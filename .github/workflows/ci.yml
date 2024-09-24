@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: upload artefact to App Center
-        uses: wzieba/AppCenter-Github-Action@v1.0.3
+        uses: wzieba/AppCenter-Github-Action@v1
         with:
           appName: DevMobUnlam/Alaya
           token: 066407fdd99c528b921ae8ea6ba64abbcfe9f09f
