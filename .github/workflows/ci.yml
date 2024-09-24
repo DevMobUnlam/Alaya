@@ -34,6 +34,9 @@ jobs:
       - name: Run gradle tests
         run: ./gradlew test
 
+      - name: Build App
+        run: ./gradlew assemble
+
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -43,7 +46,4 @@ jobs:
           name: AndroidAlayaCICD.apk
           path: app/build/outputs/apk/debug/app-debug.apk
           
-
-      - name: Build App
-        run: ./gradlew assemble
         
