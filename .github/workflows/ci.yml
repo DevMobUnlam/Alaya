@@ -34,9 +34,6 @@ jobs:
       - name: Run gradle tests
         run: ./gradlew test
 
-      - name: Build App
-        run: ./gradlew assemble
-
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -53,4 +50,7 @@ jobs:
           notifyTesters: true
           debug: false
           
+
+      - name: Build App
+        run: ./gradlew assemble
         
