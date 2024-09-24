@@ -47,7 +47,7 @@ jobs:
         uses: wzieba/AppCenter-Github-Action@v1.0.3
         with:
           appName: DevMobUnlam/Alaya
-          token: ${{secrets.066407fdd99c528b921ae8ea6ba64abbcfe9f09f}}
+          token: 066407fdd99c528b921ae8ea6ba64abbcfe9f09f
           group: Testers
           file: app/build/outputs/apk/release/app-release-unsigned.apk
           notifyTesters: true
