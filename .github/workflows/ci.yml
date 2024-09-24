@@ -49,7 +49,7 @@ jobs:
           appName: DevMobUnlam/Alaya
           token: 066407fdd99c528b921ae8ea6ba64abbcfe9f09f
           group: Testers
-          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          file: app/build/outputs/apk/debug/app-debug.apk
           notifyTesters: true
           debug: false
           
