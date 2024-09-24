@@ -40,10 +40,17 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3.1.3
+      - name: build release
+        run: ./gradlew assembleRelease
+
+      - name: upload artefact to App Center
+        uses: wzieba/AppCenter-Github-Action@v1.0.3
         with:
-          name: AndroidAlayaCICD.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          appName: DevMobUnlam/Alaya
+          token: ${{secrets.066407fdd99c528b921ae8ea6ba64abbcfe9f09f}}
+          group: Testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          notifyTesters: true
+          debug: false
           
         
