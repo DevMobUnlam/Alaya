@@ -37,6 +37,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: AndroidAlayaCICD.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          
+
       - name: Build App
         run: ./gradlew assemble
         
