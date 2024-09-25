@@ -1,9 +1,11 @@
-name: Android Build
+name: Project CI
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-    
+
   workflow_dispatch:
 
 jobs:
@@ -31,7 +33,24 @@ jobs:
       # Run Tests Build
       - name: Run gradle tests
         run: ./gradlew test
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: build release
+        run: ./gradlew assembleRelease
+
+      - name: upload artefact to App Center
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: DevMobUnlam/Alaya
+          token: 066407fdd99c528b921ae8ea6ba64abbcfe9f09f
+          group: Testers
+          file: app/build/outputs/apk/debug/app-debug.apk
+          notifyTesters: true
+          debug: false
           
+
       - name: Build App
         run: ./gradlew assemble
         
