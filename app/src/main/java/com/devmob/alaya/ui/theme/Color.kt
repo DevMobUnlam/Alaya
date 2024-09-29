@@ -1,4 +1,4 @@
-package com.example.tpigrupocinco.ui.theme
+package com.devmob.alaya.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
