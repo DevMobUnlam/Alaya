@@ -17,7 +17,7 @@ fun Modal(
     show: Boolean,
     title: String,
     primaryButtonText: String,
-    secondaryButtonText: String,
+    secondaryButtonText: String? = null,
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
     onDismissRequest: () -> Unit = {}
@@ -34,12 +34,14 @@ fun Modal(
             )
         },
         dismissButton = {
-            Button(
-                secondaryButtonText,
-                Modifier.fillMaxWidth(),
-                ButtonStyle.Outlined,
-                onDismiss
-            )
+            secondaryButtonText?.let {
+                Button(
+                    secondaryButtonText,
+                    Modifier.fillMaxWidth(),
+                    ButtonStyle.Outlined,
+                    onDismiss
+                )
+            }
         },
         containerColor = LightBlueColor,
         title = {
