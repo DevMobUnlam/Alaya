@@ -1,4 +1,4 @@
-package com.example.tpigrupocinco.components
+package com.devmob.alaya.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -9,8 +9,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.tpigrupocinco.ui.theme.ColorText
-import com.example.tpigrupocinco.ui.theme.LightBlueColor
+import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
 fun Modal(
