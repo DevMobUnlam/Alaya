@@ -1,4 +1,4 @@
-package com.example.tpigrupocinco.components
+package com.devmob.alaya.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tpigrupocinco.ui.theme.ColorPrimary
-import com.example.tpigrupocinco.ui.theme.ColorText
-import com.example.tpigrupocinco.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun Button (
