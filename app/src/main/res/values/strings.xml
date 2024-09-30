@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Alaya</string>
-    <string name="patients_today">Esta es la lista de pacientes que atenderás hoy.\r\n¡Te deseamos una linda jornada!</string>
+    <string name="patients_today">Esta es la lista de pacientes que atenderás hoy.\n¡Te deseamos una linda jornada!</string>
 </resources>

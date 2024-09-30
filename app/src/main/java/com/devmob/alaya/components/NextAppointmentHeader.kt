@@ -1,5 +1,7 @@
 package com.devmob.alaya.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +26,10 @@ import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import java.time.LocalDate
 
 @Composable
-fun Header(name: String){
+fun NextAppointmentHeader(name: String,lastName: String, date: LocalDate){
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -39,31 +42,33 @@ fun Header(name: String){
     ) {
         Column(
             modifier =
-                Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-                Text(
-                    text = "Hola $name,\r\n¡Buen día!",
-                    fontSize = 35.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = ColorText,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = stringResource(R.string.patients_today),
-                    fontSize = 21.sp,
-                    textAlign = TextAlign.Center,
-                    color = ColorText,
-                )
+            Text(
+                text = "$name $lastName",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = ColorText,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Próxima Sesión: \n $date",
+                fontSize = 21.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color = ColorText,
+            )
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun HeaderPreview(name: String = "Mauro"){
-    Header(name)
+fun NextAppointmentHeaderPreview(name: String = "Mauro", lastName:String = "Catrambone",date: LocalDate = LocalDate.now()){
+    NextAppointmentHeader(name = name, lastName = lastName, date)
 }
