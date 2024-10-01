@@ -12,9 +12,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.model.IconType
 import com.devmob.alaya.model.ItemMenu
@@ -22,11 +25,19 @@ import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostController) {
+    val currentRoute = currentRoute(navHostController)
     NavigationBar(containerColor = ColorWhite) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = false,
-                onClick = { navHostController.navigate(item.route) },
+                selected = currentRoute == item.route,
+                onClick = {
+                    navHostController.navigate(item.route) {
+                        popUpTo(navHostController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    }
+                },
                 icon = {
                     Icon(
                         imageVector = when (item.iconType) {
@@ -44,17 +55,25 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
     }
 }
 
+@Composable
+private fun currentRoute(navHostController: NavHostController): String? {
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
+}
+
 @Preview
 @Composable
 fun NavigationBarPreview() {
     val navHostController = rememberNavController()
     Scaffold(
         bottomBar = {
-            BottomBarNavigation(items = listOf(
-                ItemMenu("Home", IconType.HOME, "home"),
-                ItemMenu("Manejo de criss", IconType.PROFESSIONAL, "manejo de crisis"),
-                ItemMenu("Más", IconType.MENU, "menu hamburguesa")
-            ), navHostController = navHostController)
+            BottomBarNavigation(
+                items = listOf(
+                    ItemMenu("Home", IconType.HOME, "home"),
+                    ItemMenu("Manejo de criss", IconType.PROFESSIONAL, "manejo de crisis"),
+                    ItemMenu("Más", IconType.MENU, "menu hamburguesa")
+                ), navHostController = navHostController
+            )
         }
     ) { paddingValues ->
         Text(
