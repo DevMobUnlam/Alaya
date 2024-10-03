@@ -26,17 +26,14 @@ import java.util.*
 fun DateTimePicker() {
     val calendar = Calendar.getInstance()
 
-    // Estados para fecha y hora seleccionada
     var selectedStartDate by remember { mutableStateOf(calendar.time) }
     var selectedStartTime by remember { mutableStateOf(calendar.time) }
     var selectedEndDate by remember { mutableStateOf(calendar.time) }
     var selectedEndTime by remember { mutableStateOf(calendar.time) }
 
-    // Formatos para mostrar fecha y hora
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-    // Variables para mostrar el diálogo de selección de fecha y hora
     val datePickerDialog = DatePickerDialog(
         LocalContext.current,
         { _, year, month, dayOfMonth ->
@@ -63,7 +60,6 @@ fun DateTimePicker() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Inicio: Selector de fecha y hora
         Column {
             OutlinedTextField(
                 value = dateFormat.format(selectedStartDate),
@@ -77,10 +73,10 @@ fun DateTimePicker() {
                     }
                 },
                 readOnly = true,
-                shape = RoundedCornerShape(50), // Forma ovalada
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Ajustar la altura para mantener la proporción ovalada
+                    .height(56.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -96,14 +92,13 @@ fun DateTimePicker() {
                     }
                 },
                 readOnly = true,
-                shape = RoundedCornerShape(50), // Forma ovalada
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Ajustar la altura
+                    .height(56.dp)
             )
         }
 
-        // Fin: Selector de fecha y hora
         Column {
             OutlinedTextField(
                 value = dateFormat.format(selectedEndDate),
@@ -117,10 +112,10 @@ fun DateTimePicker() {
                     }
                 },
                 readOnly = true,
-                shape = RoundedCornerShape(50), // Forma ovalada
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Ajustar la altura
+                    .height(56.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -136,10 +131,10 @@ fun DateTimePicker() {
                     }
                 },
                 readOnly = true,
-                shape = RoundedCornerShape(50), // Forma ovalada
+                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Ajustar la altura
+                    .height(56.dp)
             )
         }
     }
