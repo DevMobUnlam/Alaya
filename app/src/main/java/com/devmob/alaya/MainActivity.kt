@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.components.FabGroup
 import com.devmob.alaya.ui.theme.AlayaTheme
 import com.devmob.alaya.components.DateTimePicker
+import com.devmob.alaya.components.ProgressBarScreen
+import com.devmob.alaya.components.SegmentedProgressBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
