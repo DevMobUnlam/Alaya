@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.components.FabGroup
 import com.devmob.alaya.ui.theme.AlayaTheme
+import com.devmob.alaya.components.DateTimePicker
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
             AlayaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                       name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
