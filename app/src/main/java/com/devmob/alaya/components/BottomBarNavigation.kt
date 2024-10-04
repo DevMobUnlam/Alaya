@@ -48,7 +48,8 @@ import com.devmob.alaya.ui.theme.ColorWhite
 fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostController) {
     val currentRoute = currentRoute(navHostController)
     NavigationBar(containerColor = ColorWhite) {
-        items.forEach { item ->
+        val sortedItems = items.sortedBy { it.order }
+        sortedItems.forEach { item ->
             NavigationBarItem(
                 selected = currentRoute == item.route && !isMiddleButton(item.iconType),
                 onClick = {
@@ -156,7 +157,7 @@ fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
                 modifier = Modifier.size(48.dp)
             )
 
-            else -> { }
+            else -> {}
         }
     }
 }
@@ -169,9 +170,9 @@ fun NavigationBarPreview() {
         bottomBar = {
             BottomBarNavigation(
                 items = listOf(
-                    ItemMenu(iconType = IconType.HOME, route = "inicio", contentDescription = "boton de inicio"),
-                    ItemMenu(iconType = IconType.PATIENT, route = "manejo de crisis", contentDescription = "boton para el manejo de crisis"),
-                    ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu")
+                    ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
+                    ItemMenu(iconType = IconType.PATIENT, route = "manejo de crisis", contentDescription = "boton para el manejo de crisis", order = 2),
+                    ItemMenu(iconType = IconType.HOME, route = "inicio", contentDescription = "boton de inicio", order = 1),
                 ), navHostController = navHostController
             )
         }
