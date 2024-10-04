@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
@@ -32,7 +33,7 @@ fun IconButton(
             onClick = onClick,
             enabled = true,
             colors = IconButtonColors(
-                containerColor = Color(0xFF819FFF),
+                containerColor = ColorPrimary,
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite),
@@ -48,8 +49,8 @@ fun IconButton(
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun IconButtonPreview(){
-    IconButton(Icons.Outlined.Home, "Cama", onClick = {})
+    IconButton(Icons.Outlined.Home, "Home", onClick = {})
 }

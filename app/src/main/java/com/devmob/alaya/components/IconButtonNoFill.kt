@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import dashedBorder
@@ -51,14 +52,14 @@ fun IconButtonNoFill(text : String, onClick: () -> Unit){
                 disabledContainerColor = ColorWhite
             ),
             modifier = Modifier.dashedBorder(
-                color = Color(0xFFB1C4FF),
+                color = ColorPrimary,
                 shape = CircleShape,
                 strokeWidth = 1.dp,
                 dashLength = 2.dp,
                 cap = StrokeCap.Square
             )
         ) {
-            Icon(Icons.Filled.Add ,contentDescription = text, tint= Color(0xFF819FFF), modifier = Modifier.fillMaxSize(0.70f))
+            Icon(Icons.Filled.Add ,contentDescription = text, tint= ColorPrimary, modifier = Modifier.fillMaxSize(0.70f))
         }
         Spacer(modifier = Modifier.height(5.dp))
         Text(
@@ -72,7 +73,7 @@ fun IconButtonNoFill(text : String, onClick: () -> Unit){
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun IconButtonNoFillPreview(){
     IconButtonNoFill(text = "Añadir emocion", onClick = {})
