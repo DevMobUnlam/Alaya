@@ -63,7 +63,12 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
                 icon = {
                     IconMenu(item, navHostController)
                 },
-                label = { item.title?.let { Text(text = it) } }
+                label = { item.title?.let { Text(text = it) } },
+                colors = NavigationBarItemColors(
+                    selectedIconColor = ColorTertiary, unselectedIconColor = ColorText, disabledIconColor = ColorText,
+                    selectedTextColor = ColorTertiary, unselectedTextColor = ColorText, disabledTextColor = ColorText,
+                    selectedIndicatorColor = ColorTertiary,
+                )
             )
         }
     }
