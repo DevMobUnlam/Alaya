@@ -87,14 +87,14 @@ fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
     when (item.iconType) {
         IconType.HOME -> Icon(
             Icons.Default.Home,
-            contentDescription = "Home",
+            contentDescription = item.contentDescription,
             tint = ColorText,
             modifier = Modifier.size(48.dp)
         )
 
         IconType.MENU -> Icon(
             Icons.Default.Menu,
-            contentDescription = "Menu",
+            contentDescription = item.contentDescription,
             tint = ColorText,
             modifier = Modifier.size(48.dp)
         )
@@ -144,14 +144,14 @@ fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
         when (item.iconType) {
             IconType.PATIENT -> Image(
                 painter = painterResource(id = R.mipmap.ic_patient),
-                contentDescription = "manejo de crisis",
+                contentDescription = item.contentDescription,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(48.dp)
             )
 
             IconType.PROFESSIONAL -> Image(
                 painter = painterResource(id = R.mipmap.ic_professional),
-                contentDescription = "pacientes",
+                contentDescription = item.contentDescription,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(48.dp)
             )
@@ -169,9 +169,9 @@ fun NavigationBarPreview() {
         bottomBar = {
             BottomBarNavigation(
                 items = listOf(
-                    ItemMenu(iconType = IconType.HOME, route = "home"),
-                    ItemMenu(iconType = IconType.PATIENT, route = "manejo de crisis"),
-                    ItemMenu(iconType = IconType.MENU, route = "menu hamburguesa")
+                    ItemMenu(iconType = IconType.HOME, route = "inicio", contentDescription = "boton de inicio"),
+                    ItemMenu(iconType = IconType.PATIENT, route = "manejo de crisis", contentDescription = "boton para el manejo de crisis"),
+                    ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu")
                 ), navHostController = navHostController
             )
         }
