@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -100,37 +99,8 @@ fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
             modifier = Modifier.size(48.dp)
         )
 
-        IconType.PROFESSIONAL -> FloatingMiddleButton(item, navHostController)
+        IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController)
         IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController)
-    }
-}
-
-@Composable
-fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
-    FloatingActionButton(
-        containerColor = ColorTertiary,
-        modifier = Modifier
-            .size(60.dp),
-        onClick = { navHostController.navigate(item.route) },
-        shape = CircleShape
-    ) {
-        when (item.iconType) {
-            IconType.PATIENT -> Image(
-                painter = painterResource(id = R.mipmap.ic_patient),
-                contentDescription = "manejo de crisis",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(48.dp)
-            )
-
-            IconType.PROFESSIONAL -> Icon(
-                Icons.Outlined.AccountCircle,
-                contentDescription = "pacientes",
-                modifier = Modifier.size(48.dp),
-                tint = ColorWhite
-            )
-
-            else -> {}
-        }
     }
 }
 
@@ -159,6 +129,35 @@ fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHost
                 .background(ColorPrimary, shape = CircleShape)
         )
         FloatingMiddleButton(item, navHostController)
+    }
+}
+
+@Composable
+fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
+    FloatingActionButton(
+        containerColor = ColorTertiary,
+        modifier = Modifier
+            .size(60.dp),
+        onClick = { navHostController.navigate(item.route) },
+        shape = CircleShape
+    ) {
+        when (item.iconType) {
+            IconType.PATIENT -> Image(
+                painter = painterResource(id = R.mipmap.ic_patient),
+                contentDescription = "manejo de crisis",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(48.dp)
+            )
+
+            IconType.PROFESSIONAL -> Image(
+                painter = painterResource(id = R.mipmap.ic_professional),
+                contentDescription = "pacientes",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(48.dp)
+            )
+
+            else -> { }
+        }
     }
 }
 
