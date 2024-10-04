@@ -34,7 +34,7 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
-fun PlaceHolderTitle(title: String){
+fun TextArea(title: String){
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
     Column(

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,19 +28,18 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devmob.alaya.ui.theme.ColorGray
-import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun PlaceHolder(
     initialTitle: String,
-    initialDescription: String
+    cardWidth: Dp = 600.dp,
+    cardHeight: Dp = 200.dp
 ) {
     var titleState by remember { mutableStateOf(initialTitle) }
-    var descriptionState by remember { mutableStateOf(initialDescription) }
 
     Column(
         modifier = Modifier
@@ -52,24 +52,17 @@ fun PlaceHolder(
             value = titleState,
             onValueChange = { newValue -> titleState = newValue },
             placeholder = "Título",
-            singleLine = true,
-            fontSize = 28.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        CustomCard(
-            value = descriptionState,
-            onValueChange = { newValue -> descriptionState = newValue },
-            placeholder = "Descripción",
             singleLine = false,
             fontSize = 28.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.height(200.dp)
+            cardWidth = cardWidth,
+            cardHeight = cardHeight
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomCard(
@@ -79,6 +72,8 @@ fun CustomCard(
     singleLine: Boolean,
     fontSize: TextUnit,
     textAlign: TextAlign,
+    cardWidth: Dp = 300.dp,
+    cardHeight: Dp = 200.dp,
     modifier: Modifier = Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -86,15 +81,15 @@ fun CustomCard(
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = modifier
-            .fillMaxWidth()
+            .width(cardWidth)
+            .height(cardHeight)
             .padding(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White)
-
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(Color.White)
                 .padding(8.dp),
             contentAlignment = Alignment.Center
@@ -106,15 +101,14 @@ fun CustomCard(
                     if (!isFocused && value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = ColorWhite,
+                            color = Color.Gray,
                             fontSize = fontSize,
                             textAlign = textAlign
                         )
                     }
                 },
                 textStyle = LocalTextStyle.current.copy(
-
-                    color = ColorGray,
+                    color = Color.Gray,
                     fontSize = fontSize,
                     fontWeight = FontWeight.Bold,
                     textAlign = textAlign
