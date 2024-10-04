@@ -19,6 +19,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +51,7 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
     NavigationBar(containerColor = ColorWhite) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = currentRoute == item.route,
+                selected = currentRoute == item.route && !isMiddleButton(item.iconType),
                 onClick = {
                     navHostController.navigate(item.route) {
                         popUpTo(navHostController.graph.findStartDestination().id) {
@@ -60,7 +61,7 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
                     }
                 },
                 icon = {
-                    IconMenu(iconType = item.iconType)
+                    IconMenu(item, navHostController)
                 },
                 label = { item.title?.let { Text(text = it) } }
             )
@@ -74,9 +75,12 @@ private fun currentRoute(navHostController: NavHostController): String? {
     return navBackStackEntry?.destination?.route
 }
 
+private fun isMiddleButton(type: IconType) =
+    type == IconType.PROFESSIONAL || type == IconType.PATIENT
+
 @Composable
-fun IconMenu(iconType: IconType) {
-    when (iconType) {
+fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
+    when (item.iconType) {
         IconType.HOME -> Icon(
             Icons.Default.Home,
             contentDescription = "Home",
@@ -91,23 +95,23 @@ fun IconMenu(iconType: IconType) {
             modifier = Modifier.size(48.dp)
         )
 
-        IconType.PROFESSIONAL -> FloatingMiddleButton(iconType)
-        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(iconType)
+        IconType.PROFESSIONAL -> FloatingMiddleButton(item, navHostController)
+        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController)
     }
 }
 
 @Composable
-fun FloatingMiddleButton(iconType: IconType) {
+fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
     FloatingActionButton(
         containerColor = ColorTertiary,
         modifier = Modifier
             .size(60.dp),
-        onClick = { /* //TODO */ },
+        onClick = { navHostController.navigate(item.route) },
         shape = CircleShape
     ) {
-        when (iconType) {
+        when (item.iconType) {
             IconType.PATIENT -> Image(
-                painter = painterResource(id = R.mipmap.ic_patient), // Reemplaza con el ID correcto
+                painter = painterResource(id = R.mipmap.ic_patient),
                 contentDescription = "manejo de crisis",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(48.dp)
@@ -126,7 +130,7 @@ fun FloatingMiddleButton(iconType: IconType) {
 }
 
 @Composable
-fun FloatingMiddleButtonWithAnimation(iconType: IconType) {
+fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHostController) {
     val scale = remember { Animatable(1f) }
 
     LaunchedEffect(Unit) {
@@ -149,7 +153,7 @@ fun FloatingMiddleButtonWithAnimation(iconType: IconType) {
                 }
                 .background(ColorPrimary, shape = CircleShape)
         )
-        FloatingMiddleButton(iconType)
+        FloatingMiddleButton(item, navHostController)
     }
 }
 
