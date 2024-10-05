@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Alaya</string>
     <string name="patients_today">Esta es la lista de pacientes que atenderás hoy.\r\n¡Te deseamos una linda jornada!</string>
+    <string name="feedback_felicitaciones">Me sorprende lo fuerte que eres, mira hasta donde has llegado!</string>
+    <string name="feedback_va_aestarbien">No importa lo fuerte que puedas ser, nunca intentes cargar con todo tu solo</string>
+    <string name="feliz">Feliz</string>
+    <string name="calmo">Calmo</string>
+    <string name="indiferente">Indiferente</string>
+    <string name="triste">Triste</string>
+    <string name="enojado">Enojado</string>
+    <string name="inseguro">Inseguro</string>
+    <string name="confiado">Confiado</string>
+    <string name="aliviado">Aliviado</string>
+    <string name="frustrado">Frustrado</string>
+    <string name="ansioso">Ansioso</string>
+    <string name="desilusionado">Desilusionado</string>
+    <string name="angustiado">Angustiado</string>
+    <string name="entusiasmado">Entusiasmado</string>
 </resources>
