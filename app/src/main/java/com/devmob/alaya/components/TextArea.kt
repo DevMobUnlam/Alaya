@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorPrimary
@@ -43,20 +44,23 @@ fun TextArea(title: String){
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = title,
             fontSize = 30.sp,
             color = ColorText,
-            modifier = Modifier.padding(horizontal = 90.dp),
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Card(
             modifier = Modifier
-                .height(600.dp),
+                .fillMaxWidth()
+                .weight(1f),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = RoundedCornerShape(30.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -76,12 +80,13 @@ fun TextArea(title: String){
                 }
             )
         }
-        Spacer(modifier = Modifier.height(50.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
             onClick = {},
             shape = CircleShape,
-            containerColor = ColorPrimary ,
+            containerColor = ColorPrimary,
             modifier = Modifier
                 .size(80.dp)
         ) {
@@ -89,9 +94,10 @@ fun TextArea(title: String){
                 imageVector = Icons.Outlined.Mic,
                 contentDescription = "Agregar",
                 tint = ColorWhite,
-                modifier = Modifier
-                    .size(35.dp)
+                modifier = Modifier.size(35.dp)
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
