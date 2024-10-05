@@ -7,10 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.devmob.alaya.components.BottomBarNavigation
-import com.devmob.alaya.model.IconType
-import com.devmob.alaya.model.ItemMenu
-import com.devmob.alaya.screen.HomeScreen
+import com.devmob.alaya.domain.model.IconType
+import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.screen.HomeScreen
+import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.utils.NavUtils
 
 @Composable

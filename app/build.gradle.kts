@@ -71,8 +71,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.constraint)
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation("io.coil-kt:coil-compose:2.1.0")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
 }
