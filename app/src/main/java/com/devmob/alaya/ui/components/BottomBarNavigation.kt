@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -37,8 +37,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
-import com.devmob.alaya.model.IconType
-import com.devmob.alaya.model.ItemMenu
+import com.devmob.alaya.domain.model.IconType
+import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText

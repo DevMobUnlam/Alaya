@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
