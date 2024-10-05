@@ -59,9 +59,9 @@ fun HomeScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(16.dp)
                 .constrainAs(greetingText) {
-                    top.linkTo(parent.top, margin = 60.dp)
+                    top.linkTo(parent.top, margin = 16.dp)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    end.linkTo(parent.end, margin = 15.dp)
                 }
         )
 
@@ -69,7 +69,7 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .constrainAs(cardColumn) {
-                    top.linkTo(greetingText.bottom, margin = 24.dp)
+                    top.linkTo(greetingText.bottom, margin = 40.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom, margin = 70.dp)
