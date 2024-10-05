@@ -2,9 +2,7 @@ package com.devmob.alaya.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
@@ -17,8 +15,11 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.ui.tooling.preview.Preview
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,23 +35,48 @@ fun DateTimePicker() {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-    val datePickerDialog = DatePickerDialog(
-        LocalContext.current,
+    val context = LocalContext.current
+
+    val datePickerDialogStart = DatePickerDialog(
+        context,
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
             selectedStartDate = calendar.time
-            selectedEndDate = calendar.time
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
-    )
+        },
+        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+    ).apply {
+        datePicker.maxDate = Calendar.getInstance().timeInMillis
+    }
 
-    val timePickerDialog = TimePickerDialog(
-        LocalContext.current,
+    val datePickerDialogEnd = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            calendar.set(year, month, dayOfMonth)
+            selectedEndDate = calendar.time
+        },
+        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+    ).apply {
+        datePicker.maxDate = Calendar.getInstance().timeInMillis
+    }
+
+    val timePickerDialogStart = TimePickerDialog(
+        context,
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
             selectedStartTime = calendar.time
+        },
+        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
+    )
+
+    val timePickerDialogEnd = TimePickerDialog(
+        context,
+        { _, hourOfDay, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calendar.set(Calendar.MINUTE, minute)
             selectedEndTime = calendar.time
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
+        },
+        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )
 
     Column(
@@ -64,19 +90,18 @@ fun DateTimePicker() {
             OutlinedTextField(
                 value = dateFormat.format(selectedStartDate),
                 onValueChange = {},
-                label = { Text(text = "Inicio") },
+                label = { Text(text = "Inicio (Fecha)") },
+                readOnly = true,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        datePickerDialog.show()
-                    }) {
+                    IconButton(onClick = { datePickerDialogStart.show() }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
                     }
                 },
-                readOnly = true,
-                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .clickable { datePickerDialogStart.show() },
+                shape = RoundedCornerShape(50),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -84,38 +109,39 @@ fun DateTimePicker() {
             OutlinedTextField(
                 value = timeFormat.format(selectedStartTime),
                 onValueChange = {},
+                label = { Text(text = "Inicio (Hora)") },
+                readOnly = true,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        timePickerDialog.show()
-                    }) {
+                    IconButton(onClick = { timePickerDialogStart.show() }) {
                         Icon(Icons.Default.AccessTime, contentDescription = "Select Time")
                     }
                 },
-                readOnly = true,
-                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .clickable { timePickerDialogStart.show() },
+                shape = RoundedCornerShape(50),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column {
             OutlinedTextField(
                 value = dateFormat.format(selectedEndDate),
                 onValueChange = {},
-                label = { Text(text = "Fin") },
+                label = { Text(text = "Fin (Fecha)") },
+                readOnly = true,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        datePickerDialog.show()
-                    }) {
+                    IconButton(onClick = { datePickerDialogEnd.show() }) {
                         Icon(Icons.Default.CalendarToday, contentDescription = "Select Date")
                     }
                 },
-                readOnly = true,
-                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .clickable { datePickerDialogEnd.show() },
+                shape = RoundedCornerShape(50),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -123,19 +149,28 @@ fun DateTimePicker() {
             OutlinedTextField(
                 value = timeFormat.format(selectedEndTime),
                 onValueChange = {},
+                label = { Text(text = "Fin (Hora)") },
+                readOnly = true,
                 trailingIcon = {
-                    IconButton(onClick = {
-                        timePickerDialog.show()
-                    }) {
+                    IconButton(onClick = { timePickerDialogEnd.show() }) {
                         Icon(Icons.Default.AccessTime, contentDescription = "Select Time")
                     }
                 },
-                readOnly = true,
-                shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .clickable { timePickerDialogEnd.show() },
+                shape = RoundedCornerShape(50),
+                textStyle = MaterialTheme.typography.bodyMedium
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDateTimePicker()
+{
+    Surface {
+        DateTimePicker()
     }
 }
