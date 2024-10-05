@@ -30,7 +30,7 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
-fun CrisisHandlingScreen() {
+fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -111,5 +111,5 @@ fun CrisisHandlingScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewCrisisScreen() {
-    CrisisHandlingScreen()
+    CrisisHandlingScreen(CrisisHandlingViewModel())
 }
