@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -58,7 +58,7 @@ fun Card(
 
         ) {
 
-            LeftIconOrProgress(progress,leftIcon);
+            LeftIconOrProgress(progress,leftIcon)
 
             if (imageUrl != null) {
                 Image(
