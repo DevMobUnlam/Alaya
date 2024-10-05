@@ -23,7 +23,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.IconType
@@ -43,10 +41,11 @@ import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostController) {
-    val currentRoute = currentRoute(navHostController)
+    val currentRoute = NavUtils.currentRoute(navHostController)
     NavigationBar(containerColor = ColorWhite) {
         val sortedItems = items.sortedBy { it.order }
         sortedItems.forEach { item ->
@@ -72,12 +71,6 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
             )
         }
     }
-}
-
-@Composable
-private fun currentRoute(navHostController: NavHostController): String? {
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
 }
 
 private fun isMiddleButton(type: IconType) =
