@@ -1,5 +1,6 @@
 package com.devmob.alaya.screen
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -100,15 +102,22 @@ fun HomeScreen(navController: NavController) {
                 title = "Herramientas de bienestar",
                 subtitle = "Encuentra recursos para cuidar tu mente y mejorar tu bienestar diario",
                 onClick = { },
-                leftIcon = Icons.Outlined.Mood,
-                rightIcon = Icons.Filled.ArrowForwardIos
+                rightIcon = Icons.Filled.ArrowForwardIos,
+                leftIconBitmap = BitmapFactory.decodeResource(
+                        LocalContext.current.resources,
+                R.drawable.hand_heart
+            )
             )
             Card(
                 title = "Registro de crisis",
                 subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
                 onClick = { },
                 leftIcon = Icons.Outlined.Mood,
-                rightIcon = Icons.Filled.ArrowForwardIos
+                rightIcon = Icons.Filled.ArrowForwardIos,
+                leftIconBitmap = BitmapFactory.decodeResource(
+                    LocalContext.current.resources,
+                    R.drawable.head_side_heart
+                )
             )
         }
     }
