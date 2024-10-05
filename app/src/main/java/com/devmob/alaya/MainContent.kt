@@ -3,20 +3,19 @@ package com.devmob.alaya
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.devmob.alaya.components.BottomBarNavigation
 import com.devmob.alaya.model.IconType
 import com.devmob.alaya.model.ItemMenu
 import com.devmob.alaya.screen.HomeScreen
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun MainContent(navController: NavHostController) {
-    val currentRoute = currentRoute(navController)
+    val currentRoute = NavUtils.currentRoute(navController)
     Scaffold(
         bottomBar = {
             //condicion para mostrar o no el bottom
@@ -44,10 +43,4 @@ fun MainContent(navController: NavHostController) {
 
         }
     }
-}
-
-@Composable
-private fun currentRoute(navHostController: NavHostController): String? {
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route
 }
