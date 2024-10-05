@@ -51,7 +51,8 @@ fun TextArea(title: String){
             fontSize = 30.sp,
             color = ColorText,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(16.dp),
             textAlign = TextAlign.Center
         )
 
@@ -80,7 +81,6 @@ fun TextArea(title: String){
                 }
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
@@ -97,7 +97,6 @@ fun TextArea(title: String){
                 modifier = Modifier.size(35.dp)
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
