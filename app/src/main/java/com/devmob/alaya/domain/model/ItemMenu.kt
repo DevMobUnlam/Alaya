@@ -1,4 +1,4 @@
-package com.devmob.alaya.model
+package com.devmob.alaya.domain.model
 
 data class ItemMenu(
     val title: String? = null,
