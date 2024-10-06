@@ -41,6 +41,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
 
     val currentStep = viewModel.currentStep
     val shouldShowModal = viewModel.shouldShowModal
+    val shouldShowExitModal = viewModel.shouldShowExitModal
 
     ConstraintLayout(
         modifier = Modifier
@@ -55,6 +56,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             tint = ColorText,
             modifier = Modifier
                 .size(32.dp)
+                .clickable { viewModel.showExitModal() }
                 .constrainAs(closeIcon) {
                     top.linkTo(parent.top, margin = 12.dp)
                     end.linkTo(parent.end, margin = 16.dp)
@@ -146,6 +148,20 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 /*navController.navigate( TODO agregar ruta de feedback) {} */
             }
         )
+
+        Modal(
+            show = shouldShowExitModal,
+            stringResource(R.string.title_exit_modal_crisis_handling),
+            primaryButtonText = stringResource(R.string.confirm),
+            secondaryButtonText = stringResource(R.string.dismiss),
+            onConfirm = {
+                navController.navigate(NavUtils.Routes.Home.route) {
+                    popUpTo(NavUtils.Routes.Home.route) {
+                        inclusive = true
+                    }
+                }
+            },
+            onDismiss = { viewModel.dismissExitModal() })
     }
 }
 
