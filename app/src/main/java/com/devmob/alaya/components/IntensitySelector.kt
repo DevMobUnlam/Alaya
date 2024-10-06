@@ -1,79 +1,136 @@
 package com.devmob.alaya.components
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.LightBlueColor
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.sp
 
-
+/**
+ * Radiobutton para seleccionar intensidad
+ *
+ * onIntensityChange - Accion que recibe tipo de Intensidad
+ */
 @Composable
-fun IntensitySelector(onClick: (Intensity) -> Unit) {
-    var selectedIntensity by remember { mutableStateOf(0) }
+fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity: Intensity) {
+
+
 
     var context = LocalContext
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(4.dp)
-    ) {
-        Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText)
+    Card(
+        colors = CardDefaults.cardColors(containerColor = LightBlueColor),
+        modifier = Modifier
+            .width(IntrinsicSize.Max)
+            .shadow(elevation = 2.dp, shape = SpeechBubbleShape())
 
-        Spacer(modifier = Modifier.height(1.dp))
-
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .height(IntrinsicSize.Max)
+                .padding(top = 6.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
         ) {
-            for (i in Intensity.entries) {
+            Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText,fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(1.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ){
+                for (i in Intensity.entries) {
+                    OutlinedButton(
+                        modifier= Modifier.size(15.dp),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = {
+                            onIntensityChange(i)
+                        },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (i == selectedIntensity) ColorText else LightBlueColor
+                        ),
+                        border = BorderStroke(width = 1.dp, color = ColorText)
+                    ){
 
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .border(1.dp, color = Color(0xFF2E4D83), CircleShape)
-                        .size(30.dp)
-                        .background(color = if (i.ordinal == selectedIntensity) Color(0xFF2E4D83) else Color(0xFFeef3ff))
-                        .clickable {onClick}
+                    }
 
-                )
-
+                }
             }
         }
     }
+
 }
 
+/**
+ * Tipos de Intensidades seleccionables
+ *
+ * LOW - baja
+ *
+ * MEDIUM - media
+ *
+ * HIGH - alta
+ */
+
 enum class Intensity{
-    BAJA,
-    MEDIA,
-    ALTA
+    LOW,
+    MEDIUM,
+    HIGH
+}
+
+class SpeechBubbleShape() : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val path = Path().apply {
+            val rect = Rect(0f, 0f, size.width*0.95f, size.height * 0.95f)
+            val cornerRadius = CornerRadius(12f, 12f)
+            addRoundRect(RoundRect(rect,cornerRadius))
+            moveTo(size.width * 0.47f, size.height * 0.95f)
+            lineTo(size.width * 0.53f, size.height *0.95f)
+            lineTo(size.width * 0.5f, size.height*1.05f)
+            close()
+        }
+        return Outline.Generic(path)
+    }
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewIntensitySelector() {
-    //IntensitySelector(onClick = {})
+    IntensitySelector(onIntensityChange = {}, selectedIntensity = Intensity.LOW)
 }
+
+
