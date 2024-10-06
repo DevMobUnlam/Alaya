@@ -1,5 +1,6 @@
 package com.devmob.alaya.components
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +39,7 @@ fun Card(
     onClick: () -> Unit,
     leftIcon: ImageVector? = null,
     rightIcon: ImageVector? = null,
+    leftIconBitmap: Bitmap? = null,
 ) {
     ElevatedCard(
         onClick = onClick,
@@ -58,7 +62,7 @@ fun Card(
 
         ) {
 
-            LeftIconOrProgress(progress,leftIcon);
+            LeftIconOrProgress(progress,leftIcon, leftIconBitmap);
 
             if (imageUrl != null) {
                 Image(
@@ -127,7 +131,7 @@ fun CardsExample() {
 }
 
 @Composable
-fun LeftIconOrProgress(progress: Float?, leftIcon: ImageVector?) {
+fun LeftIconOrProgress(progress: Float?, leftIcon: ImageVector?, leftIconBitmap: Bitmap?, iconTint: Color = Color.Unspecified) {
     when {
         // Si hay progreso, mostrar CircularProgressIndicator o Check
         progress != null -> {
@@ -164,8 +168,16 @@ fun LeftIconOrProgress(progress: Float?, leftIcon: ImageVector?) {
             )
             Spacer(modifier = Modifier.width(16.dp))
         }
+        leftIconBitmap != null -> {
+            Image(
+                bitmap = leftIconBitmap.asImageBitmap(),
+                contentDescription = "Left Icon Image",
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(ColorText)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
     }
-}
+}}
 
 @Preview(showBackground = true)
 @Composable
