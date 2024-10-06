@@ -138,6 +138,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             Modifier.constrainAs(goodButton) {
                 top.linkTo(description.bottom, margin = 12.dp)
                 start.linkTo(parent.start, margin = 16.dp)
+                bottom.linkTo(parent.bottom, margin = 16.dp)
             },
             ButtonStyle.Outlined,
             { viewModel.showModal() })
@@ -148,6 +149,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 top.linkTo(description.bottom, margin = 12.dp)
                 start.linkTo(goodButton.end, margin = 8.dp)
                 end.linkTo(parent.end, margin = 16.dp)
+                bottom.linkTo(parent.bottom, margin = 16.dp)
             },
             ButtonStyle.Filled,
             onClick = { viewModel.nextStep() })
