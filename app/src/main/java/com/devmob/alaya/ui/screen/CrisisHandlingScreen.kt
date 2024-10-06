@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
@@ -32,9 +34,10 @@ import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.components.TextContainer
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
+fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavController) {
 
     val currentStep = viewModel.currentStep
     val shouldShowModal = viewModel.shouldShowModal
@@ -110,24 +113,38 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
             }
         )
 
-        Button(stringResource(R.string.primary_button_crisis_handling), Modifier.constrainAs(goodButton) {
-            top.linkTo(description.bottom, margin = 12.dp)
-            start.linkTo(parent.start, margin = 16.dp)
-        }, ButtonStyle.Outlined, { viewModel.showModal() })
+        Button(
+            stringResource(R.string.primary_button_crisis_handling),
+            Modifier.constrainAs(goodButton) {
+                top.linkTo(description.bottom, margin = 12.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+            },
+            ButtonStyle.Outlined,
+            { viewModel.showModal() })
 
-        Button(stringResource(R.string.secondary_button_crisis_handling), Modifier.constrainAs(nextButton) {
-            top.linkTo(description.bottom, margin = 12.dp)
-            start.linkTo(goodButton.end, margin = 8.dp)
-            end.linkTo(parent.end, margin = 16.dp)
-        }, ButtonStyle.Filled, onClick = { viewModel.nextStep() })
+        Button(
+            stringResource(R.string.secondary_button_crisis_handling),
+            Modifier.constrainAs(nextButton) {
+                top.linkTo(description.bottom, margin = 12.dp)
+                start.linkTo(goodButton.end, margin = 8.dp)
+                end.linkTo(parent.end, margin = 16.dp)
+            },
+            ButtonStyle.Filled,
+            onClick = { viewModel.nextStep() })
 
         Modal(
             show = shouldShowModal,
             title = stringResource(R.string.title_modal_crisis_handling),
             primaryButtonText = stringResource(R.string.primary_button_modal_crisis_handling),
             secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
-            onConfirm = { viewModel.dismissModal() },
-            onDismiss = { viewModel.dismissModal() }
+            onConfirm = {
+                viewModel.dismissModal()
+                /*navController.navigate( TODO agregar ruta de feedback) {} */
+            },
+            onDismiss = {
+                viewModel.dismissModal()
+                /*navController.navigate( TODO agregar ruta de feedback) {} */
+            }
         )
     }
 }
@@ -145,5 +162,6 @@ fun getImage(image: String): Int {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewCrisisScreen() {
-    CrisisHandlingScreen(CrisisHandlingViewModel())
+    val navController = rememberNavController()
+    CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
 }

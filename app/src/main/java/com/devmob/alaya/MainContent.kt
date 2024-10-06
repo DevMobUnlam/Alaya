@@ -11,6 +11,8 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.CrisisHandlingScreen
+import com.devmob.alaya.ui.screen.CrisisHandlingViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -20,7 +22,7 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-            if (currentRoute !in listOf("nobottom", "nobottom2")) {
+            if (currentRoute !in listOf("nobottom", "nobottom2", NavUtils.Routes.Crisis.route)) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
@@ -34,13 +36,15 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = NavUtils.Routes.Crisis.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("home") {
+            composable(NavUtils.Routes.Home.route) {
                 HomeScreen(navController)
             }
-
+            composable(NavUtils.Routes.Crisis.route) {
+                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+            }
         }
     }
 }
