@@ -11,4 +11,9 @@ object NavUtils {
         val navBackStackEntry by navHostController.currentBackStackEntryAsState()
         return navBackStackEntry?.destination?.route
     }
+
+    sealed class Routes (val route: String) {
+        data object Home : Routes("home")
+        data object Crisis : Routes("crisis")
+    }
 }
