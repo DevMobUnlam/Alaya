@@ -68,7 +68,7 @@ fun ProgressBarScreen(modifier: Modifier = Modifier) {
                 Text("Anterior")
             }
             Button(onClick = { if (currentStep < totalSteps) currentStep++ }) {
-                Text("Siguiente")
+                Text("Siguiente!")
             }
         }
     }
