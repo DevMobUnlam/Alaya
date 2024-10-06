@@ -79,4 +79,3 @@ fun ProgressBarScreen(modifier: Modifier = Modifier) {
 fun PreviewProgressBar() {
     ProgressBarScreen()
 }
-

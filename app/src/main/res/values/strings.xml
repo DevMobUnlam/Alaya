@@ -16,4 +16,12 @@
     <string name="desilusionado">Desilusionado</string>
     <string name="angustiado">Angustiado</string>
     <string name="entusiasmado">Entusiasmado</string>
+    <string name="primary_button_crisis_handling">Ya me encuentro bien</string>
+    <string name="secondary_button_crisis_handling">Siguiente</string>
+    <string name="title_modal_crisis_handling">¿Te sentís más calmado ahora?</string>
+    <string name="primary_button_modal_crisis_handling">Sí, me siento mejor</string>
+    <string name="secondary_button_modal_crisis_handling">No, aún necesito apoyo</string>
+    <string name="title_exit_modal_crisis_handling">¿Seguro que deseas salir?</string>
+    <string name="confirm">Sí</string>
+    <string name="dismiss">No</string>
 </resources>
