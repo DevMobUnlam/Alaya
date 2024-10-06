@@ -13,6 +13,8 @@ class CrisisHandlingViewModel : ViewModel() {
 
     private var currentStepIndex by mutableIntStateOf(0)
 
+   var shouldShowModal by mutableStateOf(false)
+
     val currentStep: StepCrisis
         get() = steps[currentStepIndex]
 
@@ -37,6 +39,16 @@ class CrisisHandlingViewModel : ViewModel() {
     fun nextStep() {
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
+        } else {
+            shouldShowModal = true
         }
+    }
+
+    fun showModal(){
+        shouldShowModal = true
+    }
+
+    fun dismissModal(){
+        shouldShowModal = false
     }
 }
