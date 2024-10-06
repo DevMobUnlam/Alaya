@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.components
+package com.devmob.alaya.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Canvas
@@ -18,34 +18,35 @@ import com.devmob.alaya.ui.theme.ColorTertiary
 fun SegmentedProgressBar(
     totalSteps: Int,
     currentStep: Int,
-    segmentWidth: Float = 600f,
+    modifier: Modifier = Modifier,
     segmentSpacing: Float = 20f,
     filledColor: Color = ColorTertiary,
     unfilledColor: Color = Color(0xFFE0E5F1)
 ) {
-    val totalBarWidth = (segmentWidth - (segmentSpacing * (totalSteps - 1))) / totalSteps
-
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
+            .padding(horizontal = 16.dp)
     ) {
-    Canvas(
-        modifier = Modifier
-            .width(segmentWidth.dp)
-            .height(8.dp)
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+        ) {
+            val totalBarWidth = size.width - (segmentSpacing * (totalSteps - 1))
+            val segmentWidth = totalBarWidth / totalSteps
 
-    ) {
-        for (i in 0 until totalSteps) {
-            val startX = i * (totalBarWidth + segmentSpacing)
+            for (i in 0 until totalSteps) {
+                val startX = i * (segmentWidth + segmentSpacing)
 
-            drawRoundRect(
-                color = if (i < currentStep) filledColor else unfilledColor,
-                topLeft = Offset(startX, 0f),
-                size = Size(totalBarWidth, size.height),
-                cornerRadius = CornerRadius(50f, 50f)
-            )
-        }}
+                drawRoundRect(
+                    color = if (i < currentStep) filledColor else unfilledColor,
+                    topLeft = Offset(startX, 0f),
+                    size = Size(segmentWidth, size.height),
+                    cornerRadius = CornerRadius(50f, 50f)
+                )
+            }
+        }
     }
 }
 
@@ -59,7 +60,7 @@ fun ProgressBarScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        SegmentedProgressBar(totalSteps = totalSteps, currentStep = currentStep)
+        SegmentedProgressBar(totalSteps = totalSteps, currentStep = currentStep, Modifier)
 
         Spacer(modifier = Modifier.height(22.dp))
 
