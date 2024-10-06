@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.devmob.alaya.ui.screen.FeedbackScreen
 import com.devmob.alaya.ui.theme.AlayaTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,8 +15,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AlayaTheme {
-                val navController = rememberNavController()
-                MainContent(navController)
+//                val navController = rememberNavController()
+//                MainContent(navController)
+
+                FeedbackScreen()
             }
         }
     }}

@@ -2,6 +2,8 @@ package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,8 +33,8 @@ fun CardFeedback(
 ) {
     ElevatedCard(
         modifier = Modifier
-            .width(250.dp)
-            .padding(16.dp),
+            .fillMaxWidth(),
+//            .padding(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
@@ -40,24 +42,26 @@ fun CardFeedback(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .padding(vertical = 10.dp, horizontal = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = stringResource(id = textID),
                 fontWeight = FontWeight.W400,
-                fontSize = 20.sp,
+                fontSize = 25.sp,
                 color = ColorText,
                 modifier = Modifier
                     .padding(bottom = 16.dp)
                     .align(Alignment.CenterHorizontally),
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(20.dp))
             Image(
                 painter = painterResource(id = imageID),
                 contentDescription = "Imagen",
                 modifier = Modifier
-                    .height(200.dp)
+                    .height(300.dp)
                     .fillMaxWidth(),
                 contentScale = ContentScale.Fit
             )

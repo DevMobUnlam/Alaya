@@ -24,4 +24,6 @@
     <string name="title_exit_modal_crisis_handling">¿Seguro que deseas salir?</string>
     <string name="confirm">Sí</string>
     <string name="dismiss">No</string>
+    <string name="Registrar_episodio">Registrar el episodio</string>
+    <string name="registrar_episodio_despues">Lo registro en otro momento</string>
 </resources>
