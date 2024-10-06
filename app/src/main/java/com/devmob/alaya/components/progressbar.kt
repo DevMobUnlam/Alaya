@@ -61,7 +61,7 @@ fun ProgressBarScreen(modifier: Modifier = Modifier) {
     ) {
         SegmentedProgressBar(totalSteps = totalSteps, currentStep = currentStep)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(19.dp))
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(onClick = { if (currentStep > 0) currentStep-- }) {
