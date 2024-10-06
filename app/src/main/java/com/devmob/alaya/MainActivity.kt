@@ -1,17 +1,11 @@
 package com.devmob.alaya
 
 import android.os.Bundle
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.devmob.alaya.components.FabGroup
+import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.ui.theme.AlayaTheme
 import com.devmob.alaya.components.DateTimePicker
 import com.devmob.alaya.components.ProgressBarScreen
