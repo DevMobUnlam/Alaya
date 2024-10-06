@@ -52,7 +52,7 @@ fun SegmentedProgressBar(
 @Composable
 fun ProgressBarScreen(modifier: Modifier = Modifier) {
     var currentStep by remember { mutableStateOf(0) }
-    val totalSteps = 3
+    val totalSteps = 5
 
     Column(
         verticalArrangement = Arrangement.Center,
