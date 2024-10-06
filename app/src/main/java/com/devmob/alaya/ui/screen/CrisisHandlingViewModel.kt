@@ -1,20 +1,42 @@
 package com.devmob.alaya.ui.screen
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.model.StepCrisis
-import kotlinx.coroutines.launch
 
 class CrisisHandlingViewModel : ViewModel() {
 
-    fun getCrisisSteps(): List<StepCrisis> {
+    private var steps by mutableStateOf<List<StepCrisis>>(emptyList())
+
+    private var currentStepIndex by mutableIntStateOf(0)
+
+    val currentStep: StepCrisis
+        get() = steps[currentStepIndex]
+
+    init {
+        fetchCrisisSteps()
+    }
+
+    private fun fetchCrisisSteps() {
         /*viewModelScope.launch {
             consultar al repositorio para obtener los pasos de la crisis
         }*/
-        return listOf(
-            StepCrisis("Paso 1", "Esta descripcion es del paso 1", ""),
-            StepCrisis("Paso 2", "Esta descripcion es del paso 2", ""),
-            StepCrisis("Paso 3", "Esta descripcion es del paso 3", "")
+        steps = listOf(
+            StepCrisis("Controlar la respiración", "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente", "image_step_1"),
+            StepCrisis("Imaginación guiada", "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea", "image_step_2"),
+            StepCrisis("Autoafirmaciones", "Repetir frases:\n" +
+                    "“Soy fuerte y esto pasará”\n" +
+                    "“Tengo el control de mi mente y mi cuerpo” \n" +
+                    "“Me merezco tener alegría y plenitud”", "image_step_3")
         )
+    }
+
+    fun nextStep() {
+        if (currentStepIndex < steps.size - 1) {
+            currentStepIndex++
+        }
     }
 }

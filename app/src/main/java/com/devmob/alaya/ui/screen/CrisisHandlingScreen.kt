@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -31,6 +33,9 @@ import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
+
+    val currentStep = viewModel.currentStep
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +50,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
             modifier = Modifier
                 .size(32.dp)
                 .constrainAs(closeIcon) {
-                    top.linkTo(parent.top, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 12.dp)
                     end.linkTo(parent.end, margin = 16.dp)
                 }
         )
@@ -59,52 +64,70 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel) {
                 .size(32.dp)
                 .clickable { isVolumeUp = !isVolumeUp }
                 .constrainAs(audioIcon) {
-                    top.linkTo(parent.top, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 12.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                 }
         )
 
         Text(
-            text = "Controlar la respiración",
+            text = currentStep.title,
             color = ColorText,
             fontSize = 24.sp,
             fontWeight = Bold,
             modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top, margin = 100.dp)
+                top.linkTo(audioIcon.bottom, margin = 12.dp)
                 start.linkTo(parent.start, margin = 16.dp)
                 end.linkTo(parent.end, margin = 16.dp)
             })
 
+        /* TODO // Descargar imagen desde la URL
+        AsyncImage(
+            model = currentStep.image,
+            contentDescription = null,
+        )*/
+
+
         Image(
-            painter = painterResource(id = R.drawable.feedback_felicitaciones),
+            painter = painterResource(id = getImage(currentStep.image)),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(image) {
-                top.linkTo(title.bottom, margin = 24.dp)
-                start.linkTo(parent.start, margin = 16.dp)
-                end.linkTo(parent.end, margin = 16.dp)
-            }
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .constrainAs(image) {
+                    top.linkTo(title.bottom, margin = 24.dp)
+                }
         )
 
         TextContainer(
-            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
+            currentStep.description,
             modifier = Modifier.constrainAs(description) {
-                top.linkTo(image.bottom, margin = 80.dp)
+                top.linkTo(image.bottom, margin = 24.dp)
                 start.linkTo(parent.start, margin = 16.dp)
                 end.linkTo(parent.end, margin = 16.dp)
             }
         )
 
         Button("Ya me encuentro bien", Modifier.constrainAs(goodButton) {
-            top.linkTo(description.bottom, margin = 48.dp)
+            top.linkTo(description.bottom, margin = 12.dp)
             start.linkTo(parent.start, margin = 16.dp)
         }, ButtonStyle.Outlined, {})
 
         Button("Siguiente", Modifier.constrainAs(nextButton) {
-            top.linkTo(description.bottom, margin = 48.dp)
+            top.linkTo(description.bottom, margin = 12.dp)
             start.linkTo(goodButton.end, margin = 8.dp)
             end.linkTo(parent.end, margin = 16.dp)
-        }, ButtonStyle.Filled, {})
+        }, ButtonStyle.Filled, onClick = { viewModel.nextStep() })
+    }
+}
+
+// TODO // Eliminar esta función luego de implementar la descarga de imágenes
+fun getImage(image: String): Int {
+    return when (image) {
+        "image_step_1" -> return R.drawable.crisis_step_1
+        "image_step_2" -> return R.drawable.crisis_step_2
+        "image_step_3" -> return R.drawable.crisis_step_3
+        else -> 0
     }
 }
 
