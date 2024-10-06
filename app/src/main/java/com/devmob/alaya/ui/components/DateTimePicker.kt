@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
