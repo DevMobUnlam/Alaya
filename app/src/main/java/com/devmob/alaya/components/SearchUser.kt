@@ -47,7 +47,8 @@ fun SearchUser() {
         User("Matías Ramírez", R.drawable.ic_launcher_foreground),
         User("Mónica Fernández", R.drawable.ic_launcher_foreground),
         User("Sergio Suárez", R.drawable.ic_launcher_foreground),
-        User("Valeria Acosta", R.drawable.ic_launcher_foreground)
+        User("Valeria Acosta", R.drawable.ic_launcher_foreground),
+        User("Walter Quiroz", R.drawable.ic_launcher_foreground)
     )
 
     val UsersFilter = Users.filter {
