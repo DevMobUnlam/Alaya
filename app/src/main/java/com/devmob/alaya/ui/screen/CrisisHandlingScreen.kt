@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
+import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
@@ -42,6 +43,8 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val currentStep = viewModel.currentStep
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
+    val totalSteps = viewModel.steps.size
+    val currentStepIndex = viewModel.currentStepIndex
 
     ConstraintLayout(
         modifier = Modifier
@@ -49,6 +52,16 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             .background(ColorWhite)
     ) {
         val (progressBar, audioIcon, closeIcon, image, title, description, nextButton, goodButton) = createRefs()
+
+        SegmentedProgressBar(
+            totalSteps = totalSteps,
+            currentStep = currentStepIndex + 1,
+            modifier = Modifier.constrainAs(progressBar) {
+                top.linkTo(parent.top, margin = 24.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
 
         Icon(
             imageVector = Icons.Default.Close,
@@ -58,7 +71,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 .size(32.dp)
                 .clickable { viewModel.showExitModal() }
                 .constrainAs(closeIcon) {
-                    top.linkTo(parent.top, margin = 12.dp)
+                    top.linkTo(progressBar.bottom, margin = 8.dp)
                     end.linkTo(parent.end, margin = 16.dp)
                 }
         )
@@ -72,7 +85,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 .size(32.dp)
                 .clickable { isVolumeUp = !isVolumeUp }
                 .constrainAs(audioIcon) {
-                    top.linkTo(parent.top, margin = 12.dp)
+                    top.linkTo(progressBar.bottom, margin = 8.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                 }
         )

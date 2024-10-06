@@ -9,11 +9,9 @@ import com.devmob.alaya.domain.model.StepCrisis
 
 class CrisisHandlingViewModel : ViewModel() {
 
-    private var steps by mutableStateOf<List<StepCrisis>>(emptyList())
+    var steps by mutableStateOf<List<StepCrisis>>(emptyList())
 
-    private var currentStepIndex by mutableIntStateOf(0)
-
-
+    var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
 
@@ -25,8 +23,9 @@ class CrisisHandlingViewModel : ViewModel() {
     }
 
     private fun fetchCrisisSteps() {
-        /*viewModelScope.launch {
-            consultar al repositorio para obtener los pasos de la crisis
+        /* TODO // consultar al repositorio para obtener los pasos de la crisis
+        viewModelScope.launch {
+
         }*/
         steps = listOf(
             StepCrisis(
