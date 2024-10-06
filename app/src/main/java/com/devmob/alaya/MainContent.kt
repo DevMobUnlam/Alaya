@@ -26,7 +26,7 @@ fun MainContent(navController: NavHostController) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
-                        ItemMenu(iconType = IconType.PATIENT, route = "nobottom", contentDescription = "boton para el manejo de crisis", order = 2),
+                        ItemMenu(iconType = IconType.PATIENT, route = NavUtils.Routes.Crisis.route, contentDescription = "boton para el manejo de crisis", order = 2),
                         ItemMenu(iconType = IconType.HOME, route = "inicio", contentDescription = "boton de inicio", order = 1),
                     ),
                     navHostController = navController
@@ -36,7 +36,7 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = NavUtils.Routes.Crisis.route,
+            startDestination = NavUtils.Routes.Home.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.Routes.Home.route) {
