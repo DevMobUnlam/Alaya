@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,6 +46,10 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
+
+    BackHandler {
+
+    }
 
     ConstraintLayout(
         modifier = Modifier
