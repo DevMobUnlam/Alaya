@@ -10,16 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.CardFeedback
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
 fun FeedbackScreen(
     feedbackType: FeedbackType,
+    navController: NavHostController,
 ) {
     Column(
         modifier = Modifier
@@ -45,6 +48,7 @@ fun FeedbackScreen(
                     Button(
                         text = "Registrar el episodio",
                         onClick = {
+                            //TODO Navegar a la pantalla Registrar Crisis
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Filled,
@@ -52,7 +56,9 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         text = "Registrar el episodio más tarde",
-                        onClick = {
+                        onClick = {navController.navigate( "home") {
+                            NavUtils.Routes.Home
+                        }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Outlined
@@ -60,7 +66,6 @@ fun FeedbackScreen(
                 }
             }
             FeedbackType.TodoVaAEstarBien -> {
-                // Pantalla de "Todo va a estar bien"
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "¡Todo va a estar bien!",
@@ -77,13 +82,16 @@ fun FeedbackScreen(
                     Button(
                         text = "Mi red de contención",
                         onClick = {
+                            //TODO Navegar a la pantalla de Mi red de Contencion
                         },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
-                        onClick = {
+                        onClick = {navController.navigate( "home") {
+                            NavUtils.Routes.Home
+                        }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         text = "Ir a inicio",

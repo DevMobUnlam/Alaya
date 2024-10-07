@@ -50,7 +50,7 @@ fun MainContent(navController: NavHostController) {
                 val feedbackType = backStackEntry.arguments?.getString("feedbackType")?.let {
                     FeedbackType.valueOf(it)
                 }
-                FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien)
+                FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien,navController)
             }
         }
     }
