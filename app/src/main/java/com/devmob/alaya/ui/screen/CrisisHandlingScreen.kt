@@ -161,13 +161,14 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
             onConfirm = {
                 viewModel.dismissModal()
-                /*navController.navigate( TODO agregar ruta de feedback) {} */
+                navController.navigate("feedback_screen/Felicitaciones")
             },
             onDismiss = {
                 viewModel.dismissModal()
-                /*navController.navigate( TODO agregar ruta de feedback) {} */
+                navController.navigate("feedback_screen/TodoVaAEstarBien")
             }
         )
+
 
         Modal(
             show = shouldShowExitModal,

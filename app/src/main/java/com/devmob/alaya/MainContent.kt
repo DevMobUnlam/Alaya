@@ -7,21 +7,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
-import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.screen.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.CrisisHandlingViewModel
 import com.devmob.alaya.utils.NavUtils
+import com.tuapp.ui.components.FeedbackScreen
 
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
     Scaffold(
         bottomBar = {
-            //condicion para mostrar o no el bottom
-            //agregar a la lista las rutas que no deberian mostrarse!!
             if (currentRoute !in listOf("nobottom", "nobottom2", NavUtils.Routes.Crisis.route)) {
                 BottomBarNavigation(
                     items = listOf(
@@ -44,6 +44,13 @@ fun MainContent(navController: NavHostController) {
             }
             composable(NavUtils.Routes.Crisis.route) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+            }
+
+            composable("feedback_screen/{feedbackType}") { backStackEntry ->
+                val feedbackType = backStackEntry.arguments?.getString("feedbackType")?.let {
+                    FeedbackType.valueOf(it)
+                }
+                FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien)
             }
         }
     }
