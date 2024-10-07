@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.crisis_handling
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
