@@ -52,6 +52,7 @@ import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import android.content.Intent
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun ContactScreen(
@@ -223,9 +224,10 @@ fun EditContactModal(
                 Spacer(modifier = Modifier.height(8.dp))
                 Input(
                     value = phone,
-                    onValueChange = { name = it },
+                    onValueChange = { phone = it },
                     label = "Teléfono",
                     placeholder = "Ingresa el teléfono",
+                    keyboardType = KeyboardType.Phone
                 )
             }
         },
