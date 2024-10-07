@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.R
+import com.devmob.alaya.ui.theme.ColorText
 
 //Sacar dsps de verificar correcto funcionamiento
 data class User (val name: String, val image: Int)
@@ -38,17 +39,16 @@ data class User (val name: String, val image: Int)
 fun SearchUser() {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
     val Users = listOf(
-        User("Ana Pérez", R.drawable.ic_launcher_foreground),
-        User("Brenda Rodríguez", R.drawable.ic_launcher_foreground),
-        User("Claudia García", R.drawable.ic_launcher_foreground),
-        User("Ezequiel Torres", R.drawable.ic_launcher_foreground),
-        User("Federico Álvarez", R.drawable.ic_launcher_foreground),
-        User("Lucía Sánchez", R.drawable.ic_launcher_foreground),
-        User("Matías Ramírez", R.drawable.ic_launcher_foreground),
-        User("Mónica Fernández", R.drawable.ic_launcher_foreground),
-        User("Sergio Suárez", R.drawable.ic_launcher_foreground),
-        User("Valeria Acosta", R.drawable.ic_launcher_foreground),
-        User("Walter Quiroz", R.drawable.ic_launcher_foreground)
+        User("Ana Pérez", R.drawable.ana_perez),
+        User("Brenda Rodríguez", R.drawable.brenda_rodriguez),
+        User("Claudia García", R.drawable.claudia_garcia),
+        User("Ezequiel Torres", R.drawable.ezequiel_torres),
+        User("Federico Álvarez", R.drawable.federico_alvarez),
+        User("Lucía Sánchez", R.drawable.lucia_sanchez),
+        User("Matías Ramírez", R.drawable.matias_ramirez),
+        User("Mónica Fernández", R.drawable.monica_fernandez),
+        User("Sergio Suárez", R.drawable.sergio_suarez),
+        User("Valeria Acosta", R.drawable.valeria_acosta),
     )
 
     val UsersFilter = Users.filter {
@@ -146,7 +146,7 @@ fun UserItem(user: User) {
         Text(
             text = user.name,
             fontSize = 18.sp,
-            color = Color.Blue
+            color = ColorText
         )
     }
 }
