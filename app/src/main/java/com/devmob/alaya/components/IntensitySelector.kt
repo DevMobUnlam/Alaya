@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 
 /**
  * Radiobutton para seleccionar intensidad
@@ -44,50 +45,54 @@ import androidx.compose.ui.unit.sp
  * onIntensityChange - Accion que recibe tipo de Intensidad
  */
 @Composable
-fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity: Intensity) {
+fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity: Intensity, modifier: Modifier = Modifier) {
 
 
 
     var context = LocalContext
 
-    Card(
-        colors = CardDefaults.cardColors(containerColor = LightBlueColor),
-        modifier = Modifier
-            .width(IntrinsicSize.Max)
-            .shadow(elevation = 2.dp, shape = SpeechBubbleShape())
-
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    ConstraintLayout(modifier = modifier){
+        Card(
+            colors = CardDefaults.cardColors(containerColor = LightBlueColor),
             modifier = Modifier
-                .height(IntrinsicSize.Max)
-                .padding(top = 6.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
-        ) {
-            Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText,fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(1.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ){
-                for (i in Intensity.entries) {
-                    OutlinedButton(
-                        modifier= Modifier.size(15.dp),
-                        contentPadding = PaddingValues(0.dp),
-                        onClick = {
-                            onIntensityChange(i)
-                        },
-                        shape = CircleShape,
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = if (i == selectedIntensity) ColorText else LightBlueColor
-                        ),
-                        border = BorderStroke(width = 1.dp, color = ColorText)
-                    ){
+                .width(IntrinsicSize.Max)
+                .shadow(elevation = 2.dp, shape = SpeechBubbleShape())
+
+        ){
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .height(IntrinsicSize.Max)
+                    .padding(top = 6.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
+            ) {
+                Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText,fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(1.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ){
+                    for (i in Intensity.entries) {
+                        OutlinedButton(
+                            modifier= Modifier.size(15.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            onClick = {
+                                onIntensityChange(i)
+                            },
+                            shape = CircleShape,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = if (i == selectedIntensity) ColorText else LightBlueColor
+                            ),
+                            border = BorderStroke(width = 1.dp, color = ColorText)
+                        ){
+
+                        }
 
                     }
-
                 }
             }
         }
     }
+
+
 
 }
 
