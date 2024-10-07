@@ -74,6 +74,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation("io.coil-kt:coil-compose:2.1.0")
 
+    //Mockk
+    testImplementation(libs.mockk)
+
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
@@ -83,4 +86,5 @@ dependencies {
     //LiveData
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01")
+
 }
