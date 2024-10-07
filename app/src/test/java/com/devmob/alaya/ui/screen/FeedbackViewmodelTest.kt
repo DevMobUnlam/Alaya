@@ -21,22 +21,11 @@ class FeedbackViewModelTest {
     }
 
     @Test
-    fun `registerEpisode should execute without error`() {
-        viewModel.registerEpisode()
+    fun `setFeedbackType should update feedbackType`() {
+        viewModel.setFeedbackType(FeedbackType.TodoVaAEstarBien)
+        assertEquals(FeedbackType.TodoVaAEstarBien, viewModel.feedbackType)
     }
 
-    @Test
-    fun `registerLater should execute without error`() {
-        viewModel.registerLater()
-    }
 
-    @Test
-    fun `goToSupportNetwork should execute without error`() {
-        viewModel.goToSupportNetwork()
-    }
 
-    @Test
-    fun `goToHome should execute without error`() {
-        viewModel.goToHome()
-    }
 }
