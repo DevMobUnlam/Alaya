@@ -13,8 +13,8 @@ import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.ContainmentNetwork.AddContactScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.ContactScreen
+import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
+import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
@@ -25,7 +25,7 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
-    val ContainmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val containmentViewModel: ContainmentNetworkViewModel = viewModel()
     val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
 
     Scaffold(
@@ -65,7 +65,7 @@ fun MainContent(navController: NavHostController) {
             }
             composable(NavUtils.Routes.RedDeContencion.route) {
                 ContainmentNetworkScreen(
-                    viewModel = ContainmentViewModel,
+                    viewModel = containmentViewModel,
                     navController = navController
                 )
             }
@@ -74,13 +74,13 @@ fun MainContent(navController: NavHostController) {
                 if (contactId != null) {
                     ContactScreen(
                         contactId = contactId,
-                        viewModel = ContainmentViewModel,
+                        viewModel = containmentViewModel,
                         navController = navController
                     )
                 }
             }
             composable("add_contact") {
-                AddContactScreen(ContainmentViewModel, navController)
+                AddContactScreen(containmentViewModel, navController)
             }
         }
     }

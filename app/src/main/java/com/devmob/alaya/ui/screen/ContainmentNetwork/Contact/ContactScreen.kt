@@ -1,6 +1,5 @@
-package com.devmob.alaya.ui.screen.ContainmentNetwork
+package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.devmob.alaya.domain.model.Contact
-import com.devmob.alaya.ui.components.ContactCard
 import com.devmob.alaya.ui.components.Input
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.theme.ColorText
@@ -51,8 +49,8 @@ import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
-import android.content.Intent
 import androidx.compose.ui.text.input.KeyboardType
+import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 
 @Composable
 fun ContactScreen(
@@ -94,6 +92,7 @@ fun ContactScreen(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }.padding(16.dp),
+                viewModel = ContactViewModel()
             )
 
             Row(

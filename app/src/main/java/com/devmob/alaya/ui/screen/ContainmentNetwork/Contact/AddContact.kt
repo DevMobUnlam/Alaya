@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.ContainmentNetwork
+package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,11 +33,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
+import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 
 @Composable
 fun AddContactScreen(
-        viewModel: ContainmentNetworkViewModel,
-        navController: NavController,
+    viewModel: ContainmentNetworkViewModel,
+    navController: NavController,
 ){
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }

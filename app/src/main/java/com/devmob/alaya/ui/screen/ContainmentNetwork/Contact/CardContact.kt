@@ -1,8 +1,5 @@
-package com.devmob.alaya.ui.components
+package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,8 +39,8 @@ import com.devmob.alaya.ui.theme.ColorText
 
 
 @Composable
-fun ContactCard(contact: Contact,  modifier: Modifier = Modifier) {
-    val context = LocalContext.current;
+fun ContactCard(contact: Contact,  viewModel: ContactViewModel, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -114,7 +111,11 @@ fun ContactCard(contact: Contact,  modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {
+                        val whatsappNumber = viewModel.formatPhoneNumberForWhatsApp(contact.numberPhone)
+                            viewModel.sendWhatsAppMessage(context, whatsappNumber, "Hola, necesito apoyo 😔")
+
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF25D366)
                     ),
@@ -131,7 +132,7 @@ fun ContactCard(contact: Contact,  modifier: Modifier = Modifier) {
                 }
 
                 Button(
-                    onClick = { makeCall(context, contact.numberPhone) },
+                    onClick = { viewModel.makeCall(context, contact.numberPhone) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF34B7F1)
                     ),
@@ -153,9 +154,3 @@ fun ContactCard(contact: Contact,  modifier: Modifier = Modifier) {
     }
 }
 
-private fun makeCall(context: Context, phoneNumber: String) {
-    val intent = Intent(Intent.ACTION_DIAL).apply {
-        data = Uri.parse("tel:$phoneNumber")
-    }
-    context.startActivity(intent)
-}
