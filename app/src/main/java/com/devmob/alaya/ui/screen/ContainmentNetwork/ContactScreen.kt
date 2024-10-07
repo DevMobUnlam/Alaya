@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -40,13 +39,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.devmob.alaya.R
+import com.devmob.alaya.ui.components.Button
+import com.devmob.alaya.ui.components.ButtonStyle
 
 @Composable
 fun ContactScreen(
@@ -59,13 +63,6 @@ fun ContactScreen(
 
     var showDeleteModal by remember { mutableStateOf(false) }
     var showEditModal by remember { mutableStateOf(false) }
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        photoUri = uri
-    }
 
     contact?.let { currentContact ->
         ConstraintLayout(
@@ -73,7 +70,20 @@ fun ContactScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            val (contactCard, actionRow) = createRefs()
+            val (backgroundImage, contactCard, actionRow) = createRefs()
+            Image(
+                painter = painterResource(id = R.drawable.fondo_home),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .constrainAs(backgroundImage) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                contentScale = ContentScale.Crop
+            )
 
             ContactCard(
                 contact = currentContact,
@@ -81,7 +91,7 @@ fun ContactScreen(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                },
+                }.padding(16.dp),
             )
 
             Row(
@@ -91,22 +101,21 @@ fun ContactScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
+                    .padding(16.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(onClick = { showEditModal = true}) {
-                    Text("Editar")
-                }
+                Button(
+                    onClick = { showEditModal = true},
+                    text= "Editar",
+                    style = ButtonStyle.Filled,
+                )
 
                 Button(
                     onClick = { showDeleteModal = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    )
-                ) {
-                    Text("Eliminar")
-                }
-            }
+                    text= "Eliminar",
+                    style = ButtonStyle.Outlined
+                )
         }
 
         Modal(
@@ -136,7 +145,7 @@ fun ContactScreen(
         }
     }
 
-}
+}}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,6 +158,12 @@ fun EditContactModal(
     var name by remember { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.numberPhone) }
     var photoUri by remember { mutableStateOf<Uri?>(null) }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        photoUri = uri
+    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -167,7 +182,10 @@ fun EditContactModal(
             }
         },
         text = {
-            Column {
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ){
                 if (photoUri != null) {
                     Image(
                         painter = rememberImagePainter(photoUri),
@@ -176,6 +194,7 @@ fun EditContactModal(
                             .size(100.dp)
                             .clip(CircleShape)
                             .background(Color.Gray)
+                            .clickable { galleryLauncher.launch("image/*") },
                     )
                 } else if (contact.photo?.isNotEmpty() == true) {
                     Image(
@@ -188,6 +207,7 @@ fun EditContactModal(
                         modifier = Modifier
                             .size(50.dp)
                             .clip(CircleShape)
+                            .clickable { galleryLauncher.launch("image/*") },
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                 }
@@ -211,7 +231,7 @@ fun EditContactModal(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSave(Contact(contact.contactId, name, phone, contact.photo))
+                    onSave(Contact(contact.contactId, name, phone, photoUri?.toString() ?: contact.photo))
                 }
             ) {
                 Text("Guardar")

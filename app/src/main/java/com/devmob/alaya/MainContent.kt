@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.ContainmentNetwork.AddContactScreen
@@ -19,12 +20,23 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.utils.NavUtils
+import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
     val ContainmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
+
     Scaffold(
+        topBar = {
+            if (currentRoute in routesWithAppBar) {
+                val appBarTitle = routeTitleAppBar[currentRoute] ?: " "
+                AppBar(title = appBarTitle) {
+                    navController.popBackStack()
+                }
+            }
+        },
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
