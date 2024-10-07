@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.ContainmentNetwork
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +51,7 @@ import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
+import android.content.Intent
 
 @Composable
 fun ContactScreen(
@@ -243,3 +245,4 @@ fun EditContactModal(
         }
     )
 }
+
