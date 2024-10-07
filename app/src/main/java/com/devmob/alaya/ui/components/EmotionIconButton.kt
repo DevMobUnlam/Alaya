@@ -26,9 +26,10 @@ import com.devmob.alaya.ui.theme.ColorWhite
 fun EmotionIconButton(
     symbol: ImageVector,
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ){
-    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally){
+    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
         FilledIconButton(
             onClick = onClick,
             enabled = true,

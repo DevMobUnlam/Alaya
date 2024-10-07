@@ -1,5 +1,7 @@
 package com.devmob.alaya
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
+import com.devmob.alaya.ui.screen.CrisisRegistrationScreen
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
@@ -99,6 +102,9 @@ fun MainContent(navController: NavHostController) {
                     FeedbackType.valueOf(it)
                 }
                 FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien,navController)
+            }
+            composable(NavUtils.Routes.CrisisRegistration.route) {
+                CrisisRegistrationScreen(onCloseClick = {navController.navigate(NavUtils.Routes.Home.route)})
             }
         }
     }

@@ -35,10 +35,14 @@ import dashedBorder
  * text - El texto va a ir debajo del boton
  */
 @Composable
-fun IconButtonNoFill(text : String, onClick: () -> Unit){
+fun IconButtonNoFill(
+    text : String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(IntrinsicSize.Min)
+        modifier = modifier.width(IntrinsicSize.Min)
     )
     {
         FilledIconButton(

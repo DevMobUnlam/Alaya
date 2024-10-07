@@ -19,7 +19,7 @@ object NavUtils {
         data object RedDeContencion : Routes("red_de_contencion")
         data object AddContact : Routes ("add_contact")
         data object Feedback : Routes("feedback_screen/{feedbackType}")
-
+        data object CrisisRegistration : Routes("crisisregistration")
     }
 
     val routeTitleAppBar = mapOf(
