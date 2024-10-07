@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.Header
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
@@ -126,12 +127,13 @@ fun UserItem(user: User) {
             Text(
                 text = user.name,
                 fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
                 color = ColorText
             )
             Text(
                 text = user.hour,
                 fontSize = 18.sp,
-                color = ColorText
+                color = ColorPrimary
             )
         }
 
