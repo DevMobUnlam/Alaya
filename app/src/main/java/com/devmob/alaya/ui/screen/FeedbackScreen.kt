@@ -72,7 +72,7 @@ fun FeedbackScreen(
                     color = ColorText,
                     fontSize = 35.sp,
                     fontWeight = Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 17.dp)
                 )
                 CardFeedback(
                     textID = R.string.feedback_va_aestarbien,
