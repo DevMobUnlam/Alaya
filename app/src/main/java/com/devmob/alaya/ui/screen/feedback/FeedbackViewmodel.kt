@@ -1,4 +1,4 @@
-package com.devmob.alaya.viewmodel
+package com.devmob.alaya.ui.screen.feedback
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

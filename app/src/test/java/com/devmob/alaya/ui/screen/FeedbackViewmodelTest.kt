@@ -1,7 +1,7 @@
 package com.devmob.alaya.ui.screen
 
-import com.devmob.alaya.viewmodel.FeedbackViewModel
 import com.devmob.alaya.domain.model.FeedbackType
+import com.devmob.alaya.ui.screen.feedback.FeedbackViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

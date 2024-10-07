@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.feedback
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
