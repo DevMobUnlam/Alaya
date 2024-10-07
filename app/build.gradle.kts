@@ -77,4 +77,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
     implementation(libs.androidx.constraint)
     testImplementation(libs.mockk)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockito)
 }

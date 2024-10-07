@@ -13,6 +13,8 @@ navVersion = "2.8.0"
 constraintLayoutVersion = "1.0.1"
 runtimeLivedata = "1.7.3"
 mockkVersion = "1.13.12"
+core-testing = "2.1.0"
+mockito = "4.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +36,8 @@ androidx-navigation = { group = "androidx.navigation", name = "navigation-compos
 androidx-constraint = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayoutVersion"}
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 mockk = {group = "io.mockk", name = "mockk", version.ref = "mockkVersion"}
+core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
