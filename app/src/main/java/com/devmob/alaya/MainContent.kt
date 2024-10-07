@@ -14,8 +14,8 @@ import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.screen.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.CrisisHandlingViewModel
+import com.devmob.alaya.ui.screen.FeedbackScreen
 import com.devmob.alaya.utils.NavUtils
-import com.tuapp.ui.components.FeedbackScreen
 
 @Composable
 fun MainContent(navController: NavHostController) {
