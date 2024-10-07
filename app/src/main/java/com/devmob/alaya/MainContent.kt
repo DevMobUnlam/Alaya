@@ -24,8 +24,8 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-            if (currentRoute !in listOf("login","nobottom", "nobottom2")) {
-            if (currentRoute !in listOf("nobottom", "nobottom2", NavUtils.Routes.Crisis.route)) {
+
+            if (currentRoute !in listOf(NavUtils.Routes.Login.route,"nobottom", "nobottom2", NavUtils.Routes.Crisis.route)) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
@@ -39,14 +39,14 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = "login",
-            startDestination = NavUtils.Routes.Home.route,
+            //startDestination = "login",
+            startDestination = NavUtils.Routes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.Routes.Home.route) {
                 HomeScreen(navController)
             }
-            composable("login"){
+            composable(NavUtils.Routes.Login.route){
                 SreenLogin(navController)
             }
 
