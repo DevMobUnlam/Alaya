@@ -12,6 +12,7 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.ContainmentNetwork.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
@@ -65,6 +66,9 @@ fun MainContent(navController: NavHostController) {
                         navController = navController
                     )
                 }
+            }
+            composable("add_contact") {
+                AddContactScreen(ContainmentViewModel, navController)
             }
         }
     }

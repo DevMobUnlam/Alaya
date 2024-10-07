@@ -17,4 +17,5 @@ object NavUtils {
         data object Crisis : Routes("crisis")
         data object RedDeContencion : Routes("red_de_contencion")
     }
+
 }

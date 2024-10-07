@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.model.Contact
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 
 
 @Composable
-fun ContactCard(name: String, number: String, imageUrl: String, modifier: Modifier = Modifier) {
+fun ContactCard(contact: Contact,  modifier: Modifier = Modifier) {
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -55,10 +58,10 @@ fun ContactCard(name: String, number: String, imageUrl: String, modifier: Modifi
             verticalArrangement = Arrangement.Center,
 
         ) {
-            if (imageUrl != null) {
+            if (contact.photo?.isNotEmpty() == true) {
                 Image(
                     painter = rememberAsyncImagePainter(
-                        model = imageUrl,
+                        model = contact.photo,
                         contentScale = ContentScale.Crop,
                     ),
                     contentScale = ContentScale.Crop,
@@ -68,12 +71,26 @@ fun ContactCard(name: String, number: String, imageUrl: String, modifier: Modifi
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .background(ColorPrimary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = contact.name.take(1).uppercase(),
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = name,
+                text = contact.name,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color= ColorText
@@ -82,7 +99,7 @@ fun ContactCard(name: String, number: String, imageUrl: String, modifier: Modifi
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = number,
+                text = contact.numberPhone,
                 style = MaterialTheme.typography.bodyMedium
             )
 

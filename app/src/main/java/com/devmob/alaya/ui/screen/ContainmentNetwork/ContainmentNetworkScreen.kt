@@ -56,16 +56,15 @@ fun ContainmentNetworkScreen(
         IconButton(
             symbol = Icons.Outlined.Add,
             onClick = {
-
+                navController.navigate("add_contact")
             },
             modifier = Modifier.constrainAs(iconButton) {
                 bottom.linkTo(parent.bottom, margin = 0.dp)
-                end.linkTo(parent.end, margin = 16.dp)
+                end.linkTo(parent.end, margin = 10.dp)
             }
         )
     }
 }
-
 
 @Composable
 fun ContactCard(contact: Contact, onClick: () -> Unit) {

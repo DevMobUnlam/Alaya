@@ -15,8 +15,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,8 +32,21 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.components.ContactCard
+import com.devmob.alaya.ui.components.Input
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.theme.ColorText
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 
 @Composable
 fun ContactScreen(
@@ -48,6 +59,13 @@ fun ContactScreen(
 
     var showDeleteModal by remember { mutableStateOf(false) }
     var showEditModal by remember { mutableStateOf(false) }
+    var photoUri by remember { mutableStateOf<Uri?>(null) }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        photoUri = uri
+    }
 
     contact?.let { currentContact ->
         ConstraintLayout(
@@ -58,14 +76,12 @@ fun ContactScreen(
             val (contactCard, actionRow) = createRefs()
 
             ContactCard(
-                name = currentContact.name,
-                number = currentContact.numberPhone,
-                imageUrl = currentContact.photo,
+                contact = currentContact,
                 modifier = Modifier.constrainAs(contactCard) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }
+                },
             )
 
             Row(
@@ -78,7 +94,7 @@ fun ContactScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button(onClick = { showEditModal = true }) {
+                Button(onClick = { showEditModal = true}) {
                     Text("Editar")
                 }
 
@@ -132,6 +148,7 @@ fun EditContactModal(
 ) {
     var name by remember { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.numberPhone) }
+    var photoUri by remember { mutableStateOf<Uri?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -151,24 +168,43 @@ fun EditContactModal(
         },
         text = {
             Column {
-                TextField(
+                if (photoUri != null) {
+                    Image(
+                        painter = rememberImagePainter(photoUri),
+                        contentDescription = "Imagen de contacto",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .background(Color.Gray)
+                    )
+                } else if (contact.photo?.isNotEmpty() == true) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = contact.photo,
+                            contentScale = ContentScale.Crop,
+                        ),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "Imagen de tarjeta",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Input(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Blue,
-                        unfocusedIndicatorColor = Color.Gray
-                    )
+                    label = "Nombre",
+                    placeholder = "Ingresa el nombre",
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
+                Input(
                     value = phone,
-                    onValueChange = { phone = it },
-                    label = { Text("Número de Teléfono") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Blue,
-                        unfocusedIndicatorColor = Color.Gray
-                    )
+                    onValueChange = { name = it },
+                    label = "Teléfono",
+                    placeholder = "Ingresa el teléfono",
                 )
             }
         },

@@ -40,7 +40,7 @@ fun IconButton(
                 disabledContainerColor = ColorWhite),
             modifier = Modifier.size(80.dp)
         ) {
-            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.75f))
+            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.50f))
         }
         Text(
             text = text,
