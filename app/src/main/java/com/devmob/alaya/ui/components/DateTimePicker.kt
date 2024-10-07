@@ -96,7 +96,7 @@ fun DateTimePicker() {
                         value = dateFormat.format(selectedStartDate),
                         onValueChange = {},
                         label = {
-                            Text(text = "Inicio (Fecha)", color = Color(0xFF2E4D83)) // Color para la etiqueta
+                            Text(text = "Inicio (Fecha)", color = Color(0xFF2E4D83))
                         },
                         readOnly = true,
                         trailingIcon = {
@@ -104,7 +104,7 @@ fun DateTimePicker() {
                                 Icon(
                                     imageVector = Icons.Default.CalendarToday,
                                     contentDescription = "Select Date",
-                                    tint = Color(0xFF2E4D83) // Color para el icono
+                                    tint = Color(0xFF2E4D83)
                                 )
                             }
                         },
@@ -112,7 +112,7 @@ fun DateTimePicker() {
                             .fillMaxWidth()
                             .clickable { datePickerDialogStart.show() },
                         shape = RoundedCornerShape(50),
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83)) // Color para el texto
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83))
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -121,7 +121,7 @@ fun DateTimePicker() {
                         value = timeFormat.format(selectedStartTime),
                         onValueChange = {},
                         label = {
-                            Text(text = "Inicio (Hora)", color = Color(0xFF2E4D83)) // Color para la etiqueta
+                            Text(text = "Inicio (Hora)", color = Color(0xFF2E4D83))
                         },
                         readOnly = true,
                         trailingIcon = {
@@ -129,7 +129,7 @@ fun DateTimePicker() {
                                 Icon(
                                     imageVector = Icons.Default.AccessTime,
                                     contentDescription = "Select Time",
-                                    tint = Color(0xFF2E4D83) // Color para el icono
+                                    tint = Color(0xFF2E4D83)
                                 )
                             }
                         },
@@ -137,7 +137,7 @@ fun DateTimePicker() {
                             .fillMaxWidth()
                             .clickable { timePickerDialogStart.show() },
                         shape = RoundedCornerShape(50),
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83)) // Color para el texto
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83))
                     )
                 }
 
@@ -148,7 +148,7 @@ fun DateTimePicker() {
                         value = dateFormat.format(selectedEndDate),
                         onValueChange = {},
                         label = {
-                            Text(text = "Fin (Fecha)", color = Color(0xFF2E4D83)) // Color para la etiqueta
+                            Text(text = "Fin (Fecha)", color = Color(0xFF2E4D83))
                         },
                         readOnly = true,
                         trailingIcon = {
@@ -156,7 +156,7 @@ fun DateTimePicker() {
                                 Icon(
                                     imageVector = Icons.Default.CalendarToday,
                                     contentDescription = "Select Date",
-                                    tint = Color(0xFF2E4D83) // Color para el icono
+                                    tint = Color(0xFF2E4D83)
                                 )
                             }
                         },
@@ -164,7 +164,7 @@ fun DateTimePicker() {
                             .fillMaxWidth()
                             .clickable { datePickerDialogEnd.show() },
                         shape = RoundedCornerShape(50),
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83)) // Color para el texto
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83))
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -173,7 +173,7 @@ fun DateTimePicker() {
                         value = timeFormat.format(selectedEndTime),
                         onValueChange = {},
                         label = {
-                            Text(text = "Fin (Hora)", color = Color(0xFF2E4D83)) // Color para la etiqueta
+                            Text(text = "Fin (Hora)", color = Color(0xFF2E4D83))
                         },
                         readOnly = true,
                         trailingIcon = {
@@ -181,7 +181,7 @@ fun DateTimePicker() {
                                 Icon(
                                     imageVector = Icons.Default.AccessTime,
                                     contentDescription = "Select Time",
-                                    tint = Color(0xFF2E4D83) // Color para el icono
+                                    tint = Color(0xFF2E4D83)
                                 )
                             }
                         },
@@ -189,7 +189,7 @@ fun DateTimePicker() {
                             .fillMaxWidth()
                             .clickable { timePickerDialogEnd.show() },
                         shape = RoundedCornerShape(50),
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83)) // Color para el texto
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF2E4D83))
                     )
                 }
             }

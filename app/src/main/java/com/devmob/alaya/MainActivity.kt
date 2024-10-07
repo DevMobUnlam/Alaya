@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.devmob.alaya.ui.components.DateTimePicker
 import com.devmob.alaya.ui.theme.AlayaTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,12 +19,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AlayaTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                       name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-                DateTimePicker()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                       name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
@@ -45,4 +43,5 @@ fun GreetingPreview() {
     AlayaTheme {
         Greeting("Android!")
     }
+}
 }
