@@ -32,33 +32,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.Header
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.viewmodel.ProfessionalHomeViewModel
 
 @Composable
-fun ProfessionalHomeScreen(navController: NavController) {
-    val users = listOf(
-        User("Ana Pérez", R.drawable.ic_launcher_foreground,"08:30"),
-        User("Brenda Rodríguez", R.drawable.ic_launcher_foreground,"09:30"),
-        User("Claudia García", R.drawable.ic_launcher_foreground,"10:30"),
-        User("Ezequiel Torres", R.drawable.ic_launcher_foreground,"11:30"),
-        User("Federico Álvarez", R.drawable.ic_launcher_foreground,"12:30"),
-        User("Lucía Sánchez", R.drawable.ic_launcher_foreground,"13:30"),
-        User("Matías Ramírez", R.drawable.ic_launcher_foreground,"15:00"),
-        User("Mónica Fernández", R.drawable.ic_launcher_foreground,"16:00"),
-        User("Sergio Suárez", R.drawable.ic_launcher_foreground,"17:00"),
-        User("Valeria Acosta", R.drawable.ic_launcher_foreground,"18:30"),
-        User("Walter Quiroz", R.drawable.ic_launcher_foreground,"19:30")
-    )
-
+fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Header("Bren")  //Obtener nombre del viewmodel
+        Header(viewModel.nameProfessional)  //Obtener nombre del viewmodel
         Spacer(modifier = Modifier.width(16.dp))
         CardContainer(
             modifier = Modifier.fillMaxHeight(),
@@ -96,7 +82,7 @@ fun ProfessionalHomeScreen(navController: NavController) {
                     LazyColumn(
                         modifier = Modifier.wrapContentHeight()
                     ) {
-                        items(users) { user ->
+                        items(viewModel.users) { user ->
                             UserItem(user)
                         }
                     }
@@ -146,5 +132,5 @@ data class User(val name: String, val image: Int, val hour: String)
 @Composable
 fun PreviewProfessionalHomeScreen() {
     val navController = rememberNavController()
-    ProfessionalHomeScreen(navController)
+    ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
 }
