@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorPrimary
@@ -36,7 +37,7 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 
 
 @Composable
-fun FabGroup(){
+fun FabGroup(modifier: Modifier = Modifier){
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -48,7 +49,7 @@ fun FabGroup(){
         Column(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(end = 20.dp, bottom = 70.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             if (expanded) {
                 FabOptionWithText(

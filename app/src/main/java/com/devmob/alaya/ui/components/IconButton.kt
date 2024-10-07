@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.FilledIconButton
@@ -24,10 +25,11 @@ import com.devmob.alaya.ui.theme.ColorWhite
 @Composable
 fun IconButton(
     symbol: ImageVector,
-    text: String,
-    onClick: () -> Unit
+    text: String = "",
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ){
-    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally){
+    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
         FilledIconButton(
             onClick = onClick,
             enabled = true,
@@ -36,6 +38,7 @@ fun IconButton(
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite),
+            modifier = Modifier.size(80.dp)
         ) {
             Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.75f))
         }
