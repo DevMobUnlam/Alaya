@@ -62,8 +62,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation)
-    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,4 +74,13 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation("io.coil-kt:coil-compose:2.1.0")
 
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation ("com.google.firebase:firebase-auth-ktx")
+
+    //LiveData
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01")
 }
