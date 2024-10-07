@@ -15,12 +15,13 @@ import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
+import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
-    val noAppBarRoutes = listOf("home")
     val ContainmentViewModel: ContainmentNetworkViewModel = viewModel()
     Scaffold(
         bottomBar = {
@@ -30,39 +31,43 @@ fun MainContent(navController: NavHostController) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
-                        ItemMenu(iconType = IconType.PATIENT, route = "nobottom", contentDescription = "boton para el manejo de crisis", order = 2),
-                        ItemMenu(iconType = IconType.HOME, route = "inicio", contentDescription = "boton de inicio", order = 1),
+                        ItemMenu(iconType = IconType.PATIENT, route = NavUtils.Routes.Crisis.route, contentDescription = "boton para el manejo de crisis", order = 2),
+                        ItemMenu(iconType = IconType.HOME, route = NavUtils.Routes.Home.route, contentDescription = "boton de inicio", order = 1),
                     ),
                     navHostController = navController
                 )
             }
         }
-    )
-        { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = "home",
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable("home") {
-                    HomeScreen(navController)
-                }
-                composable("red_de_contencion") {
-                    ContainmentNetworkScreen(
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = NavUtils.Routes.Home.route,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            composable(NavUtils.Routes.Home.route) {
+                HomeScreen(navController)
+            }
+            composable(NavUtils.Routes.Crisis.route) {
+                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+            }
+            composable(NavUtils.Routes.RedDeContencion.route) {
+                ContainmentNetworkScreen(
+                    viewModel = ContainmentViewModel,
+                    navController = navController
+                )
+            }
+            composable("contact_detail/{contactId}") { backStackEntry ->
+                val contactId = backStackEntry.arguments?.getString("contactId")
+                if (contactId != null) {
+                    ContactScreen(
+                        contactId = contactId,
                         viewModel = ContainmentViewModel,
                         navController = navController
                     )
                 }
-
-                composable("contact_detail/{contactId}") { backStackEntry ->
-                    val contactId = backStackEntry.arguments?.getString("contactId")
-                        if (contactId != null) {
-                            ContactScreen(
-                                contactId = contactId,
-                                viewModel = ContainmentViewModel,
-                                navController = navController
-                            )
-                    }
-                }
+            }
+        }
     }
-}}
+}
+
+
