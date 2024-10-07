@@ -22,7 +22,7 @@ fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
     Scaffold(
         bottomBar = {
-            if (currentRoute !in listOf("nobottom", "nobottom2", NavUtils.Routes.Crisis.route)) {
+            if (currentRoute !in listOf("nobottom", "nobottom2", NavUtils.Routes.Crisis.route, NavUtils.Routes.Feedback.route)) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
