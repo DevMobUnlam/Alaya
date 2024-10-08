@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -17,11 +18,12 @@ import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun TextContainer(text: String) {
-    Column(modifier = Modifier
+fun TextContainer(text: String, modifier: Modifier) {
+    Column(modifier = modifier
         .fillMaxWidth()
         .padding(16.dp)
         .background(ColorQuaternary.copy(alpha = 0.35f), RoundedCornerShape(8.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             Text(
                 text = text,
@@ -38,5 +40,5 @@ fun TextContainer(text: String) {
 @Preview(showBackground = true)
 @Composable
 fun TextContainerPreview() {
-    TextContainer("Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente.")
+    TextContainer("Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente.", Modifier)
 }
