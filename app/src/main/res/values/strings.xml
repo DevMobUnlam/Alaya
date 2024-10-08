@@ -24,4 +24,5 @@
     <string name="title_exit_modal_crisis_handling">¿Seguro que deseas salir?</string>
     <string name="confirm">Sí</string>
     <string name="dismiss">No</string>
+    <string name="intensity_selector_text">Intensidad</string>
 </resources>
