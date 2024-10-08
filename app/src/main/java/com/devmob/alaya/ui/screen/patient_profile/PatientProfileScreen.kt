@@ -12,14 +12,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubbleOutline
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -88,7 +87,12 @@ fun PatientProfileScreen(navController: NavController) {
             containerColor = ColorWhite
         )
 
-        ElevatedCard(
+        Card(
+            colors = CardDefaults.cardColors(containerColor = ColorWhite),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 9.dp
+            ),
             modifier = Modifier
                 .constrainAs(summaryCard) {
                     top.linkTo(contactButton.bottom, margin = 16.dp)
@@ -97,12 +101,7 @@ fun PatientProfileScreen(navController: NavController) {
                 }
                 .fillMaxWidth()
                 .padding(16.dp)
-                .background(color = ColorWhite),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White,
-            ),
-            elevation = CardDefaults.cardElevation(8.dp)) {
+                .background(color = ColorWhite)) {
 
             Row(
                 modifier = Modifier
@@ -113,7 +112,7 @@ fun PatientProfileScreen(navController: NavController) {
                 Text(
                     stringResource(R.string.summary_text_button_professional),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = ColorText,
                 )
