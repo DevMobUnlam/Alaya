@@ -12,46 +12,51 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class LoginViewModel: ViewModel(){
+class LoginViewModel : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth
-    private val _loading = MutableLiveData (false)
+    private val _loading = MutableLiveData(false)
 
-    fun singInWithEmailAndPassword (email: String, password: String, HomeScreen: ()-> Unit) = viewModelScope.launch {
-        try {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener {task->
-                    if (task.isSuccessful){
-                        Log.d("Login", "singInWithEmailAndPassword Logeuado")
-                        HomeScreen()
-                    }
-                    else{
-                        Log.d("login", "singInWinthEmailAndPassword: ${task.result.toString()}")
-                        HomeScreen()
+    fun singInWithEmailAndPassword(email: String, password: String, homePatient: () -> Unit, homeProfessional: () -> Unit) =
+        viewModelScope.launch {
+            try {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("Login", "singInWithEmailAndPassword Logeuado")
+                            //TODO Cambiar este if por rol del usuario
+                            if (email == "e.torres.baquedano@gmail.com"){
+                                homePatient()
+                            } else {
+                                homeProfessional()
+                            }
 
+                        } else {
+                            Log.d("login", "singInWinthEmailAndPassword: ${task.result.toString()}")
+                        }
+                    }.addOnFailureListener {task ->
+                        Log.d("login", "singInWinthEmailAndPassword: addOnFailureListener")
+                        homePatient()
                     }
-                }
+            } catch (ex: Exception) {
+                Log.d("login", "singInWinthEmailAndPassword: ${ex.message}")
+            }
         }
-        catch (ex: Exception){
-            Log.d("login", "singInWinthEmailAndPassword: ${ex.message}")
-        }
-    }
 
     fun createUserWithEmailAndPassword(
         email: String,
         password: String,
         home: () -> Unit
-    ){
-        if(_loading.value==false){
-            _loading.value=true
-            auth.createUserWithEmailAndPassword(email,password)
-                .addOnCompleteListener { task->
-                    if (task.isSuccessful){
+    ) {
+        if (_loading.value == false) {
+            _loading.value = true
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         val displayName =
                             task.result.user?.email?.split("@")?.get(0)
                         createUser(displayName)
                         home()
-                    }
-                    else{
+                    } else {
                         Log.d("Registro", "CreateWithEmailAndPassword: ${task.result.toString()}")
                     }
                     _loading.value = false

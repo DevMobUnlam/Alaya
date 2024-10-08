@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,16 +33,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.devmob.alaya.MainContent
-import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.utils.NavUtils
+
 
 @Composable
 fun SreenLogin(navController: NavController,
-               viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-               ){
+               viewModel: LoginViewModel){
 
     val  showLoginForm = rememberSaveable {
         mutableStateOf(true)
@@ -58,19 +53,24 @@ fun SreenLogin(navController: NavController,
         {
             if (showLoginForm.value) {
                 Text(text = "Iniciar sesion")
-                UserForm (
-                    isCreateAccount = false
-                ){
+                UserForm (isCreateAccount = false){
                     email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password){
-                        //Ruta para ir a la Home cuando el login es OK
+                    viewModel.singInWithEmailAndPassword(email, password,{
+                        //Ruta para ir a la Home cuando el login es paciente
                         navController.navigate(NavUtils.Routes.Home.route) {
                             popUpTo(NavUtils.Routes.Home.route) {
                                 inclusive = true
                             }
                         }
-                    }
+                    }, {//Ruta para ir a la Home cuando el login es profesional
+                        //TODO cambiar ruta a professional
+                        navController.navigate(NavUtils.Routes.Crisis.route) {
+                            popUpTo(NavUtils.Routes.Crisis.route) {
+                                inclusive = true
+                            }
+                        }
+                    })
                 }
             }
             else{
@@ -81,7 +81,12 @@ fun SreenLogin(navController: NavController,
                     email, password ->
                     Log.d("Logeado", "Creando cuenta con $email y $password")
                     viewModel.createUserWithEmailAndPassword(email,password){
-                      //Falta agregar la ruta de nav
+                      //Va directo al Home cuando creás una cuenta válida
+                        navController.navigate(NavUtils.Routes.Home.route) {
+                            popUpTo(NavUtils.Routes.Home.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
 

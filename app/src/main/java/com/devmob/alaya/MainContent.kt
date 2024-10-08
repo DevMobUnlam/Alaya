@@ -15,6 +15,7 @@ import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.login.SreenLogin
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
+import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -47,7 +48,7 @@ fun MainContent(navController: NavHostController) {
                 HomeScreen(navController)
             }
             composable(NavUtils.Routes.Login.route){
-                SreenLogin(navController)
+                SreenLogin(navController, LoginViewModel())
             }
 
             composable(NavUtils.Routes.Crisis.route) {
