@@ -48,7 +48,7 @@ fun MainContent(navController: NavHostController) {
             composable(NavUtils.Routes.Crisis.route) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
             }
-            composable("patient_profile"){
+            composable(NavUtils.Routes.PatientProfile.route){
                 PatientProfileScreen(navController)
             }
         }
