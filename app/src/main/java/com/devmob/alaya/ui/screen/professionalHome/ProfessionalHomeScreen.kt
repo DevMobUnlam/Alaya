@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.professionalHome
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -37,14 +37,13 @@ import com.devmob.alaya.ui.components.Header
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.viewmodel.ProfessionalHomeViewModel
 
 @Composable
 fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: NavController) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Header(viewModel.nameProfessional)  //Obtener nombre del viewmodel
+        Header(viewModel.nameProfessional)
         Spacer(modifier = Modifier.width(16.dp))
         CardContainer(
             modifier = Modifier.fillMaxHeight(),

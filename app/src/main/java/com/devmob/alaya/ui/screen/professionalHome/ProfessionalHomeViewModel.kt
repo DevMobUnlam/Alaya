@@ -1,11 +1,10 @@
-package com.devmob.alaya.ui.viewmodel
+package com.devmob.alaya.ui.screen.professionalHome
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.devmob.alaya.R
-import com.devmob.alaya.ui.screen.User
 
 class ProfessionalHomeViewModel : ViewModel() {
     var nameProfessional by mutableStateOf("")
