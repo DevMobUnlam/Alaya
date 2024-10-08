@@ -55,7 +55,7 @@ fun IconButtonNoFill(
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite
             ),
-            modifier = Modifier.dashedBorder(
+            modifier = modifier.dashedBorder(
                 color = ColorPrimary,
                 shape = CircleShape,
                 strokeWidth = 1.dp,
@@ -70,9 +70,10 @@ fun IconButtonNoFill(
             modifier = Modifier.fillMaxWidth(),
             text = text,
             color = ColorText,
-            fontSize = 10.sp,
-            lineHeight = 10.sp,
+            fontSize = 13.sp,
+            lineHeight = 13.sp,
             textAlign = TextAlign.Center,
+            maxLines = 3
         )
     }
 }

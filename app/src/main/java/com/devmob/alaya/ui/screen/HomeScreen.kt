@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.components.Card
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
@@ -112,7 +113,7 @@ fun HomeScreen(navController: NavController) {
             Card(
                 title = "Registro de crisis",
                 subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
-                onClick = { },
+                onClick = { navController.navigate(NavUtils.Routes.CrisisRegistration.route)},
                 leftIcon = Icons.Outlined.Mood,
                 rightIcon = Icons.Filled.ArrowForwardIos,
                 leftIconBitmap = BitmapFactory.decodeResource(

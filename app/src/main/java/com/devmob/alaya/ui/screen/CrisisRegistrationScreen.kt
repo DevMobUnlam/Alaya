@@ -1,23 +1,16 @@
 package com.devmob.alaya.ui.screen
 
-import android.graphics.fonts.FontStyle
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,32 +22,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
-import com.devmob.alaya.ui.components.EmotionIconButton
-import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.theme.ColorWhite
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material.icons.filled.SportsBar
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.outlined.Air
-import androidx.compose.material.icons.outlined.RemoveRedEye
+import androidx.compose.material.icons.outlined.Preview
+import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material.icons.outlined.SelfImprovement
-import androidx.compose.material.icons.outlined.SentimentDissatisfied
 import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.vectorResource
@@ -62,134 +52,105 @@ import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.ui.components.Modal
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel = viewModel(),
-    onCloseClick: () -> Unit)
-{
+    onClose: () -> Unit) {
+
     val screenState = viewModel.screenState.observeAsState()
+    val shouldShowExitModal = viewModel.shouldShowExitModal
+    var messageTextSize = 30.sp
+    val horizontalPadding = 15.dp
+    var shouldShowGridList by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = horizontalPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()
-        .background(ColorWhite)) {
-        val (progressBar,message,startingDate, closeIcon, startingTime,endDate, endTime, contentBox,addNewIcon, backArrow, forwardArrow) = createRefs()
         SegmentedProgressBar(
             totalSteps = screenState.value!!.totalSteps,
-            currentStep = screenState.value!!.currentSteps,
-            modifier = Modifier.constrainAs(progressBar){
-                top.linkTo(parent.top, margin = 15.dp)
-            }
+            currentStep = screenState.value!!.currentStep,
         )
 
         Icon(
             Icons.Default.Close,
             contentDescription = "Close",
             tint = ColorGray,
-            modifier = Modifier.size(25.dp).constrainAs(closeIcon){
-                top.linkTo(progressBar.bottom,margin = 15.dp)
-                end.linkTo(parent.end, margin = 15.dp)
-            }.clickable {
-                viewModel.cleanState()
-                onCloseClick()
-            }
+            modifier = Modifier
+                .size(32.dp)
+                .align(Alignment.End)
+                .clickable {
+                    viewModel.showExitModal()
+                }
         )
 
-        when(screenState.value!!.currentSteps){
-            1 -> {
-                Text(stringResource(
-                R.string.start_question),
-                fontSize = 30.sp,
+        AnimatedContent(targetState = screenState.value!!.currentStep) {
+            var screenMessage = when (it) {
+                1 -> stringResource(R.string.start_question)
+                2 -> "¿Donde estabas?"
+                3 -> "¿Qué sensaciones\n corporales sentiste?"
+                4 -> "¿Que emociones sentiste?"
+                5 -> "Qué herramientas usaste\npara calmarte?"
+                else -> "¿Querés agregar algo más?"
+            }.toString()
+
+            Text(
+                text = screenMessage,
+                fontSize = messageTextSize,
                 color = ColorText,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.constrainAs(message) {
-                    top.linkTo(progressBar.bottom, margin = 18.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    }
+                lineHeight = 30.sp,
+                modifier = Modifier
+                    .padding(15.dp)
                 )
-
-
-            }
-            2 -> {
-
-                var shouldShowGridList by remember{mutableStateOf(false)}
-
-                Text(text = "¿Donde estabas?",
-                    fontSize = 30.sp,
-                    color = ColorText,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.constrainAs(message) {
-                        top.linkTo(progressBar.bottom, margin = 18.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                )
-
-                LazyVerticalGrid(
-                    contentPadding = PaddingValues(5.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    columns = GridCells.Fixed(3)
-                ) {
-                    viewModel.screenState.value?.placeList?.let {
-                        items(it){place ->
-                            EmotionIconButton(text = place.name, symbol = place.icon, onClick = {})
-                        }
-
-                    }
-
-                }
-
-                IconButtonNoFill(text = "Otra ubicación", onClick = {shouldShowGridList = !shouldShowGridList})
-                AnimatedVisibility(visible = shouldShowGridList) {
-                    LazyVerticalGrid(
-                        contentPadding = PaddingValues(5.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        columns = GridCells.Fixed(3)
-                    ) {
-                        GridElementsRepository.returnAvailablePlaces().let{
-                            items(it){ place ->
-                                EmotionIconButton(text = place.name, symbol = place.icon, onClick = {})
-                            }
-                        }
-
-                    }
-                }
-            }
-            3 -> {}
-            4 -> {}
-            5 -> {}
-            6 -> {}
-        }
-
-        Icon(
-            Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
-            tint = ColorPrimary,
-            modifier = Modifier.size(50.dp).constrainAs(backArrow){
-                start.linkTo(parent.start, margin = 25.dp)
-                bottom.linkTo(parent.bottom, margin = 25.dp)
-            }
-        )
-
-        Icon(
-            Icons.AutoMirrored.Filled.ArrowForward,
-            contentDescription = "Back",
-            tint = ColorPrimary,
-            modifier = Modifier.size(50.dp).constrainAs(forwardArrow){
-                end.linkTo(parent.end, margin = 25.dp)
-                bottom.linkTo(parent.bottom, margin = 25.dp)
-            }
-        )
-
 
     }
 
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
+                tint = ColorPrimary,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clickable {
+                        if (screenState.value?.currentStep != 1) {
+                            viewModel.goOneStepBack()
+                        }
 
+                    }
+            )
+
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowForward,
+                contentDescription = "Forward",
+                tint = ColorPrimary,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clickable {
+                        viewModel.goOneStepForward()
+                    }
+            )
+
+        Modal(
+            show = shouldShowExitModal,
+            stringResource(R.string.title_exit_modal_crisis_handling),
+            primaryButtonText = stringResource(R.string.confirm),
+            secondaryButtonText = stringResource(R.string.dismiss),
+            onConfirm = {
+                onClose()
+                viewModel.cleanState()
+            },
+            onDismiss = { viewModel.dismissExitModal() })
+
+
+    }
 
 }
 
@@ -198,7 +159,7 @@ object GridElementsRepository{
         return listOf(
             CrisisPlace(name = "Casa", icon = Icons.Filled.Home),
             CrisisPlace(name = "Trabajo", icon = Icons.Filled.Work),
-            CrisisPlace(name = "Gymnasio", icon = Icons.Filled.SportsBar),
+            CrisisPlace(name = "Bar", icon = Icons.Filled.SportsBar),
             CrisisPlace(name = "Universidad", icon = Icons.Filled.School),
         )
     }
@@ -215,18 +176,17 @@ object GridElementsRepository{
     @Composable
     fun returnAvailableTools(): List<CrisisTool>{
         return listOf(
-            CrisisTool(name = "Meditación",icon = Icons.Outlined.SelfImprovement),
+            CrisisTool(name = "Imaginacion guiada",icon = Icons.Outlined.Preview),
             CrisisTool(name = "Respiracion",icon = Icons.Outlined.Air),
-            CrisisTool(name = "Cerrar los ojos",icon = ImageVector.vectorResource(R.drawable.domino_mask)),
+            CrisisTool(name = "Autoafirmaciones",icon = Icons.Outlined.Psychology),
         )
     }
 
-    @Composable
     fun returnAvailableBodySensations(): List<CrisisBodySensation>{
         return listOf(
             CrisisBodySensation(name = "Mareos",icon = Icons.Filled.Cached, intensity = "Baja"),
             CrisisBodySensation(name = "Temblores",icon = Icons.Filled.Sensors, intensity = "Baja"),
-            CrisisBodySensation(name = "Palpitaciones",icon = ImageVector.vectorResource(R.drawable.vital_signs), intensity = "Baja")
+            CrisisBodySensation(name = "Palpitaciones",icon = Icons.Filled.MonitorHeart, intensity = "Baja")
         )
     }
 }
@@ -235,5 +195,5 @@ object GridElementsRepository{
 @Preview
 @Composable
 fun CrisisRegistrationScreenPreview(){
-    CrisisRegistrationScreen(onCloseClick = {})
+    CrisisRegistrationScreen(onClose = {})
 }

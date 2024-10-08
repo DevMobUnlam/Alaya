@@ -104,7 +104,11 @@ fun MainContent(navController: NavHostController) {
                 FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien,navController)
             }
             composable(NavUtils.Routes.CrisisRegistration.route) {
-                CrisisRegistrationScreen(onCloseClick = {navController.navigate(NavUtils.Routes.Home.route)})
+                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
+                    popUpTo(NavUtils.Routes.Home.route) {
+                        inclusive = true
+                    }
+                }})
             }
         }
     }
