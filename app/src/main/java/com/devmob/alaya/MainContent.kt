@@ -40,7 +40,7 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-            if (currentRoute !in listOf("nobottom", "nobottom2")) {
+            if (currentRoute !in listOf(NavUtils.Routes.Crisis.route)) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
