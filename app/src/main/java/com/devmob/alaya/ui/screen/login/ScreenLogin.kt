@@ -39,6 +39,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.MainContent
 import com.devmob.alaya.ui.screen.HomeScreen
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun SreenLogin(navController: NavController,
@@ -63,7 +64,12 @@ fun SreenLogin(navController: NavController,
                     email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
                     viewModel.singInWithEmailAndPassword(email, password){
-                        //Falta agregar la ruta de nav para cuando es OK
+                        //Ruta para ir a la Home cuando el login es OK
+                        navController.navigate(NavUtils.Routes.Home.route) {
+                            popUpTo(NavUtils.Routes.Home.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }

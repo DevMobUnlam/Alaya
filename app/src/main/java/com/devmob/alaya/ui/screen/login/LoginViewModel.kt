@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.ui.screen.HomeScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -15,16 +16,18 @@ class LoginViewModel: ViewModel(){
     private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData (false)
 
-    fun singInWithEmailAndPassword (email: String, password: String, home: ()-> Unit) = viewModelScope.launch {
+    fun singInWithEmailAndPassword (email: String, password: String, HomeScreen: ()-> Unit) = viewModelScope.launch {
         try {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {task->
                     if (task.isSuccessful){
                         Log.d("Login", "singInWithEmailAndPassword Logeuado")
-                        home()
+                        HomeScreen()
                     }
                     else{
                         Log.d("login", "singInWinthEmailAndPassword: ${task.result.toString()}")
+                        HomeScreen()
+
                     }
                 }
         }
