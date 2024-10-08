@@ -13,8 +13,6 @@ import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
-import com.devmob.alaya.ui.screen.CrisisHandlingScreen
-import com.devmob.alaya.ui.screen.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.utils.NavUtils
 
