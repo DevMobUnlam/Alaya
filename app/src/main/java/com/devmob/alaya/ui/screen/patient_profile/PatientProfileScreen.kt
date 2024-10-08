@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,7 +76,7 @@ fun PatientProfileScreen(navController: NavController) {
             })
 
         Button(
-            "Enviar mensaje",
+            stringResource(R.string.send_message),
             Modifier.constrainAs(contactButton) {
                 top.linkTo(header.bottom, margin = 4.dp)
                 start.linkTo(header.start)
@@ -110,7 +111,7 @@ fun PatientProfileScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Resumen semanal",
+                    stringResource(R.string.summary_text_button_professional),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center,
@@ -120,7 +121,7 @@ fun PatientProfileScreen(navController: NavController) {
         }
 
         Button(
-            "Configurar tratamientos",
+            stringResource(R.string.treatment_text_button_professional),
             Modifier.constrainAs(treatmentButton) {
                 start.linkTo(parent.start)
                 top.linkTo(summaryCard.bottom, margin = 16.dp)
@@ -132,7 +133,7 @@ fun PatientProfileScreen(navController: NavController) {
         )
 
         Button(
-            "Programar próxima sesión",
+            stringResource(R.string.session_text_button_professional),
             Modifier.constrainAs(sessionButton) {
                 start.linkTo(parent.start)
                 top.linkTo(treatmentButton.bottom, margin = 16.dp)

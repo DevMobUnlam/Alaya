@@ -24,4 +24,8 @@
     <string name="title_exit_modal_crisis_handling">¿Seguro que deseas salir?</string>
     <string name="confirm">Sí</string>
     <string name="dismiss">No</string>
+    <string name="send_message">Enviar mensaje</string>
+    <string name="treatment_text_button_professional">Configurar tratamientos</string>
+    <string name="summary_text_button_professional">Resumen semanal</string>
+    <string name="session_text_button_professional">Programar próxima sesión</string>
 </resources>
