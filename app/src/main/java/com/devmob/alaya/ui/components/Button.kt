@@ -1,5 +1,4 @@
 package com.devmob.alaya.ui.components
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun Button (
@@ -29,6 +29,7 @@ fun Button (
     modifier: Modifier = Modifier,
     style: ButtonStyle = ButtonStyle.Filled,
     onClick: () -> Unit,
+    containerColor: Color? = null,
     icon: ImageVector? = null //ver bien como vamos a manejar los iconos
 ) {
     when (style) {
@@ -44,7 +45,7 @@ fun Button (
         ButtonStyle.Outlined -> {
             OutlinedButton(
                 onClick = onClick,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorPrimary),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorPrimary, containerColor = containerColor ?: Color.Unspecified),
                 border = BorderStroke(1.dp, ColorPrimary),
                 modifier = modifier
             ) {
@@ -54,7 +55,7 @@ fun Button (
         ButtonStyle.OutlinedWithIcon -> {
             OutlinedButton(
                 onClick = onClick,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorPrimary),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = ColorPrimary, containerColor = containerColor ?: Color.Unspecified),
                 border = BorderStroke(1.dp, ColorPrimary),
                 modifier = modifier
             ) {

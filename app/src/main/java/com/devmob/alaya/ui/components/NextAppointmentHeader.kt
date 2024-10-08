@@ -1,7 +1,5 @@
 package com.devmob.alaya.ui.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
@@ -28,16 +26,15 @@ import com.devmob.alaya.ui.theme.ColorWhite
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NextAppointmentHeader(name: String,lastName: String, date: LocalDateTime){
+fun NextAppointmentHeader(name: String,lastName: String, date: LocalDateTime, modifier: Modifier){
     Card(
         colors = CardDefaults.cardColors(containerColor = ColorWhite),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 9.dp
         ),
-        modifier = Modifier.width(IntrinsicSize.Max)
+        modifier = modifier.width(IntrinsicSize.Max)
     ) {
         Column(
             modifier =
@@ -75,20 +72,17 @@ fun NextAppointmentHeader(name: String,lastName: String, date: LocalDateTime){
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview()
 @Composable
 fun NextAppointmentHeaderPreview(name: String = "Mauro", lastName:String = "Catrambone",date: LocalDateTime = LocalDateTime.now()){
-    NextAppointmentHeader(name = name, lastName = lastName, date)
+    NextAppointmentHeader(name = name, lastName = lastName, date, Modifier)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun formatDate(date: LocalDateTime, pattern: String = "dd/MM/yyyy"): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return date.format(formatter)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun formatTime(date: LocalDateTime, pattern: String = "HH:mm"): String {
     val formatter = DateTimeFormatter.ofPattern(pattern)
     return date.format(formatter)
