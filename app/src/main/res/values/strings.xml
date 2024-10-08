@@ -27,4 +27,5 @@
     <string name="Registrar_episodio">Registrar el episodio</string>
     <string name="registrar_episodio_despues">Lo registro en otro momento</string>
     <string name="go_to_network">Ir a mi red de contencion</string>
+    <string name="intensity_selector_text">Intensidad</string>
 </resources>
