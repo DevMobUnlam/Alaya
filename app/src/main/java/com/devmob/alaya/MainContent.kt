@@ -36,7 +36,7 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
-    val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
+    val routesWithAppBar = listOf(NavUtils.Routes.ContainmentNetwork.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
 
     Scaffold(
         topBar = {
@@ -65,7 +65,6 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            //startDestination = "login",
             startDestination = NavUtils.Routes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
@@ -89,7 +88,7 @@ fun MainContent(navController: NavHostController) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
             }
 
-            composable(NavUtils.Routes.RedDeContencion.route) {
+            composable(NavUtils.Routes.ContainmentNetwork.route) {
                 ContainmentNetworkScreen(
                     viewModel = containmentViewModel,
                     navController = navController

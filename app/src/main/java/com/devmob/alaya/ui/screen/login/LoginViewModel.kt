@@ -20,20 +20,18 @@ class LoginViewModel : ViewModel() {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Log.d("Login", "singInWithEmailAndPassword Logeuado")
+                            Log.d("Login", "singInWithEmailAndPassword Logueado")
                             //TODO Cambiar este if por rol del usuario
-                            if (email == "e.torres.baquedano@gmail.com"){
+                            //florencia@gmail.com contraseña 123456 es paciente
+                            //patricia@gmail.com contraseña 123456 es profesional
+                            if (email == "florencia@gmail.com"){
                                 homePatient()
                             } else {
                                 homeProfessional()
                             }
-
                         } else {
-                            Log.d("login", "singInWinthEmailAndPassword: ${task.result.toString()}")
+                            Log.d("login", "singInWinthEmailAndPassword: ${task.exception}")
                         }
-                    }.addOnFailureListener {task ->
-                        Log.d("login", "singInWinthEmailAndPassword: addOnFailureListener")
-                        homePatient()
                     }
             } catch (ex: Exception) {
                 Log.d("login", "singInWinthEmailAndPassword: ${ex.message}")
@@ -55,7 +53,7 @@ class LoginViewModel : ViewModel() {
                         createUser(displayName)
                         home()
                     } else {
-                        Log.d("Registro", "CreateWithEmailAndPassword: ${task.result.toString()}")
+                        Log.d("Registro", "CreateWithEmailAndPassword: ${task.exception}")
                     }
                     _loading.value = false
                 }
