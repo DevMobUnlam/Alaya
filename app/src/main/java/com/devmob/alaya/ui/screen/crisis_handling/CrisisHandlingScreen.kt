@@ -161,11 +161,21 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
             onConfirm = {
                 viewModel.dismissModal()
-                navController.navigate("feedback_screen/Felicitaciones")
+                navController.navigate(
+                    NavUtils.PatientRoutes.Feedback.route.replace(
+                        "{feedbackType}",
+                        "Felicitaciones"
+                    )
+                )
             },
             onDismiss = {
                 viewModel.dismissModal()
-                navController.navigate("feedback_screen/TodoVaAEstarBien")
+                navController.navigate(
+                    NavUtils.PatientRoutes.Feedback.route.replace(
+                        "{feedbackType}",
+                        "TodoVaAEstarBien"
+                    )
+                )
             }
         )
 
@@ -176,8 +186,8 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             primaryButtonText = stringResource(R.string.confirm),
             secondaryButtonText = stringResource(R.string.dismiss),
             onConfirm = {
-                navController.navigate(NavUtils.Routes.Home.route) {
-                    popUpTo(NavUtils.Routes.Home.route) {
+                navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                    popUpTo(NavUtils.PatientRoutes.Home.route) {
                         inclusive = true
                     }
                 }
