@@ -19,5 +19,5 @@ class MainActivity : ComponentActivity() {
                 MainContent(navController)
             }
         }
-    }}
-
+    }
+}
