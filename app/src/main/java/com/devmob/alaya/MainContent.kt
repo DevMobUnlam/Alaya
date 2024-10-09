@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,6 +29,7 @@ import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)

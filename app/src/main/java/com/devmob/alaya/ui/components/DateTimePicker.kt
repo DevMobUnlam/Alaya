@@ -28,7 +28,7 @@ import java.util.*
 
 
 @Composable
-fun DateTimePicker() {
+fun DateTimePicker(modifier: Modifier = Modifier) {
     val calendar = Calendar.getInstance()
 
     var selectedStartDate by remember { mutableStateOf(calendar.time) }
@@ -89,7 +89,7 @@ fun DateTimePicker() {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column {
+                Column(modifier = modifier){
                     Spacer(modifier = Modifier.height(50.dp))
 
                     OutlinedTextField(

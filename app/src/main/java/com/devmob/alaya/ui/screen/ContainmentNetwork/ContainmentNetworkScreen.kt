@@ -69,7 +69,7 @@ fun ContainmentNetworkScreen(
             }
         }
 
-        IconButton(
+        /*IconButton(
             symbol = Icons.Outlined.Add,
             onClick = {
                 navController.navigate("add_contact")
@@ -78,7 +78,7 @@ fun ContainmentNetworkScreen(
                 bottom.linkTo(parent.bottom, margin = 0.dp)
                 end.linkTo(parent.end, margin = 10.dp)
             }
-        )
+        )*/
     }
 }
 

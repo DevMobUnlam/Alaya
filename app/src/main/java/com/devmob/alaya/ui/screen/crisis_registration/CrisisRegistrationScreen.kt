@@ -68,6 +68,7 @@ import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.components.CrisisRegistrationElementIconButton
+import com.devmob.alaya.ui.components.DateTimePicker
 import com.devmob.alaya.ui.components.EmotionIconButton
 import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.components.Modal
@@ -117,7 +118,14 @@ fun CrisisRegistrationScreen(
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 20.dp)
                         }
+
                 )
+
+                DateTimePicker(modifier = Modifier.constrainAs(datePickerComponent){
+                    start.linkTo(parent.start, margin = 15.dp)
+                    top.linkTo(title.bottom, margin = 20.dp)
+                    bottom.linkTo(forwardArrow.top)
+                })
             }
             2 ->{
                 Text(
@@ -295,7 +303,7 @@ fun CrisisRegistrationScreen(
                         .constrainAs(title){
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            top.linkTo(progressBar.bottom, margin = 25.dp)
+                            top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
             }
@@ -310,7 +318,7 @@ fun CrisisRegistrationScreen(
                         .constrainAs(title){
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            top.linkTo(progressBar.bottom, margin = 25.dp)
+                            top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
             }
@@ -325,14 +333,16 @@ fun CrisisRegistrationScreen(
                         .constrainAs(title){
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            top.linkTo(progressBar.bottom, margin = 25.dp)
+                            top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
 
-                Box(modifier = Modifier.fillMaxSize().constrainAs(textBox){
+                Box(modifier = Modifier.constrainAs(textBox){
                     top.linkTo(title.bottom, margin = 20.dp)
                     start.linkTo(parent.start, margin = 12.dp)
                     end.linkTo(parent.end,margin = 12.dp)
+                    bottom.linkTo(micButton.top,margin = 12.dp)
+
                 }
                     .shadow(
                         elevation = 1.dp,
@@ -356,9 +366,9 @@ fun CrisisRegistrationScreen(
                     colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {},
                     modifier = Modifier.size(55.dp).constrainAs(micButton){
-                        top.linkTo(textBox.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        bottom.linkTo(backArrow.top, margin = 12.dp)
                     }.shadow(
                         elevation = 4.dp,
                         shape = CircleShape

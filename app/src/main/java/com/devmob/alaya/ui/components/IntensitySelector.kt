@@ -98,15 +98,6 @@ fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity:
 
 }
 
-/**
- * Tipos de Intensidades seleccionables
- *
- * LOW - baja
- *
- * MEDIUM - media
- *
- * HIGH - alta
- */
 
 
 class SpeechBubbleShape() : Shape {
