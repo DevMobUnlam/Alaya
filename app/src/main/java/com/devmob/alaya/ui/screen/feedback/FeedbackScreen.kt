@@ -56,7 +56,7 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         text = "Registrar el episodio más tarde",
-                        onClick = {navController.navigate( "home") {
+                        onClick = {navController.navigate(NavUtils.Routes.Home.route) {
                             NavUtils.Routes.Home
                         }
                         },
@@ -82,14 +82,16 @@ fun FeedbackScreen(
                     Button(
                         text = "Mi red de contención",
                         onClick = {
-                            //TODO Navegar a la pantalla de Mi red de Contencion
+                            navController.navigate(NavUtils.Routes.ContainmentNetwork.route) {
+                            NavUtils.Routes.ContainmentNetwork
+                            }
                         },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
-                        onClick = {navController.navigate( "home") {
+                        onClick = {navController.navigate(NavUtils.Routes.Home.route) {
                             NavUtils.Routes.Home
                         }
                         },
