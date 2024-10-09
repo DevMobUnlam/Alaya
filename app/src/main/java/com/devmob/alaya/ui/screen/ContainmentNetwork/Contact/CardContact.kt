@@ -40,7 +40,7 @@ import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
 fun ContactCard(contact: Contact,  viewModel: ContactViewModel, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+        val context = LocalContext.current
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth(),
