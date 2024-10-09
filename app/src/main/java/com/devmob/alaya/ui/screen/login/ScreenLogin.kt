@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -64,17 +65,17 @@ fun SreenLogin(navController: NavController,
                 UserForm (isCreateAccount = false){
                     email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password,{
+                    viewModel.singInWithEmailAndPassword(email, password, homePatient = {
                         //Ruta para ir a la Home cuando el login es paciente
                         navController.navigate(NavUtils.Routes.Home.route) {
                             popUpTo(NavUtils.Routes.Home.route) {
                                 inclusive = true
                             }
                         }
-                    }, {//Ruta para ir a la Home cuando el login es profesional
+                    }, homeProfessional =  {//Ruta para ir a la Home cuando el login es profesional
                         //TODO cambiar ruta a professional
-                        navController.navigate(NavUtils.Routes.Crisis.route) {
-                            popUpTo(NavUtils.Routes.Crisis.route) {
+                        navController.navigate(NavUtilsProfessional.Routes.Home.route) {
+                            popUpTo(NavUtilsProfessional.Routes.Home.route) {
                                 inclusive = true
                             }
                         }

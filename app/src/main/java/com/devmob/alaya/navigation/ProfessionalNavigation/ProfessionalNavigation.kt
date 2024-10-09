@@ -16,6 +16,8 @@ import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
+import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -47,6 +49,9 @@ fun ProfessionalNavigation(navController: NavHostController){
             }
             composable(NavUtilsProfessional.Routes.PatientProfile.route){
                 PatientProfileScreen(navController)
+            }
+            composable(NavUtilsProfessional.Routes.PatientProfile.route){
+                SearchUserScreen(SearchUserViewModel(), navController)
             }
             composable(NavUtilsProfessional.Routes.ConfigTreatment.route){
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)

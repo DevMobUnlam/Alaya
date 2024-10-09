@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.UserItem
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -82,9 +83,8 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                         UserItem(
                             user,
                             false
-                        ) { /*
-                        TODO: Hacer la navegacion al perfil del paciente.
-                        */
+                        ) {
+                            navController.navigate(NavUtilsProfessional.Routes.PatientProfile.route)
                         }
                     }
                 }

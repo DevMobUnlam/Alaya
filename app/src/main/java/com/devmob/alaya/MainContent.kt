@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
@@ -23,6 +24,11 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
+import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
+import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
+import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
+import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
@@ -65,6 +71,15 @@ fun MainContent(navController: NavHostController) {
         ) {
             composable(NavUtils.Routes.Home.route) {
                 HomeScreen(navController)
+            }
+            composable(NavUtilsProfessional.Routes.Home.route) {
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(),navController)
+            }
+            composable(NavUtilsProfessional.Routes.PatientProfile.route) {
+                PatientProfileScreen(navController)
+            }
+            composable(NavUtilsProfessional.Routes.SearchPatient.route) {
+                SearchUserScreen(SearchUserViewModel(), navController)
             }
             composable(NavUtils.Routes.Login.route){
                 SreenLogin(navController, LoginViewModel())
