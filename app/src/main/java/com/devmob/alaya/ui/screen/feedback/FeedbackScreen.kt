@@ -56,15 +56,20 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         text = "Registrar el episodio más tarde",
-                        onClick = {navController.navigate(NavUtils.Routes.Home.route) {
-                            NavUtils.Routes.Home
-                        }
+                        onClick = {
+                            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Outlined
                     )
                 }
             }
+
             FeedbackType.TodoVaAEstarBien -> {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -82,18 +87,20 @@ fun FeedbackScreen(
                     Button(
                         text = "Mi red de contención",
                         onClick = {
-                            navController.navigate(NavUtils.Routes.ContainmentNetwork.route) {
-                            NavUtils.Routes.ContainmentNetwork
-                            }
+                            navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route) {}
                         },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
-                        onClick = {navController.navigate(NavUtils.Routes.Home.route) {
-                            NavUtils.Routes.Home
-                        }
+                        onClick = {
+                            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         text = "Ir a inicio",

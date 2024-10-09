@@ -39,6 +39,7 @@ import com.devmob.alaya.ui.components.Header
 import com.devmob.alaya.ui.components.UserItem
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: NavController) {
@@ -68,7 +69,7 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
-                                .clickable { navController.navigate(NavUtilsProfessional.Routes.SearchPatient.route) },
+                                .clickable { navController.navigate(NavUtils.ProfessionalRoutes.SearchPatient.route) },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         )
@@ -99,7 +100,7 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                         ) {
                             items(viewModel.users) { user ->
                                 UserItem(user, true) {
-                                    navController.navigate(NavUtilsProfessional.Routes.PatientProfile.route)
+                                    navController.navigate(NavUtils.ProfessionalRoutes.PatientProfile.route)
                                 }
                             }
                         }

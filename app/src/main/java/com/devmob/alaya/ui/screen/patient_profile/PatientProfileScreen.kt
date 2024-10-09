@@ -38,7 +38,7 @@ import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.NextAppointmentHeader
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
-import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 import java.time.LocalDateTime
 
 @Composable
@@ -136,7 +136,7 @@ fun PatientProfileScreen(navController: NavController) {
                 end.linkTo(parent.end)
             },
             ButtonStyle.Outlined,
-            {navController.navigate(NavUtilsProfessional.Routes.ConfigTreatment.route)},
+            {navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)},
             containerColor = ColorWhite
         )
 

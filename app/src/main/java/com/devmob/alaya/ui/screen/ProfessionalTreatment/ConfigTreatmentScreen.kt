@@ -24,6 +24,7 @@ import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.SelectMenu
 import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun ConfigTreatmentScreen(viewModel: ConfigTreatmentViewModel, navController: NavController) {
@@ -79,7 +80,7 @@ fun ConfigTreatmentScreen(viewModel: ConfigTreatmentViewModel, navController: Na
                 text = "Confirmar tratamiento",
                 onClick = {
                     navController.navigate(
-                        NavUtilsProfessional.Routes.TreatmentSummary.createRoute(
+                        NavUtils.ProfessionalRoutes.TreatmentSummary.createRoute(
                             viewModel.firstSelectOption.value?.title ?: "",
                             viewModel.secondSelectOption.value?.title ?: "",
                             viewModel.thirdSelectOption.value?.title ?: ""

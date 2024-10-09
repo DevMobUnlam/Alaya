@@ -33,14 +33,14 @@ fun UserItem(user: User, withSubtitle: Boolean, onClick: () -> Unit) {
             .padding(8.dp)
             .clickable { onClick() }
     ) {
-        Image(
+/*        Image(
             painter = painterResource(user.image),
             contentDescription = "Foto de ${user.name}",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-        )
+        )*/
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(

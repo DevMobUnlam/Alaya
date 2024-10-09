@@ -38,7 +38,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -63,19 +62,19 @@ fun SreenLogin(navController: NavController,
             if (showLoginForm.value) {
                 Text(text = "Iniciar sesion")
                 UserForm (isCreateAccount = false){
-                    email, password ->
+                        email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password, homePatient = {
+                    viewModel.singInWithEmailAndPassword(email, password,{
                         //Ruta para ir a la Home cuando el login es paciente
-                        navController.navigate(NavUtils.Routes.Home.route) {
-                            popUpTo(NavUtils.Routes.Home.route) {
+                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                            popUpTo(NavUtils.PatientRoutes.Home.route) {
                                 inclusive = true
                             }
                         }
-                    }, homeProfessional =  {//Ruta para ir a la Home cuando el login es profesional
+                    }, {//Ruta para ir a la Home cuando el login es profesional
                         //TODO cambiar ruta a professional
-                        navController.navigate(NavUtilsProfessional.Routes.Home.route) {
-                            popUpTo(NavUtilsProfessional.Routes.Home.route) {
+                        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+                            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
                                 inclusive = true
                             }
                         }
@@ -87,12 +86,12 @@ fun SreenLogin(navController: NavController,
                 UserForm(
                     isCreateAccount = true
                 ){
-                    email, password ->
+                        email, password ->
                     Log.d("Logeado", "Creando cuenta con $email y $password")
                     viewModel.createUserWithEmailAndPassword(email,password){
-                      //Va directo al Home cuando creás una cuenta válida
-                        navController.navigate(NavUtils.Routes.Home.route) {
-                            popUpTo(NavUtils.Routes.Home.route) {
+                        //Va directo al Home cuando creás una cuenta válida
+                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                            popUpTo(NavUtils.PatientRoutes.Home.route) {
                                 inclusive = true
                             }
                         }
@@ -105,7 +104,7 @@ fun SreenLogin(navController: NavController,
                 verticalAlignment = Alignment.CenterVertically){
                 val  text1 =
                     if (showLoginForm.value) "¿No tenes cuenta?"
-                else "¿Ya tienes cuenta?"
+                    else "¿Ya tienes cuenta?"
 
                 val  text2 =
                     if (showLoginForm.value) "Registrate"
@@ -141,7 +140,7 @@ fun UserForm(isCreateAccount: Boolean = false,
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         EmailInput (
-            emailState = email  
+            emailState = email
         )
         PasswordInput(
             passwordState = password,
@@ -203,7 +202,7 @@ fun PasswordInput(
             }
             else null
         }
-        )
+    )
 }
 
 @Composable
@@ -227,12 +226,12 @@ fun PasswordVisibleIcon(
 
 @Composable
 fun EmailInput(emailState: MutableState<String>,
-labelId: String = "Email") {
-        InputField(
-            valueState = emailState,
-            labelId = labelId,
-            keyboardType = KeyboardType.Email
-        )
+               labelId: String = "Email") {
+    InputField(
+        valueState = emailState,
+        labelId = labelId,
+        keyboardType = KeyboardType.Email
+    )
 }
 
 @Composable

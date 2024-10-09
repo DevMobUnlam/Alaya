@@ -29,6 +29,7 @@ import com.devmob.alaya.components.Card
 import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun TreatmentSummaryScreen(
@@ -121,7 +122,7 @@ fun TreatmentSummaryScreen(
             onDismiss = { showModal = false },
             onConfirm = {
                 showModal = false
-                navController.navigate(NavUtilsProfessional.Routes.Home.route)
+                navController.navigate(NavUtils.ProfessionalRoutes.Home.route)
             }
         )
     }
