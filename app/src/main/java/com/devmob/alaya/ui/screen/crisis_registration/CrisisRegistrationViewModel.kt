@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.crisis_registration
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,6 +12,7 @@ import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.domain.model.Intensity
 
 class CrisisRegistrationViewModel(): ViewModel() {
 
@@ -21,6 +22,8 @@ class CrisisRegistrationViewModel(): ViewModel() {
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
 
     var shouldShowExitModal by mutableStateOf(false)
+
+    var listprueba = listOf("Mauro","Jose")
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun cleanState(){
@@ -49,13 +52,13 @@ class CrisisRegistrationViewModel(): ViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onBodySensationIntensityChange(intensity: String, index: Int,bodySensation: CrisisBodySensation){
+    fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
         val updatedBodySensation = bodySensation.copy(intensity = intensity)
         _screenState.value?.bodySensationList?.set(index,updatedBodySensation)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onEmotionIntensityChange(intensity: String, index: Int,emotion: CrisisEmotion){
+    fun onEmotionIntensityChange(intensity: Intensity, index: Int, emotion: CrisisEmotion){
         val updatedEmotion = emotion.copy(intensity = intensity)
         _screenState.value?.emotionList?.set(index,updatedEmotion)
     }
@@ -78,5 +81,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         shouldShowExitModal = true
         println("showExitModal updated, new value is $shouldShowExitModal")
     }
+
 
 }

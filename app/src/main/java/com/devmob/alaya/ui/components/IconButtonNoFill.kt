@@ -71,7 +71,7 @@ fun IconButtonNoFill(
             text = text,
             color = ColorText,
             fontSize = 13.sp,
-            lineHeight = 13.sp,
+            lineHeight = 18.sp,
             textAlign = TextAlign.Center,
             maxLines = 3
         )

@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.crisis_registration
 
 import android.os.Build
 import androidx.annotation.RequiresApi

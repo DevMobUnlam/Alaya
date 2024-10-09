@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.devmob.alaya.domain.model.Intensity
 
 /**
  * Radiobutton para seleccionar intensidad
@@ -106,11 +108,6 @@ fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity:
  * HIGH - alta
  */
 
-enum class Intensity{
-    LOW,
-    MEDIUM,
-    HIGH
-}
 
 class SpeechBubbleShape() : Shape {
     override fun createOutline(

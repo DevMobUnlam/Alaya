@@ -1,17 +1,22 @@
 package com.devmob.alaya.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,9 +32,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
 fun EmotionIconButton(
@@ -39,6 +46,8 @@ fun EmotionIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
     onClick: () -> Unit,
+    intensity: Intensity,
+    onChangedIntensity: (Intensity) -> Unit,
 ){
 
     var showIntensitySelector by remember{mutableStateOf(false)}
@@ -47,11 +56,36 @@ fun EmotionIconButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-
-            AnimatedVisibility(visible = showIntensitySelector){
-                Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                AnimatedVisibility(visible = showIntensitySelector) {
+                    IntensitySelector(
+                        onIntensityChange = {
+                            showIntensitySelector = !showIntensitySelector
+                            onChangedIntensity(it)
+                        },
+                        selectedIntensity = intensity,
+                    )
                 }
-            }
+                AnimatedVisibility(visible = !showIntensitySelector) {
+                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            repeat(intensity.ordinal + 1) {
+                                OutlinedButton(
+                                    modifier = Modifier.size(15.dp),
+                                    contentPadding = PaddingValues(0.dp),
+                                    enabled = false,
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        containerColor = LightBlueColor
+                                    ),
+                                    border = BorderStroke(width = 1.dp, color = ColorWhite),
+                                    onClick = { showIntensitySelector = !showIntensitySelector }
+                                ) {}
+                            }
+                        }
+                    }
+                }
 
             FilledIconButton(
                 onClick = {
@@ -72,7 +106,7 @@ fun EmotionIconButton(
                     symbol,
                     contentDescription = text,
                     tint = ColorWhite,
-                    modifier = Modifier.fillMaxSize(0.80f)
+                    modifier = Modifier.fillMaxSize(0.70f)
                 )
             }
             Text(
@@ -88,5 +122,5 @@ fun EmotionIconButton(
 @Composable
 
 fun EmotionIconButtonPreview(){
-    EmotionIconButton(Icons.Outlined.Refresh, "Mareos", size = 70.dp, enabled = true, onClick = {})
+    EmotionIconButton(Icons.Outlined.Refresh, "Mareos", size = 70.dp,enabled = true, onChangedIntensity = {}, intensity = Intensity.LOW, onClick = {})
 }

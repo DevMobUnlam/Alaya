@@ -26,7 +26,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
-import com.devmob.alaya.ui.screen.CrisisRegistrationScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
