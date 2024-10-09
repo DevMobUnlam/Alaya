@@ -72,6 +72,8 @@ import com.devmob.alaya.ui.components.DateTimePicker
 import com.devmob.alaya.ui.components.EmotionIconButton
 import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.ui.components.TextArea
+import com.devmob.alaya.ui.components.TextContainer
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -127,7 +129,6 @@ fun CrisisRegistrationScreen(
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     top.linkTo(title.bottom, margin = (-15).dp)
-                    bottom.linkTo(forwardArrow.top)
                 },
                  onConfirmCrisisTimeDetails = { viewModel.updateCrisisTimeDetails(it) },
                 )
@@ -328,10 +329,73 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
+                viewModel.screenState.value?.toolList?.let { tools ->
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(3),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.constrainAs(elementsGrid){
+                            top.linkTo(title.bottom,margin = 20.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                    ) {
+                        itemsIndexed(tools) { index, tool ->
+                            CrisisRegistrationElementIconButton(
+                                symbol = tool.icon,
+                                text = tool.name,
+                                size = 60.dp,
+                                onClick = {},
+                            )
+                        }
+                    }
+                }
+                IconButtonNoFill(
+                    text = "Agregar otra herramienta",
+                    modifier = Modifier.constrainAs(addNewIcon){
+                        top.linkTo(elementsGrid.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    onClick = {shouldShowGridList = !shouldShowGridList}
+                )
+                AnimatedVisibility(visible = shouldShowGridList){
+                    ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
+                        modifier = Modifier.constrainAs(newElementsGrid) {
+                            top.linkTo(title.bottom,margin = 8.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(forwardArrow.top)
+                        })
+                    {
+                        GridElementsRepository.returnAvailableTools().let{ list ->
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(3),
+                                horizontalArrangement = Arrangement.SpaceAround,
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+
+                                ) {
+                                items(list) {tool ->
+                                    CrisisRegistrationElementIconButton(
+                                        symbol = tool.icon,
+                                        text = tool.name,
+                                        size = 60.dp,
+                                        onClick = {
+                                            viewModel.addCrisisTool(tool)
+                                            shouldShowGridList = !shouldShowGridList
+                                        }
+                                    )
+                                }
+
+                            }
+                        }
+                    }
+
+                }
             }
             6 ->{
                 Text(
-                    text = "¿Queres agregar algo mas?",
+                    text = "¿Querés agregar algo más?",
                     fontSize = messageTextSize,
                     color = ColorText,
                     textAlign = TextAlign.Center,
@@ -343,34 +407,18 @@ fun CrisisRegistrationScreen(
                             top.linkTo(closeIcon.bottom, margin = 10.dp)
                         }
                 )
-
-                Box(modifier = Modifier.constrainAs(textBox){
-                    top.linkTo(title.bottom, margin = 20.dp)
-                    start.linkTo(parent.start, margin = 12.dp)
-                    end.linkTo(parent.end,margin = 12.dp)
-                    bottom.linkTo(micButton.top,margin = 4.dp)
-
-                }
-                    .shadow(
-                        elevation = 3.dp,
-                        shape = RoundedCornerShape(1.dp),
-                    ) )
-                    {
-                    Text(
-                        text = "\n" +
-                                "¿Con quién estabas?\n" +
-                                "¿Qué estabas haciendo?\n" +
-                                "¿Qué hiciste después?\n" +
-                                "¿Qué herramientas te ayudaron\n" +
-                                "a superar la crisis?\n" +
-                                "¿Qué pensamientos tuviste?",
-                        color = ColorGray,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.Center)
+                    TextArea(
+                        title = "",
+                        modifier = Modifier.constrainAs(textBox){
+                            top.linkTo(title.bottom)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
                     )
-                }
 
-                IconButton(
+
+                /*IconButton(
                     colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
                     onClick = {},
                     modifier = Modifier.size(55.dp).constrainAs(micButton){
@@ -388,7 +436,7 @@ fun CrisisRegistrationScreen(
                         modifier = Modifier.fillMaxSize(0.65F),
                         tint = ColorWhite
                     )
-                }
+                }*/
             }
         }
 

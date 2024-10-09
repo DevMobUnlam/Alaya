@@ -35,11 +35,12 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
-fun TextArea(title: String){
+fun TextArea(title: String, modifier: Modifier = Modifier){
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally

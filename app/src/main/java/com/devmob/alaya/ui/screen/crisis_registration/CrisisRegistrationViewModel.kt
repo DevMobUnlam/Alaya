@@ -26,6 +26,10 @@ class CrisisRegistrationViewModel(): ViewModel() {
 
     var listprueba = listOf("Mauro","Jose")
 
+    init{
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun cleanState(){
         _screenState.value = CrisisRegistrationScreenState()
