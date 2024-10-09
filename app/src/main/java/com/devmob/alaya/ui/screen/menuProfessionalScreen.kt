@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -22,6 +24,7 @@ fun MenuProfessionalScreen(navController: NavController){
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(LightBlueColor)
             .padding(16.dp)
     ) {
         CardContainer(
