@@ -11,10 +11,14 @@ composeBom = "2024.04.01"
 iconExtended = "1.7.0"
 constraintlayout = "2.1.4"
 constraintLayoutVersion = "1.0.1"
-navVersion = "2.8.0"
+runtimeLivedata = "1.7.3"
 mockkVersion = "1.13.12"
+core-testing = "2.1.0"
+mockito = "4.0.0"
+navVersion = "2.8.0"
 appcompat = "1.7.0"
 material = "1.12.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +38,9 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-constraint = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayoutVersion"}
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
 mockk = {group = "io.mockk", name = "mockk", version.ref = "mockkVersion"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

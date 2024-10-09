@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -79,4 +80,6 @@ dependencies {
     implementation(libs.androidx.constraint)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.mockk)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockito)
 }

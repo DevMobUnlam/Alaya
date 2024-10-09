@@ -87,7 +87,7 @@ fun HomeScreen(navController: NavController) {
             Card(
                 title = "Mi red de contención",
                 subtitle = "Accede a tus contactos de confianza",
-                onClick = { },
+                onClick = { navController.navigate("red_de_contencion")},
                 leftIcon = Icons.Outlined.Groups,
                 rightIcon = Icons.Filled.ArrowForwardIos
             )
