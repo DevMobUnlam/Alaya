@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.material:material:1.9.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -65,6 +66,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,6 +78,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation("io.coil-kt:coil-compose:2.1.0")
     implementation(libs.androidx.constraint)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.mockk)
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <style name="CustomPickerTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/purple_200</item> <!-- Fondo del encabezado -->
+        <item name="colorAccent">@color/purple_500</item> <!-- Color de los botones de selección -->
+        <item name="android:textColorPrimary">@color/black</item> <!-- Color del texto de la hora -->
+    </style>
+</resources>
+
+
