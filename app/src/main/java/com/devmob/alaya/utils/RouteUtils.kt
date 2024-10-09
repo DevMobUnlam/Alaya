@@ -16,14 +16,14 @@ object NavUtils {
         data object Home : Routes("home")
         data object Crisis : Routes("crisis")
         data object Login : Routes ("login")
-        data object RedDeContencion : Routes("red_de_contencion")
+        data object ContainmentNetwork : Routes("containment_network")
         data object AddContact : Routes ("add_contact")
         data object Feedback : Routes("feedback_screen/{feedbackType}")
 
     }
 
     val routeTitleAppBar = mapOf(
-        Routes.RedDeContencion.route to "Red de Contención",
+        Routes.ContainmentNetwork.route to "Red de Contención",
         Routes.AddContact.route to "Agregar Contacto",
         "contact_detail/{contactId}" to "Detalles del Contacto"
     )
