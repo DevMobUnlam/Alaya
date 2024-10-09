@@ -14,7 +14,10 @@ constraintLayoutVersion = "1.0.1"
 runtimeLivedata = "1.7.3"
 mockkVersion = "1.13.12"
 firebaseAuthKtx = "23.0.0"
-firebaseFirestoreKtx = "25.1.0"
+firebaseFirestoreKtx = "25.1.0
+core-testing = "2.1.0"
+mockito = "4.0.0"
+navVersion = "2.8.0"
 appcompat = "1.7.0"
 material = "1.12.0"
 
