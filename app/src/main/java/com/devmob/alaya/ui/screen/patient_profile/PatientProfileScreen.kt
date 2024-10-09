@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.screen.patient_profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
+import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.NextAppointmentHeader
@@ -41,11 +43,18 @@ import java.time.LocalDateTime
 
 @Composable
 fun PatientProfileScreen(navController: NavController) {
-
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.fondo_home),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(LightBlueColor)
     ) {
 
         val (image, header, contactButton, summaryCard, treatmentButton, sessionButton) = createRefs()
@@ -127,7 +136,7 @@ fun PatientProfileScreen(navController: NavController) {
                 end.linkTo(parent.end)
             },
             ButtonStyle.Outlined,
-            {},
+            {navController.navigate(NavUtilsProfessional.Routes.ConfigTreatment.route)},
             containerColor = ColorWhite
         )
 
@@ -142,7 +151,7 @@ fun PatientProfileScreen(navController: NavController) {
             {},
             containerColor = ColorWhite
         )
-    }
+    }}
 }
 
 @Preview(showBackground = true, showSystemUi = true)

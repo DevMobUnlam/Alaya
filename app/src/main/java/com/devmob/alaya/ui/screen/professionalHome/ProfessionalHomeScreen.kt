@@ -1,7 +1,9 @@
 package com.devmob.alaya.ui.screen.professionalHome
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.devmob.alaya.R
+import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.Header
 import com.devmob.alaya.ui.theme.ColorPrimary
@@ -40,64 +44,83 @@ import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
 fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: NavController) {
-    Column(
+    Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Header(viewModel.nameProfessional)
-        Spacer(modifier = Modifier.width(16.dp))
-        CardContainer(
-            modifier = Modifier.fillMaxHeight(),
-            enabled = true,
-            content = {
-                Column(Modifier.padding(13.dp,0.dp)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    )
-                    {
-                        Text(
-                            text = "Pacientes",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            color = ColorText
-                        )
-
-                        Icon(
-                            imageVector = Icons.Filled.ArrowForwardIos,
-                            contentDescription = "Right Icon",
-                            tint = ColorText,
+        Image(
+            painter = painterResource(id = R.drawable.fondo_home),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Header(viewModel.nameProfessional)
+            Spacer(modifier = Modifier.width(16.dp))
+            CardContainer(
+                modifier = Modifier.fillMaxHeight(),
+                enabled = true,
+                content = {
+                    Column(Modifier.padding(13.dp, 0.dp)) {
+                        Row(
                             modifier = Modifier
-                                .size(24.dp)
-                                .align(Alignment.CenterVertically)
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         )
-                    }
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = ColorQuaternary,
-                        thickness = 1.dp)
-                    LazyColumn(
-                        modifier = Modifier.wrapContentHeight()
-                    ) {
-                        items(viewModel.users) { user ->
-                            UserItem(user)
+                        {
+                            Text(
+                                text = "Pacientes",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                color = ColorText
+                            )
+
+                            Icon(
+                                imageVector = Icons.Filled.ArrowForwardIos,
+                                contentDescription = "Right Icon",
+                                tint = ColorText,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .align(Alignment.CenterVertically)
+                            )
+                        }
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = ColorQuaternary,
+                            thickness = 1.dp
+                        )
+                        LazyColumn(
+                            modifier = Modifier.wrapContentHeight()
+                        ) {
+                            items(viewModel.users) { user ->
+                                    UserItem(user) {
+
+                                        navController.navigate(NavUtilsProfessional.Routes.PatientProfile.route)
+
+                                }
+                            }
                         }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
 @Composable
-fun UserItem(user: User) {
+fun UserItem(user: User, onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable { onClick() }
     ) {
         Image(
             painter = painterResource(user.image),
