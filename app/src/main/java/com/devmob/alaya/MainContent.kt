@@ -21,6 +21,9 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
+import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
@@ -30,13 +33,18 @@ import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
+import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
 fun MainContent(navController: NavHostController) {
-    val currentRoute = NavUtils.currentRoute(navController)
+    val currentRoute = currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
-    val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
+    val routesWithAppBar = listOf(
+        NavUtils.PatientRoutes.RedDeContencion.route,
+        NavUtils.PatientRoutes.AddContact.route,
+        "contact_detail/{contactId}"
+    )
 
     Scaffold(
         topBar = {
@@ -51,45 +59,37 @@ fun MainContent(navController: NavHostController) {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
 
-            if (currentRoute !in listOf(NavUtils.Routes.Login.route,"nobottom", "nobottom2", NavUtils.Routes.Crisis.route,NavUtils.Routes.Feedback.route)) {
-                BottomBarNavigation(
-                    items = listOf(
-                        ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
-                        ItemMenu(iconType = IconType.PATIENT, route = NavUtils.Routes.Crisis.route, contentDescription = "boton para el manejo de crisis", order = 2),
-                        ItemMenu(iconType = IconType.HOME, route = NavUtils.Routes.Home.route, contentDescription = "boton de inicio", order = 1),
-                    ),
-                    navHostController = navController
-                )
+
+            if (currentRoute in NavUtils.routesWithBottomBar) {
+                GetBottomBarNavigation(navController)
             }
         }
     ) { paddingValues ->
         NavHost(
             navController = navController,
             //startDestination = "login",
-            startDestination = NavUtils.Routes.Login.route,
+            startDestination = NavUtils.PatientRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(NavUtils.Routes.Home.route) {
+            composable(NavUtils.PatientRoutes.Home.route) {
                 HomeScreen(navController)
             }
-            composable(NavUtilsProfessional.Routes.Home.route) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(),navController)
+            composable(NavUtils.ProfessionalRoutes.Home.route) {
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
-            composable(NavUtilsProfessional.Routes.PatientProfile.route) {
+            composable(NavUtils.ProfessionalRoutes.PatientProfile.route) {
                 PatientProfileScreen(navController)
             }
-            composable(NavUtilsProfessional.Routes.SearchPatient.route) {
+            composable(NavUtils.ProfessionalRoutes.SearchPatient.route) {
                 SearchUserScreen(SearchUserViewModel(), navController)
             }
-            composable(NavUtils.Routes.Login.route){
+            composable(NavUtils.PatientRoutes.Login.route) {
                 SreenLogin(navController, LoginViewModel())
             }
-
-            composable(NavUtils.Routes.Crisis.route) {
+            composable(NavUtils.PatientRoutes.Crisis.route) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
             }
-
-            composable(NavUtils.Routes.RedDeContencion.route) {
+            composable(NavUtils.PatientRoutes.RedDeContencion.route) {
                 ContainmentNetworkScreen(
                     viewModel = containmentViewModel,
                     navController = navController
@@ -113,10 +113,61 @@ fun MainContent(navController: NavHostController) {
                 val feedbackType = backStackEntry.arguments?.getString("feedbackType")?.let {
                     FeedbackType.valueOf(it)
                 }
-                FeedbackScreen(feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien,navController)
+                FeedbackScreen(
+                    feedbackType = feedbackType ?: FeedbackType.TodoVaAEstarBien,
+                    navController
+                )
+            }
+            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route) {
+                ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
+            }
+            composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
+                val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
+                val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
+                val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
+                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
             }
         }
     }
+}
+
+@Composable
+fun GetBottomBarNavigation(navController: NavHostController) {
+    BottomBarNavigation(
+        items = listOf(
+            ItemMenu(
+                iconType = IconType.MENU,
+                route = "menu",
+                contentDescription = "",
+                order = 3
+            ),
+            ItemMenu(
+                iconType = if (NavUtils.isPatientRoute(currentRoute(navController))) {
+                    IconType.PATIENT
+                } else {
+                    IconType.PROFESSIONAL
+                },
+                route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
+                    NavUtils.PatientRoutes.Crisis.route
+                } else {
+                    NavUtils.ProfessionalRoutes.SearchPatient.route
+                },
+                contentDescription = "",
+                order = 2
+            ),
+            ItemMenu(
+                iconType = IconType.HOME,
+                route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
+                    NavUtils.PatientRoutes.Home.route
+                } else {
+                    NavUtils.ProfessionalRoutes.Home.route
+                },
+                contentDescription = "",
+                order = 1
+            ),
+        ),
+        navHostController = navController
+    )
 }
 
 

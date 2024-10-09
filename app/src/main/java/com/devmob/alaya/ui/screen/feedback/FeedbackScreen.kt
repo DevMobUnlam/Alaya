@@ -56,15 +56,20 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         text = "Registrar el episodio más tarde",
-                        onClick = {navController.navigate( "home") {
-                            NavUtils.Routes.Home
-                        }
+                        onClick = {
+                            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Outlined
                     )
                 }
             }
+
             FeedbackType.TodoVaAEstarBien -> {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -82,16 +87,20 @@ fun FeedbackScreen(
                     Button(
                         text = "Mi red de contención",
                         onClick = {
-                            //TODO Navegar a la pantalla de Mi red de Contencion
+                            navController.navigate(NavUtils.PatientRoutes.RedDeContencion.route) {}
                         },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
-                        onClick = {navController.navigate( "home") {
-                            NavUtils.Routes.Home
-                        }
+                        onClick = {
+                            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         text = "Ir a inicio",

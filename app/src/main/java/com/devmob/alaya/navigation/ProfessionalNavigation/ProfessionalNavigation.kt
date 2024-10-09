@@ -31,8 +31,8 @@ fun ProfessionalNavigation(navController: NavHostController){
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
-                        ItemMenu(iconType = IconType.PROFESSIONAL, route = NavUtilsProfessional.Routes.Home.route, contentDescription = "Home profesional", order = 2),
-                        ItemMenu(iconType = IconType.HOME, route = NavUtils.Routes.Home.route, contentDescription = "boton de inicio", order = 1),
+                        ItemMenu(iconType = IconType.PROFESSIONAL, route = NavUtils.ProfessionalRoutes.Home.route, contentDescription = "Home profesional", order = 2),
+                        ItemMenu(iconType = IconType.HOME, route = NavUtils.PatientRoutes.Home.route, contentDescription = "boton de inicio", order = 1),
                     ),
                     navHostController = navController
                 )
@@ -41,22 +41,22 @@ fun ProfessionalNavigation(navController: NavHostController){
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = NavUtilsProfessional.Routes.Home.route,
+            startDestination = NavUtils.ProfessionalRoutes.Home.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(NavUtilsProfessional.Routes.Home.route) {
+            composable(NavUtils.ProfessionalRoutes.Home.route) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
-            composable(NavUtilsProfessional.Routes.PatientProfile.route){
+            composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 PatientProfileScreen(navController)
             }
-            composable(NavUtilsProfessional.Routes.PatientProfile.route){
+            composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(SearchUserViewModel(), navController)
             }
-            composable(NavUtilsProfessional.Routes.ConfigTreatment.route){
+            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route){
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
             }
-            composable(NavUtilsProfessional.Routes.TreatmentSummary.route) { backStackEntry ->
+            composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""

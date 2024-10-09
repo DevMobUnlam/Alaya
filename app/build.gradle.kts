@@ -84,4 +84,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
 }
