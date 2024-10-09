@@ -87,7 +87,7 @@ fun FeedbackScreen(
                     Button(
                         text = "Mi red de contención",
                         onClick = {
-                            navController.navigate(NavUtils.PatientRoutes.RedDeContencion.route) {}
+                            navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route) {}
                         },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.fillMaxWidth(),

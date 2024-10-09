@@ -16,9 +16,10 @@ object NavUtils {
         data object Home : PatientRoutes("home")
         data object Crisis : PatientRoutes("crisis")
         data object Login : PatientRoutes("login")
-        data object RedDeContencion : PatientRoutes("red_de_contencion")
+        data object ContainmentNetwork : PatientRoutes("red_de_contencion")
         data object AddContact : PatientRoutes("add_contact")
         data object Feedback : PatientRoutes("feedback_screen/{feedbackType}")
+        data object MenuPatient : PatientRoutes ("menu_patient")
     }
 
     sealed class ProfessionalRoutes(val route: String) {
@@ -31,19 +32,22 @@ object NavUtils {
             fun createRoute(firstStep: String, secondStep: String, thirdStep: String) =
                 "treatment_summary/$firstStep/$secondStep/$thirdStep"
         }
+        data object MenuProfessional : ProfessionalRoutes("menu_professional")
     }
 
     val routeTitleAppBar = mapOf(
-        PatientRoutes.RedDeContencion.route to "Red de Contención",
+        PatientRoutes.ContainmentNetwork.route to "Red de Contención",
         PatientRoutes.AddContact.route to "Agregar Contacto",
         "contact_detail/{contactId}" to "Detalles del Contacto"
     )
 
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
-        PatientRoutes.RedDeContencion.route,
+        PatientRoutes.ContainmentNetwork.route,
         ProfessionalRoutes.Home.route,
-        ProfessionalRoutes.SearchPatient.route
+        ProfessionalRoutes.SearchPatient.route,
+        PatientRoutes.MenuPatient.route,
+        ProfessionalRoutes.MenuProfessional.route
     )
 
     fun isProfessionalRoute(route: String?): Boolean {

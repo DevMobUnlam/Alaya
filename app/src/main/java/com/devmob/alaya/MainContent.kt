@@ -20,6 +20,8 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.MenuPatientScreen
+import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
@@ -40,7 +42,7 @@ fun MainContent(navController: NavHostController) {
     val currentRoute = currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
     val routesWithAppBar = listOf(
-        NavUtils.PatientRoutes.RedDeContencion.route,
+        NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
         "contact_detail/{contactId}"
     )
@@ -87,7 +89,7 @@ fun MainContent(navController: NavHostController) {
             composable(NavUtils.PatientRoutes.Crisis.route) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
             }
-            composable(NavUtils.PatientRoutes.RedDeContencion.route) {
+            composable(NavUtils.PatientRoutes.ContainmentNetwork.route) {
                 ContainmentNetworkScreen(
                     viewModel = containmentViewModel,
                     navController = navController
@@ -125,6 +127,12 @@ fun MainContent(navController: NavHostController) {
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
                 TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
             }
+            composable(NavUtils.PatientRoutes.MenuPatient.route) {
+                MenuPatientScreen(navController)
+            }
+            composable(NavUtils.ProfessionalRoutes.MenuProfessional.route) {
+                MenuProfessionalScreen(navController)
+            }
         }
     }
 }
@@ -135,7 +143,11 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         items = listOf(
             ItemMenu(
                 iconType = IconType.MENU,
-                route = "menu",
+                route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
+                    NavUtils.PatientRoutes.MenuPatient.route
+                } else {
+                    NavUtils.ProfessionalRoutes.MenuProfessional.route
+                },
                 contentDescription = "",
                 order = 3
             ),
