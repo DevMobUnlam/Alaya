@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.components
+package com.devmob.alaya.ui.screen.searchUser
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,21 +16,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.devmob.alaya.domain.model.UsersProvider
-import com.devmob.alaya.ui.screen.SearchUserViewModel
+import com.devmob.alaya.ui.components.CardContainer
+import com.devmob.alaya.ui.components.UserItem
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
 fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavController) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
-    val users = UsersProvider.users
-    val usersFilter = users.filter {
-        it.name.contains(searchText.text, ignoreCase = true)
-    }
 
     Column(
         modifier = Modifier
@@ -44,6 +43,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 .fillMaxWidth()
                 .padding(20.dp),
             singleLine = true,
+            textStyle = TextStyle(fontSize = TextUnit(16f,TextUnitType.Sp)),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -68,8 +68,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 }
             }
         )
-
-
+        
         CardContainer(
             modifier = Modifier
                 .wrapContentHeight()
@@ -79,7 +78,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(usersFilter) { user ->
+                    items(viewModel.getUsersFilter(searchText.text)) { user ->
                         UserItem(
                             user,
                             false
