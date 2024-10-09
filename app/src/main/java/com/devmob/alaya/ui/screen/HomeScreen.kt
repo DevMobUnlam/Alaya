@@ -28,6 +28,7 @@ import com.devmob.alaya.R
 import com.devmob.alaya.components.Card
 import com.devmob.alaya.ui.theme.ColorText
 
+
 @Composable
 fun HomeScreen(navController: NavController) {
     ConstraintLayout(
@@ -87,7 +88,7 @@ fun HomeScreen(navController: NavController) {
             Card(
                 title = "Mi red de contención",
                 subtitle = "Accede a tus contactos de confianza",
-                onClick = { },
+                onClick = { navController.navigate("red_de_contencion")},
                 leftIcon = Icons.Outlined.Groups,
                 rightIcon = Icons.Filled.ArrowForwardIos
             )
