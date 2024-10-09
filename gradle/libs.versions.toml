@@ -13,6 +13,8 @@ constraintlayout = "2.1.4"
 constraintLayoutVersion = "1.0.1"
 runtimeLivedata = "1.7.3"
 mockkVersion = "1.13.12"
+firebaseAuthKtx = "23.0.0"
+firebaseFirestoreKtx = "25.1.0"
 core-testing = "2.1.0"
 mockito = "4.0.0"
 navVersion = "2.8.0"
@@ -43,6 +45,8 @@ core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
 mockk = {group = "io.mockk", name = "mockk", version.ref = "mockkVersion"}
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 

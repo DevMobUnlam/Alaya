@@ -15,6 +15,7 @@ object NavUtils {
     sealed class Routes (val route: String) {
         data object Home : Routes("home")
         data object Crisis : Routes("crisis")
+        data object Login : Routes ("login")
         data object RedDeContencion : Routes("red_de_contencion")
         data object AddContact : Routes ("add_contact")
     }
