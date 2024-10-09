@@ -47,7 +47,8 @@ object NavUtils {
         ProfessionalRoutes.Home.route,
         ProfessionalRoutes.SearchPatient.route,
         PatientRoutes.MenuPatient.route,
-        ProfessionalRoutes.MenuProfessional.route
+        ProfessionalRoutes.MenuProfessional.route,
+        ProfessionalRoutes.PatientProfile.route
     )
 
     fun isProfessionalRoute(route: String?): Boolean {
