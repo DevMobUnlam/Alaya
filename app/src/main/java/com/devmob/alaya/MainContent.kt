@@ -21,6 +21,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.MenuScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
@@ -54,7 +55,7 @@ fun MainContent(navController: NavHostController) {
             if (currentRoute !in listOf(NavUtils.Routes.Login.route,"nobottom", "nobottom2", NavUtils.Routes.Crisis.route,NavUtils.Routes.Feedback.route)) {
                 BottomBarNavigation(
                     items = listOf(
-                        ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
+                        ItemMenu(iconType = IconType.MENU, route = NavUtils.Routes.Menu.route, contentDescription = "menu", order = 3),
                         ItemMenu(iconType = IconType.PATIENT, route = NavUtils.Routes.Crisis.route, contentDescription = "boton para el manejo de crisis", order = 2),
                         ItemMenu(iconType = IconType.HOME, route = NavUtils.Routes.Home.route, contentDescription = "boton de inicio", order = 1),
                     ),
@@ -70,6 +71,9 @@ fun MainContent(navController: NavHostController) {
         ) {
             composable(NavUtils.Routes.Home.route) {
                 HomeScreen(navController)
+            }
+            composable(NavUtils.Routes.Menu.route) {
+                MenuScreen(navController)
             }
             composable(NavUtilsProfessional.Routes.Home.route) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(),navController)

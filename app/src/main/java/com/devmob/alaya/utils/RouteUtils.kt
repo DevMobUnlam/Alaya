@@ -16,6 +16,7 @@ object NavUtils {
         data object Home : Routes("home")
         data object Crisis : Routes("crisis")
         data object Login : Routes ("login")
+        data object Menu : Routes ("menu")
         data object ContainmentNetwork : Routes("containment_network")
         data object AddContact : Routes ("add_contact")
         data object Feedback : Routes("feedback_screen/{feedbackType}")
