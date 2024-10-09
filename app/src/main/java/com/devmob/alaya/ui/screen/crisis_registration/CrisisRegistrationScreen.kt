@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -61,7 +62,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
@@ -78,7 +78,9 @@ import com.devmob.alaya.ui.theme.ColorWhite
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel = viewModel(),
-    onClose: () -> Unit) {
+    onClose: () -> Unit,
+    onFinishedRegistration: (CrisisRegistrationScreenState) -> Unit,
+    ) {
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
@@ -89,7 +91,7 @@ fun CrisisRegistrationScreen(
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
         .background(ColorWhite)) {
-        val (progressBar, startTitle, endTitle, datePickerComponent, closeIcon,title, backArrow, forwardArrow) = createRefs()
+        val (progressBar, datePickerComponent, closeIcon,title, backArrow, forwardArrow) = createRefs()
         val (elementsGrid,addNewIcon, newElementsGrid) = createRefs()
         val (micButton,textBox) = createRefs()
 
@@ -122,10 +124,13 @@ fun CrisisRegistrationScreen(
                 )
 
                 DateTimePicker(modifier = Modifier.constrainAs(datePickerComponent){
-                    start.linkTo(parent.start, margin = 15.dp)
-                    top.linkTo(title.bottom, margin = 20.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(title.bottom, margin = (-15).dp)
                     bottom.linkTo(forwardArrow.top)
-                })
+                },
+                 onConfirmCrisisTimeDetails = { viewModel.updateCrisisTimeDetails(it) },
+                )
             }
             2 ->{
                 Text(
@@ -175,9 +180,10 @@ fun CrisisRegistrationScreen(
                 )
                 AnimatedVisibility(visible = shouldShowGridList){
                     ElevatedCard(modifier = Modifier.constrainAs(newElementsGrid){
-                        top.linkTo(addNewIcon.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                        top.linkTo(title.bottom)
+                        start.linkTo(parent.start, margin = 10.dp)
+                        end.linkTo(parent.end, margin = 105.dp)
+                        bottom.linkTo(forwardArrow.top)
                     })
                     {
                         GridElementsRepository.returnAvailablePlaces().let{ list ->
@@ -262,9 +268,10 @@ fun CrisisRegistrationScreen(
                 AnimatedVisibility(visible = shouldShowGridList){
                     ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
                         modifier = Modifier.constrainAs(newElementsGrid) {
-                        top.linkTo(addNewIcon.bottom)
+                        top.linkTo(title.bottom,margin = 8.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                            bottom.linkTo(forwardArrow.top)
                     })
                     {
                         GridElementsRepository.returnAvailableBodySensations().let{ list ->
@@ -333,7 +340,7 @@ fun CrisisRegistrationScreen(
                         .constrainAs(title){
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            top.linkTo(progressBar.bottom, margin = 30.dp)
+                            top.linkTo(closeIcon.bottom, margin = 10.dp)
                         }
                 )
 
@@ -341,14 +348,14 @@ fun CrisisRegistrationScreen(
                     top.linkTo(title.bottom, margin = 20.dp)
                     start.linkTo(parent.start, margin = 12.dp)
                     end.linkTo(parent.end,margin = 12.dp)
-                    bottom.linkTo(micButton.top,margin = 12.dp)
+                    bottom.linkTo(micButton.top,margin = 4.dp)
 
                 }
                     .shadow(
-                        elevation = 1.dp,
-                        shape = RoundedCornerShape(13.dp)
-                    )
-                ){
+                        elevation = 3.dp,
+                        shape = RoundedCornerShape(1.dp),
+                    ) )
+                    {
                     Text(
                         text = "\n" +
                                 "¿Con quién estabas?\n" +
@@ -358,6 +365,7 @@ fun CrisisRegistrationScreen(
                                 "a superar la crisis?\n" +
                                 "¿Qué pensamientos tuviste?",
                         color = ColorGray,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -434,8 +442,13 @@ fun CrisisRegistrationScreen(
                         end.linkTo(parent.end, margin = 15.dp)
                     }
                     .clickable {
-                        viewModel.goOneStepForward()
-                        shouldShowGridList = false
+                        if (screenState.value?.currentStep!! < 6) {
+                            viewModel.goOneStepForward()
+                            shouldShowGridList = false
+                    } else{
+                            onFinishedRegistration(screenState.value!!)
+                        }
+
                     }
             )
 
@@ -497,5 +510,5 @@ object GridElementsRepository{
 @Preview
 @Composable
 fun CrisisRegistrationScreenPreview(){
-    CrisisRegistrationScreen(onClose = {})
+    CrisisRegistrationScreen(onClose = {}, onFinishedRegistration = {})
 }

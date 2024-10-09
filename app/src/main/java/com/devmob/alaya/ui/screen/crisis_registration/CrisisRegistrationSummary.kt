@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,8 @@ import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.ui.components.Button
+import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
 
@@ -43,37 +46,6 @@ fun CrisisRegistrationSummary(
 
         val (informationColumn, topTitle,actionButtons) = createRefs()
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(LightBlueColor) // Light background color
-                .padding(vertical = 8.dp)
-                .constrainAs(topTitle) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(onClick = onBackPressed) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = ColorText
-                    )
-                }
-                Text(
-                    text = "Resumen",
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-            }
-        }
-
         Column(
             modifier = Modifier.constrainAs(informationColumn) {
                 top.linkTo(topTitle.top,margin = 8.dp)
@@ -84,8 +56,24 @@ fun CrisisRegistrationSummary(
 
         }
 
-        Row(){
-            Button()
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.constrainAs(actionButtons){
+                bottom.linkTo(parent.bottom, margin = 10.dp)
+                start.linkTo(parent.start, margin = 5.dp)
+                end.linkTo(parent.end,margin = 5.dp)
+
+            }
+            ){
+           Button(
+               text = "Eliminar",
+               style = ButtonStyle.Outlined,
+               onClick = onDelete
+           )
+            Button(
+                text = "Confirmar",
+                style = ButtonStyle.Filled,
+                onClick = onConfirm
+            )
         }
     }
 }

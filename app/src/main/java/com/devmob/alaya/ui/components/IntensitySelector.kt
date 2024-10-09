@@ -47,7 +47,10 @@ import com.devmob.alaya.domain.model.Intensity
  * onIntensityChange - Accion que recibe tipo de Intensidad
  */
 @Composable
-fun IntensitySelector(onIntensityChange: (Intensity) -> Unit, selectedIntensity: Intensity, modifier: Modifier = Modifier) {
+fun IntensitySelector(
+    onIntensityChange: (Intensity) -> Unit,
+    selectedIntensity: Intensity,
+    modifier: Modifier = Modifier) {
 
 
 

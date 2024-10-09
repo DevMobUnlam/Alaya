@@ -34,7 +34,7 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 fun MainContent(navController: NavHostController) {
     val currentRoute = NavUtils.currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
-    val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}")
+    val routesWithAppBar = listOf(NavUtils.Routes.RedDeContencion.route, NavUtils.Routes.AddContact.route, "contact_detail/{contactId}",NavUtils.Routes.CrisisRegistrationSummary.route)
 
     Scaffold(
         topBar = {
@@ -49,7 +49,7 @@ fun MainContent(navController: NavHostController) {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
 
-            if (currentRoute !in listOf(NavUtils.Routes.Login.route,"nobottom", "nobottom2", NavUtils.Routes.Crisis.route,NavUtils.Routes.Feedback.route)) {
+            if (currentRoute !in listOf(NavUtils.Routes.Login.route,"nobottom", "nobottom2", NavUtils.Routes.Crisis.route,NavUtils.Routes.Feedback.route,NavUtils.Routes.CrisisRegistration.route)) {
                 BottomBarNavigation(
                     items = listOf(
                         ItemMenu(iconType = IconType.MENU, route = "menu", contentDescription = "menu", order = 3),
@@ -108,8 +108,16 @@ fun MainContent(navController: NavHostController) {
                     popUpTo(NavUtils.Routes.Home.route) {
                         inclusive = true
                     }
-                }})
+                }}, onFinishedRegistration = {/*navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route)*/})
             }
+
+            /*composable(NavUtils.Routes.CrisisRegistrationSummary.route){
+                popUpTo(NavUtils.Routes.Home.route) {
+                    inclusive = true
+                }
+            }
+            */
+
         }
     }
 }

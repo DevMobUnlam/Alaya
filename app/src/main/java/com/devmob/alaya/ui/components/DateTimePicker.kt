@@ -23,12 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.model.CrisisTimeDetails
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 @Composable
-fun DateTimePicker(modifier: Modifier = Modifier) {
+fun DateTimePicker(
+    modifier: Modifier = Modifier,
+    onConfirmCrisisTimeDetails: (CrisisTimeDetails) -> Unit
+) {
     val calendar = Calendar.getInstance()
 
     var selectedStartDate by remember { mutableStateOf(calendar.time) }
@@ -83,13 +87,13 @@ fun DateTimePicker(modifier: Modifier = Modifier) {
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(modifier = modifier){
+                Column(){
                     Spacer(modifier = Modifier.height(50.dp))
 
                     OutlinedTextField(
@@ -199,6 +203,6 @@ fun DateTimePicker(modifier: Modifier = Modifier) {
 fun PreviewDateTimePicker()
 {
     Surface {
-        DateTimePicker()
+        DateTimePicker(onConfirmCrisisTimeDetails = {})
     }
 }

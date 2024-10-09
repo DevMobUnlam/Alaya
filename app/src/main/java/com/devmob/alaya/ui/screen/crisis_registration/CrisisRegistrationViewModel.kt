@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
+import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 
@@ -80,6 +81,13 @@ class CrisisRegistrationViewModel(): ViewModel() {
     fun showExitModal() {
         shouldShowExitModal = true
         println("showExitModal updated, new value is $shouldShowExitModal")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateCrisisTimeDetails(crisisTimeDetails: CrisisTimeDetails) {
+        _screenState?.value = _screenState?.value?.copy(
+            crisisTimeDetails = crisisTimeDetails
+        )
     }
 
 

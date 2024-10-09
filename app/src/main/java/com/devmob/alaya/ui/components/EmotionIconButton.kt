@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.theme.ColorGray
@@ -66,7 +69,9 @@ fun EmotionIconButton(
                     )
                 }
                 AnimatedVisibility(visible = !showIntensitySelector) {
-                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)
+                        .zIndex(5f)
+                    ) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
@@ -109,6 +114,7 @@ fun EmotionIconButton(
                     modifier = Modifier.fillMaxSize(0.70f)
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = text,
                 color = ColorText,
