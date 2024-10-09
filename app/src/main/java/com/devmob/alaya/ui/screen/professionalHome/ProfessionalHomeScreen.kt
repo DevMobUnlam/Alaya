@@ -38,7 +38,7 @@ import com.devmob.alaya.R
 import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.Header
-import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.components.UserItem
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
@@ -99,10 +99,8 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                             modifier = Modifier.wrapContentHeight()
                         ) {
                             items(viewModel.users) { user ->
-                                    UserItem(user) {
-
-                                        navController.navigate(NavUtilsProfessional.Routes.PatientProfile.route)
-
+                                UserItem(user, true) {
+                                    navController.navigate(NavUtilsProfessional.Routes.PatientProfile.route)
                                 }
                             }
                         }
@@ -112,43 +110,6 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
         }
     }
 }
-
-@Composable
-fun UserItem(user: User, onClick: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onClick() }
-    ) {
-        Image(
-            painter = painterResource(user.image),
-            contentDescription = "Foto de ${user.name}",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(
-                text = user.name,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = ColorText
-            )
-            Text(
-                text = user.hour,
-                fontSize = 18.sp,
-                color = ColorPrimary
-            )
-        }
-
-    }
-}
-
-data class User(val name: String, val image: Int, val hour: String)
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
