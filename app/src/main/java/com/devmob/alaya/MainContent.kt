@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
-import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
@@ -67,7 +66,6 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            //startDestination = "login",
             startDestination = NavUtils.PatientRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
