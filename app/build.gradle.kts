@@ -67,6 +67,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,4 +82,6 @@ dependencies {
     implementation(libs.androidx.constraint)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.mockk)
+    testImplementation(libs.core.testing)
+    testImplementation(libs.mockito)
 }
