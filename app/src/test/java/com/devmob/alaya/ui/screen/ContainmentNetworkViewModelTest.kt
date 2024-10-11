@@ -24,7 +24,6 @@ class ContainmentNetworkViewModelTest {
     fun setUp() {
         viewModel = ContainmentNetworkViewModel()
         observer = mock(Observer::class.java) as Observer<List<Contact>>
-        viewModel.contacts.observeForever(observer)
     }
 
     @Test

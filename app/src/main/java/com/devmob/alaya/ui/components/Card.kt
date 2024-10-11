@@ -22,11 +22,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
@@ -69,28 +69,49 @@ fun Card(
 
             LeftIconOrProgress(progress,leftIcon, leftIconBitmap);
 
-            if (imageUrl != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = imageUrl,
+            when {
+                imageUrl != null -> {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = imageUrl,
+                            contentScale = ContentScale.Crop,
+                        ),
                         contentScale = ContentScale.Crop,
-                    ),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "Imagen de tarjeta",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-            } else if (imageResId != null) {
-                Image(
-                    painter = painterResource(id = imageResId),
-                    contentDescription = "Imagen de tarjeta",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
+                        contentDescription = "Imagen de tarjeta",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+                imageResId != null -> {
+                    Image(
+                        painter = painterResource(id = imageResId),
+                        contentDescription = "Imagen de tarjeta",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
+                rightIcon == null -> {
+                    val initials = getInitials(title)
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                            .background(ColorPrimary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = initials,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
             }
 
 
@@ -192,6 +213,13 @@ fun LeftIconOrProgress(progress: Float?, leftIcon: ImageVector?, leftIconBitmap:
             Spacer(modifier = Modifier.width(16.dp))
     }
 }}
+
+fun getInitials(name: String): String {
+    return name.split(" ")
+        .filter { it.isNotEmpty() }
+        .take(2)
+        .joinToString("") { it.take(1).uppercase() }
+}
 
 @Preview(showBackground = true)
 @Composable
