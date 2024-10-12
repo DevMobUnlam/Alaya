@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.Contact
+import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 

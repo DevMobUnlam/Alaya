@@ -49,7 +49,6 @@ fun Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = ColorWhite)
             .wrapContentHeight(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
