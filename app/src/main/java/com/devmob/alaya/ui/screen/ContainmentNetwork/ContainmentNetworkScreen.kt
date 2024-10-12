@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,9 +25,9 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.components.Card
-import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.components.IconButton
+import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactCard
+import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 
 @Composable
 fun ContainmentNetworkScreen(
@@ -87,6 +86,7 @@ fun ContainmentNetworkScreen(
             items(contacts) { contact ->
                 ContactCard(
                     contact = contact,
+                    viewModel = ContactViewModel(),
                     onClick = {
                         navController.navigate("contact_detail/${contact.contactId}")
                     }
@@ -114,16 +114,7 @@ fun ContainmentNetworkScreen(
     }
 }
 
-@Composable
-fun ContactCard(contact: Contact, onClick: () -> Unit) {
-    Card(
-        title = contact.name,
-        subtitle = contact.numberPhone,
-        imageUrl = contact.photo,
-        onClick = onClick
-    )
 
-}
 
 
 
