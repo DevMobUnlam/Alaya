@@ -33,6 +33,7 @@ import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.registerScreen.RegisterScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
@@ -70,7 +71,7 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = NavUtils.PatientRoutes.Login.route,
+            startDestination = NavUtils.LoginRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.PatientRoutes.Home.route,
@@ -114,7 +115,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 SearchUserScreen(SearchUserViewModel(), navController)
             }
-            composable(NavUtils.PatientRoutes.Login.route,
+            composable(NavUtils.LoginRoutes.Login.route,
                 enterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
                 exitTransition = { return@composable slideOutOfContainer(
@@ -233,6 +234,16 @@ fun MainContent(navController: NavHostController) {
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
                 MenuProfessionalScreen(navController)
+            }
+            composable(NavUtils.LoginRoutes.Register.route,
+                    enterTransition = { return@composable slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                RegisterScreen(navController)
             }
         }
     }
