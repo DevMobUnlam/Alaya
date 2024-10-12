@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth
-    private val _loading = MutableLiveData(false)
+    private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
+
 
     fun singInWithEmailAndPassword(email: String, password: String, homePatient: () -> Unit, homeProfessional: () -> Unit) =
         viewModelScope.launch {
@@ -37,6 +38,9 @@ class LoginViewModel : ViewModel() {
                 Log.d("login", "singInWinthEmailAndPassword: ${ex.message}")
             }
         }
+
+    /////////////////////// BORRAR ESTO LUEGO DE IMPLEMENTAR EL OTRO VIEWMODEL
+
 
     fun createUserWithEmailAndPassword(
         email: String,
@@ -75,4 +79,8 @@ class LoginViewModel : ViewModel() {
                 Log.d("Dato de BD", "Error ${it}")
             }
     }
+
+
+
+
 }
