@@ -33,7 +33,7 @@ import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
-import com.devmob.alaya.ui.screen.registerScreen.RegisterScreen
+import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils

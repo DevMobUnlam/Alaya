@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.registerScreen
+package com.devmob.alaya.ui.screen.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
