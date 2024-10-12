@@ -58,7 +58,7 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Header(viewModel.nameProfessional)
+            Header(viewModel.nameProfessional,viewModel.greetingMessage)
             Spacer(modifier = Modifier.width(16.dp))
             CardContainer(
                 modifier = Modifier.fillMaxHeight(),
