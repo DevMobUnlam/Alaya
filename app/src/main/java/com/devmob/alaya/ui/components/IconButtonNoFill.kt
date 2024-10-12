@@ -70,7 +70,7 @@ fun IconButtonNoFill(
             modifier = Modifier.fillMaxWidth(),
             text = text,
             color = ColorText,
-            fontSize = 13.sp,
+            fontSize = 16.sp,
             lineHeight = 18.sp,
             textAlign = TextAlign.Center,
             maxLines = 3

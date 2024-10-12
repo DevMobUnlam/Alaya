@@ -2,7 +2,9 @@ package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
@@ -31,7 +33,7 @@ fun IconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
         FilledIconButton(
             onClick = onClick,
             enabled = true,
@@ -42,8 +44,10 @@ fun IconButton(
                 disabledContainerColor = ColorWhite),
             modifier = Modifier.size(size)
         ) {
-            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.70f))
+            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.75f))
         }
+
+        Spacer(modifier = Modifier.height(7.dp))
         Text(
             text = text,
             color = ColorText,

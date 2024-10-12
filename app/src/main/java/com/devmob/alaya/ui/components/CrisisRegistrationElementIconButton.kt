@@ -2,7 +2,9 @@ package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FilledIconButton
@@ -18,17 +20,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
 fun CrisisRegistrationElementIconButton(
+    modifier: Modifier = Modifier,
     symbol: ImageVector,
     text: String,
     size: Dp,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    isActive: Boolean = false,
+    onClick: () -> Unit = {}
 ){
+
+    val buttonColor = if(isActive) ColorText else ColorPrimary
 
     Column(
         verticalArrangement = Arrangement.spacedBy((-3).dp),
@@ -40,7 +47,7 @@ fun CrisisRegistrationElementIconButton(
             enabled = true,
             shape = CircleShape,
             colors = IconButtonColors(
-                containerColor = ColorText,
+                containerColor = buttonColor,
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite
@@ -51,13 +58,14 @@ fun CrisisRegistrationElementIconButton(
                 symbol,
                 contentDescription = text,
                 tint = ColorWhite,
-                modifier = Modifier.fillMaxSize(0.80f)
+                modifier = Modifier.fillMaxSize(0.75f)
             )
         }
+        Spacer(modifier = Modifier.height(7.dp))
         Text(
             text = text,
             color = ColorText,
-            fontSize = 13.sp
+            fontSize = 16.sp
         )
 
     }

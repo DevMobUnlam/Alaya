@@ -6,19 +6,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,7 +35,7 @@ import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Sensors
@@ -50,15 +47,10 @@ import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -72,8 +64,8 @@ import com.devmob.alaya.ui.components.DateTimePicker
 import com.devmob.alaya.ui.components.EmotionIconButton
 import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.ui.components.NewCrisisElementCard
 import com.devmob.alaya.ui.components.TextArea
-import com.devmob.alaya.ui.components.TextContainer
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -82,20 +74,20 @@ fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel = viewModel(),
     onClose: () -> Unit,
     onFinishedRegistration: (CrisisRegistrationScreenState) -> Unit,
+    content: @Composable () -> Unit = {},
     ) {
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
     var messageTextSize = 30.sp
-    val horizontalPadding = 15.dp
-    var shouldShowGridList by remember { mutableStateOf(false) }
+    val horizontalMargin = 15.dp
+    var shouldShowAddNewCard by remember { mutableStateOf(false) }
 
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
         .background(ColorWhite)) {
         val (progressBar, datePickerComponent, closeIcon,title, backArrow, forwardArrow) = createRefs()
-        val (elementsGrid,addNewIcon, newElementsGrid) = createRefs()
-        val (micButton,textBox) = createRefs()
+        val (elementsGrid,addNewIcon, newElementsCard, addMoreStep) = createRefs()
 
         SegmentedProgressBar(
             totalSteps = screenState.value!!.totalSteps,
@@ -134,6 +126,9 @@ fun CrisisRegistrationScreen(
                 )
             }
             2 ->{
+
+                val icon = Icons.Filled.LocationOn
+
                 Text(
                     text = "¿Donde estabas?",
                     fontSize = messageTextSize,
@@ -149,6 +144,12 @@ fun CrisisRegistrationScreen(
                 )
 
 
+                    GridElementsRepository.returnAvailablePlaces().let { places ->
+                        for(place in places){
+                            viewModel.addCrisisPlace(place)
+                        }
+                    }
+
                     viewModel.screenState.value?.placeList?.let { places ->
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
@@ -161,11 +162,13 @@ fun CrisisRegistrationScreen(
                             }
                         ) {
                             items(places) {
+                                var isActive = false
                                 CrisisRegistrationElementIconButton(
                                     symbol = it.icon,
                                     text = it.name,
                                     size = 60.dp,
-                                    onClick = {}
+                                    isActive = isActive,
+                                    onClick = {isActive = !isActive}
                                 )
                             }
                         }
@@ -177,42 +180,34 @@ fun CrisisRegistrationScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowGridList = !shouldShowGridList}
+                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
                 )
-                AnimatedVisibility(visible = shouldShowGridList){
-                    ElevatedCard(modifier = Modifier.constrainAs(newElementsGrid){
-                        top.linkTo(title.bottom)
-                        start.linkTo(parent.start, margin = 10.dp)
-                        end.linkTo(parent.end, margin = 105.dp)
-                        bottom.linkTo(forwardArrow.top)
-                    })
-                    {
-                        GridElementsRepository.returnAvailablePlaces().let{ list ->
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(3),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
 
-                                ) {
-                                items(list) { place ->
-                                    CrisisRegistrationElementIconButton(
-                                        symbol = place.icon,
-                                        text = place.name,
-                                        size = 60.dp,
-                                        onClick = {
-                                            viewModel.addCrisisPlace(place)
-                                            shouldShowGridList = !shouldShowGridList
-                                        }
-                                    )
-                                }
-
-                            }
+                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }) {
+                    NewCrisisElementCard(
+                        placeholderText = "Agrega otro lugar...",
+                        icon = icon,
+                        onSave = {viewModel.addCrisisPlace(
+                            CrisisPlace(
+                                name = it,
+                                icon = icon
+                            )
+                        )
+                            shouldShowAddNewCard = !shouldShowAddNewCard
                         }
-                    }
-
+                    )
                 }
+
             }
             3 -> {
+
+                val icon = Icons.Filled.Accessibility
+
                 Text(
                     text = "¿Que sensaciones\ncorporales sentiste?",
                     fontSize = messageTextSize,
@@ -227,6 +222,12 @@ fun CrisisRegistrationScreen(
                         }
                 )
 
+                GridElementsRepository.returnAvailableBodySensations().let { bodySensations ->
+                    for(sensation in bodySensations){
+                        viewModel.addCrisisBodySensation(sensation)
+                    }
+                }
+
                 viewModel.screenState.value?.bodySensationList?.let { bodySensations ->
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
@@ -238,19 +239,18 @@ fun CrisisRegistrationScreen(
                             end.linkTo(parent.end)
                         }
                     ) {
-                        itemsIndexed(bodySensations) { index, bodySensation ->
+                        itemsIndexed(bodySensations) {index, sensation ->
+                            var isActive = false
                             EmotionIconButton(
-                                symbol = bodySensation.icon,
-                                text = bodySensation.name,
+                                symbol = sensation.icon,
+                                text = sensation.name,
                                 size = 60.dp,
-                                onClick = {},
-                                enabled = true,
-                                intensity = bodySensation.intensity,
+                                intensity = sensation.intensity,
                                 onChangedIntensity = {
                                     viewModel.onBodySensationIntensityChange(
-                                        intensity = bodySensation.intensity,
+                                        intensity = it,
                                         index = index,
-                                        bodySensation = bodySensation
+                                        bodySensation = sensation
                                     )
                                 }
                             )
@@ -258,47 +258,35 @@ fun CrisisRegistrationScreen(
                     }
                 }
                 IconButtonNoFill(
-                    text = "Agregar otra sensación",
+                    text = "Añadir \n sensación \n corporal",
                     modifier = Modifier.constrainAs(addNewIcon){
                         top.linkTo(elementsGrid.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowGridList = !shouldShowGridList}
+                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
                 )
-                AnimatedVisibility(visible = shouldShowGridList){
-                    ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
-                        modifier = Modifier.constrainAs(newElementsGrid) {
-                        top.linkTo(title.bottom,margin = 8.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                            bottom.linkTo(forwardArrow.top)
-                    })
-                    {
-                        GridElementsRepository.returnAvailableBodySensations().let{ list ->
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(3),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
 
-                                ) {
-                                items(list) {bodySensation ->
-                                    CrisisRegistrationElementIconButton(
-                                        symbol = bodySensation.icon,
-                                        text = bodySensation.name,
-                                        size = 60.dp,
-                                        onClick = {
-                                            viewModel.addCrisisBodySensation(bodySensation)
-                                            shouldShowGridList = !shouldShowGridList
-                                        }
-                                    )
-                                }
-
-                            }
+                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }) {
+                    NewCrisisElementCard(
+                        placeholderText = "Agrega otro lugar...",
+                        icon = icon,
+                        onSave = {viewModel.addCrisisPlace(
+                            CrisisPlace(
+                                name = it,
+                                icon = icon
+                            )
+                        )
+                            shouldShowAddNewCard = !shouldShowAddNewCard
                         }
-                    }
-
+                    )
                 }
+
             }
             4 ->{
                 Text(
@@ -329,87 +317,13 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
-                viewModel.screenState.value?.toolList?.let { tools ->
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.constrainAs(elementsGrid){
-                            top.linkTo(title.bottom,margin = 20.dp)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                    ) {
-                        itemsIndexed(tools) { index, tool ->
-                            CrisisRegistrationElementIconButton(
-                                symbol = tool.icon,
-                                text = tool.name,
-                                size = 60.dp,
-                                onClick = {},
-                            )
-                        }
-                    }
-                }
-                IconButtonNoFill(
-                    text = "Agregar otra herramienta",
-                    modifier = Modifier.constrainAs(addNewIcon){
-                        top.linkTo(elementsGrid.bottom, margin = 10.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                    onClick = {shouldShowGridList = !shouldShowGridList}
-                )
-                AnimatedVisibility(visible = shouldShowGridList){
-                    ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
-                        modifier = Modifier.constrainAs(newElementsGrid) {
-                            top.linkTo(title.bottom,margin = 8.dp)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            bottom.linkTo(forwardArrow.top)
-                        })
-                    {
-                        GridElementsRepository.returnAvailableTools().let{ list ->
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(3),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
 
-                                ) {
-                                items(list) {tool ->
-                                    CrisisRegistrationElementIconButton(
-                                        symbol = tool.icon,
-                                        text = tool.name,
-                                        size = 60.dp,
-                                        onClick = {
-                                            viewModel.addCrisisTool(tool)
-                                            shouldShowGridList = !shouldShowGridList
-                                        }
-                                    )
-                                }
 
-                            }
-                        }
-                    }
-
-                }
             }
             6 ->{
-                Text(
-                    text = "¿Querés agregar algo más?",
-                    fontSize = messageTextSize,
-                    color = ColorText,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 30.sp,
-                    modifier = Modifier
-                        .constrainAs(title){
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            top.linkTo(closeIcon.bottom, margin = 10.dp)
-                        }
-                )
                     TextArea(
-                        title = "",
-                        modifier = Modifier.constrainAs(textBox){
+                        title = "¿Querés agregar algo más?",
+                        modifier = Modifier.constrainAs(addMoreStep){
                             top.linkTo(title.bottom)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
@@ -417,26 +331,6 @@ fun CrisisRegistrationScreen(
                         }
                     )
 
-
-                /*IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    onClick = {},
-                    modifier = Modifier.size(55.dp).constrainAs(micButton){
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(backArrow.top, margin = 12.dp)
-                    }.shadow(
-                        elevation = 4.dp,
-                        shape = CircleShape
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Mic,
-                        contentDescription = "Talk to speech",
-                        modifier = Modifier.fillMaxSize(0.65F),
-                        tint = ColorWhite
-                    )
-                }*/
             }
         }
 
@@ -450,7 +344,7 @@ fun CrisisRegistrationScreen(
                 .size(32.dp)
                 .constrainAs(closeIcon) {
                     top.linkTo(progressBar.bottom, margin = 10.dp)
-                    end.linkTo(parent.end, margin = 15.dp)
+                    end.linkTo(parent.end, margin = horizontalMargin)
                 }
                 .clickable {
                     viewModel.showExitModal()
@@ -472,7 +366,7 @@ fun CrisisRegistrationScreen(
                         .clickable {
                             if (screenState.value?.currentStep != 1) {
                                 viewModel.goOneStepBack()
-                                shouldShowGridList = false
+                                shouldShowAddNewCard = false
                             }
                         }
                 )
@@ -492,7 +386,7 @@ fun CrisisRegistrationScreen(
                     .clickable {
                         if (screenState.value?.currentStep!! < 6) {
                             viewModel.goOneStepForward()
-                            shouldShowGridList = false
+                            shouldShowAddNewCard = false
                     } else{
                             onFinishedRegistration(screenState.value!!)
                         }

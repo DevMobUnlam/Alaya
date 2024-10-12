@@ -47,9 +47,10 @@ fun EmotionIconButton(
     text: String,
     size: Dp,
     modifier: Modifier = Modifier,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    intensity: Intensity,
+    buttonColor: Color = ColorText,
+    isActive: Boolean = true,
+    onClick: () -> Unit = {},
+    intensity: Intensity = Intensity.LOW,
     onChangedIntensity: (Intensity) -> Unit,
 ){
 
@@ -70,7 +71,6 @@ fun EmotionIconButton(
                 }
                 AnimatedVisibility(visible = !showIntensitySelector) {
                     Box(modifier = Modifier.align(Alignment.CenterHorizontally)
-                        .zIndex(5f)
                     ) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -97,10 +97,9 @@ fun EmotionIconButton(
                     showIntensitySelector = !showIntensitySelector
                     onClick()
                     },
-                enabled = enabled,
                 shape = CircleShape,
                 colors = IconButtonColors(
-                    containerColor = Color(0xFF2E4D83),
+                    containerColor = buttonColor,
                     contentColor = ColorWhite,
                     disabledContentColor = ColorGray,
                     disabledContainerColor = ColorWhite
@@ -111,14 +110,14 @@ fun EmotionIconButton(
                     symbol,
                     contentDescription = text,
                     tint = ColorWhite,
-                    modifier = Modifier.fillMaxSize(0.70f)
+                    modifier = Modifier.fillMaxSize(0.75f)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(7.dp))
             Text(
                 text = text,
                 color = ColorText,
-                fontSize = 13.sp
+                fontSize = 16.sp
             )
 
         }
@@ -128,5 +127,5 @@ fun EmotionIconButton(
 @Composable
 
 fun EmotionIconButtonPreview(){
-    EmotionIconButton(Icons.Outlined.Refresh, "Mareos", size = 70.dp,enabled = true, onChangedIntensity = {}, intensity = Intensity.LOW, onClick = {})
+    EmotionIconButton(Icons.Outlined.Refresh, "Mareos", size = 70.dp,isActive = true, onChangedIntensity = {}, intensity = Intensity.LOW, onClick = {})
 }

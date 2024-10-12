@@ -35,7 +35,11 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
-fun TextArea(title: String, modifier: Modifier = Modifier){
+fun TextArea(
+    modifier: Modifier = Modifier,
+    title: String,
+    onMicClick:() -> Unit = {},
+    ){
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
 
@@ -76,7 +80,16 @@ fun TextArea(title: String, modifier: Modifier = Modifier){
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                 decorationBox = { innerTextField ->
                     if (text.text.isEmpty()) {
-                        Text("Escribe aquí...", color = Color.Gray)
+                        Text(text =
+                                "¿Con quién estabas?\n" +
+                                "¿Qué estabas haciendo?\n" +
+                                "¿Qué hiciste después?\n" +
+                                "¿Qué herramientas te ayudaron?\n" +
+                                "a superar la crisis?\n" +
+                                "¿Qué pensamientos tuviste?",
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                        )
                     }
                     innerTextField()
                 }
@@ -85,7 +98,7 @@ fun TextArea(title: String, modifier: Modifier = Modifier){
         Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
-            onClick = {},
+            onClick = onMicClick,
             shape = CircleShape,
             containerColor = ColorPrimary,
             modifier = Modifier
