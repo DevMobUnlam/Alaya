@@ -7,9 +7,10 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
 /build
+.DS_Store
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+.idea/deploymentTargetSelector.xml

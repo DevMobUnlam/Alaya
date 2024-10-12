@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -8,9 +8,23 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
+iconExtended = "1.7.0"
+constraintlayout = "2.1.4"
+constraintLayoutVersion = "1.0.1"
+runtimeLivedata = "1.7.3"
+mockkVersion = "1.13.12"
+firebaseAuthKtx = "23.0.0"
+firebaseFirestoreKtx = "25.1.0"
+core-testing = "2.1.0"
+mockito = "4.0.0"
+navVersion = "2.8.0"
+appcompat = "1.7.0"
+material = "1.12.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-material-icons-extended= {group= "androidx.compose.material" , name = "material-icons-extended", version.ref= "iconExtended"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -24,6 +38,18 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-constraint = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayoutVersion"}
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
+mockk = {group = "io.mockk", name = "mockk", version.ref = "mockkVersion"}
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
