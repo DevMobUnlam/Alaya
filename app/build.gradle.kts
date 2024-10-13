@@ -85,4 +85,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)
+    testImplementation (libs.robolectric)
 }
