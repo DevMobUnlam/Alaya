@@ -34,14 +34,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
+import com.devmob.alaya.ui.components.Switch
+import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
-fun RegisterScreen(navController: NavController){
+fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
 
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
@@ -78,6 +83,10 @@ fun RegisterScreen(navController: NavController){
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        Switch( modifier = Modifier.fillMaxWidth())
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -106,7 +115,7 @@ fun RegisterScreen(navController: NavController){
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
+        /*OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Usuario",
@@ -119,7 +128,7 @@ fun RegisterScreen(navController: NavController){
             },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))*/
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -185,12 +194,22 @@ fun RegisterScreen(navController: NavController){
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    if (name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                        showAlert = true
-                    } else if (password != confirmPassword) {
-                        errorMessage = "Las contraseñas no coinciden"
-                    } else {
-                        errorMessage = "Registrado con éxito"
+                    if (validateRegisterFields(
+                        name,
+                        surname,
+                        email,
+                        password,
+                        confirmPassword,
+                        showAlert,
+                        errorMessage
+                    )) {
+                        viewModel.createUserWithEmailAndPassword(email, password) {
+                            navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+                                popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                     }
                 },
                 modifier = Modifier.weight(1f).height(50.dp),
@@ -213,3 +232,35 @@ fun RegisterScreen(navController: NavController){
         }
     }
 }
+
+private fun validateRegisterFields(
+    name: String,
+    surname: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    showAlert: Boolean,
+    errorMessage: String
+): Boolean {
+    var showAlert1 = showAlert
+    var errorMessage1 = errorMessage
+    if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        showAlert1 = true
+        return false
+    } else if (password != confirmPassword) {
+        errorMessage1 = "Las contraseñas no coinciden"
+        return false
+    } else {
+        errorMessage1 = "Registrado con éxito"
+        return true
+    }
+}
+
+/*
+@Preview (showBackground = true)
+@Composable
+fun PreviewRegisterScreen(){
+    RegisterScreen(rememberNavController() )
+}
+
+*/

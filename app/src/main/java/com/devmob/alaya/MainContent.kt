@@ -35,6 +35,7 @@ import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
+import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
@@ -244,7 +245,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                RegisterScreen(navController)
+                RegisterScreen(navController, RegisterViewmodel())
             }
         }
     }

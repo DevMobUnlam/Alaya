@@ -23,12 +23,13 @@ class RegisterViewmodel : ViewModel() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Log.d("leandro", "is success")
                         val displayName =
                             task.result.user?.email?.split("@")?.get(0)
                         createUser(displayName)
                         home()
                     } else {
-                        Log.d("Registro", "CreateWithEmailAndPassword: ${task.exception}")
+                        Log.d("leandro", "CreateWithEmailAndPassword: ${task.exception}")
                     }
                     _loading.value = false
                 }

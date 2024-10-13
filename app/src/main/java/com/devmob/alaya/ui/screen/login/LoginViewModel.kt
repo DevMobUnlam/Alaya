@@ -53,8 +53,6 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
         }
 
     /////////////////////// BORRAR ESTO LUEGO DE IMPLEMENTAR EL OTRO VIEWMODEL
-
-
     fun createUserWithEmailAndPassword(
         email: String,
         password: String,

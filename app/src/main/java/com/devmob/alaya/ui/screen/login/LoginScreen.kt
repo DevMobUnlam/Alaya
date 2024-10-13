@@ -120,7 +120,14 @@ fun SreenLogin(
                 Text(text = text1)
                 Text(text = text2,
                     modifier = Modifier
-                        .clickable { showLoginForm.value = !showLoginForm.value }
+                        .clickable {
+                            //showLoginForm.value = !showLoginForm.value
+                            navController.navigate(NavUtils.LoginRoutes.Register.route) {
+                                popUpTo(NavUtils.LoginRoutes.Register.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                         .padding(start = 5.dp))
             }
         }
