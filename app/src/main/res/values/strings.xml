@@ -29,4 +29,5 @@
     <string name="go_to_network">Ir a mi red de contencion</string>
     <string name="intensity_selector_text">Intensidad</string>
     <string name="start_question">¿En qué momento\ncomenzó?</string>
+    <string name="text_tooltip_text_area">¿Prefieres hablar en lugar de escribir? Mantén presionado el botón para dictar tu mensaje.</string>
 </resources>
