@@ -5,6 +5,8 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_UP
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
@@ -155,14 +158,17 @@ fun TextArea(
             state = tooltipState,
             enableUserInput = false
         ) {
+            val scale by animateFloatAsState(if (isPressed) 0.9f else 1f)
+            val backgroundColor by animateColorAsState(if (isPressed) Color.Gray else ColorPrimary)
             FloatingActionButton(
                 onClick = {
                     tooltipState.dismiss()
                 },
                 shape = CircleShape,
-                containerColor = ColorPrimary,
+                containerColor = backgroundColor,
                 modifier = Modifier
                     .size(80.dp)
+                    .scale(scale)
                     .pointerInteropFilter { event ->
                         tooltipState.dismiss()
                         recordAudioLauncher.launch(RECORD_AUDIO)
