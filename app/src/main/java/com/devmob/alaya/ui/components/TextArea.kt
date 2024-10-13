@@ -17,13 +17,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Mic
-import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,17 +42,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.VoiceToText
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TextArea(
     modifier: Modifier = Modifier,
@@ -105,9 +113,7 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
-                onValueChange = { newText ->
-                    text = newText
-                },
+                onValueChange = { text = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -115,14 +121,13 @@ fun TextArea(
                 decorationBox = { innerTextField ->
                     if (text.text.isEmpty()) {
                         Text(
-                            text = state.spokenText.ifEmpty {
-                                "¿Con quién estabas?\n" +
-                                        "¿Qué estabas haciendo?\n" +
-                                        "¿Qué hiciste después?\n" +
-                                        "¿Qué herramientas te ayudaron?\n" +
-                                        "a superar la crisis?\n" +
-                                        "¿Qué pensamientos tuviste?"
-                            },
+                            text =
+                            "¿Con quién estabas?\n" +
+                                    "¿Qué estabas haciendo?\n" +
+                                    "¿Qué hiciste después?\n" +
+                                    "¿Qué herramientas te ayudaron?\n" +
+                                    "a superar la crisis?\n" +
+                                    "¿Qué pensamientos tuviste?",
                             color = Color.Gray,
                             textAlign = TextAlign.Center
                         )
@@ -133,46 +138,64 @@ fun TextArea(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-
-        FloatingActionButton(
-            onClick = {},
-            shape = CircleShape,
-            containerColor = ColorPrimary,
-            modifier = Modifier
-                .size(80.dp)
-                .pointerInteropFilter { event ->
-                    recordAudioLauncher.launch(RECORD_AUDIO)
-                    if (!canRecord) return@pointerInteropFilter false
-                    when (event.action) {
-                        ACTION_DOWN -> {
-                            isPressed = true
-                            coroutineScope.launch {
-                                voiceToText.startListening()
-                            }
-                            true
-                        }
-
-                        ACTION_UP -> {
-                            isPressed = false
-                            coroutineScope.launch {
-                                voiceToText.stopListening()
-                            }
-                            true
-                        }
-
-                        else -> false
-                    }
+        val tooltipState = rememberTooltipState(isPersistent = false, initialIsVisible = true)
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                PlainTooltip(
+                    containerColor = LightBlueColor,
+                    contentColor = ColorText
+                ) {
+                    Text(
+                        stringResource(R.string.text_tooltip_text_area),
+                        textAlign = TextAlign.Center
+                    )
                 }
+            },
+            state = tooltipState,
+            enableUserInput = false
         ) {
-            Icon(
-                imageVector = if (isPressed) Icons.Rounded.Stop else Icons.Rounded.Mic,
-                contentDescription = "Agregar",
-                tint = ColorWhite,
-                modifier = Modifier.size(35.dp)
-            )
+            FloatingActionButton(
+                onClick = {
+                    tooltipState.dismiss()
+                },
+                shape = CircleShape,
+                containerColor = ColorPrimary,
+                modifier = Modifier
+                    .size(80.dp)
+                    .pointerInteropFilter { event ->
+                        tooltipState.dismiss()
+                        recordAudioLauncher.launch(RECORD_AUDIO)
+                        if (!canRecord) return@pointerInteropFilter false
+                        when (event.action) {
+                            ACTION_DOWN -> {
+                                isPressed = true
+                                coroutineScope.launch {
+                                    voiceToText.startListening()
+                                }
+                                true
+                            }
+
+                            ACTION_UP -> {
+                                isPressed = false
+                                coroutineScope.launch {
+                                    voiceToText.stopListening()
+                                }
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Mic,
+                    contentDescription = "Agregar",
+                    tint = ColorWhite,
+                    modifier = Modifier.size(35.dp)
+                )
+            }
         }
-
-
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
