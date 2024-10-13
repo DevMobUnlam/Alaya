@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -123,7 +124,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                SreenLogin(navController, LoginViewModel())
+                SreenLogin(navController, LoginViewModel(LoginUseCase()))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = { return@composable slideIntoContainer(

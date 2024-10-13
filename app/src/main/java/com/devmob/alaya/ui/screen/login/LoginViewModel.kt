@@ -1,41 +1,54 @@
 package com.devmob.alaya.ui.screen.login
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.domain.LoginUseCase
+import com.devmob.alaya.domain.model.LoginResult
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
 
 
-    fun singInWithEmailAndPassword(email: String, password: String, homePatient: () -> Unit, homeProfessional: () -> Unit) =
+    private val _navigateToPatientHome = mutableStateOf(false)
+    val navigateToPatientHome: MutableState<Boolean>
+        get() = _navigateToPatientHome
+
+    private val _navigateToProfessionalHome = mutableStateOf(false)
+    val navigateToProfessionalHome: MutableState<Boolean>
+        get() = _navigateToProfessionalHome
+
+    fun singInWithEmailAndPassword(
+        email: String,
+        password: String
+    ) =
         viewModelScope.launch {
-            try {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d("Login", "singInWithEmailAndPassword Logueado")
-                            //TODO Cambiar este if por rol del usuario
-                            //florencia@gmail.com contraseña 123456 es paciente
-                            //patricia@gmail.com contraseña 123456 es profesional
-                            if (email == "florencia@gmail.com"){
-                                homePatient()
-                            } else {
-                                homeProfessional()
-                            }
-                        } else {
-                            Log.d("login", "singInWinthEmailAndPassword: ${task.exception}")
-                        }
+            _loading.value = true
+            when (val result = loginUseCase(email, password)) {
+                is LoginResult.Error -> {
+                    _loading.value = false
+                    Log.d("login", "singInWithEmailAndPassword error: ${result.t}")
+                    //TODO: manejo de errores
+                }
+
+                is LoginResult.Success -> {
+                    //TODO: Cambiar por role:
+                    //if (result.role == "PATIENT") { //Podría ser un when en vez de if.
+                    if (email == "florencia@gmail.com") {
+                        _navigateToPatientHome.value = true
+                    } else {
+                        _navigateToProfessionalHome.value = true
                     }
-            } catch (ex: Exception) {
-                Log.d("login", "singInWinthEmailAndPassword: ${ex.message}")
+                }
             }
         }
 
