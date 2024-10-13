@@ -27,6 +27,10 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
     val navigateToProfessionalHome: MutableState<Boolean>
         get() = _navigateToProfessionalHome
 
+    private val _showError = mutableStateOf(false)
+    val showError: MutableState<Boolean>
+        get() = _showError
+
     fun singInWithEmailAndPassword(
         email: String,
         password: String
@@ -37,7 +41,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
                 is LoginResult.Error -> {
                     _loading.value = false
                     Log.d("login", "singInWithEmailAndPassword error: ${result.t}")
-                    //TODO: manejo de errores
+                    _showError.value = true
                 }
 
                 is LoginResult.Success -> {
@@ -51,6 +55,10 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
                 }
             }
         }
+
+    fun resetError() {
+        _showError.value = false
+    }
 
     /////////////////////// BORRAR ESTO LUEGO DE IMPLEMENTAR EL OTRO VIEWMODEL
     fun createUserWithEmailAndPassword(
@@ -90,8 +98,4 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
                 Log.d("Dato de BD", "Error ${it}")
             }
     }
-
-
-
-
 }

@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.screen.login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -46,6 +49,7 @@ fun SreenLogin(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
+    val context = LocalContext.current
 
     val showLoginForm = rememberSaveable {
         mutableStateOf(true)
@@ -63,6 +67,15 @@ fun SreenLogin(
                 inclusive = true
             }
         }
+    }
+
+    if (viewModel.showError.value) {
+        Toast.makeText(
+            context,
+            stringResource(R.string.usuario_o_contrasena_invalidos),
+            Toast.LENGTH_SHORT)
+            .show()
+        viewModel.resetError()
     }
 
     Surface(
@@ -219,7 +232,7 @@ fun PasswordInput(
         trailingIcon = {
             if (passwordState.value.isNotBlank()) {
                 PasswordVisibleIcon(passwordVisible)
-            } else null
+            }
         }
     )
 }
