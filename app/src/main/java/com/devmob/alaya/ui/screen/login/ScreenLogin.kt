@@ -42,53 +42,59 @@ import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
-fun SreenLogin(navController: NavController,
-               viewModel: LoginViewModel){
+fun SreenLogin(
+    navController: NavController,
+    viewModel: LoginViewModel
+) {
 
-    val  showLoginForm = rememberSaveable {
+    val showLoginForm = rememberSaveable {
         mutableStateOf(true)
     }
+    if (viewModel.navigateToPatientHome.value) {
+        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+            popUpTo(NavUtils.PatientRoutes.Home.route) {
+                inclusive = true
+            }
+        }
+    }
+    if (viewModel.navigateToProfessionalHome.value) {
+        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                inclusive = true
+            }
+        }
+    }
 
-    Surface (modifier = Modifier
-        .fillMaxSize()
-    ){
-        Column (horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center)
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        )
         {
-            Image(painterResource(id = R.drawable.logounologin), contentDescription = "Logo",
-                modifier = Modifier.size(230.dp) )
+            Image(
+                painterResource(id = R.drawable.logounologin), contentDescription = "Logo",
+                modifier = Modifier.size(230.dp)
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
             if (showLoginForm.value) {
                 Text(text = "Iniciar sesion")
-                UserForm (isCreateAccount = false){
-                        email, password ->
+                UserForm(isCreateAccount = false) { email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password,{
-                        //Ruta para ir a la Home cuando el login es paciente
-                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    }, {//Ruta para ir a la Home cuando el login es profesional
-                        //TODO cambiar ruta a professional
-                        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
-                            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    })
+                    viewModel.singInWithEmailAndPassword(email, password)
+
+
                 }
-            }
-            else{
+            } else {
                 Text(text = "Crear una cuenta")
                 UserForm(
                     isCreateAccount = true
-                ){
-                        email, password ->
+                ) { email, password ->
                     Log.d("Logeado", "Creando cuenta con $email y $password")
-                    viewModel.createUserWithEmailAndPassword(email,password){
+                    viewModel.createUserWithEmailAndPassword(email, password) {
                         //Va directo al Home cuando creás una cuenta válida
                         navController.navigate(NavUtils.PatientRoutes.Home.route) {
                             popUpTo(NavUtils.PatientRoutes.Home.route) {
@@ -100,13 +106,15 @@ fun SreenLogin(navController: NavController,
 
             }
             Spacer(modifier = Modifier.height(15.dp))
-            Row (horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically){
-                val  text1 =
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val text1 =
                     if (showLoginForm.value) "¿No tenes cuenta?"
                     else "¿Ya tienes cuenta?"
 
-                val  text2 =
+                val text2 =
                     if (showLoginForm.value) "Registrate"
                     else "Iniciar Sesion"
                 Text(text = text1)
@@ -121,10 +129,11 @@ fun SreenLogin(navController: NavController,
 }
 
 @Composable
-fun UserForm(isCreateAccount: Boolean = false,
-             onDone: (String, String) -> Unit = {email, pwd ->}
+fun UserForm(
+    isCreateAccount: Boolean = false,
+    onDone: (String, String) -> Unit = { email, pwd -> }
 ) {
-    val  email = rememberSaveable {
+    val email = rememberSaveable {
         mutableStateOf("")
     }
     val password = rememberSaveable {
@@ -139,7 +148,7 @@ fun UserForm(isCreateAccount: Boolean = false,
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        EmailInput (
+        EmailInput(
             emailState = email
         )
         PasswordInput(
@@ -150,7 +159,7 @@ fun UserForm(isCreateAccount: Boolean = false,
         SubmitButton(
             textId = if (isCreateAccount) "Crear cuenta" else "Login",
             inputValido = valido
-        ){
+        ) {
             onDone(email.value.trim(), password.value.trim())
             keyboardController?.hide()
         }
@@ -161,16 +170,20 @@ fun UserForm(isCreateAccount: Boolean = false,
 fun SubmitButton(
     textId: String,
     inputValido: Boolean,
-    onClic: ()->Unit
+    onClic: () -> Unit
 ) {
-    Button(onClick = onClic,
+    Button(
+        onClick = onClic,
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth(),
-        shape =  CircleShape,
-        enabled = inputValido) {
-        Text(text = textId,
-            modifier = Modifier.padding(5.dp))
+        shape = CircleShape,
+        enabled = inputValido
+    ) {
+        Text(
+            text = textId,
+            modifier = Modifier.padding(5.dp)
+        )
     }
 }
 
@@ -186,8 +199,8 @@ fun PasswordInput(
 
     OutlinedTextField(
         value = passwordState.value,
-        onValueChange ={passwordState.value = it},
-        label = { Text(text = labelId)},
+        onValueChange = { passwordState.value = it },
+        label = { Text(text = labelId) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password
@@ -197,17 +210,17 @@ fun PasswordInput(
             .fillMaxWidth(),
         visualTransformation = visualTransformation,
         trailingIcon = {
-            if (passwordState.value.isNotBlank()){
+            if (passwordState.value.isNotBlank()) {
                 PasswordVisibleIcon(passwordVisible)
-            }
-            else null
+            } else null
         }
     )
 }
 
 @Composable
 fun PasswordVisibleIcon(
-    passwordVisible: MutableState<Boolean>) {
+    passwordVisible: MutableState<Boolean>
+) {
     val image =
         if (passwordVisible.value)
             Icons.Default.VisibilityOff
@@ -225,8 +238,10 @@ fun PasswordVisibleIcon(
 
 
 @Composable
-fun EmailInput(emailState: MutableState<String>,
-               labelId: String = "Email") {
+fun EmailInput(
+    emailState: MutableState<String>,
+    labelId: String = "Email"
+) {
     InputField(
         valueState = emailState,
         labelId = labelId,
@@ -239,16 +254,18 @@ fun InputField(
     valueState: MutableState<String>,
     labelId: String,
     isSingLine: Boolean = true,
-    keyboardType: KeyboardType) {
+    keyboardType: KeyboardType
+) {
     OutlinedTextField(
-        value =valueState.value ,
-        onValueChange = {valueState.value = it},
-        label = { Text(text = labelId)},
+        value = valueState.value,
+        onValueChange = { valueState.value = it },
+        label = { Text(text = labelId) },
         singleLine = isSingLine,
         modifier = Modifier
             .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType)
+            keyboardType = keyboardType
+        )
     )
 }
