@@ -19,7 +19,6 @@ class PatientHomeScreenViewmodel():ViewModel() {
         namePatient = "Flor"
     }
 
-    // TODO Método para actualizar el saludo según la hora del día
     private fun updateGreetingMessage() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
