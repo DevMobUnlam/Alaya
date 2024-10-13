@@ -69,10 +69,6 @@ fun TextArea(
         }
     )
 
-    LaunchedEffect(Unit) {
-        recordAudioLauncher.launch(RECORD_AUDIO)
-    }
-
     LaunchedEffect(state.spokenText) {
         if (state.spokenText.isNotEmpty()) {
             text = text.copy(text = state.spokenText)
@@ -137,43 +133,45 @@ fun TextArea(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (canRecord) {
-            FloatingActionButton(
-                onClick = {},
-                shape = CircleShape,
-                containerColor = ColorPrimary,
-                modifier = Modifier
-                    .size(80.dp)
-                    .pointerInteropFilter { event ->
-                        when (event.action) {
-                            ACTION_DOWN -> {
-                                isPressed = true
-                                coroutineScope.launch {
-                                    voiceToText.startListening()
-                                }
-                                true
-                            }
 
-                            ACTION_UP -> {
-                                isPressed = false
-                                coroutineScope.launch {
-                                    voiceToText.stopListening()
-                                }
-                                true
+        FloatingActionButton(
+            onClick = {},
+            shape = CircleShape,
+            containerColor = ColorPrimary,
+            modifier = Modifier
+                .size(80.dp)
+                .pointerInteropFilter { event ->
+                    recordAudioLauncher.launch(RECORD_AUDIO)
+                    if (!canRecord) return@pointerInteropFilter false
+                    when (event.action) {
+                        ACTION_DOWN -> {
+                            isPressed = true
+                            coroutineScope.launch {
+                                voiceToText.startListening()
                             }
-
-                            else -> false
+                            true
                         }
+
+                        ACTION_UP -> {
+                            isPressed = false
+                            coroutineScope.launch {
+                                voiceToText.stopListening()
+                            }
+                            true
+                        }
+
+                        else -> false
                     }
-            ) {
-                Icon(
-                    imageVector = if (isPressed) Icons.Rounded.Stop else Icons.Rounded.Mic,
-                    contentDescription = "Agregar",
-                    tint = ColorWhite,
-                    modifier = Modifier.size(35.dp)
-                )
-            }
+                }
+        ) {
+            Icon(
+                imageVector = if (isPressed) Icons.Rounded.Stop else Icons.Rounded.Mic,
+                contentDescription = "Agregar",
+                tint = ColorWhite,
+                modifier = Modifier.size(35.dp)
+            )
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
     }
