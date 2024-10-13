@@ -31,7 +31,7 @@ class ProfessionalHomeViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         greetingMessage = when (hourOfDay) {
-            in 0..11 -> "Buenos días"
+            in 5..11 -> "Buenos días"
             in 12..19 -> "Buenas tardes"
             else -> "Buenas noches"
         }
