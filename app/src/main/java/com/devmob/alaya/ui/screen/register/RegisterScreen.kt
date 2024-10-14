@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.register
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,21 +44,50 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.model.User
+import com.devmob.alaya.domain.model.UserRole
 import com.devmob.alaya.ui.components.Switch
 import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
-fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
+fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
 
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("") }
+    var isProfessional by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
+
+    if (viewModel.navigateToPatientHome.value) {
+        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+            popUpTo(NavUtils.PatientRoutes.Home.route) {
+                inclusive = true
+            }
+        }
+    }
+    if (viewModel.navigateToProfessionalHome.value) {
+        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                inclusive = true
+            }
+        }
+    }
+
+    if (viewModel.showError.value) {
+        Toast.makeText(
+            context,
+            stringResource(R.string.usuario_o_contrasena_invalidos),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        viewModel.resetError()
+    }
+
 
     Column(
         modifier = Modifier
@@ -83,15 +115,22 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Switch( modifier = Modifier.fillMaxWidth())
+        Switch(
+            modifier = Modifier.fillMaxWidth(),
+            onChange = { isProfessional = it }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Nombre",
-                fontSize = 20.sp) },
+            label = {
+                Text(
+                    "Nombre",
+                    fontSize = 20.sp
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -104,8 +143,12 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
         OutlinedTextField(
             value = surname,
             onValueChange = { surname = it },
-            label = { Text("Apellido",
-                fontSize = 20.sp) },
+            label = {
+                Text(
+                    "Apellido",
+                    fontSize = 20.sp
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
@@ -115,25 +158,16 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        /*OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Usuario",
-                fontSize = 20.sp) },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))*/
+
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email",
-                fontSize = 20.sp) },
+            label = {
+                Text(
+                    "Email",
+                    fontSize = 20.sp
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -146,8 +180,12 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña",
-                fontSize = 20.sp) },
+            label = {
+                Text(
+                    "Contraseña",
+                    fontSize = 20.sp
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
@@ -155,15 +193,22 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
                 )
             },
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirmar Contraseña",
-                fontSize = 20.sp) },
+            label = {
+                Text(
+                    "Confirmar Contraseña",
+                    fontSize = 20.sp
+                )
+            },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
@@ -171,7 +216,10 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
                 )
             },
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(30.dp))
@@ -183,42 +231,49 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
                 onClick = {
                     // Acción para el botón Cancelar
                 },
-                modifier = Modifier.weight(1f).height(50.dp),
-                colors = ButtonDefaults.buttonColors( containerColor = Color(0xFF38a7df))
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38a7df))
             ) {
-                Text("Cancelar",
+                Text(
+                    "Cancelar",
                     fontSize = 20.sp,
                     color = Color.White,
-                    fontWeight = FontWeight.Black)
+                    fontWeight = FontWeight.Black
+                )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
+                    val newUser = User(
+                        name = name,
+                        surname = surname,
+                        email = email,
+                        role = resolveRole(isProfessional)
+                    )
                     if (validateRegisterFields(
-                        name,
-                        surname,
-                        email,
-                        password,
-                        confirmPassword,
-                        showAlert,
-                        errorMessage
-                    )) {
-                        viewModel.createUserWithEmailAndPassword(email, password) {
-                            navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
-                                popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
-                                    inclusive = true
-                                }
-                            }
-                        }
+                            newUser,
+                            password,
+                            confirmPassword,
+                            showAlert,
+                            errorMessage
+                        )
+                    ) {
+                        viewModel.createUser(newUser, password)
                     }
                 },
-                modifier = Modifier.weight(1f).height(50.dp),
-                colors = ButtonDefaults.buttonColors( containerColor = Color(0xFF38a7df))
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38a7df))
             ) {
-                Text("Registrar",
+                Text(
+                    "Registrar",
                     fontSize = 20.sp,
                     color = Color.White,
-                    fontWeight = FontWeight.Black)
+                    fontWeight = FontWeight.Black
+                )
             }
         }
 
@@ -233,10 +288,17 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel){
     }
 }
 
+fun resolveRole(professional: Boolean): UserRole {
+    return when (professional) {
+        true -> UserRole.PROFESSIONAL
+        false -> UserRole.PATIENT
+    }
+
+}
+
+
 private fun validateRegisterFields(
-    name: String,
-    surname: String,
-    email: String,
+    user: User,
     password: String,
     confirmPassword: String,
     showAlert: Boolean,
@@ -244,7 +306,7 @@ private fun validateRegisterFields(
 ): Boolean {
     var showAlert1 = showAlert
     var errorMessage1 = errorMessage
-    if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+    if (user.name.isEmpty() || user.surname.isEmpty() || user.email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
         showAlert1 = true
         return false
     } else if (password != confirmPassword) {
@@ -255,12 +317,3 @@ private fun validateRegisterFields(
         return true
     }
 }
-
-/*
-@Preview (showBackground = true)
-@Composable
-fun PreviewRegisterScreen(){
-    RegisterScreen(rememberNavController() )
-}
-
-*/

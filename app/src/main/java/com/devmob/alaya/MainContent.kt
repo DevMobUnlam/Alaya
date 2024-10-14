@@ -18,7 +18,7 @@ import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.SreenLogin
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
@@ -125,7 +125,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                SreenLogin(navController, LoginViewModel(LoginUseCase()))
+                LoginScreen(navController, LoginViewModel(LoginUseCase()))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = { return@composable slideIntoContainer(

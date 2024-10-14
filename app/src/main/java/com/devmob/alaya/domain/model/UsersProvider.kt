@@ -3,22 +3,28 @@ package com.devmob.alaya.domain.model
 import com.devmob.alaya.R
 
 
-data class User (val name: String, val image: Int, val hour: String)
+//data class User (val name: String, val image: Int, val hour: String)
+data class User (
+    val name: String,
+    val surname: String,
+    val email: String,
+    val image: Int = R.drawable.logounologin,
+    val hour: String = "No tiene sesiones",
+    val role: UserRole
+)
 
 object UsersProvider {
-
-
 val users = listOf(
-    User("Ana Pérez", R.drawable.ana_perez,"08:30"),
-    User("Brenda Rodríguez", R.drawable.brenda_rodriguez,"09:30"),
-    User("Claudia García", R.drawable.claudia_garcia,"10:30"),
-    User("Ezequiel Torres", R.drawable.ezequiel_torres,"11:30"),
-    User("Federico Álvarez", R.drawable.federico_alvarez,"13:00"),
-    User("Lucía Sánchez", R.drawable.lucia_sanchez,"15:30"),
-    User("Matías Ramírez", R.drawable.matias_ramirez,"16:30"),
-    User("Mónica Fernández", R.drawable.monica_fernandez,"18:00"),
-    User("Sergio Suárez", R.drawable.sergio_suarez,"19:00"),
-    User("Valeria Acosta", R.drawable.valeria_acosta,"20:00"),
+    User(name = "Ana Pérez", surname ="", email = "", image = R.drawable.ana_perez, hour = "08:30", UserRole.PATIENT),
+    User(name = "Brenda Rodríguez", surname ="", email = "", image = R.drawable.brenda_rodriguez, hour = "09:30", UserRole.PATIENT),
+    User(name = "Claudia García", surname ="", email = "", image = R.drawable.claudia_garcia, hour = "10:30", UserRole.PATIENT),
+    User(name = "Ezequiel Torres", surname ="", email = "", image = R.drawable.ezequiel_torres, hour = "11:30", UserRole.PATIENT),
+    User(name = "Federico Álvarez", surname ="", email = "", image = R.drawable.federico_alvarez, hour = "13:00", UserRole.PATIENT),
+    User(name = "Lucía Sánchez", surname ="", email = "", image = R.drawable.lucia_sanchez, hour = "15:30", UserRole.PATIENT),
+    User(name = "Matías Ramírez", surname ="", email = "", image = R.drawable.matias_ramirez, hour = "16:30", UserRole.PATIENT),
+    User(name = "Mónica Fernández", surname ="", email = "", image = R.drawable.monica_fernandez, hour = "18:00", UserRole.PATIENT),
+    User(name = "Sergio Suárez", surname ="", email = "", image = R.drawable.sergio_suarez, hour = "19:00", UserRole.PATIENT),
+    User(name = "Valeria Acosta", surname ="", email = "", image = R.drawable.valeria_acosta, hour = "20:00", UserRole.PATIENT),
 )
 }
 

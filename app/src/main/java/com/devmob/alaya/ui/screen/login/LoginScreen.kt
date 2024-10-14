@@ -45,7 +45,7 @@ import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
-fun SreenLogin(
+fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {

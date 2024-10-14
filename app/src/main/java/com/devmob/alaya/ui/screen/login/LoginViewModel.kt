@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.LoginUseCase
-import com.devmob.alaya.domain.model.LoginResult
+import com.devmob.alaya.domain.model.AuthenticationResult
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -38,13 +38,13 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
         viewModelScope.launch {
             _loading.value = true
             when (val result = loginUseCase(email, password)) {
-                is LoginResult.Error -> {
+                is AuthenticationResult.Error -> {
                     _loading.value = false
                     Log.d("login", "singInWithEmailAndPassword error: ${result.t}")
                     _showError.value = true
                 }
 
-                is LoginResult.Success -> {
+                is AuthenticationResult.Success -> {
                     //TODO: Cambiar por role:
                     //if (result.role == "PATIENT") { //Podría ser un when en vez de if.
                     if (email == "florencia@gmail.com") {

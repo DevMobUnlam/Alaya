@@ -39,7 +39,7 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 
 
 @Composable
-fun Switch(modifier: Modifier) {
+fun Switch(modifier: Modifier, onChange : (Boolean)-> Unit) {
     var isProfessional by remember { mutableStateOf(false) }
     var size by remember { mutableStateOf(IntSize.Zero) }
 
@@ -63,7 +63,7 @@ fun Switch(modifier: Modifier) {
                 .fillMaxHeight()
                 .width(size.width.div(5).dp) // TODO Fijarse que no se rompa
                 .background(
-                    color =  ColorPrimary,
+                    color = ColorPrimary,
                     shape = CircleShape
                 )
                 .align(if (isProfessional) Alignment.CenterEnd else Alignment.CenterStart) // Mueve el "thumb"
@@ -103,7 +103,10 @@ fun Switch(modifier: Modifier) {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .clickable { isProfessional = !isProfessional } // Cambia el estado al hacer clic
+                .clickable {
+                    isProfessional = !isProfessional
+                    onChange(isProfessional)
+                } // Cambia el estado al hacer clic
         )
     }
 }
@@ -111,5 +114,5 @@ fun Switch(modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewSwitch() {
-    Switch(Modifier)
+    Switch(Modifier, {})
 }
