@@ -47,6 +47,7 @@ import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
 import com.devmob.alaya.ui.components.Switch
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -109,7 +110,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             text = "Registrar usuario",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = Color(0xFF38a7df),
+            color = ColorPrimary,
             fontWeight = FontWeight.Black
 
         )
@@ -234,7 +235,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38a7df))
+                colors = ButtonDefaults.buttonColors(containerColor = ColorPrimary)
             ) {
                 Text(
                     "Cancelar",
@@ -266,7 +267,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF38a7df))
+                colors = ButtonDefaults.buttonColors(containerColor = ColorPrimary)
             ) {
                 Text(
                     "Registrar",

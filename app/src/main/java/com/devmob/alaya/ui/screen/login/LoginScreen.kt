@@ -71,7 +71,8 @@ fun LoginScreen(
         Toast.makeText(
             context,
             stringResource(R.string.usuario_o_contrasena_invalidos),
-            Toast.LENGTH_SHORT)
+            Toast.LENGTH_SHORT
+        )
             .show()
         viewModel.resetError()
     }
@@ -82,7 +83,8 @@ fun LoginScreen(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(30.dp)
         )
         {
             Image(
@@ -91,19 +93,17 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Iniciar sesion")
-                UserForm { email, password ->
-                    Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password)
-                }
+            UserForm { email, password ->
+                Log.d("Logeado", "Logeado con $email y $password")
+                viewModel.singInWithEmailAndPassword(email, password)
             }
+
             Spacer(modifier = Modifier.height(15.dp))
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "¿No tenes cuenta?")
-
                 Text(text = "Registrate",
                     color = ColorPrimary,
                     modifier = Modifier
@@ -118,6 +118,7 @@ fun LoginScreen(
             }
         }
     }
+}
 
 
 @Composable
@@ -197,7 +198,7 @@ fun PasswordInput(
             keyboardType = KeyboardType.Password
         ),
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth(),
         visualTransformation = visualTransformation,
         trailingIcon = {
@@ -253,7 +254,7 @@ fun InputField(
         label = { Text(text = labelId) },
         singleLine = isSingLine,
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
