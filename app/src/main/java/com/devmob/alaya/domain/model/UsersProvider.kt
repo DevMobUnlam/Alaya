@@ -11,7 +11,9 @@ data class User (
     val image: Int = R.drawable.logounologin,
     val hour: String = "No tiene sesiones",
     val role: UserRole
-) : Serializable
+) : Serializable {
+    constructor() : this("", "", "", 0, "", UserRole.PROFESSIONAL)
+}
 
 
 object UsersProvider {

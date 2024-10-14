@@ -2,5 +2,6 @@ package com.devmob.alaya.domain.model
 
 enum class UserRole {
     PROFESSIONAL,
-    PATIENT
+    PATIENT,
+    NONE
 }
