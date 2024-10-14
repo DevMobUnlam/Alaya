@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
+import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
 import com.google.firebase.Firebase
@@ -17,11 +19,12 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-class RegisterViewmodel(val registerNewUserUseCase: RegisterNewUserUseCase) : ViewModel() {
+class RegisterViewmodel(
+    val registerNewUserUseCase: RegisterNewUserUseCase,
+    val addUserToFirestoreUseCase: AddUserToFirestoreUseCase
+) : ViewModel() {
 
     private val _loading = MutableLiveData(false)
-    private val auth = FirebaseClient().auth
-
 
     private val _navigateToPatientHome = mutableStateOf(false)
     val navigateToPatientHome: MutableState<Boolean>
@@ -53,35 +56,29 @@ class RegisterViewmodel(val registerNewUserUseCase: RegisterNewUserUseCase) : Vi
                     }
 
                     is AuthenticationResult.Success -> {
-                        //createUserOnDatabase(displayName)
-                        if (user.role == UserRole.PATIENT) {
-                            _navigateToPatientHome.value = true
-                        } else {
-                            _navigateToProfessionalHome.value = true
+                        when (val result = addUserToFirestoreUseCase(user)) {
+                            is FirebaseResult.Success -> {
+                                if (user.role == UserRole.PATIENT) {
+                                    _navigateToPatientHome.value = true
+                                } else {
+                                    _navigateToProfessionalHome.value = true
+                                }
+                            }
+
+                            is FirebaseResult.Error -> {
+                                _showError.value = true
+                                Log.d("addUserError", "addUserToFirestore error: ${result.t} ")
+                            }
                         }
                     }
                 }
+
             }
         }
-    }
 
-    private fun createUserOnDatabase(newUser: User) {
-        val userId = auth.currentUser?.uid
-        val user = mutableMapOf<String, Any>()
-
-        user["user_id"] = userId.toString()
-        //user["display_name"] = displayName.toString()
-
-        FirebaseFirestore.getInstance().collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                Log.d("Dato de BD", "Creado ${it.id}")
-            }.addOnFailureListener {
-                Log.d("Dato de BD", "Error ${it}")
-            }
     }
 
     fun resetError() {
-            _showError.value = false
+        _showError.value = false
     }
 }
