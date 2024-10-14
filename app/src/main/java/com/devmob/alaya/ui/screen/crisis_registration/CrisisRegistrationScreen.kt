@@ -40,11 +40,15 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Sensors
+import androidx.compose.material.icons.filled.SentimentNeutral
 import androidx.compose.material.icons.filled.SportsBar
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.outlined.Air
+import androidx.compose.material.icons.outlined.LocalFireDepartment
+import androidx.compose.material.icons.outlined.MoodBad
 import androidx.compose.material.icons.outlined.Preview
 import androidx.compose.material.icons.outlined.Psychology
+import androidx.compose.material.icons.outlined.SentimentDissatisfied
 import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +62,7 @@ import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
+import com.devmob.alaya.ui.components.CrisisRegisterIconButton
 import com.devmob.alaya.ui.components.CrisisRegistrationElementIconButton
 import com.devmob.alaya.ui.components.DateTimePicker
 import com.devmob.alaya.ui.components.EmotionIconButton
@@ -80,6 +85,14 @@ fun CrisisRegistrationScreen(
     var messageTextSize = 30.sp
     val horizontalMargin = 15.dp
     var shouldShowAddNewCard by remember { mutableStateOf(false) }
+    val places by viewModel.places.observeAsState(emptyList())
+    var selectedPlace by remember { mutableStateOf<String?>(null) }
+    val tools by viewModel.tools.observeAsState(emptyList())
+    var selectedTools by remember { mutableStateOf<Set<String>>(emptySet()) }
+    val bodySensations by viewModel.bodySensations.observeAsState(emptyList())
+    var selectedBodySensations by remember { mutableStateOf<Set<String>>(emptySet()) }
+    val emotions by viewModel.emotions.observeAsState(emptyList())
+    var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
 
     GridElementsRepository.returnAvailableTools().let { list ->
         for(tool in list){
@@ -102,7 +115,6 @@ fun CrisisRegistrationScreen(
                 end.linkTo(parent.end)
             }
         )
-
 
         when(screenState.value?.currentStep){
             1 ->{
@@ -136,9 +148,7 @@ fun CrisisRegistrationScreen(
                 }
             }
             2 ->{
-
                 val icon = Icons.Filled.LocationOn
-
                 Text(
                     text = "¿Donde estabas?",
                     fontSize = messageTextSize,
@@ -152,31 +162,30 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 20.dp)
                         }
                 )
-
-
-
-                    viewModel.screenState.value?.crisisDetails?.placeList?.let { places ->
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(3),
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.constrainAs(elementsGrid){
-                                top.linkTo(title.bottom,margin = 20.dp)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                            }
-                        ) {
-                            itemsIndexed(places) {index, place ->
-                                CrisisRegistrationElementIconButton(
-                                    symbol = place.icon,
-                                    text = place.name,
-                                    size = 60.dp,
-                                    isActive = place.isActive,
-                                    onClick = {viewModel.updatePlaceStatus(place, index, !place.isActive)}
-                                )
-                            }
-                        }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.constrainAs(elementsGrid) {
+                        top.linkTo(title.bottom, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
+                ) {
+                    items(places) { place ->
+                        val isSelected = place.name == selectedPlace
+
+                        CrisisRegisterIconButton(
+                            imageVector = place.icon,
+                            text = place.name,
+                            isSelected = isSelected,
+                            onClick = {
+                                selectedPlace = place.name
+                            }
+                        )
+
+                    }
+                }
                 IconButtonNoFill(
                     text = "Agregar otra ubicacion",
                     modifier = Modifier.constrainAs(addNewIcon){
@@ -226,8 +235,6 @@ fun CrisisRegistrationScreen(
                         }
                 )
 
-
-                viewModel.screenState.value?.crisisDetails?.bodySensationList?.let { bodySensations ->
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
                         horizontalArrangement = Arrangement.SpaceAround,
@@ -238,24 +245,23 @@ fun CrisisRegistrationScreen(
                             end.linkTo(parent.end)
                         }
                     ) {
-                        itemsIndexed(bodySensations) {index, sensation ->
-                            var isActive = false
-                            EmotionIconButton(
-                                symbol = sensation.icon,
-                                text = sensation.name,
-                                size = 60.dp,
-                                intensity = sensation.intensity,
-                                onChangedIntensity = {
-                                    viewModel.onBodySensationIntensityChange(
-                                        intensity = it,
-                                        index = index,
-                                        bodySensation = sensation
-                                    )
+                        items(bodySensations) { bodySensation ->
+                            val isSelected = selectedBodySensations.contains(bodySensation.name)
+
+                            CrisisRegisterIconButton(
+                                imageVector = bodySensation.icon,
+                                text = bodySensation.name,
+                                isSelected = isSelected,
+                                onClick = {
+                                    selectedBodySensations = if (isSelected) {
+                                        selectedBodySensations - bodySensation.name
+                                    } else {
+                                        selectedBodySensations + bodySensation.name
+                                    }
                                 }
                             )
                         }
                     }
-                }
                 IconButtonNoFill(
                     text = "Añadir \n sensación \n corporal",
                     modifier = Modifier.constrainAs(addNewIcon){
@@ -288,6 +294,7 @@ fun CrisisRegistrationScreen(
 
             }
             4 ->{
+                val icon = Icons.Filled.SentimentNeutral
                 Text(
                     text = "¿Qué emociones sentiste?",
                     fontSize = messageTextSize,
@@ -301,6 +308,64 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.constrainAs(elementsGrid){
+                        top.linkTo(title.bottom,margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                ) {
+                    items(emotions) { emotion ->
+                        val isSelected = selectedEmotions.contains(emotion.name)
+
+                        CrisisRegisterIconButton(
+                            imageVector = emotion.icon,
+                            text = emotion.name,
+                            isSelected = isSelected,
+                            onClick = {
+                                selectedEmotions = if (isSelected) {
+                                    selectedEmotions - emotion.name
+                                } else {
+                                    selectedEmotions + emotion.name
+                                }
+                            }
+                        )
+                    }
+                }
+                IconButtonNoFill(
+                    text = "Añadir \n emoción",
+                    modifier = Modifier.constrainAs(addNewIcon){
+                        top.linkTo(elementsGrid.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
+                )
+
+                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }) {
+                    NewCrisisElementCard(
+                        placeholderText = "Agrega otra emoción...",
+                        icon = icon,
+                        onSave = {viewModel.addCrisisEmotion(
+                            CrisisEmotion(
+                                name = it,
+                                icon = icon
+                            )
+                        )
+                            shouldShowAddNewCard = !shouldShowAddNewCard
+                        }
+                    )
+                }
+
             }
             5 ->{
                 val icon = Icons.Filled.ChangeHistory
@@ -319,27 +384,31 @@ fun CrisisRegistrationScreen(
                         }
                 )
 
-                viewModel.screenState.value?.crisisDetails?.toolList?.let { tools ->
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.constrainAs(elementsGrid){
-                            top.linkTo(title.bottom,margin = 20.dp)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                    ) {
-                        itemsIndexed(tools) {index, tool ->
-                            CrisisRegistrationElementIconButton(
-                                symbol = tool.icon,
-                                text = tool.name,
-                                size = 60.dp,
-                                isActive = tool.isActive,
-                                // TODO() AGREGAR ACCION CUANDO SE PRESIONA EL BOTON
-                                onClick = {/*viewModel.updateToolStatus(tool, index, !place.isActive)*/}
-                            )
-                        }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.constrainAs(elementsGrid) {
+                        top.linkTo(title.bottom, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                ) {
+                    items(tools) { tool ->
+                        val isSelected = selectedTools.contains(tool.name)
+
+                        CrisisRegisterIconButton(
+                            imageVector = tool.icon,
+                            text = tool.name,
+                            isSelected = isSelected,
+                            onClick = {
+                                selectedTools = if (isSelected) {
+                                    selectedTools - tool.name
+                                } else {
+                                    selectedTools + tool.name
+                                }
+                            }
+                        )
                     }
                 }
                 IconButtonNoFill(
@@ -479,16 +548,14 @@ object GridElementsRepository{
         )
     }
 
-    @Composable
     fun returnAvailableEmotions(): List<CrisisEmotion>{
         return listOf(
             CrisisEmotion(name = "Miedo",icon = Icons.Outlined.SentimentVeryDissatisfied, intensity = Intensity.LOW),
-            CrisisEmotion(name = "Tristeza",icon = ImageVector.vectorResource(R.drawable.sentiment_fear), intensity = Intensity.LOW),
-            CrisisEmotion(name = "Enfado",icon = ImageVector.vectorResource(R.drawable.sentiment_extremely_dissatisfied) ,  intensity = Intensity.LOW),
+            CrisisEmotion(name = "Tristeza",icon = Icons.Outlined.SentimentDissatisfied, intensity = Intensity.LOW),
+            CrisisEmotion(name = "Enfado",icon = Icons.Outlined.SentimentVeryDissatisfied ,  intensity = Intensity.LOW),
         )
     }
 
-    @Composable
     fun returnAvailableTools(): List<CrisisTool>{
         return listOf(
             CrisisTool(name = "Imaginacion guiada",icon = Icons.Outlined.Preview),

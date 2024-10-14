@@ -39,6 +39,7 @@ import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 
 /**
  * Card para agregar nuevo elemento de crisis personalizado
@@ -63,7 +64,7 @@ fun NewCrisisElementCard(
     
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = ColorTertiary
+            containerColor = LightBlueColor
         ),
         shape = RoundedCornerShape(10.dp),
     ){
@@ -78,7 +79,7 @@ fun NewCrisisElementCard(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
-                    tint = ColorWhite,
+                    tint = ColorPrimary,
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 TextField(

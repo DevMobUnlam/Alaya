@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -29,25 +30,24 @@ import com.devmob.alaya.ui.theme.ColorWhite
 fun IconButton(
     symbol: ImageVector,
     text: String,
-    size: Dp,
+    size: Dp = 50.dp,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor : Color = ColorPrimary
 ){
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
+    Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
         FilledIconButton(
             onClick = onClick,
             enabled = true,
             colors = IconButtonColors(
-                containerColor = ColorPrimary,
+                containerColor = backgroundColor,
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite),
             modifier = Modifier.size(size)
         ) {
-            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.75f))
+            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.70f))
         }
-
-        Spacer(modifier = Modifier.height(7.dp))
         Text(
             text = text,
             color = ColorText,

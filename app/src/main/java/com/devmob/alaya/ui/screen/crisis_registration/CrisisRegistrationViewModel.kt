@@ -2,6 +2,7 @@ package com.devmob.alaya.ui.screen.crisis_registration
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,21 @@ class CrisisRegistrationViewModel(): ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
 
+    private val _places = MutableLiveData<List<CrisisPlace>>()
+    val places: LiveData<List<CrisisPlace>> get() = _places
+    private val _tools = MutableLiveData<List<CrisisTool>>()
+    val tools: LiveData<List<CrisisTool>> get() = _tools
+    private val _bodySensations = MutableLiveData<List<CrisisBodySensation>>()
+    val bodySensations: LiveData<List<CrisisBodySensation>> get() = _bodySensations
+    private val _emotions = MutableLiveData<List<CrisisEmotion>>()
+    val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
+
+    init {
+        loadPlaces()
+        loadTools()
+        loadBodySensations()
+        loadEmotions()
+    }
     var shouldShowExitModal by mutableStateOf(false)
 
 
@@ -44,12 +60,30 @@ class CrisisRegistrationViewModel(): ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisPlace(place: CrisisPlace){
-        _screenState.value?.crisisDetails?.placeList?.add(place)
+        val currentPlaces = _places.value?.toMutableList() ?: mutableListOf()
+        if (!currentPlaces.any { it.name == place.name }) {
+            currentPlaces.add(place)
+            _places.value = currentPlaces
+            _screenState.value = _screenState.value?.copy(
+                crisisDetails = _screenState.value!!.crisisDetails.copy(
+                    placeList = currentPlaces
+                )
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisBodySensation(bodySensation: CrisisBodySensation) {
-        _screenState.value?.crisisDetails?.bodySensationList?.add(bodySensation)
+        val currentSensations = _bodySensations.value?.toMutableList() ?: mutableListOf()
+        if (!currentSensations.any { it.name == bodySensation.name }) {
+            currentSensations.add(bodySensation)
+            _bodySensations.value = currentSensations
+            _screenState.value = _screenState.value?.copy(
+                crisisDetails = _screenState.value!!.crisisDetails.copy(
+                    bodySensationList = currentSensations
+                )
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -66,12 +100,30 @@ class CrisisRegistrationViewModel(): ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisTool(crisisTool: CrisisTool) {
-        _screenState.value?.crisisDetails?.toolList?.add(crisisTool)
+        val currentTools= _tools.value?.toMutableList() ?: mutableListOf()
+        if (!currentTools.any { it.name == crisisTool.name }) {
+            currentTools.add(crisisTool)
+            _tools.value = currentTools
+            _screenState.value = _screenState.value?.copy(
+                crisisDetails = _screenState.value!!.crisisDetails.copy(
+                    toolList = currentTools
+                )
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
-        _screenState.value?.crisisDetails?.emotionList?.add(crisisEmotion)
+        val currentEmotions= _emotions.value?.toMutableList() ?: mutableListOf()
+        if (!currentEmotions.any { it.name == crisisEmotion.name }) {
+            currentEmotions.add(crisisEmotion)
+            _emotions.value = currentEmotions
+            _screenState.value = _screenState.value?.copy(
+                crisisDetails = _screenState.value!!.crisisDetails.copy(
+                    emotionList = currentEmotions
+                )
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -149,6 +201,22 @@ class CrisisRegistrationViewModel(): ViewModel() {
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+    }
+
+    private fun loadPlaces() {
+        _places.value = GridElementsRepository.returnAvailablePlaces()
+    }
+
+    private fun loadTools() {
+        _tools.value = GridElementsRepository.returnAvailableTools()
+    }
+
+    private fun loadBodySensations() {
+        _bodySensations.value = GridElementsRepository.returnAvailableBodySensations()
+    }
+
+    private fun loadEmotions() {
+        _emotions.value = GridElementsRepository.returnAvailableEmotions()
     }
 
 
