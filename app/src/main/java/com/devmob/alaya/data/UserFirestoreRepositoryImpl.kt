@@ -13,7 +13,7 @@ class UserFirestoreRepositoryImpl : UserFirestoreRepository{
     private val db = FirebaseClient().db
 
     override suspend fun addUser(user: User) : FirebaseResult = runCatching {
-        db.collection("users").add(user).await()
+        db.collection("users").document(user.email).set(user).await()
     }.toResponseFirebase()
 
 }

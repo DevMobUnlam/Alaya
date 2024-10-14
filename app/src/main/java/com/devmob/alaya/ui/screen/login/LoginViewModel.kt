@@ -46,6 +46,7 @@ class LoginViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
 
                 is AuthenticationResult.Success -> {
                     //TODO: Cambiar por role:
+
                     //if (result.role == "PATIENT") { //Podría ser un when en vez de if.
                     if (email == "florencia@gmail.com") {
                         _navigateToPatientHome.value = true

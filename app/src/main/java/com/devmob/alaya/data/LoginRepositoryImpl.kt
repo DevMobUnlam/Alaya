@@ -12,5 +12,4 @@ class LoginRepositoryImpl : LoginRepository {
         firebase.auth.signInWithEmailAndPassword(email, pass).await()
     }.toAuthenticationResult()
 
-
 }
