@@ -1,9 +1,9 @@
 package com.devmob.alaya.domain.model
 
 import com.devmob.alaya.R
+import java.io.Serializable
 
 
-//data class User (val name: String, val image: Int, val hour: String)
 data class User (
     val name: String,
     val surname: String,
@@ -11,7 +11,8 @@ data class User (
     val image: Int = R.drawable.logounologin,
     val hour: String = "No tiene sesiones",
     val role: UserRole
-)
+) : Serializable
+
 
 object UsersProvider {
 val users = listOf(

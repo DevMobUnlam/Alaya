@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
+import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.FeedbackType
@@ -172,7 +173,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase()))
+                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase()))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
