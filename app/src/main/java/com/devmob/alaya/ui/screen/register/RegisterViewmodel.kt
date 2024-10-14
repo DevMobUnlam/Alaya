@@ -53,7 +53,7 @@ class RegisterViewmodel(val registerNewUserUseCase: RegisterNewUserUseCase) : Vi
                     }
 
                     is AuthenticationResult.Success -> {
-                        createUserOnDatabase(displayName)
+                        //createUserOnDatabase(displayName)
                         if (user.role == UserRole.PATIENT) {
                             _navigateToPatientHome.value = true
                         } else {

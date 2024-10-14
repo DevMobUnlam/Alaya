@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.LoginUseCase
+import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -245,7 +246,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                RegisterScreen(navController, RegisterViewmodel())
+                RegisterScreen(navController, RegisterViewmodel(RegisterNewUserUseCase()))
             }
         }
     }

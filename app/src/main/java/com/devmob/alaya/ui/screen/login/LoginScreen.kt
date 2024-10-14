@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -51,9 +52,6 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
 
-    val showLoginForm = rememberSaveable {
-        mutableStateOf(true)
-    }
     if (viewModel.navigateToPatientHome.value) {
         navController.navigate(NavUtils.PatientRoutes.Home.route) {
             popUpTo(NavUtils.PatientRoutes.Home.route) {
@@ -93,48 +91,23 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-            if (showLoginForm.value) {
-                Text(text = "Iniciar sesion")
-                UserForm(isCreateAccount = false) { email, password ->
+            Text(text = "Iniciar sesion")
+                UserForm { email, password ->
                     Log.d("Logeado", "Logeado con $email y $password")
                     viewModel.singInWithEmailAndPassword(email, password)
-
-
                 }
-            } else {
-                Text(text = "Crear una cuenta")
-                UserForm(
-                    isCreateAccount = true
-                ) { email, password ->
-                    Log.d("Logeado", "Creando cuenta con $email y $password")
-                    viewModel.createUserWithEmailAndPassword(email, password) {
-                        //Va directo al Home cuando creás una cuenta válida
-                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                }
-
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val text1 =
-                    if (showLoginForm.value) "¿No tenes cuenta?"
-                    else "¿Ya tienes cuenta?"
+                Text(text = "¿No tenes cuenta?")
 
-                val text2 =
-                    if (showLoginForm.value) "Registrate"
-                    else "Iniciar Sesion"
-                Text(text = text1)
-                Text(text = text2,
+                Text(text = "Registrate",
+                    color = ColorPrimary,
                     modifier = Modifier
                         .clickable {
-                            //showLoginForm.value = !showLoginForm.value
                             navController.navigate(NavUtils.LoginRoutes.Register.route) {
                                 popUpTo(NavUtils.LoginRoutes.Register.route) {
                                     inclusive = true
@@ -146,11 +119,9 @@ fun LoginScreen(
         }
     }
 
-}
 
 @Composable
 fun UserForm(
-    isCreateAccount: Boolean = false,
     onDone: (String, String) -> Unit = { email, pwd -> }
 ) {
     val email = rememberSaveable {
@@ -177,7 +148,7 @@ fun UserForm(
             passwordVisible = passwordVisible
         )
         SubmitButton(
-            textId = if (isCreateAccount) "Crear cuenta" else "Login",
+            textId = "Iniciar sesión",
             inputValido = valido
         ) {
             onDone(email.value.trim(), password.value.trim())
