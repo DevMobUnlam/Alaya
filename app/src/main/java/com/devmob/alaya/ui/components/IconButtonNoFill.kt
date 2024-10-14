@@ -30,9 +30,11 @@ import com.devmob.alaya.ui.theme.ColorWhite
 import dashedBorder
 
 /**
- * Boton de Icono sin relleno
+ * Boton de Icono sin relleno para agregar elemento
  *
  * text - El texto va a ir debajo del boton
+ *
+ * onClick -> Accion a ejecutar una vez se presiona el boton
  */
 @Composable
 fun IconButtonNoFill(

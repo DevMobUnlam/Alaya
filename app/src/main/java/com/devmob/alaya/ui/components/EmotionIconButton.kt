@@ -27,19 +27,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
+
+/**
+ * IconButton que representa la emocion
+ *     isActive -> Atributo que indica si esta activo el boton o no, el cual se usa para cambiarlo de color
+ *     onClick -> Accion a ejecutar una vez se presiona en el iconButton
+ *     intensity -> La intensidad que va a mostrar los radioButton, la intensidad seleccionada va a ser la que va a estar pintada
+ *     onChangedIntensity -> Accion a ejecutar una vez se cambia la intensidad seleccionada con el tooltip
+ */
 
 @Composable
 fun EmotionIconButton(
@@ -47,13 +52,13 @@ fun EmotionIconButton(
     text: String,
     size: Dp,
     modifier: Modifier = Modifier,
-    buttonColor: Color = ColorText,
     isActive: Boolean = true,
     onClick: () -> Unit = {},
     intensity: Intensity = Intensity.LOW,
     onChangedIntensity: (Intensity) -> Unit,
 ){
 
+    // Este atributo determina si esta abierto o no el IntensitySelector
     var showIntensitySelector by remember{mutableStateOf(false)}
         Column(
             verticalArrangement = Arrangement.spacedBy((-3).dp),
@@ -98,8 +103,9 @@ fun EmotionIconButton(
                     onClick()
                     },
                 shape = CircleShape,
+                //TODO() AGREGAR CONDICIONAL PARA QUE EL COLOR SE ELIJA SEGUN ESTA ACTIVADO O NO CON ISACTIVE
                 colors = IconButtonColors(
-                    containerColor = buttonColor,
+                    containerColor = ColorText,
                     contentColor = ColorWhite,
                     disabledContentColor = ColorGray,
                     disabledContainerColor = ColorWhite

@@ -40,6 +40,16 @@ import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorWhite
 
+/**
+ * Card para agregar nuevo elemento de crisis personalizado
+ *
+ * placeholderText: Texto como placeholder para indicar que tiene que agregar
+ *
+ * icon: Icono generico de muestra que representa el elemento a agregar
+ *
+ * onSave: Accion a ejecutar una vez se desea guardar ese elemento personalizado. Recibe un String, es decir el nombre.
+ */
+
 @Composable
 fun NewCrisisElementCard(
     modifier: Modifier = Modifier,

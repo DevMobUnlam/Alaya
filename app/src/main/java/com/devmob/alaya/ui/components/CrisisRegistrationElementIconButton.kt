@@ -25,6 +25,16 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
 
+
+/**
+ * IconButton para representar un elemento de crisis, sin intensitySelector
+ *
+ * symbol -> Icono
+ * text -> Nombre del elemento
+ * size -> Tamaño del Icono
+ * isActive -> Si el icono esta activo o no
+ * onClick -> Accion a ejecutar una vez se presiona el boton
+ */
 @Composable
 fun CrisisRegistrationElementIconButton(
     modifier: Modifier = Modifier,
@@ -35,6 +45,7 @@ fun CrisisRegistrationElementIconButton(
     onClick: () -> Unit = {}
 ){
 
+    // TODO() Este atributo parece no funcionar, ya que no genera la recomposicion, y no cambia el color del boton
     val buttonColor = if(isActive) ColorText else ColorPrimary
 
     Column(

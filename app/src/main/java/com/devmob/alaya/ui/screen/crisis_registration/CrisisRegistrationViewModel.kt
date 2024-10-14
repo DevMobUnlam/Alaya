@@ -14,21 +14,17 @@ import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
+import java.util.Date
 
 class CrisisRegistrationViewModel(): ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private val _screenState = MutableLiveData(CrisisRegistrationScreenState(totalSteps = 6))
+    private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     @RequiresApi(Build.VERSION_CODES.O)
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
 
     var shouldShowExitModal by mutableStateOf(false)
 
-    var listprueba = listOf("Mauro","Jose")
-
-    init{
-
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun cleanState(){
@@ -48,49 +44,110 @@ class CrisisRegistrationViewModel(): ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisPlace(place: CrisisPlace){
-        _screenState.value?.placeList?.add(place)
+        _screenState.value?.crisisDetails?.placeList?.add(place)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisBodySensation(bodySensation: CrisisBodySensation) {
-        _screenState.value?.bodySensationList?.add(bodySensation)
+        _screenState.value?.crisisDetails?.bodySensationList?.add(bodySensation)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
         val updatedBodySensation = bodySensation.copy(intensity = intensity)
-        _screenState.value?.bodySensationList?.set(index,updatedBodySensation)
+        _screenState.value?.crisisDetails?.bodySensationList?.set(index,updatedBodySensation)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEmotionIntensityChange(intensity: Intensity, index: Int, emotion: CrisisEmotion){
         val updatedEmotion = emotion.copy(intensity = intensity)
-        _screenState.value?.emotionList?.set(index,updatedEmotion)
+        _screenState.value?.crisisDetails?.emotionList?.set(index,updatedEmotion)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisTool(crisisTool: CrisisTool) {
-        _screenState.value?.toolList?.add(crisisTool)
+        _screenState.value?.crisisDetails?.toolList?.add(crisisTool)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
-        _screenState.value?.emotionList?.add(crisisEmotion)
+        _screenState.value?.crisisDetails?.emotionList?.add(crisisEmotion)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateNotes(text: String){
+        _screenState.value = _screenState?.value?.copy(
+            crisisDetails = _screenState?.value?.crisisDetails?.copy(
+                notes = text
+            )!!
+        )
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updatePlaceStatus(place: CrisisPlace, index: Int, isActive: Boolean){
+        val updatedElement = place.copy(isActive = isActive)
+        _screenState.value?.crisisDetails?.placeList?.set(index = index, updatedElement)
+    }
+
+
     fun dismissExitModal() {
-        shouldShowExitModal = false
+    shouldShowExitModal = false
     }
 
     fun showExitModal() {
         shouldShowExitModal = true
-        println("showExitModal updated, new value is $shouldShowExitModal")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateCrisisTimeDetails(crisisTimeDetails: CrisisTimeDetails) {
-        _screenState?.value = _screenState?.value?.copy(
-            crisisTimeDetails = crisisTimeDetails
+    fun updateStartDate(date: Date) {
+        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
+            startingDate = date
+        )
+
+        _screenState.value = _screenState.value?.copy(
+            crisisDetails = _screenState.value?.crisisDetails?.copy(
+                crisisTimeDetails = updatedCrisisTimeDetails!!
+            )!!
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateStartTime(time: Date) {
+        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
+            startTIme = time
+        )
+
+        _screenState.value = _screenState.value?.copy(
+            crisisDetails = _screenState.value?.crisisDetails?.copy(
+                crisisTimeDetails = updatedCrisisTimeDetails!!
+            )!!
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateEndDate(date: Date) {
+        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
+            endDate = date
+        )
+
+        _screenState.value = _screenState.value?.copy(
+            crisisDetails = _screenState.value?.crisisDetails?.copy(
+                crisisTimeDetails = updatedCrisisTimeDetails!!
+            )!!
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateEndTime(time: Date) {
+        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
+            endTime = time
+        )
+
+        _screenState.value = _screenState.value?.copy(
+            crisisDetails = _screenState.value?.crisisDetails?.copy(
+                crisisTimeDetails = updatedCrisisTimeDetails!!
+            )!!
         )
     }
 

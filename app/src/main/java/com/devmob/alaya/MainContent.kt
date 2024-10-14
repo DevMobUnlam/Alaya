@@ -26,6 +26,7 @@ import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
@@ -111,12 +112,11 @@ fun MainContent(navController: NavHostController) {
                 }}, onFinishedRegistration = {/*navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route)*/})
             }
 
-            /*composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                popUpTo(NavUtils.Routes.Home.route) {
-                    inclusive = true
-                }
+            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
+                CrisisRegistrationSummaryScreen(
+
+                )
             }
-            */
 
         }
     }

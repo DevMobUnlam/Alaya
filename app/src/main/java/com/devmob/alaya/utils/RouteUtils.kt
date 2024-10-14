@@ -27,7 +27,7 @@ object NavUtils {
         Routes.RedDeContencion.route to "Red de Contención",
         Routes.AddContact.route to "Agregar Contacto",
         "contact_detail/{contactId}" to "Detalles del Contacto",
-        Routes.CrisisRegistration.route to "Resumen"
+        Routes.CrisisRegistrationSummary.route to "Resumen"
     )
 }
 

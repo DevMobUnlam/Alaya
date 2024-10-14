@@ -38,9 +38,10 @@ import com.devmob.alaya.ui.theme.ColorWhite
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
+    text: String = "",
+    onTextChange: (String) -> Unit = {},
     onMicClick:() -> Unit = {},
     ){
-    var text by remember { mutableStateOf(TextFieldValue("")) }
 
 
     Column(
@@ -58,7 +59,8 @@ fun TextArea(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            lineHeight = 30.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -73,13 +75,13 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
-                onValueChange = { newText -> text = newText },
+                onValueChange = { newText -> onTextChange(newText) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                 decorationBox = { innerTextField ->
-                    if (text.text.isEmpty()) {
+                    if (text.isEmpty()) {
                         Text(text =
                                 "¿Con quién estabas?\n" +
                                 "¿Qué estabas haciendo?\n" +

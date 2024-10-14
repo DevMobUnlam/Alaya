@@ -29,4 +29,12 @@
     <string name="go_to_network">Ir a mi red de contencion</string>
     <string name="intensity_selector_text">Intensidad</string>
     <string name="start_question">¿En qué momento\ncomenzó?</string>
+    <string name="place">Lugar</string>
+    <string name="body_sensations">Sensaciones corporales</string>
+    <string name="tools">Herramientas</string>
+    <string name="emotions">Emociones</string>
+    <string name="notes">Notas</string>
+    <string name="intensity_low">Baja</string>
+    <string name="intensity_medium">Media</string>
+    <string name="intensity_high">Alta</string>
 </resources>
