@@ -10,17 +10,13 @@ import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.model.UserRole
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginUseCase: LoginUseCase,
-                     private val getRoleUseCase: GetRoleUseCase
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
+    private val getRoleUseCase: GetRoleUseCase
 ) : ViewModel() {
-    private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
-
 
     private val _navigateToPatientHome = mutableStateOf(false)
     val navigateToPatientHome: MutableState<Boolean>
@@ -50,10 +46,11 @@ class LoginViewModel(private val loginUseCase: LoginUseCase,
                 is AuthenticationResult.Success -> {
                     when (getRoleUseCase(email)) {
                         UserRole.PATIENT ->
-                    //if (email == "florencia@gmail.com") {
-                        _navigateToPatientHome.value = true
+                            _navigateToPatientHome.value = true
+
                         UserRole.PROFESSIONAL ->
-                        _navigateToProfessionalHome.value = true
+                            _navigateToProfessionalHome.value = true
+
                         else -> _showError.value = true
                     }
                 }

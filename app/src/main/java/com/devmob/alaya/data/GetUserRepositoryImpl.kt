@@ -12,5 +12,3 @@ class GetUserRepositoryImpl : GetUserRepository {
         db.collection("users").document(email).get().await()
     }.toUser()
 }
-
-
