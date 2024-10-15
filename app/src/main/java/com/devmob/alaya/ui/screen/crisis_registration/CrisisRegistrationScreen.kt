@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -57,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
@@ -71,13 +73,14 @@ import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.components.NewCrisisElementCard
 import com.devmob.alaya.ui.components.TextArea
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.utils.NavUtils
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel = viewModel(),
     onClose: () -> Unit,
-    onFinishedRegistration: (CrisisRegistrationScreenState) -> Unit,
+    onFinishedRegistration: () -> Unit,
     ) {
 
     val screenState = viewModel.screenState.observeAsState()
@@ -134,15 +137,23 @@ fun CrisisRegistrationScreen(
                 )
 
                 viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
-                    DateTimePicker(modifier = Modifier.constrainAs(datePickerComponent){
+                    DateTimePicker(modifier = Modifier.constrainAs(datePickerComponent) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         top.linkTo(title.bottom)
                     },
-                        onStartDateChange = {viewModel.updateStartDate(it)} ,
-                        onStartTimeChange = {viewModel.updateStartTime(it)} ,
-                        onEndDateChange = {viewModel.updateEndDate(it)},
-                        onEndTimeChange = {viewModel.updateEndTime(it)},
+                        onStartDateChange = { newDate ->
+                            viewModel.updateStartDate(newDate)
+                        },
+                        onStartTimeChange = { newTime ->
+                            viewModel.updateStartTime(newTime)
+                        },
+                        onEndDateChange = { newDate ->
+                            viewModel.updateEndDate(newDate)
+                        },
+                        onEndTimeChange = { newTime ->
+                            viewModel.updateEndTime(newTime)
+                        },
                         crisisTimeDetails = it
                     )
                 }
@@ -514,8 +525,8 @@ fun CrisisRegistrationScreen(
                         if (screenState.value?.currentStep!! < 6) {
                             viewModel.goOneStepForward()
                             shouldShowAddNewCard = false
-                    } else{
-                            onFinishedRegistration(screenState.value!!)
+                    } else if(screenState.value?.currentStep!! == 6) {
+                            onFinishedRegistration()
                         }
 
                     }
@@ -571,11 +582,4 @@ object GridElementsRepository{
             CrisisBodySensation(name = "Palpitaciones",icon = Icons.Filled.MonitorHeart, intensity = Intensity.LOW)
         )
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun CrisisRegistrationScreenPreview(){
-    CrisisRegistrationScreen(onClose = {}, onFinishedRegistration = {})
 }

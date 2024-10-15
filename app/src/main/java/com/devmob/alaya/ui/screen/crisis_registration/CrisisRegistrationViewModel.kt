@@ -12,18 +12,33 @@ import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
+import com.devmob.alaya.domain.model.CrisisRegisterData
 import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 class CrisisRegistrationViewModel(): ViewModel() {
+
+    var registrationData = mutableStateOf(CrisisRegisterData())
+        private set
+
+    fun updateRegistrationData(data: CrisisRegisterData) {
+        registrationData.value = data
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     @RequiresApi(Build.VERSION_CODES.O)
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
-
+    var startDate by mutableStateOf<LocalDate?>(null)
+    var startTime by mutableStateOf<LocalTime?>(null)
+    var endDate by mutableStateOf<LocalDate?>(null)
+    var endTime by mutableStateOf<LocalTime?>(null)
     private val _places = MutableLiveData<List<CrisisPlace>>()
     val places: LiveData<List<CrisisPlace>> get() = _places
     private val _tools = MutableLiveData<List<CrisisTool>>()
@@ -32,6 +47,8 @@ class CrisisRegistrationViewModel(): ViewModel() {
     val bodySensations: LiveData<List<CrisisBodySensation>> get() = _bodySensations
     private val _emotions = MutableLiveData<List<CrisisEmotion>>()
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
+
+
 
     init {
         loadPlaces()
@@ -152,6 +169,17 @@ class CrisisRegistrationViewModel(): ViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateCrisisTimeDetails(updatedDetails: CrisisTimeDetails) {
+        _screenState.value = _screenState.value?.crisisDetails?.copy(
+            crisisTimeDetails = updatedDetails
+        )?.let {
+            _screenState.value?.copy(
+                crisisDetails = it
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateStartDate(date: Date) {
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             startingDate = date
@@ -218,6 +246,4 @@ class CrisisRegistrationViewModel(): ViewModel() {
     private fun loadEmotions() {
         _emotions.value = GridElementsRepository.returnAvailableEmotions()
     }
-
-
 }

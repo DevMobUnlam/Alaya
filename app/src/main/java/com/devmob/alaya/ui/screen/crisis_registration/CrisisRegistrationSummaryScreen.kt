@@ -24,7 +24,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,10 +40,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.Intensity
+import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 
 
 /**
@@ -62,20 +71,32 @@ fun CrisisRegistrationSummaryScreen(
     viewModel: CrisisRegistrationSummaryViewModel = viewModel(),
     onConfirm: () -> Unit = {},
     onDelete: () -> Unit = {},
-    onEditClick: (Int) -> Unit = {}
+    onEditClick: (Int) -> Unit = {},
+    navController: NavController
     ){
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowModal
-    
+    var showModalDelete by remember { mutableStateOf(false) }
+    var showModalConfirm by remember { mutableStateOf(false) }
+
 
     ConstraintLayout(modifier = modifier.fillMaxSize()){
 
         val (informationColumn, actionButtons) = createRefs()
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(8.dp)
         ) {
+            // Contenedor que permite hacer scroll si hay muchas tarjetas.
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f) // Asegura que la lista ocupe todo el espacio disponible.
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
             item{
                 SummaryItemCard(
                     title = "Inicio y Fin",
@@ -118,9 +139,8 @@ fun CrisisRegistrationSummaryScreen(
                 SummaryItemCard(
                     title = stringResource(R.string.body_sensations),
                     startContent = {
-                        LazyColumn{
+                        Column{
                             // TODO() Remplazar con items() para que recorra la lista de sensaciones por atributo de viewModel
-                            item{
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                                     verticalAlignment = Alignment.CenterVertically,
@@ -140,11 +160,10 @@ fun CrisisRegistrationSummaryScreen(
                                         )
                                         Text(
                                             // TODO() PASAR INTENSIDAD RECIBIDA DE OBJETO, Y USAR FORMATTER
-                                            text = "Intensidad: ${IntensityFormatter(Intensity.LOW)}",
+                                            text = "Intensidad: Media",
                                             fontSize = 19.sp,
                                             color = ColorText,
                                         )
-                                    }
                                 }
                             }
                         }
@@ -184,9 +203,7 @@ fun CrisisRegistrationSummaryScreen(
                                 Icon(Icons.Outlined.CrisisAlert, contentDescription = stringResource(R.string.place),
                                     tint = ColorText, modifier = Modifier.size(35.dp))
                                 Column(verticalArrangement = Arrangement.spacedBy(1.dp)){
-                                    Text(text = "Miedo", fontSize = 21.sp,  color = ColorText, fontWeight = FontWeight.Bold)
-                                    Text(text = "Intensidad: Alta", fontSize = 21.sp,  color = ColorText)
-
+                                    Text(text = "Imaginación", fontSize = 21.sp,  color = ColorText, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -215,27 +232,48 @@ fun CrisisRegistrationSummaryScreen(
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.constrainAs(actionButtons){
-                bottom.linkTo(parent.bottom, margin = 8.dp)
-                start.linkTo(parent.start, margin = 5.dp)
-                end.linkTo(parent.end,margin = 5.dp)
-                top.linkTo(informationColumn.bottom, margin = 5.dp)
-
-            }
+           modifier = Modifier.align(Alignment.CenterHorizontally)
             ){
            Button(
                text = "Eliminar",
                style = ButtonStyle.Outlined,
-               onClick = onDelete
+               onClick = { showModalDelete = true }
            )
             Button(
                 text = "Confirmar",
                 style = ButtonStyle.Filled,
-                onClick = onConfirm
+                onClick = { showModalConfirm = true }
             )
+        }
+            Modal(
+                show = showModalDelete,
+                title = "¿Seguro que quiere eliminar el registro?",
+                primaryButtonText = "Si",
+                secondaryButtonText = "No" ,
+                onDismiss = { showModalDelete = false },
+                onConfirm = {
+                    showModalDelete = false
+                    navController.navigate(NavUtils.Routes.Home.route)
+                }
+            )
+
+            Modal(
+                show = showModalConfirm,
+                title = "¿Quiere confirmar el registro?",
+                primaryButtonText = "Si",
+                secondaryButtonText = "No" ,
+                onDismiss = { showModalConfirm = false },
+                onConfirm = {
+                    showModalConfirm = false
+                    navController.navigate(NavUtils.Routes.Home.route)
+                }
+            )
+
+
         }
     }
 }
+
 
 @Composable
 fun SummaryItemCard(
@@ -268,7 +306,7 @@ fun SummaryItemCard(
                     .size(20.dp)
                     .clickable {
                         onEditClick(step)
-                    },imageVector = Icons.Outlined.Edit, contentDescription = "Editar", tint = ColorText)
+                    },imageVector = Icons.Outlined.Edit, contentDescription = "Editar", tint = ColorGray)
 
             }
             Spacer(modifier = Modifier.height(3.dp))
@@ -282,6 +320,8 @@ fun SummaryItemCard(
                 endContent?.invoke()
             }
         }
+
+
     }
 }
 
@@ -294,11 +334,4 @@ fun IntensityFormatter(intensity: Intensity): String{
         Intensity.MEDIUM -> R.string.intensity_medium.toString()
         Intensity.HIGH -> R.string.intensity_high.toString()
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun CrisisRegistrationSummaryPreview(){
-    CrisisRegistrationSummaryScreen()
 }

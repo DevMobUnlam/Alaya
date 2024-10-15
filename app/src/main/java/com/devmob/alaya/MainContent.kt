@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -109,13 +110,16 @@ fun MainContent(navController: NavHostController) {
                     popUpTo(NavUtils.Routes.Home.route) {
                         inclusive = true
                     }
-                }}, onFinishedRegistration = {/*navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route)*/})
+                }},
+                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                            inclusive = true
+                        }
+                    }})
             }
 
             composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                CrisisRegistrationSummaryScreen(
-
-                )
+                CrisisRegistrationSummaryScreen(navController = navController)
             }
 
         }
