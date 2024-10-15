@@ -47,4 +47,6 @@
     <string name="iniciar_sesi_n">Iniciar sesión</string>
     <string name="logo">Logo</string>
     <string name="logeado_con_correctamente">Logeado con correctamente</string>
+    <string name="paciente">Paciente</string>
+    <string name="profesional">Profesional</string>
 </resources>

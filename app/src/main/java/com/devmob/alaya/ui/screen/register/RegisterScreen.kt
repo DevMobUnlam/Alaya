@@ -226,9 +226,8 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
         ) {
             Button(
                 onClick = {
-                    // Acción para el botón Cancelar
-                    navController.navigate(NavUtils.LoginRoutes.Login) {
-                        popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                    navController.navigate(NavUtils.LoginRoutes.Login.route) {
+                        popUpTo(NavUtils.LoginRoutes.Login.route) {
                             inclusive = true
                         }
                     }

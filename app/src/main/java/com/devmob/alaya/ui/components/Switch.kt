@@ -26,12 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -39,25 +41,22 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 
 
 @Composable
-fun Switch(modifier: Modifier, onChange : (Boolean)-> Unit) {
+fun Switch(modifier: Modifier, onChange: (Boolean) -> Unit) {
     var isProfessional by remember { mutableStateOf(false) }
     var size by remember { mutableStateOf(IntSize.Zero) }
 
-    // Caja que contiene el switch con ambos textos visibles
     Box(
         modifier = modifier
-            .width(200.dp) // Ancho del switch
-            .height(50.dp) // Alto del switch
+            .width(200.dp)
+            .height(50.dp)
             .background(
-                color = LightBlueColor, // Color de fondo cuando no está seleccionado
-                shape = RoundedCornerShape(25.dp) // Bordes redondeados
+                color = LightBlueColor,
+                shape = RoundedCornerShape(25.dp)
             )
             .padding(0.dp)
             .onSizeChanged { size = it },
-        contentAlignment = Alignment.CenterStart // Alineación inicial del "thumb"
+        contentAlignment = Alignment.CenterStart
     ) {
-
-        // Fondo que se mueve junto con el estado del switch
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -66,10 +65,8 @@ fun Switch(modifier: Modifier, onChange : (Boolean)-> Unit) {
                     color = ColorPrimary,
                     shape = CircleShape
                 )
-                .align(if (isProfessional) Alignment.CenterEnd else Alignment.CenterStart) // Mueve el "thumb"
+                .align(if (isProfessional) Alignment.CenterEnd else Alignment.CenterStart)
         )
-
-        // Fila que contiene ambos textos: "Paciente" y "Profesional"
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,36 +74,30 @@ fun Switch(modifier: Modifier, onChange : (Boolean)-> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Texto "Paciente", siempre visible
             Text(
-                text = "Paciente",
+                text = stringResource(R.string.paciente),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (isProfessional) ColorGray else ColorWhite, // Texto blanco cuando está seleccionado
+                color = if (isProfessional) ColorGray else ColorWhite,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
             )
-
-            // Texto "Profesional", siempre visible
             Text(
-                text = "Profesional",
+                text = stringResource(R.string.profesional),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                color = if (isProfessional) ColorWhite else ColorGray, // Texto blanco cuando está seleccionado
+                color = if (isProfessional) ColorWhite else ColorGray,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
             )
         }
-
-
-        // Caja transparente para detectar clics y cambiar el estado
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .clickable {
                     isProfessional = !isProfessional
                     onChange(isProfessional)
-                } // Cambia el estado al hacer clic
+                }
         )
     }
 }
