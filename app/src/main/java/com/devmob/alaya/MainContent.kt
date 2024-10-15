@@ -10,6 +10,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.domain.AddUserToFirestoreUseCase
+import com.devmob.alaya.domain.GetRoleUseCase
+import com.devmob.alaya.domain.LoginUseCase
+import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -17,7 +21,7 @@ import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.patientHome.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.SreenLogin
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
@@ -34,6 +38,8 @@ import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.register.RegisterScreen
+import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
@@ -71,77 +77,140 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = NavUtils.PatientRoutes.Login.route,
+            startDestination = NavUtils.LoginRoutes.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.PatientRoutes.Home.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 HomeScreen(PatientHomeScreenViewmodel(),navController)
             }
             composable(NavUtils.ProfessionalRoutes.Home.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
-                ) {
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
 
             ) {
                 PatientProfileScreen(navController)
             }
             composable(NavUtils.ProfessionalRoutes.SearchPatient.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 SearchUserScreen(SearchUserViewModel(), navController)
             }
-            composable(NavUtils.PatientRoutes.Login.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            composable(NavUtils.LoginRoutes.Login.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                SreenLogin(navController, LoginViewModel())
+                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase()))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 ContainmentNetworkScreen(
                     viewModel = containmentViewModel,
@@ -149,12 +218,21 @@ fun MainContent(navController: NavHostController) {
                 )
             }
             composable("contact_detail/{contactId}",
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) { backStackEntry ->
                 val contactId = backStackEntry.arguments?.getString("contactId")
                 if (contactId != null) {
@@ -166,23 +244,41 @@ fun MainContent(navController: NavHostController) {
                 }
             }
             composable("add_contact",
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 AddContactScreen(containmentViewModel, navController)
             }
 
             composable("feedback_screen/{feedbackType}",
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) { backStackEntry ->
                 val feedbackType = backStackEntry.arguments?.getString("feedbackType")?.let {
                     FeedbackType.valueOf(it)
@@ -193,22 +289,40 @@ fun MainContent(navController: NavHostController) {
                 )
             }
             composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
             }
             composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) { backStackEntry ->
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
@@ -216,24 +330,67 @@ fun MainContent(navController: NavHostController) {
                 TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
             }
             composable(NavUtils.PatientRoutes.MenuPatient.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 MenuPatientScreen(navController)
             }
             composable(NavUtils.ProfessionalRoutes.MenuProfessional.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 MenuProfessionalScreen(navController)
+            }
+            composable(NavUtils.LoginRoutes.Register.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                RegisterScreen(
+                    navController,
+                    RegisterViewmodel(
+                        RegisterNewUserUseCase(),
+                        AddUserToFirestoreUseCase()
+                    )
+                )
             }
         }
     }
