@@ -88,13 +88,14 @@ fun LoginScreen(
         )
         {
             Image(
-                painterResource(id = R.drawable.logounologin), contentDescription = "Logo",
+                painterResource(id = R.drawable.logounologin),
+                contentDescription = stringResource(R.string.logo),
                 modifier = Modifier.size(230.dp)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
             UserForm { email, password ->
-                Log.d("Logeado", "Logeado con $email y $password")
+                Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
                 viewModel.singInWithEmailAndPassword(email, password)
             }
 
@@ -103,8 +104,8 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "¿No tenes cuenta?")
-                Text(text = "Registrate",
+                Text(text = stringResource(R.string.no_tenes_cuenta))
+                Text(text = stringResource(R.string.registrate),
                     color = ColorPrimary,
                     modifier = Modifier
                         .clickable {
@@ -134,7 +135,7 @@ fun UserForm(
     val passwordVisible = rememberSaveable {
         mutableStateOf(false)
     }
-    val valido = remember(email.value, password.value) {
+    val valid = remember(email.value, password.value) {
         email.value.trim().isNotEmpty() &&
                 password.value.trim().isNotEmpty()
     }
@@ -145,12 +146,12 @@ fun UserForm(
         )
         PasswordInput(
             passwordState = password,
-            labelId = "Password",
+            labelId = stringResource(R.string.password),
             passwordVisible = passwordVisible
         )
         SubmitButton(
-            textId = "Iniciar sesión",
-            inputValido = valido
+            textId = stringResource(R.string.iniciar_sesi_n),
+            inputValid = valid
         ) {
             onDone(email.value.trim(), password.value.trim())
             keyboardController?.hide()
@@ -161,16 +162,16 @@ fun UserForm(
 @Composable
 fun SubmitButton(
     textId: String,
-    inputValido: Boolean,
-    onClic: () -> Unit
+    inputValid: Boolean,
+    onClick: () -> Unit
 ) {
     Button(
-        onClick = onClic,
+        onClick = onClick,
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth(),
         shape = CircleShape,
-        enabled = inputValido
+        enabled = inputValid
     ) {
         Text(
             text = textId,

@@ -61,8 +61,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
     var isProfessional by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
-    var showAlert by remember { mutableStateOf(false) }
+    val errorMessage by remember { mutableStateOf("") }
 
     if (viewModel.navigateToPatientHome.value) {
         navController.navigate(NavUtils.PatientRoutes.Home.route) {
@@ -100,14 +99,14 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
 
         Image(
             painter = painterResource(id = R.drawable.pasotresrelajacionnuevo),
-            contentDescription = "Imagen de Registro",
+            contentDescription = stringResource(R.string.imagen_de_registro),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Registrar usuario",
+            text = stringResource(R.string.registrar_usuario),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = ColorPrimary,
@@ -128,7 +127,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             onValueChange = { name = it },
             label = {
                 Text(
-                    "Nombre",
+                    stringResource(R.string.nombre),
                     fontSize = 20.sp
                 )
             },
@@ -146,7 +145,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             onValueChange = { surname = it },
             label = {
                 Text(
-                    "Apellido",
+                    stringResource(R.string.apellido),
                     fontSize = 20.sp
                 )
             },
@@ -183,7 +182,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             onValueChange = { password = it },
             label = {
                 Text(
-                    "Contraseña",
+                    stringResource(R.string.contrase_a),
                     fontSize = 20.sp
                 )
             },
@@ -206,7 +205,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             onValueChange = { confirmPassword = it },
             label = {
                 Text(
-                    "Confirmar Contraseña",
+                    stringResource(R.string.confirmar_contrase_a),
                     fontSize = 20.sp
                 )
             },
@@ -226,11 +225,16 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
         Spacer(modifier = Modifier.height(30.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center // Alineación central horizontal
+            horizontalArrangement = Arrangement.Center
         ) {
             Button(
                 onClick = {
                     // Acción para el botón Cancelar
+                    navController.navigate(NavUtils.LoginRoutes.Login) {
+                        popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                            inclusive = true
+                        }
+                    }
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -238,7 +242,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                 colors = ButtonDefaults.buttonColors(containerColor = ColorPrimary)
             ) {
                 Text(
-                    "Cancelar",
+                    stringResource(R.string.cancelar),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Black
@@ -256,9 +260,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                     if (validateRegisterFields(
                             newUser,
                             password,
-                            confirmPassword,
-                            showAlert,
-                            errorMessage
+                            confirmPassword
                         )
                     ) {
                         viewModel.createUser(newUser, password)
@@ -270,7 +272,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                 colors = ButtonDefaults.buttonColors(containerColor = ColorPrimary)
             ) {
                 Text(
-                    "Registrar",
+                    stringResource(R.string.registrar),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Black
@@ -294,27 +296,19 @@ fun resolveRole(professional: Boolean): UserRole {
         true -> UserRole.PROFESSIONAL
         false -> UserRole.PATIENT
     }
-
 }
 
 
 private fun validateRegisterFields(
     user: User,
     password: String,
-    confirmPassword: String,
-    showAlert: Boolean,
-    errorMessage: String
+    confirmPassword: String
 ): Boolean {
-    var showAlert1 = showAlert
-    var errorMessage1 = errorMessage
-    if (user.name.isEmpty() || user.surname.isEmpty() || user.email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-        showAlert1 = true
-        return false
+    return if (user.name.isEmpty() || user.surname.isEmpty() || user.email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        false
     } else if (password != confirmPassword) {
-        errorMessage1 = "Las contraseñas no coinciden"
-        return false
+        false
     } else {
-        errorMessage1 = "Registrado con éxito"
-        return true
+        true
     }
 }
