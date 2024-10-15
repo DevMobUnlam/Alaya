@@ -6,17 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class RegisterViewmodel(

@@ -4,8 +4,6 @@ import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.UserFirestoreRepository
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 class UserFirestoreRepositoryImpl : UserFirestoreRepository{
