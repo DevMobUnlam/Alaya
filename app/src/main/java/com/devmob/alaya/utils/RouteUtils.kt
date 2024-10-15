@@ -12,10 +12,15 @@ object NavUtils {
         return navBackStackEntry?.destination?.route
     }
 
+    sealed class LoginRoutes (val route: String){
+        data object Login: LoginRoutes("login")
+        data object Register: LoginRoutes("register")
+    }
+
     sealed class PatientRoutes(val route: String) {
         data object Home : PatientRoutes("home")
         data object Crisis : PatientRoutes("crisis")
-        data object Login : PatientRoutes("login")
+        //data object Login : PatientRoutes("login")
         data object ContainmentNetwork : PatientRoutes("red_de_contencion")
         data object AddContact : PatientRoutes("add_contact")
         data object Feedback : PatientRoutes("feedback_screen/{feedbackType}")

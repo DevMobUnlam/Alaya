@@ -41,7 +41,7 @@ fun MenuPatientScreen(navController: NavController){
                     color = ColorText,
                     modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
                         navController.navigate(
-                            NavUtils.PatientRoutes.Login.route
+                            NavUtils.LoginRoutes.Login.route
                         )
                     }
                 )
