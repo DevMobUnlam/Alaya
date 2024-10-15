@@ -53,7 +53,7 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
                 selected = currentRoute == item.route && !isMiddleButton(item.iconType),
                 onClick = {
                     navHostController.navigate(item.route) {
-                        popUpTo(navHostController.graph.findStartDestination().id) {
+                        popUpTo(item.route) {
                             saveState = true
                         }
                         launchSingleTop = true

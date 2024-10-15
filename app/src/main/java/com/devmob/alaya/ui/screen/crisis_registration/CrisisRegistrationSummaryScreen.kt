@@ -253,7 +253,7 @@ fun CrisisRegistrationSummaryScreen(
                 onDismiss = { showModalDelete = false },
                 onConfirm = {
                     showModalDelete = false
-                    navController.navigate(NavUtils.Routes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route)
                 }
             )
 
@@ -265,7 +265,7 @@ fun CrisisRegistrationSummaryScreen(
                 onDismiss = { showModalConfirm = false },
                 onConfirm = {
                     showModalConfirm = false
-                    navController.navigate(NavUtils.Routes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route)
                 }
             )
 

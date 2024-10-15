@@ -20,7 +20,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +37,7 @@ fun Card(
     title: String,
     subtitle: String? = null,
     imageUrl: String? = null,
+    imageResId: Int? = null,
     progress: Float? = null,
     onClick: () -> Unit,
     leftIcon: ImageVector? = null,
@@ -45,7 +48,9 @@ fun Card(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp).background(color = ColorWhite),
+            .padding(8.dp)
+            .background(color = ColorWhite)
+            .wrapContentHeight(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -71,6 +76,15 @@ fun Card(
                         contentScale = ContentScale.Crop,
                     ),
                     contentScale = ContentScale.Crop,
+                    contentDescription = "Imagen de tarjeta",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+            } else if (imageResId != null) {
+                Image(
+                    painter = painterResource(id = imageResId),
                     contentDescription = "Imagen de tarjeta",
                     modifier = Modifier
                         .size(50.dp)

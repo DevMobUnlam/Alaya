@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.devmob.alaya"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -85,4 +85,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
 }
