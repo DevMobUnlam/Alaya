@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Checklist
@@ -32,7 +34,8 @@ import com.devmob.alaya.ui.theme.ColorText
 @Composable
 fun HomeScreen(navController: NavController) {
     ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         val (backgroundImage, greetingText, cardColumn) = createRefs()
 
@@ -58,9 +61,8 @@ fun HomeScreen(navController: NavController) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
                 .constrainAs(greetingText) {
-                    top.linkTo(parent.top, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 25.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end, margin = 15.dp)
                 }
@@ -68,12 +70,12 @@ fun HomeScreen(navController: NavController) {
 
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
                 .constrainAs(cardColumn) {
-                    top.linkTo(greetingText.bottom, margin = 40.dp)
+                    top.linkTo(greetingText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, margin = 70.dp)
+                    bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
 
                 }
