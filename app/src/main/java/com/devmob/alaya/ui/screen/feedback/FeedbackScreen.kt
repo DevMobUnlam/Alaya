@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -48,7 +49,16 @@ fun FeedbackScreen(
                     style = MaterialTheme.typography.titleLarge.copy(fontSize = 50.sp),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-//
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Lograste superar este momento. ¡Seguí así!",
+                    color = ColorText,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+
                 val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.feedback_congratulations_animation))
                 var isPlaying by remember {
                     mutableStateOf(true)
@@ -98,6 +108,15 @@ fun FeedbackScreen(
                     fontSize = 35.sp,
                     fontWeight = Bold,
                     modifier = Modifier.padding(bottom = 17.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Está bien, lo importante es que lo intentaste",
+                    color = ColorText,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
 //
                 val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.everything_will_be_fine_animation))
