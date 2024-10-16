@@ -31,9 +31,7 @@ class CrisisRegistrationViewModel(): ViewModel() {
         registrationData.value = data
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
-    @RequiresApi(Build.VERSION_CODES.O)
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
     var startDate by mutableStateOf<LocalDate?>(null)
     var startTime by mutableStateOf<LocalTime?>(null)
@@ -58,24 +56,18 @@ class CrisisRegistrationViewModel(): ViewModel() {
     }
     var shouldShowExitModal by mutableStateOf(false)
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun cleanState(){
         _screenState.value = CrisisRegistrationScreenState()
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun goOneStepForward(){
         _screenState.value = _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.plus(1))
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun goOneStepBack(){
         _screenState.value = _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.minus(1))
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisPlace(place: CrisisPlace){
         val currentPlaces = _places.value?.toMutableList() ?: mutableListOf()
         if (!currentPlaces.any { it.name == place.name }) {
@@ -89,7 +81,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisBodySensation(bodySensation: CrisisBodySensation) {
         val currentSensations = _bodySensations.value?.toMutableList() ?: mutableListOf()
         if (!currentSensations.any { it.name == bodySensation.name }) {
@@ -103,19 +94,16 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
         val updatedBodySensation = bodySensation.copy(intensity = intensity)
         _screenState.value?.crisisDetails?.bodySensationList?.set(index,updatedBodySensation)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun onEmotionIntensityChange(intensity: Intensity, index: Int, emotion: CrisisEmotion){
         val updatedEmotion = emotion.copy(intensity = intensity)
         _screenState.value?.crisisDetails?.emotionList?.set(index,updatedEmotion)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisTool(crisisTool: CrisisTool) {
         val currentTools= _tools.value?.toMutableList() ?: mutableListOf()
         if (!currentTools.any { it.name == crisisTool.name }) {
@@ -129,7 +117,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
         val currentEmotions= _emotions.value?.toMutableList() ?: mutableListOf()
         if (!currentEmotions.any { it.name == crisisEmotion.name }) {
@@ -143,7 +130,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateNotes(text: String){
         _screenState.value = _screenState?.value?.copy(
             crisisDetails = _screenState?.value?.crisisDetails?.copy(
@@ -153,7 +139,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updatePlaceStatus(place: CrisisPlace, index: Int, isActive: Boolean){
         val updatedElement = place.copy(isActive = isActive)
         _screenState.value?.crisisDetails?.placeList?.set(index = index, updatedElement)
@@ -168,7 +153,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         shouldShowExitModal = true
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateCrisisTimeDetails(updatedDetails: CrisisTimeDetails) {
         _screenState.value = _screenState.value?.crisisDetails?.copy(
             crisisTimeDetails = updatedDetails
@@ -179,7 +163,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateStartDate(date: Date) {
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             startingDate = date
@@ -192,7 +175,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateStartTime(time: Date) {
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             startTIme = time
@@ -205,7 +187,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateEndDate(date: Date) {
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             endDate = date
@@ -218,7 +199,6 @@ class CrisisRegistrationViewModel(): ViewModel() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateEndTime(time: Date) {
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             endTime = time

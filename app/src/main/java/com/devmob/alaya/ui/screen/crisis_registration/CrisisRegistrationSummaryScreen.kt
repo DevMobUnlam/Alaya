@@ -64,7 +64,6 @@ import com.devmob.alaya.utils.NavUtils
  *
  */
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CrisisRegistrationSummaryScreen(
     modifier: Modifier = Modifier,
