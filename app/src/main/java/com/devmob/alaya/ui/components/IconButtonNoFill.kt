@@ -30,15 +30,21 @@ import com.devmob.alaya.ui.theme.ColorWhite
 import dashedBorder
 
 /**
- * Boton de Icono sin relleno
+ * Boton de Icono sin relleno para agregar elemento
  *
  * text - El texto va a ir debajo del boton
+ *
+ * onClick -> Accion a ejecutar una vez se presiona el boton
  */
 @Composable
-fun IconButtonNoFill(text : String, onClick: () -> Unit){
+fun IconButtonNoFill(
+    text : String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(IntrinsicSize.Min)
+        modifier = modifier.width(IntrinsicSize.Min)
     )
     {
         FilledIconButton(
@@ -51,7 +57,7 @@ fun IconButtonNoFill(text : String, onClick: () -> Unit){
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite
             ),
-            modifier = Modifier.dashedBorder(
+            modifier = modifier.dashedBorder(
                 color = ColorPrimary,
                 shape = CircleShape,
                 strokeWidth = 1.dp,
@@ -66,9 +72,10 @@ fun IconButtonNoFill(text : String, onClick: () -> Unit){
             modifier = Modifier.fillMaxWidth(),
             text = text,
             color = ColorText,
-            fontSize = 10.sp,
-            lineHeight = 10.sp,
+            fontSize = 16.sp,
+            lineHeight = 18.sp,
             textAlign = TextAlign.Center,
+            maxLines = 3
         )
     }
 }

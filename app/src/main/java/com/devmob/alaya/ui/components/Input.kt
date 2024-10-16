@@ -24,7 +24,7 @@ import com.devmob.alaya.ui.theme.ColorWhite
 fun Input(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    label: String = "",
     placeholder: String,
     keyboardType: KeyboardType = KeyboardType.Text
 ) {

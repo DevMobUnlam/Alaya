@@ -48,7 +48,7 @@ fun FeedbackScreen(
                     Button(
                         text = "Registrar el episodio",
                         onClick = {
-                            //TODO Navegar a la pantalla Registrar Crisis
+                            navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Filled,

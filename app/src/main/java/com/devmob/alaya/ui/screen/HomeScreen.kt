@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.components.Card
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
@@ -90,7 +91,7 @@ fun HomeScreen(navController: NavController) {
             Card(
                 title = "Mi red de contención",
                 subtitle = "Accede a tus contactos de confianza",
-                onClick = { navController.navigate("red_de_contencion")},
+                onClick = { navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route)},
                 leftIcon = Icons.Outlined.Groups,
                 rightIcon = Icons.Filled.ArrowForwardIos
             )
@@ -114,7 +115,7 @@ fun HomeScreen(navController: NavController) {
             Card(
                 title = "Registro de crisis",
                 subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
-                onClick = { },
+                onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)},
                 leftIcon = Icons.Outlined.Mood,
                 rightIcon = Icons.Filled.ArrowForwardIos,
                 leftIconBitmap = BitmapFactory.decodeResource(
