@@ -57,7 +57,7 @@ fun Switch(modifier: Modifier, onChange: (Boolean) -> Unit) {
             .onSizeChanged { size = it },
         contentAlignment = Alignment.CenterStart
     ) {
-        val switchWidth = size.width.div(3.5).dp
+        val switchWidth = size.width.div(5).dp
         Box(
             modifier = Modifier
                 .fillMaxHeight()
