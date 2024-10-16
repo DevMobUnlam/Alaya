@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.screen.register
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -85,15 +88,16 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
         viewModel.resetError()
     }
 
-
+    Box(modifier = Modifier.fillMaxSize()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        horizontalAlignment = Alignment.CenterHorizontally,
 
+    ) {
         Image(
             painter = painterResource(id = R.drawable.pasotresrelajacionnuevo),
             contentDescription = stringResource(R.string.imagen_de_registro),
@@ -219,10 +223,10 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
                 onClick = {
@@ -285,7 +289,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
             )
         }
     }
-}
+}}
 
 fun resolveRole(professional: Boolean): UserRole {
     return when (professional) {
