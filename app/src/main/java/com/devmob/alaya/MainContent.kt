@@ -47,6 +47,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.utils.NavUtils
+import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
@@ -57,7 +58,12 @@ fun MainContent(navController: NavHostController) {
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
-        "contact_detail/{contactId}"
+        "contact_detail/{contactId}",
+        NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
+        ProfessionalRoutes.PatientProfile.route,
+        ProfessionalRoutes.ConfigTreatment.route,
+        ProfessionalRoutes.TreatmentSummary.route
+
     )
 
     Scaffold(
@@ -122,7 +128,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
-            composable(NavUtils.ProfessionalRoutes.PatientProfile.route,
+            composable(ProfessionalRoutes.PatientProfile.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -292,7 +298,7 @@ fun MainContent(navController: NavHostController) {
                     navController
                 )
             }
-            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route,
+            composable(ProfessionalRoutes.ConfigTreatment.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -311,7 +317,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
             }
-            composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route,
+            composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)

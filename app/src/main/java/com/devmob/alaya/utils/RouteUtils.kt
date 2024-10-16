@@ -47,6 +47,9 @@ object NavUtils {
         PatientRoutes.AddContact.route to "Agregar Contacto",
         "contact_detail/{contactId}" to "Detalles del Contacto",
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
+        ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
+        ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
+        ProfessionalRoutes.TreatmentSummary.route to "Resumen"
     )
 
     val routesWithBottomBar = listOf(
