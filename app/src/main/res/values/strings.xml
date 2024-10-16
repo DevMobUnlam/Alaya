@@ -41,4 +41,5 @@
     <string name="intensity_low">Baja</string>
     <string name="intensity_medium">Media</string>
     <string name="intensity_high">Alta</string>
+    <string name="text_tooltip_text_area">¿Prefieres hablar en lugar de escribir? Mantén presionado el botón para dictar tu mensaje.</string>
 </resources>
