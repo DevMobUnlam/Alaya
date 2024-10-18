@@ -1,11 +1,14 @@
 package com.devmob.alaya
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,7 +45,10 @@ import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.utils.NavUtils
+import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
@@ -53,7 +59,12 @@ fun MainContent(navController: NavHostController) {
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
-        "contact_detail/{contactId}"
+        "contact_detail/{contactId}",
+        NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
+        ProfessionalRoutes.PatientProfile.route,
+        ProfessionalRoutes.ConfigTreatment.route,
+        ProfessionalRoutes.TreatmentSummary.route
+
     )
 
     Scaffold(
@@ -118,7 +129,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
-            composable(NavUtils.ProfessionalRoutes.PatientProfile.route,
+            composable(ProfessionalRoutes.PatientProfile.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -288,7 +299,7 @@ fun MainContent(navController: NavHostController) {
                     navController
                 )
             }
-            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route,
+            composable(ProfessionalRoutes.ConfigTreatment.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -307,7 +318,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
             }
-            composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route,
+            composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -392,6 +403,35 @@ fun MainContent(navController: NavHostController) {
                     )
                 )
             }
+            composable(NavUtils.PatientRoutes.CrisisRegistration.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                    popUpTo(NavUtils.PatientRoutes.Home.route) {
+                        inclusive = true
+                    }
+                }},
+                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                        popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                            inclusive = true
+                        }
+                    }})
+            }
+            composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                CrisisRegistrationSummaryScreen(navController = navController)
+            }
         }
     }
 }
@@ -438,5 +478,22 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
+            /*composable(NavUtils.Routes.CrisisRegistration.route) {
+                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
+                    popUpTo(NavUtils.Routes.Home.route) {
+                        inclusive = true
+                    }
+                }},
+                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                            inclusive = true
+                        }
+                    }})
+            }
+
+            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
+                CrisisRegistrationSummaryScreen(navController = navController)
+            }*/
+
 
 

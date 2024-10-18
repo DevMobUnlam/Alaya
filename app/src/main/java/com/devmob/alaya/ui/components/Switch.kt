@@ -57,10 +57,11 @@ fun Switch(modifier: Modifier, onChange: (Boolean) -> Unit) {
             .onSizeChanged { size = it },
         contentAlignment = Alignment.CenterStart
     ) {
+        val switchWidth = size.width.div(5).dp
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .width(size.width.div(5).dp) // TODO Fijarse que no se rompa
+                .width(switchWidth) // TODO Fijarse que no se rompa
                 .background(
                     color = ColorPrimary,
                     shape = CircleShape

@@ -23,18 +23,26 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.model.CrisisTimeDetails
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 @Composable
-fun DateTimePicker() {
+fun DateTimePicker(
+    modifier: Modifier = Modifier,
+    onStartDateChange: (Date) -> Unit = {},
+    onEndDateChange: (Date) -> Unit = {},
+    onStartTimeChange: (Date) -> Unit = {},
+    onEndTimeChange: (Date) -> Unit = {},
+    crisisTimeDetails: CrisisTimeDetails,
+) {
     val calendar = Calendar.getInstance()
 
-    var selectedStartDate by remember { mutableStateOf(calendar.time) }
-    var selectedStartTime by remember { mutableStateOf(calendar.time) }
-    var selectedEndDate by remember { mutableStateOf(calendar.time) }
-    var selectedEndTime by remember { mutableStateOf(calendar.time) }
+    var selectedStartDate = crisisTimeDetails.startingDate
+    var selectedStartTime = crisisTimeDetails.startTIme
+    var selectedEndDate = crisisTimeDetails.endDate
+    var selectedEndTime = crisisTimeDetails.endTime
 
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -45,7 +53,7 @@ fun DateTimePicker() {
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            selectedStartDate = calendar.time
+            onStartDateChange(calendar.time)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
     ).apply {
@@ -56,7 +64,7 @@ fun DateTimePicker() {
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            selectedEndDate = calendar.time
+            onEndDateChange(calendar.time)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
     ).apply {
@@ -68,7 +76,7 @@ fun DateTimePicker() {
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            selectedStartTime = calendar.time
+            onStartTimeChange(calendar.time)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )
@@ -78,18 +86,18 @@ fun DateTimePicker() {
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            selectedEndTime = calendar.time
+            onEndTimeChange(calendar.time)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column {
+                Column(){
                     Spacer(modifier = Modifier.height(50.dp))
 
                     OutlinedTextField(
@@ -199,6 +207,6 @@ fun DateTimePicker() {
 fun PreviewDateTimePicker()
 {
     Surface {
-        DateTimePicker()
+        DateTimePicker(crisisTimeDetails = CrisisTimeDetails())
     }
 }
