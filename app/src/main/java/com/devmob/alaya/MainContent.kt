@@ -31,6 +31,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
+import com.devmob.alaya.ui.screen.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
@@ -107,7 +108,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                HomeScreen(navController)
+                HomeScreen(PatientHomeScreenViewmodel(),navController)
             }
             composable(NavUtils.ProfessionalRoutes.Home.route,
                 enterTransition = {
