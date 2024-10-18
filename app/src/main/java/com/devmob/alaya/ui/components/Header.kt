@@ -27,7 +27,7 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
-fun Header(name: String){
+fun Header(name: String, greeting:String){
     Card(
         colors = CardDefaults.cardColors(containerColor = ColorWhite),
         shape = RoundedCornerShape(20.dp),
@@ -54,7 +54,7 @@ fun Header(name: String){
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "¡Buen día!",
+                    text = "$greeting!",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = ColorText,
@@ -76,6 +76,6 @@ fun Header(name: String){
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun HeaderPreview(name: String = "Mauro"){
-    Header(name)
+fun HeaderPreview(name: String = "Mauro",greeting:String = "Buen Dia!"){
+    Header(name,greeting)
 }

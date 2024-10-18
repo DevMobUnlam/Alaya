@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.screen.login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,101 +31,102 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
-fun SreenLogin(navController: NavController,
-               viewModel: LoginViewModel){
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel
+) {
+    val context = LocalContext.current
 
-    val  showLoginForm = rememberSaveable {
-        mutableStateOf(true)
+    if (viewModel.navigateToPatientHome.value) {
+        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+            popUpTo(NavUtils.PatientRoutes.Home.route) {
+                inclusive = true
+            }
+        }
     }
-
-    Surface (modifier = Modifier
-        .fillMaxSize()
-    ){
-        Column (horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center)
-        {
-            Image(painterResource(id = R.drawable.logounologin), contentDescription = "Logo",
-                modifier = Modifier.size(230.dp) )
-
-            Spacer(modifier = Modifier.height(32.dp))
-            if (showLoginForm.value) {
-                Text(text = "Iniciar sesion")
-                UserForm (isCreateAccount = false){
-                        email, password ->
-                    Log.d("Logeado", "Logeado con $email y $password")
-                    viewModel.singInWithEmailAndPassword(email, password,{
-                        //Ruta para ir a la Home cuando el login es paciente
-                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    }, {//Ruta para ir a la Home cuando el login es profesional
-                        //TODO cambiar ruta a professional
-                        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
-                            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    })
-                }
-            }
-            else{
-                Text(text = "Crear una cuenta")
-                UserForm(
-                    isCreateAccount = true
-                ){
-                        email, password ->
-                    Log.d("Logeado", "Creando cuenta con $email y $password")
-                    viewModel.createUserWithEmailAndPassword(email,password){
-                        //Va directo al Home cuando creás una cuenta válida
-                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                }
-
-            }
-            Spacer(modifier = Modifier.height(15.dp))
-            Row (horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically){
-                val  text1 =
-                    if (showLoginForm.value) "¿No tenes cuenta?"
-                    else "¿Ya tienes cuenta?"
-
-                val  text2 =
-                    if (showLoginForm.value) "Registrate"
-                    else "Iniciar Sesion"
-                Text(text = text1)
-                Text(text = text2,
-                    modifier = Modifier
-                        .clickable { showLoginForm.value = !showLoginForm.value }
-                        .padding(start = 5.dp))
+    if (viewModel.navigateToProfessionalHome.value) {
+        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                inclusive = true
             }
         }
     }
 
+    if (viewModel.showError.value) {
+        Toast.makeText(
+            context,
+            stringResource(R.string.usuario_o_contrasena_invalidos),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        viewModel.resetError()
+    }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(30.dp)
+        )
+        {
+            Image(
+                painterResource(id = R.drawable.logounologin),
+                contentDescription = stringResource(R.string.logo),
+                modifier = Modifier.size(230.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            UserForm { email, password ->
+                Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
+                viewModel.singInWithEmailAndPassword(email, password)
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = stringResource(R.string.no_tenes_cuenta))
+                Text(text = stringResource(R.string.registrate),
+                    color = ColorPrimary,
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(NavUtils.LoginRoutes.Register.route) {
+                                popUpTo(NavUtils.LoginRoutes.Register.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                        .padding(start = 5.dp))
+            }
+        }
+    }
 }
 
+
 @Composable
-fun UserForm(isCreateAccount: Boolean = false,
-             onDone: (String, String) -> Unit = {email, pwd ->}
+fun UserForm(
+    onDone: (String, String) -> Unit = { email, pwd -> }
 ) {
-    val  email = rememberSaveable {
+    val email = rememberSaveable {
         mutableStateOf("")
     }
     val password = rememberSaveable {
@@ -133,24 +135,24 @@ fun UserForm(isCreateAccount: Boolean = false,
     val passwordVisible = rememberSaveable {
         mutableStateOf(false)
     }
-    val valido = remember(email.value, password.value) {
+    val valid = remember(email.value, password.value) {
         email.value.trim().isNotEmpty() &&
                 password.value.trim().isNotEmpty()
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        EmailInput (
+        EmailInput(
             emailState = email
         )
         PasswordInput(
             passwordState = password,
-            labelId = "Password",
+            labelId = stringResource(R.string.password),
             passwordVisible = passwordVisible
         )
         SubmitButton(
-            textId = if (isCreateAccount) "Crear cuenta" else "Login",
-            inputValido = valido
-        ){
+            textId = stringResource(R.string.iniciar_sesi_n),
+            inputValid = valid
+        ) {
             onDone(email.value.trim(), password.value.trim())
             keyboardController?.hide()
         }
@@ -160,17 +162,21 @@ fun UserForm(isCreateAccount: Boolean = false,
 @Composable
 fun SubmitButton(
     textId: String,
-    inputValido: Boolean,
-    onClic: ()->Unit
+    inputValid: Boolean,
+    onClick: () -> Unit
 ) {
-    Button(onClick = onClic,
+    Button(
+        onClick = onClick,
         modifier = Modifier
             .padding(3.dp)
             .fillMaxWidth(),
-        shape =  CircleShape,
-        enabled = inputValido) {
-        Text(text = textId,
-            modifier = Modifier.padding(5.dp))
+        shape = CircleShape,
+        enabled = inputValid
+    ) {
+        Text(
+            text = textId,
+            modifier = Modifier.padding(5.dp)
+        )
     }
 }
 
@@ -186,28 +192,28 @@ fun PasswordInput(
 
     OutlinedTextField(
         value = passwordState.value,
-        onValueChange ={passwordState.value = it},
-        label = { Text(text = labelId)},
+        onValueChange = { passwordState.value = it },
+        label = { Text(text = labelId) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password
         ),
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth(),
         visualTransformation = visualTransformation,
         trailingIcon = {
-            if (passwordState.value.isNotBlank()){
+            if (passwordState.value.isNotBlank()) {
                 PasswordVisibleIcon(passwordVisible)
             }
-            else null
         }
     )
 }
 
 @Composable
 fun PasswordVisibleIcon(
-    passwordVisible: MutableState<Boolean>) {
+    passwordVisible: MutableState<Boolean>
+) {
     val image =
         if (passwordVisible.value)
             Icons.Default.VisibilityOff
@@ -225,8 +231,10 @@ fun PasswordVisibleIcon(
 
 
 @Composable
-fun EmailInput(emailState: MutableState<String>,
-               labelId: String = "Email") {
+fun EmailInput(
+    emailState: MutableState<String>,
+    labelId: String = "Email"
+) {
     InputField(
         valueState = emailState,
         labelId = labelId,
@@ -239,16 +247,18 @@ fun InputField(
     valueState: MutableState<String>,
     labelId: String,
     isSingLine: Boolean = true,
-    keyboardType: KeyboardType) {
+    keyboardType: KeyboardType
+) {
     OutlinedTextField(
-        value =valueState.value ,
-        onValueChange = {valueState.value = it},
-        label = { Text(text = labelId)},
+        value = valueState.value,
+        onValueChange = { valueState.value = it },
+        label = { Text(text = labelId) },
         singleLine = isSingLine,
         modifier = Modifier
-            .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType)
+            keyboardType = keyboardType
+        )
     )
 }

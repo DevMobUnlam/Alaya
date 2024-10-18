@@ -2,7 +2,9 @@ package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
@@ -13,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.ui.theme.ColorGray
@@ -25,27 +29,29 @@ import com.devmob.alaya.ui.theme.ColorWhite
 @Composable
 fun IconButton(
     symbol: ImageVector,
-    text: String = "",
+    text: String,
+    size: Dp = 50.dp,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor : Color = ColorPrimary
 ){
     Column(verticalArrangement = Arrangement.spacedBy((-3).dp),horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier){
         FilledIconButton(
             onClick = onClick,
             enabled = true,
             colors = IconButtonColors(
-                containerColor = ColorPrimary,
+                containerColor = backgroundColor,
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite),
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(size)
         ) {
-            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.50f))
+            Icon(symbol ,contentDescription = text, tint= ColorWhite, modifier = Modifier.fillMaxSize(0.70f))
         }
         Text(
             text = text,
             color = ColorText,
-            fontSize = 9.sp
+            fontSize = 13.sp
         )
     }
 
@@ -54,5 +60,5 @@ fun IconButton(
 @Preview(showBackground = true)
 @Composable
 fun IconButtonPreview(){
-    IconButton(Icons.Outlined.Home, "Home", onClick = {})
+    IconButton(Icons.Outlined.Home, "Home", onClick = {}, size = 70.dp)
 }

@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,11 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.ui.components.Button
@@ -48,7 +54,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val currentStepIndex = viewModel.currentStepIndex
 
     BackHandler {
-
+        // Comportamiento del botón "Atrás"
     }
 
     ConstraintLayout(
@@ -56,7 +62,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             .fillMaxSize()
             .background(ColorWhite)
     ) {
-        val (progressBar, audioIcon, closeIcon, image, title, description, nextButton, goodButton) = createRefs()
+        val (progressBar, audioIcon, closeIcon, lottieAnimation, title, description, nextButton, goodButton) = createRefs()
 
         SegmentedProgressBar(
             totalSteps = totalSteps,
@@ -106,28 +112,40 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 end.linkTo(parent.end, margin = 16.dp)
             })
 
-        /* TODO // Descargar imagen desde la URL
-        AsyncImage(
-            model = currentStep.image,
-            contentDescription = null,
-        )*/
+        // Reemplazo de la imagen con la animación de Lottie
+        val composition by rememberLottieComposition(
+            spec = LottieCompositionSpec.RawRes(
+                when (currentStep.image) {
+                    "image_step_1" -> R.raw.crisis_step1_animation
+                    "image_step_2" -> R.raw.animation
+                    "image_step_3" -> R.raw.crisis_step3_animation
+                    else -> R.raw.feedback_congratulations_animation // Animación por defecto si no hay un paso válido
+                }
+            )
+        )
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            iterations = LottieConstants.IterateForever
+        )
 
-        Image(
-            painter = painterResource(id = getImage(currentStep.image)),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        LottieAnimation(
+            composition = composition,
+            progress = progress,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .constrainAs(image) {
+                .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
+                .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+                .constrainAs(lottieAnimation) {
                     top.linkTo(title.bottom, margin = 24.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(description.top, margin = 16.dp)
                 }
         )
 
         TextContainer(
             currentStep.description,
             modifier = Modifier.constrainAs(description) {
-                top.linkTo(image.bottom, margin = 24.dp)
+                top.linkTo(lottieAnimation.bottom, margin = 24.dp)
                 start.linkTo(parent.start, margin = 16.dp)
                 end.linkTo(parent.end, margin = 16.dp)
             }
@@ -179,7 +197,6 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             }
         )
 
-
         Modal(
             show = shouldShowExitModal,
             stringResource(R.string.title_exit_modal_crisis_handling),
@@ -194,21 +211,4 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             },
             onDismiss = { viewModel.dismissExitModal() })
     }
-}
-
-// TODO // Eliminar esta función luego de implementar la descarga de imágenes
-fun getImage(image: String): Int {
-    return when (image) {
-        "image_step_1" -> return R.drawable.crisis_step_1
-        "image_step_2" -> return R.drawable.crisis_step_2
-        "image_step_3" -> return R.drawable.crisis_step_3
-        else -> 0
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewCrisisScreen() {
-    val navController = rememberNavController()
-    CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
 }

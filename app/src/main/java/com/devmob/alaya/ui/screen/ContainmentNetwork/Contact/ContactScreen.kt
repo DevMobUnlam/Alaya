@@ -1,7 +1,6 @@
 package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,30 +20,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.components.Input
 import com.devmob.alaya.ui.components.Modal
-import com.devmob.alaya.ui.theme.ColorText
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
@@ -85,14 +76,13 @@ fun ContactScreen(
                 contentScale = ContentScale.Crop
             )
 
-            ContactCard(
+            DetailCardContact(
                 contact = currentContact,
                 modifier = Modifier.constrainAs(contactCard) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }.padding(16.dp),
-                viewModel = ContactViewModel()
             )
 
             Row(
@@ -168,66 +158,24 @@ fun EditContactModal(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Editar Contacto",
-                    color = ColorText,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        },
+        title = { Text("Editar Contacto") },
         text = {
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ){
-                if (photoUri != null) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                photoUri?.let {
                     Image(
-                        painter = rememberImagePainter(photoUri),
+                        painter = rememberImagePainter(it),
                         contentDescription = "Imagen de contacto",
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
-                            .background(Color.Gray)
                             .clickable { galleryLauncher.launch("image/*") },
                     )
-                } else if (contact.photo?.isNotEmpty() == true) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            model = contact.photo,
-                            contentScale = ContentScale.Crop,
-                        ),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "Imagen de tarjeta",
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                            .clickable { galleryLauncher.launch("image/*") },
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Input(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = "Nombre",
-                    placeholder = "Ingresa el nombre",
-                )
+                Input(value = name, onValueChange = { name = it }, label = "Nombre", placeholder = "Ingresa el nombre")
                 Spacer(modifier = Modifier.height(8.dp))
-                Input(
-                    value = phone,
-                    onValueChange = { phone = it },
-                    label = "Teléfono",
-                    placeholder = "Ingresa el teléfono",
-                    keyboardType = KeyboardType.Phone
-                )
+                Input(value = phone, onValueChange = { phone = it }, label = "Teléfono", placeholder = "Ingresa el teléfono", keyboardType = KeyboardType.Phone)
             }
         },
         confirmButton = {
@@ -235,14 +183,10 @@ fun EditContactModal(
                 onClick = {
                     onSave(Contact(contact.contactId, name, phone, photoUri?.toString() ?: contact.photo))
                 }
-            ) {
-                Text("Guardar")
-            }
+            ) { Text("Guardar") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
         }
     )
 }

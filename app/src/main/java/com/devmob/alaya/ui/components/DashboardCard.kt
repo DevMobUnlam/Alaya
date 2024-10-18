@@ -48,7 +48,7 @@ fun DashboardCard(modifier : Modifier = Modifier) {
                 )
                 {
                     Text(
-                        text = "Dashboard",
+                        text = "Resumen semanal",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = ColorText
