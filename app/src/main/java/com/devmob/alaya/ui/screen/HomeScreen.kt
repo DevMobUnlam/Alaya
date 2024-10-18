@@ -30,9 +30,8 @@ import com.devmob.alaya.R
 import com.devmob.alaya.components.Card
 import com.devmob.alaya.ui.theme.ColorText
 
-
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -54,8 +53,8 @@ fun HomeScreen(navController: NavController) {
         )
 
         Text(
-            text = "Hola Flor, ¡Buen día!",
-            fontSize = 26.sp,
+            text = "Hola ${viewmodel.namePatient}, ${viewmodel.greetingMessage}!",
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             color = ColorText,
             textAlign = TextAlign.Center,
@@ -125,7 +124,6 @@ fun HomeScreen(navController: NavController) {
         }
     }
 }
-
 
 
 
