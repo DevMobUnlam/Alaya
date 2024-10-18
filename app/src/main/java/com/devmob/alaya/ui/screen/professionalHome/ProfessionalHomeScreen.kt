@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
-import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.Header
 import com.devmob.alaya.ui.components.UserItem
