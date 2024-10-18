@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.patientHome
+package com.devmob.alaya.ui.screen
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
