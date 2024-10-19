@@ -33,12 +33,14 @@ object NavUtils {
                 "treatment_summary/$firstStep/$secondStep/$thirdStep"
         }
         data object MenuProfessional : ProfessionalRoutes("menu_professional")
+        data object AddCustomActivity : ProfessionalRoutes("add_custom_activity")
     }
 
     val routeTitleAppBar = mapOf(
         PatientRoutes.ContainmentNetwork.route to "Red de Contención",
         PatientRoutes.AddContact.route to "Agregar Contacto",
-        "contact_detail/{contactId}" to "Detalles del Contacto"
+        "contact_detail/{contactId}" to "Detalles del Contacto",
+        ProfessionalRoutes.AddCustomActivity.route to "Paso personalizado"
     )
 
     val routesWithBottomBar = listOf(
@@ -48,7 +50,8 @@ object NavUtils {
         ProfessionalRoutes.SearchPatient.route,
         PatientRoutes.MenuPatient.route,
         ProfessionalRoutes.MenuProfessional.route,
-        ProfessionalRoutes.PatientProfile.route
+        ProfessionalRoutes.PatientProfile.route,
+
     )
 
     fun isProfessionalRoute(route: String?): Boolean {

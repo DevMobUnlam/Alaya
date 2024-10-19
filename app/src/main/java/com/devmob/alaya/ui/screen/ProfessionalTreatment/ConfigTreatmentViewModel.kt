@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.ProfessionalTreatment
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.OptionTreatment
@@ -10,7 +11,7 @@ class ConfigTreatmentViewModel : ViewModel() {
     var secondSelectOption = mutableStateOf<OptionTreatment?>(null)
     var thirdSelectOption = mutableStateOf<OptionTreatment?>(null)
 
-    val treatmentOptions = listOf(
+    private val _treatmentOptions = mutableStateListOf(
         OptionTreatment(
             title = "Controlar la respiración",
             description = "Poner una mano en el pecho y otra en el estómago para tomar aire y soltarlo lentamente"
@@ -29,4 +30,11 @@ class ConfigTreatmentViewModel : ViewModel() {
             """.trimIndent()
         )
     )
+    val treatmentOptions: List<OptionTreatment> get() = _treatmentOptions
+
+    // Agregar una actividad personalizada
+    fun addCustomActivity(activity: OptionTreatment) {
+        _treatmentOptions.add(activity)
+        println("Actividad agregada: ${activity.title}")
+    }
 }

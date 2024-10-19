@@ -44,7 +44,6 @@ fun SelectMenu(
     onOptionSelected: (OptionTreatment) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-
     var selectedOption by remember { mutableStateOf<OptionTreatment?>(null) }
 
     Card(
