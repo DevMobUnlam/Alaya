@@ -1,7 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,6 +47,9 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 /**
@@ -67,7 +68,7 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun CrisisRegistrationSummaryScreen(
     modifier: Modifier = Modifier,
-    viewModel: CrisisRegistrationSummaryViewModel = viewModel(),
+    viewModel: CrisisRegistrationViewModel = viewModel(),
     onConfirm: () -> Unit = {},
     onDelete: () -> Unit = {},
     onEditClick: (Int) -> Unit = {},
@@ -75,7 +76,7 @@ fun CrisisRegistrationSummaryScreen(
     ){
 
     val screenState = viewModel.screenState.observeAsState()
-    val shouldShowExitModal = viewModel.shouldShowModal
+    //val shouldShowExitModal = viewModel.shouldShowModal
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
@@ -97,24 +98,26 @@ fun CrisisRegistrationSummaryScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
             item{
-                SummaryItemCard(
-                    title = "Inicio y Fin",
-                    startContent = {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
-                            //TODO()  Agregar el atributo de fechas y horas del viewModel, con su respectivo formatter
-                            Text(text = "13/10/2024", fontSize = 19.sp,  color = ColorText)
-                            Text(text = "13/10/2024", fontSize = 19.sp,  color = ColorText)
-                        }
-                    },
-                    endContent = {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
-                            Text(text = "12:36", fontSize = 19.sp, color = ColorText)
-                            Text(text = "12:36", fontSize = 19.sp, color = ColorText)
-                        }
-                    },
-                    onEditClick = onEditClick,
-                    step = 1
-                )
+                screenState.value?.crisisDetails?.crisisTimeDetails?.let { date ->
+                    SummaryItemCard(
+                        title = "Inicio y Fin",
+                        startContent = {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
+                                //TODO()  Agregar el atributo de fechas y horas del viewModel, con su respectivo formatter
+                                Text(text = dateFormatter(date.startingDate), fontSize = 19.sp,  color = ColorText)
+                                Text(text = dateFormatter(date.endDate), fontSize = 19.sp,  color = ColorText)
+                            }
+                        },
+                        endContent = {
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
+                                Text(text = timeFormatter(date.startTIme), fontSize = 19.sp, color = ColorText)
+                                Text(text = timeFormatter(date.endTime), fontSize = 19.sp, color = ColorText)
+                            }
+                        },
+                        onEditClick = onEditClick,
+                        step = 1
+                    )
+                }
             }
 
             item{
@@ -333,4 +336,14 @@ fun IntensityFormatter(intensity: Intensity): String{
         Intensity.MEDIUM -> R.string.intensity_medium.toString()
         Intensity.HIGH -> R.string.intensity_high.toString()
     }
+}
+
+private fun dateFormatter(date: Date): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formatter.format(date)
+}
+
+private fun timeFormatter(date: Date): String {
+    val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return formatter.format(date)
 }
