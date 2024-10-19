@@ -5,16 +5,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import com.devmob.alaya.ui.components.Button
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.ui.components.ButtonStyle
-import com.devmob.alaya.ui.components.CardFeedback
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
@@ -40,15 +49,36 @@ fun FeedbackScreen(
                     style = MaterialTheme.typography.titleLarge.copy(fontSize = 50.sp),
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                CardFeedback(
-                    textID = R.string.feedback_felicitaciones,
-                    imageID = R.drawable.feedback_felicitaciones
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Lograste superar este momento. ¡Seguí así!",
+                    color = ColorText,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
+
+                val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.feedback_congratulations_animation))
+                var isPlaying by remember {
+                    mutableStateOf(true)
+                }
+                val progress by animateLottieCompositionAsState(
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
+                LottieAnimation(
+                    composition = composition,
+                    progress = {
+                        progress
+                    }
+                )
+
                 Column {
                     Button(
                         text = "Registrar el episodio",
                         onClick = {
-                            //TODO Navegar a la pantalla Registrar Crisis
+                            navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         style = ButtonStyle.Filled,
@@ -79,10 +109,31 @@ fun FeedbackScreen(
                     fontWeight = Bold,
                     modifier = Modifier.padding(bottom = 17.dp)
                 )
-                CardFeedback(
-                    textID = R.string.feedback_va_aestarbien,
-                    imageID = R.drawable.feedback_todovaaestarbien
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Está bien, lo importante es que lo intentaste",
+                    color = ColorText,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
+//
+                val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.everything_will_be_fine_animation))
+                var isPlaying by remember {
+                    mutableStateOf(true)
+                }
+                val progress by animateLottieCompositionAsState(
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
+                LottieAnimation(
+                    composition = composition,
+                    progress = {
+                        progress
+                    }
+                )
+
                 Column {
                     Button(
                         text = "Mi red de contención",

@@ -71,7 +71,7 @@ fun AddContactScreen(
             )
             Spacer(modifier = Modifier.width(16.dp))
         } else {
-            IconButton(symbol = Icons.Outlined.CameraAlt, onClick = { galleryLauncher.launch("image/*") })
+            //IconButton(symbol = Icons.Outlined.CameraAlt, onClick = { galleryLauncher.launch("image/*") })
 
         }
         Input(
