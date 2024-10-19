@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +34,7 @@ import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun ConfigTreatmentScreen(viewModel: ConfigTreatmentViewModel, navController: NavController) {
-
+    val treatmentOptions = remember { viewModel.treatmentOptions }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,21 +57,21 @@ fun ConfigTreatmentScreen(viewModel: ConfigTreatmentViewModel, navController: Na
             item {
                 SelectMenu(
                     title = "Paso 1",
-                    options = viewModel.treatmentOptions,
+                    options = treatmentOptions,
                     onOptionSelected = { viewModel.firstSelectOption.value = it }
                 )
             }
             item {
                 SelectMenu(
                     title = "Paso 2",
-                    options = viewModel.treatmentOptions,
+                    options = treatmentOptions,
                     onOptionSelected = { viewModel.secondSelectOption.value = it }
                 )
             }
             item {
                 SelectMenu(
                     title = "Paso 3",
-                    options = viewModel.treatmentOptions,
+                    options = treatmentOptions,
                     onOptionSelected = { viewModel.thirdSelectOption.value = it }
                 )
             }

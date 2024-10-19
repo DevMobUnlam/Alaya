@@ -50,7 +50,8 @@ object NavUtils {
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
-        ProfessionalRoutes.TreatmentSummary.route to "Resumen"
+        ProfessionalRoutes.TreatmentSummary.route to "Resumen",
+        ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada"
     )
 
     val routesWithBottomBar = listOf(

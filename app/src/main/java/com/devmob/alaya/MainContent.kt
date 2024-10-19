@@ -65,8 +65,8 @@ fun MainContent(navController: NavHostController) {
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.ConfigTreatment.route,
-        ProfessionalRoutes.TreatmentSummary.route
-
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route
     )
 
     Scaffold(

@@ -63,10 +63,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun TextArea(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String = "",
     text: String = "",
     onTextChange: (String) -> Unit = {},
     onMicClick:() -> Unit = {},
+    guideText: Boolean = true,
+    placeholder: String = ""
     )
 {
 
@@ -122,14 +124,15 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
+
                 //onValueChange = { newText -> onTextChange(newText) },
-                onValueChange = { text = it },
+                onValueChange = { it.text},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                 decorationBox = { innerTextField ->
-                    if (text.text.isEmpty()) {
+                    if (text.text.isEmpty() && guideText) {
                         Text(text =
                                 "¿Con quién estabas?\n" +
                                 "¿Qué estabas haciendo?\n" +
@@ -140,6 +143,8 @@ fun TextArea(
                         color = Color.Gray,
                         textAlign = TextAlign.Center
                         )
+                    } else if( placeholder != "" && text.text.isEmpty() ) {
+                        Text(text = placeholder, color = Color.Gray, textAlign = TextAlign.Center)
                     }
                     innerTextField()
                 }
