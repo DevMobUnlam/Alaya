@@ -12,14 +12,21 @@ object NavUtils {
         return navBackStackEntry?.destination?.route
     }
 
+    sealed class LoginRoutes (val route: String){
+        data object Login: LoginRoutes("login")
+        data object Register: LoginRoutes("register")
+    }
+
     sealed class PatientRoutes(val route: String) {
         data object Home : PatientRoutes("home")
         data object Crisis : PatientRoutes("crisis")
-        data object Login : PatientRoutes("login")
+        //data object Login : PatientRoutes("login")
         data object ContainmentNetwork : PatientRoutes("red_de_contencion")
         data object AddContact : PatientRoutes("add_contact")
         data object Feedback : PatientRoutes("feedback_screen/{feedbackType}")
         data object MenuPatient : PatientRoutes ("menu_patient")
+        data object CrisisRegistration : PatientRoutes ("crisis_registration")
+        data object CrisisRegistrationSummary: PatientRoutes("crisis_registration_summary")
     }
 
     sealed class ProfessionalRoutes(val route: String) {
@@ -38,7 +45,11 @@ object NavUtils {
     val routeTitleAppBar = mapOf(
         PatientRoutes.ContainmentNetwork.route to "Red de Contención",
         PatientRoutes.AddContact.route to "Agregar Contacto",
-        "contact_detail/{contactId}" to "Detalles del Contacto"
+        "contact_detail/{contactId}" to "Detalles del Contacto",
+        PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
+        ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
+        ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
+        ProfessionalRoutes.TreatmentSummary.route to "Resumen"
     )
 
     val routesWithBottomBar = listOf(
