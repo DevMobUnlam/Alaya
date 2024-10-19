@@ -1,14 +1,11 @@
 package com.devmob.alaya
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -47,6 +44,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -403,6 +401,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 )
             }
+            val crisisRegistrationViewModel = CrisisRegistrationViewModel()
             composable(NavUtils.PatientRoutes.CrisisRegistration.route,
                 enterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
@@ -420,7 +419,7 @@ fun MainContent(navController: NavHostController) {
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }})
+                    }}, viewModel = crisisRegistrationViewModel)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -430,7 +429,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController)
+                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
         }
     }
