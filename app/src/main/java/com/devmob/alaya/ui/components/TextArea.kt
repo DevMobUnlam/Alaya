@@ -63,13 +63,13 @@ import kotlinx.coroutines.launch
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
-    text: String = "",
+    textActual: String = "",
     onTextChange: (String) -> Unit = {}
     )
 {
 
     val context = LocalContext.current
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var text by remember { mutableStateOf(TextFieldValue(textActual.ifEmpty { "" })) }
     val voiceToText = remember { VoiceToText(context) }
     val state by voiceToText.state.collectAsState()
     var isPressed by remember { mutableStateOf(false) }

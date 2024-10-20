@@ -262,11 +262,14 @@ fun CrisisRegistrationScreen(
                 ) {
                     items(bodySensations) { bodySensation ->
 
-                        val isSelected = if(viewModel.screenState.value?.crisisDetails?.bodySensationList?.isEmpty() == true){
-                            selectedBodySensations.contains(bodySensation.name)
-                        } else {
-                            viewModel.screenState.value?.crisisDetails?.bodySensationList?.contains(bodySensation) ?: false
-                        }
+                        val isSelected =
+                            if (viewModel.screenState.value?.crisisDetails?.bodySensationList?.isEmpty() == true) {
+                                selectedBodySensations.contains(bodySensation.name)
+                            } else {
+                                viewModel.screenState.value?.crisisDetails?.bodySensationList?.contains(
+                                    bodySensation
+                                ) ?: false
+                            }
 
                         CrisisRegisterIconButton(
                             imageVector = bodySensation.icon,
@@ -348,7 +351,14 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(emotions) { emotion ->
-                        val isSelected = selectedEmotions.contains(emotion.name)
+                        val isSelected =
+                            if (viewModel.screenState.value?.crisisDetails?.emotionList?.isEmpty() == true) {
+                                selectedBodySensations.contains(emotion.name)
+                            } else {
+                                viewModel.screenState.value?.crisisDetails?.emotionList?.contains(
+                                    emotion
+                                ) ?: false
+                            }
 
                         CrisisRegisterIconButton(
                             imageVector = emotion.icon,
@@ -429,7 +439,13 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(tools) { tool ->
-                        val isSelected = selectedTools.contains(tool.name)
+                        val isSelected =
+                            if (viewModel.screenState.value?.crisisDetails?.toolList?.isEmpty() == true) {
+                                selectedTools.contains(tool.name)
+                            } else {
+                                viewModel.screenState.value?.crisisDetails?.toolList?.contains(tool)
+                                    ?: false
+                            }
 
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
@@ -486,7 +502,7 @@ fun CrisisRegistrationScreen(
             6 -> {
                 TextArea(
                     title = "¿Querés agregar algo más?",
-                    text = screenState.value?.crisisDetails?.notes!!,
+                    textActual = screenState.value?.crisisDetails?.notes!!,
                     modifier = Modifier.constrainAs(addMoreStep) {
                         top.linkTo(title.bottom)
                         bottom.linkTo(parent.bottom)
@@ -532,8 +548,6 @@ fun CrisisRegistrationScreen(
                     }
             )
         }
-
-
 
         Icon(
             Icons.AutoMirrored.Filled.ArrowForward,
