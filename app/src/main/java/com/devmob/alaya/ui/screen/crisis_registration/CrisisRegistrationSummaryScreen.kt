@@ -116,33 +116,35 @@ fun CrisisRegistrationSummaryScreen(
             }
 
                 item {
-                    screenState.value?.crisisDetails?.placeList?.get(0)?.let { place ->
-                        SummaryItemCard(
-                            title = stringResource(R.string.place),
-                            startContent = {
-                                Column {
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            place.icon,
-                                            contentDescription = stringResource(R.string.place),
-                                            tint = ColorText,
-                                            modifier = Modifier.size(35.dp)
-                                        )
-                                        Text(
-                                            text = place.name,
-                                            fontSize = 21.sp,
-                                            color = ColorText,
-                                            fontWeight = FontWeight.Bold
-                                        )
+                    screenState.value?.crisisDetails?.placeList?.let { places ->
+                        if (places.isNotEmpty()){
+                            SummaryItemCard(
+                                title = stringResource(R.string.place),
+                                startContent = {
+                                    Column {
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                places.first().icon,
+                                                contentDescription = stringResource(R.string.place),
+                                                tint = ColorText,
+                                                modifier = Modifier.size(35.dp)
+                                            )
+                                            Text(
+                                                text = places.first().name,
+                                                fontSize = 21.sp,
+                                                color = ColorText,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
                                     }
-                                }
-                            },
-                            onEditClick = onEditClick,
-                            step = 2
-                        )
+                                },
+                                onEditClick = onEditClick,
+                                step = 2
+                            )
+                        }
                     }
                 }
 
