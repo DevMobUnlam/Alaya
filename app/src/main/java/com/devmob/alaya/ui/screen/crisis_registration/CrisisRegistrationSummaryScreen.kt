@@ -115,22 +115,36 @@ fun CrisisRegistrationSummaryScreen(
                 }
             }
 
-            item{
-                SummaryItemCard(
-                    title = stringResource(R.string.place),
-                    startContent = {
-                        Column{
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically){
-                                Icon(Icons.Outlined.Home, contentDescription = stringResource(R.string.place),
-                                    tint = ColorText, modifier = Modifier.size(35.dp))
-                                Text(text = "Casa", fontSize = 21.sp,  color = ColorText, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    },
-                    onEditClick = onEditClick,
-                    step = 2
-                )
-            }
+                item {
+                    screenState.value?.crisisDetails?.placeList?.get(0)?.let { place ->
+                        SummaryItemCard(
+                            title = stringResource(R.string.place),
+                            startContent = {
+                                Column {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            place.icon,
+                                            contentDescription = stringResource(R.string.place),
+                                            tint = ColorText,
+                                            modifier = Modifier.size(35.dp)
+                                        )
+                                        Text(
+                                            text = place.name,
+                                            fontSize = 21.sp,
+                                            color = ColorText,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            },
+                            onEditClick = onEditClick,
+                            step = 2
+                        )
+                    }
+                }
 
                 item {
                     screenState.value?.crisisDetails?.bodySensationList?.let { sensationsList ->

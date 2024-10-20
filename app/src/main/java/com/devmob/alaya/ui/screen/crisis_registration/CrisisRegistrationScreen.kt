@@ -177,6 +177,7 @@ fun CrisisRegistrationScreen(
                             isSelected = isSelected,
                             onClick = {
                                 selectedPlace = place.name
+                                viewModel.updatePlaceStatus(place, 0)
                             }
                         )
 

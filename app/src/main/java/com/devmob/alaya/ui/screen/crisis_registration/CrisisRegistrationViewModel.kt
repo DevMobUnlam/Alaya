@@ -150,12 +150,9 @@ class CrisisRegistrationViewModel(): ViewModel() {
         )
     }
 
-
-    fun updatePlaceStatus(place: CrisisPlace, index: Int, isActive: Boolean){
-        val updatedElement = place.copy(isActive = isActive)
-        _screenState.value?.crisisDetails?.placeList?.set(index = index, updatedElement)
+    fun updatePlaceStatus(place: CrisisPlace, index: Int){
+        _screenState.value?.crisisDetails?.placeList?.add(index, place)
     }
-
 
     fun dismissExitModal() {
     shouldShowExitModal = false
