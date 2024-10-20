@@ -169,7 +169,11 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(places) { place ->
-                        val isSelected = place.name == selectedPlace
+                        val isSelected = if(viewModel.screenState.value?.crisisDetails?.placeList?.isEmpty() == true){
+                            place.name == selectedPlace
+                        } else {
+                            viewModel.screenState.value?.crisisDetails?.placeList?.get(0)?.name == place.name
+                        }
 
                         CrisisRegisterIconButton(
                             imageVector = place.icon,
