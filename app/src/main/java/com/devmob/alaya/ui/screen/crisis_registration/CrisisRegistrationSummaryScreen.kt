@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.Intensity
@@ -133,24 +132,22 @@ fun CrisisRegistrationSummaryScreen(
                             Column {
                                 screenState.value?.crisisDetails?.placeList?.let { places ->
                                     if (places.isNotEmpty()) {
-                                        places.forEach { place ->
-                                            Row(
-                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Icon(
-                                                    places.first().icon,
-                                                    contentDescription = stringResource(R.string.place),
-                                                    tint = ColorText,
-                                                    modifier = Modifier.size(35.dp)
-                                                )
-                                                Text(
-                                                    text = places.first().name,
-                                                    fontSize = 21.sp,
-                                                    color = ColorText,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                            }
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                places.first().icon,
+                                                contentDescription = stringResource(R.string.place),
+                                                tint = ColorText,
+                                                modifier = Modifier.size(35.dp)
+                                            )
+                                            Text(
+                                                text = places.first().name,
+                                                fontSize = 21.sp,
+                                                color = ColorText,
+                                                fontWeight = FontWeight.Bold
+                                            )
                                         }
                                     }
                                 }
