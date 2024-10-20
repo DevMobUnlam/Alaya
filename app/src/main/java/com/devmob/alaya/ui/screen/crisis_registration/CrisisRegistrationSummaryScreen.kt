@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CrisisAlert
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -72,24 +70,20 @@ fun CrisisRegistrationSummaryScreen(
 ) {
 
     val screenState = viewModel.screenState.observeAsState()
-    //val shouldShowExitModal = viewModel.shouldShowModal
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
-        val (informationColumn, actionButtons) = createRefs()
-
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            // Contenedor que permite hacer scroll si hay muchas tarjetas.
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f) // Asegura que la lista ocupe todo el espacio disponible.
+                    .weight(1f)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -132,8 +126,6 @@ fun CrisisRegistrationSummaryScreen(
                 }
 
                 item {
-
-
                     SummaryItemCard(
                         title = stringResource(R.string.place),
                         startContent = {
@@ -289,7 +281,6 @@ fun CrisisRegistrationSummaryScreen(
                     )
                 }
 
-
                 item {
                     screenState.value?.crisisDetails?.notes?.let { notes ->
                         SummaryItemCard(
@@ -347,8 +338,6 @@ fun CrisisRegistrationSummaryScreen(
                     navController.navigate(NavUtils.PatientRoutes.Home.route)
                 }
             )
-
-
         }
     }
 }
