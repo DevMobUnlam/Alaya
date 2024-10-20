@@ -63,6 +63,7 @@ import kotlinx.coroutines.launch
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
+    text: String = "",
     onTextChange: (String) -> Unit = {}
     )
 {
