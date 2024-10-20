@@ -269,23 +269,24 @@ fun CrisisRegistrationSummaryScreen(
                 }
             }
 
-            item{
-                SummaryItemCard(
-                    title = stringResource(R.string.notes),
-                    startContent = {
-                        Text(
-                            // TODO() Agregar atributo del viewModel para cargar las notas
-                            "Este es el texto que tiene que ir en el caso de las notas que registro el usuario, vemos como se corta en cierta parte para que tenga que editarlo si quiere verlo todo. Se corta de por si ya que tiene un maximo de 3 lineas" ,
-                            fontSize = 19.sp,
-                            color = ColorText,
-                            maxLines = 3
+                item {
+                    screenState.value?.crisisDetails?.notes?.let { notes ->
+                        SummaryItemCard(
+                            title = stringResource(R.string.notes),
+                            startContent = {
+                                Text(
+                                    notes,
+                                    fontSize = 19.sp,
+                                    color = ColorText,
+                                    maxLines = 3
+                                )
+                            },
+                            onEditClick = onEditClick,
+                            step = 6
                         )
-                    },
-                    onEditClick = onEditClick,
-                    step = 6
-                )
+                    }
+                }
             }
-        }
 
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
            modifier = Modifier.align(Alignment.CenterHorizontally)

@@ -446,24 +446,20 @@ fun CrisisRegistrationScreen(
 
 
             }
-            6 ->{
-                    TextArea(
-                        title = "¿Querés agregar algo más?",
-                        text = screenState.value?.crisisDetails?.notes!!,
-                        modifier = Modifier.constrainAs(addMoreStep){
-                            top.linkTo(title.bottom)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        },
-                        onTextChange = {viewModel.updateNotes(it)}
-                        // TODO() AGREGAR ACCION A EJECUTAR UNA VEZ SE APRIETA EL BOTON DEL MICROFONO
-                    )
-
+            6 -> {
+                TextArea(
+                    title = "¿Querés agregar algo más?",
+                    text = screenState.value?.crisisDetails?.notes!!,
+                    modifier = Modifier.constrainAs(addMoreStep) {
+                        top.linkTo(title.bottom)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    onTextChange = { viewModel.updateNotes(it) }
+                )
             }
         }
-
-
 
         Icon(
             Icons.Default.Close,
@@ -479,7 +475,6 @@ fun CrisisRegistrationScreen(
                     viewModel.showExitModal()
                 }
         )
-
 
             if(screenState.value?.currentStep != 1){
                 Icon(
@@ -535,9 +530,6 @@ fun CrisisRegistrationScreen(
             },
             onDismiss = { viewModel.dismissExitModal() }
         )
-
-
-
     }
 }
 

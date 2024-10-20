@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorPrimary
-import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
@@ -64,9 +63,7 @@ import kotlinx.coroutines.launch
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
-    text: String = "",
-    onTextChange: (String) -> Unit = {},
-    onMicClick:() -> Unit = {},
+    onTextChange: (String) -> Unit = {}
     )
 {
 
@@ -88,6 +85,7 @@ fun TextArea(
     LaunchedEffect(state.spokenText) {
         if (state.spokenText.isNotEmpty()) {
             text = text.copy(text = state.spokenText)
+            onTextChange(state.spokenText)
         }
     }
 
@@ -122,8 +120,10 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
-                //onValueChange = { newText -> onTextChange(newText) },
-                onValueChange = { text = it },
+                onValueChange = {
+                    text = it
+                    onTextChange(it.text)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
