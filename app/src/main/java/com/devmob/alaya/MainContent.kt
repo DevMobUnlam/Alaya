@@ -84,6 +84,7 @@ fun MainContent(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
+        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -401,7 +402,6 @@ fun MainContent(navController: NavHostController) {
                     )
                 )
             }
-            val crisisRegistrationViewModel = CrisisRegistrationViewModel()
             composable(NavUtils.PatientRoutes.CrisisRegistration.route,
                 enterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
@@ -419,7 +419,7 @@ fun MainContent(navController: NavHostController) {
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }}, viewModel = crisisRegistrationViewModel)
+                    }}, viewModel = sharedViewModel)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -429,7 +429,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
+                CrisisRegistrationSummaryScreen(navController = navController, viewModel = sharedViewModel)
             }
         }
     }
