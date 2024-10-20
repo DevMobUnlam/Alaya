@@ -261,7 +261,12 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(bodySensations) { bodySensation ->
-                        val isSelected = selectedBodySensations.contains(bodySensation.name)
+
+                        val isSelected = if(viewModel.screenState.value?.crisisDetails?.bodySensationList?.isEmpty() == true){
+                            selectedBodySensations.contains(bodySensation.name)
+                        } else {
+                            viewModel.screenState.value?.crisisDetails?.bodySensationList?.contains(bodySensation) ?: false
+                        }
 
                         CrisisRegisterIconButton(
                             imageVector = bodySensation.icon,
