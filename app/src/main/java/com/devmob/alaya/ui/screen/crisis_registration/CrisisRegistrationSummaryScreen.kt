@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CrisisAlert
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -31,21 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.devmob.alaya.ui.components.Button
-import com.devmob.alaya.ui.components.ButtonStyle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.Intensity
+import com.devmob.alaya.ui.components.Button
+import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
-import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -68,7 +64,7 @@ import java.util.Locale
 @Composable
 fun CrisisRegistrationSummaryScreen(
     modifier: Modifier = Modifier,
-    viewModel: CrisisRegistrationViewModel = viewModel(),
+    viewModel: CrisisRegistrationViewModel,
     onConfirm: () -> Unit = {},
     onDelete: () -> Unit = {},
     onEditClick: (Int) -> Unit = {},
@@ -103,7 +99,6 @@ fun CrisisRegistrationSummaryScreen(
                         title = "Inicio y Fin",
                         startContent = {
                             Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
-                                //TODO()  Agregar el atributo de fechas y horas del viewModel, con su respectivo formatter
                                 Text(text = dateFormatter(date.startingDate), fontSize = 19.sp,  color = ColorText)
                                 Text(text = dateFormatter(date.endDate), fontSize = 19.sp,  color = ColorText)
                             }
@@ -137,43 +132,47 @@ fun CrisisRegistrationSummaryScreen(
                 )
             }
 
-            item{
-                SummaryItemCard(
-                    title = stringResource(R.string.body_sensations),
-                    startContent = {
-                        Column{
-                            // TODO() Remplazar con items() para que recorra la lista de sensaciones por atributo de viewModel
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.Refresh,
-                                        contentDescription = stringResource(R.string.place),
-                                        tint = ColorText,
-                                        modifier = Modifier.size(35.dp),
-                                    )
-                                    Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                                        Text(
-                                            text = "Mareo",
-                                            fontSize = 21.sp,
-                                            color = ColorText,
-                                            fontWeight = FontWeight.Bold,
-                                        )
-                                        Text(
-                                            // TODO() PASAR INTENSIDAD RECIBIDA DE OBJETO, Y USAR FORMATTER
-                                            text = "Intensidad: Media",
-                                            fontSize = 19.sp,
-                                            color = ColorText,
-                                        )
-                                }
-                            }
+                item {
+                    screenState.value?.crisisDetails?.bodySensationList?.let { sensationsList ->
+                        if (sensationsList.isNotEmpty()) {
+                            SummaryItemCard(
+                                title = stringResource(R.string.body_sensations),
+                                startContent = {
+                                    Column {
+                                        sensationsList.forEach { sensation ->
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                verticalAlignment = Alignment.CenterVertically,
+                                            ) {
+                                                Icon(
+                                                    sensation.icon,
+                                                    contentDescription = stringResource(R.string.place),
+                                                    tint = ColorText,
+                                                    modifier = Modifier.size(35.dp),
+                                                )
+                                                Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                                    Text(
+                                                        text = sensation.name,
+                                                        fontSize = 21.sp,
+                                                        color = ColorText,
+                                                        fontWeight = FontWeight.Bold,
+                                                    )
+                                                    Text(
+                                                        text = sensation.intensity.name,
+                                                        fontSize = 19.sp,
+                                                        color = ColorText,
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                onEditClick = onEditClick,
+                                step = 3
+                            )
                         }
-                    },
-                    onEditClick = onEditClick,
-                    step = 3
-                )
-            }
+                    }
+                }
 
             item{
                 SummaryItemCard(

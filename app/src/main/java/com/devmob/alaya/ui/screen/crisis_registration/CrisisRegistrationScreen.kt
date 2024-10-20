@@ -43,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.model.CrisisBodySensation
@@ -64,7 +63,7 @@ import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun CrisisRegistrationScreen(
-    viewModel: CrisisRegistrationViewModel = viewModel(),
+    viewModel: CrisisRegistrationViewModel,
     onClose: () -> Unit,
     onFinishedRegistration: () -> Unit,
     ) {
@@ -250,10 +249,12 @@ fun CrisisRegistrationScreen(
                                 text = bodySensation.name,
                                 isSelected = isSelected,
                                 onClick = {
-                                    selectedBodySensations = if (isSelected) {
-                                        selectedBodySensations - bodySensation.name
+                                    if (isSelected) {
+                                        selectedBodySensations = selectedBodySensations - bodySensation.name
+                                        viewModel.updateCrisisBodySensation(bodySensation)
                                     } else {
-                                        selectedBodySensations + bodySensation.name
+                                        selectedBodySensations = selectedBodySensations + bodySensation.name
+                                        viewModel.updateCrisisBodySensation(bodySensation)
                                     }
                                 }
                             )

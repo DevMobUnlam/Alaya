@@ -1,8 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,8 +15,6 @@ import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 class CrisisRegistrationViewModel(): ViewModel() {
@@ -92,6 +87,23 @@ class CrisisRegistrationViewModel(): ViewModel() {
                 )
             )
         }
+    }
+
+    fun updateCrisisBodySensation(bodySensation: CrisisBodySensation) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList = currentState.crisisDetails.bodySensationList.toMutableList().apply {
+            if (any { it.name == bodySensation.name }) {
+                removeIf { it.name == bodySensation.name }
+            } else {
+                add(bodySensation)
+            }
+        }
+
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                bodySensationList = updatedBodySensationList
+            )
+        )
     }
 
     fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
