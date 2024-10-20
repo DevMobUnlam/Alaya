@@ -326,10 +326,12 @@ fun CrisisRegistrationScreen(
                             text = emotion.name,
                             isSelected = isSelected,
                             onClick = {
-                                selectedEmotions = if (isSelected) {
-                                    selectedEmotions - emotion.name
+                                if (isSelected) {
+                                    selectedEmotions = selectedEmotions - emotion.name
+                                    viewModel.updateCrisisEmotion(emotion)
                                 } else {
-                                    selectedEmotions + emotion.name
+                                    selectedEmotions = selectedEmotions + emotion.name
+                                    viewModel.updateCrisisEmotion(emotion)
                                 }
                             }
                         )
@@ -513,7 +515,7 @@ fun CrisisRegistrationScreen(
                         if (screenState.value?.currentStep!! < 6) {
                             viewModel.goOneStepForward()
                             shouldShowAddNewCard = false
-                    } else if(screenState.value?.currentStep!! == 6) {
+                        } else if (screenState.value?.currentStep!! == 6) {
                             onFinishedRegistration()
                         }
 

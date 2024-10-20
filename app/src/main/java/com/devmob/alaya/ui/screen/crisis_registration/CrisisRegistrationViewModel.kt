@@ -106,6 +106,23 @@ class CrisisRegistrationViewModel(): ViewModel() {
         )
     }
 
+    fun updateCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList = currentState.crisisDetails.emotionList.toMutableList().apply {
+            if (any { it.name == emotion.name }) {
+                removeIf { it.name == emotion.name }
+            } else {
+                add(emotion)
+            }
+        }
+
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                emotionList = updatedEmotionList
+            )
+        )
+    }
+
     fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
         val updatedBodySensation = bodySensation.copy(intensity = intensity)
         _screenState.value?.crisisDetails?.bodySensationList?.set(index,updatedBodySensation)

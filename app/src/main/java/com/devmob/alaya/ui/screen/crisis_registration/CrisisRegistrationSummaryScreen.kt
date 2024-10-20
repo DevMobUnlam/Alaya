@@ -188,25 +188,46 @@ fun CrisisRegistrationSummaryScreen(
                     }
                 }
 
-            item{
-                SummaryItemCard(
-                    title = stringResource(R.string.emotions),
-                    startContent = {
-                        Column{
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically){
-                                Icon(Icons.Outlined.CrisisAlert, contentDescription = stringResource(R.string.place),
-                                    tint = ColorText, modifier = Modifier.size(35.dp))
-                                Column(verticalArrangement = Arrangement.spacedBy(1.dp)){
-                                    Text(text = "Miedo", fontSize = 21.sp,  color = ColorText, fontWeight = FontWeight.Bold)
-                                    Text(text = "Intensidad: Alta", fontSize = 21.sp,  color = ColorText)
-
-                                }
-                            }
+                item {
+                    screenState.value?.crisisDetails?.emotionList?.let { emotionList ->
+                        if (emotionList.isNotEmpty()) {
+                            SummaryItemCard(
+                                title = stringResource(R.string.emotions),
+                                startContent = {
+                                    Column {
+                                        emotionList.forEach { emotion ->
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Icon(
+                                                    emotion.icon,
+                                                    contentDescription = stringResource(R.string.place),
+                                                    tint = ColorText,
+                                                    modifier = Modifier.size(35.dp)
+                                                )
+                                                Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                                    Text(
+                                                        text = emotion.name,
+                                                        fontSize = 21.sp,
+                                                        color = ColorText,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                    Text(
+                                                        text = emotion.intensity.name,
+                                                        fontSize = 21.sp,
+                                                        color = ColorText
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                onEditClick = onEditClick,
+                                step = 4
+                            )
                         }
-                    },
-                    onEditClick = onEditClick,
-                    step = 4
-                )
+                    }
             }
 
             item{
