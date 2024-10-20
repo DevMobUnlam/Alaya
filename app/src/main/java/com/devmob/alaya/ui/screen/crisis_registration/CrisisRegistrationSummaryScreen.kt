@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.Intensity
@@ -119,7 +120,7 @@ fun CrisisRegistrationSummaryScreen(
                                     )
                                 }
                             },
-                            onEditClick = onEditClick,
+                            onEditClick = { goToStepScreenToEdit(1, navController, viewModel) },
                             step = 1
                         )
                     }
@@ -155,7 +156,7 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = onEditClick,
+                        onEditClick = { goToStepScreenToEdit(2, navController, viewModel) },
                         step = 2
                     )
                 }
@@ -197,7 +198,7 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = onEditClick,
+                        onEditClick = { goToStepScreenToEdit(3, navController, viewModel) },
                         step = 3
                     )
                 }
@@ -239,7 +240,7 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = onEditClick,
+                        onEditClick = { goToStepScreenToEdit(4, navController, viewModel) },
                         step = 4
                     )
                 }
@@ -276,7 +277,7 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = onEditClick,
+                        onEditClick = { goToStepScreenToEdit(5, navController, viewModel) },
                         step = 5
                     )
                 }
@@ -293,7 +294,13 @@ fun CrisisRegistrationSummaryScreen(
                                     maxLines = 3
                                 )
                             },
-                            onEditClick = onEditClick,
+                            onEditClick = {
+                                goToStepScreenToEdit(
+                                    step = 6,
+                                    navController = navController,
+                                    viewModel = viewModel
+                                )
+                            },
                             step = 6
                         )
                     }
@@ -422,4 +429,13 @@ private fun dateFormatter(date: Date): String {
 private fun timeFormatter(date: Date): String {
     val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
     return formatter.format(date)
+}
+
+private fun goToStepScreenToEdit(
+    step: Int,
+    navController: NavController,
+    viewModel: CrisisRegistrationViewModel
+) {
+    viewModel.updateStep(step)
+    navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
 }

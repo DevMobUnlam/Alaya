@@ -63,6 +63,10 @@ class CrisisRegistrationViewModel(): ViewModel() {
         _screenState.value = _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.minus(1))
     }
 
+    fun updateStep(step: Int) {
+        _screenState.value = _screenState.value?.copy(currentStep = step)
+    }
+
     fun addCrisisPlace(place: CrisisPlace){
         val currentPlaces = _places.value?.toMutableList() ?: mutableListOf()
         if (!currentPlaces.any { it.name == place.name }) {
