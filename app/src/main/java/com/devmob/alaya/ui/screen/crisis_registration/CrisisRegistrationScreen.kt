@@ -403,10 +403,12 @@ fun CrisisRegistrationScreen(
                             text = tool.name,
                             isSelected = isSelected,
                             onClick = {
-                                selectedTools = if (isSelected) {
-                                    selectedTools - tool.name
+                                if (isSelected) {
+                                    selectedTools = selectedTools - tool.name
+                                    viewModel.updateCrisisTool(tool)
                                 } else {
-                                    selectedTools + tool.name
+                                    selectedTools = selectedTools + tool.name
+                                    viewModel.updateCrisisTool(tool)
                                 }
                             }
                         )

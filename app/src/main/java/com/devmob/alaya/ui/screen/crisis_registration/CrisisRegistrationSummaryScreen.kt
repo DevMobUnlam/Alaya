@@ -231,22 +231,40 @@ fun CrisisRegistrationSummaryScreen(
             }
 
             item{
-                SummaryItemCard(
-                    title = stringResource(R.string.tools),
-                    startContent = {
-                        Column{
-                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically){
-                                Icon(Icons.Outlined.CrisisAlert, contentDescription = stringResource(R.string.place),
-                                    tint = ColorText, modifier = Modifier.size(35.dp))
-                                Column(verticalArrangement = Arrangement.spacedBy(1.dp)){
-                                    Text(text = "Imaginación", fontSize = 21.sp,  color = ColorText, fontWeight = FontWeight.Bold)
+                screenState.value?.crisisDetails?.toolList?.let { toolList ->
+                    if (toolList.isNotEmpty()) {
+                        SummaryItemCard(
+                            title = stringResource(R.string.tools),
+                            startContent = {
+                                Column {
+                                    toolList.forEach { tool ->
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                tool.icon,
+                                                contentDescription = stringResource(R.string.place),
+                                                tint = ColorText,
+                                                modifier = Modifier.size(35.dp)
+                                            )
+                                            Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                                Text(
+                                                    text = tool.name,
+                                                    fontSize = 21.sp,
+                                                    color = ColorText,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    },
-                    onEditClick = onEditClick,
-                    step = 5
-                )
+                            },
+                            onEditClick = onEditClick,
+                            step = 5
+                        )
+                    }
+                }
             }
 
             item{
