@@ -66,7 +66,7 @@ fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel,
     onClose: () -> Unit,
     onFinishedRegistration: () -> Unit,
-    ) {
+) {
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
@@ -83,29 +83,31 @@ fun CrisisRegistrationScreen(
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
 
     GridElementsRepository.returnAvailableTools().let { list ->
-        for(tool in list){
+        for (tool in list) {
             viewModel.addCrisisTool(tool)
         }
     }
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()
-        .background(ColorWhite)) {
-        val (progressBar, datePickerComponent, closeIcon,title, backArrow, forwardArrow, saveEditingButton) = createRefs()
-        val (elementsGrid,addNewIcon, newElementsCard, addMoreStep) = createRefs()
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ColorWhite)
+    ) {
+        val (progressBar, datePickerComponent, closeIcon, title, backArrow, forwardArrow, saveEditingButton) = createRefs()
+        val (elementsGrid, addNewIcon, newElementsCard, addMoreStep) = createRefs()
 
         SegmentedProgressBar(
             totalSteps = screenState.value!!.totalSteps,
             currentStep = screenState.value!!.currentStep,
-            modifier = Modifier.constrainAs(progressBar){
+            modifier = Modifier.constrainAs(progressBar) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
         )
 
-        when(screenState.value?.currentStep){
-            1 ->{
+        when (screenState.value?.currentStep) {
+            1 -> {
                 Text(
                     text = "¿En qué momento\ncomenzó?",
                     fontSize = messageTextSize,
@@ -113,7 +115,7 @@ fun CrisisRegistrationScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 30.sp,
                     modifier = Modifier
-                        .constrainAs(title){
+                        .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 20.dp)
@@ -122,11 +124,12 @@ fun CrisisRegistrationScreen(
                 )
 
                 viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
-                    DateTimePicker(modifier = Modifier.constrainAs(datePickerComponent) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(title.bottom)
-                    },
+                    DateTimePicker(
+                        modifier = Modifier.constrainAs(datePickerComponent) {
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            top.linkTo(title.bottom)
+                        },
                         onStartDateChange = { newDate ->
                             viewModel.updateStartDate(newDate)
                         },
@@ -143,7 +146,8 @@ fun CrisisRegistrationScreen(
                     )
                 }
             }
-            2 ->{
+
+            2 -> {
                 val icon = Icons.Filled.LocationOn
                 Text(
                     text = "¿Donde estabas?",
@@ -152,7 +156,7 @@ fun CrisisRegistrationScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 30.sp,
                     modifier = Modifier
-                        .constrainAs(title){
+                        .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 20.dp)
@@ -169,19 +173,25 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(places) { place ->
-                        val isSelected = if(viewModel.screenState.value?.crisisDetails?.placeList?.isEmpty() == true){
-                            place.name == selectedPlace
-                        } else {
-                            viewModel.screenState.value?.crisisDetails?.placeList?.get(0)?.name == place.name
-                        }
+                        val isSelected =
+                            if (viewModel.screenState.value?.crisisDetails?.placeList?.isEmpty() == true) {
+                                place.name == selectedPlace
+                            } else {
+                                viewModel.screenState.value?.crisisDetails?.placeList?.get(0)?.name == place.name
+                            }
 
                         CrisisRegisterIconButton(
                             imageVector = place.icon,
                             text = place.name,
                             isSelected = isSelected,
                             onClick = {
-                                selectedPlace = place.name
-                                viewModel.updatePlaceStatus(place, 0)
+                                if (isSelected) {
+                                    selectedPlace = ""
+                                    viewModel.clearPlaceSelection()
+                                } else {
+                                    selectedPlace = place.name
+                                    viewModel.updatePlaceStatus(place, 0)
+                                }
                             }
                         )
 
@@ -189,35 +199,39 @@ fun CrisisRegistrationScreen(
                 }
                 IconButtonNoFill(
                     text = "Agregar otra ubicacion",
-                    modifier = Modifier.constrainAs(addNewIcon){
+                    modifier = Modifier.constrainAs(addNewIcon) {
                         top.linkTo(elementsGrid.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
+                    onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
-                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }) {
+                AnimatedVisibility(
+                    visible = shouldShowAddNewCard,
+                    modifier = Modifier.constrainAs(newElementsCard) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }) {
                     NewCrisisElementCard(
                         placeholderText = "Agrega otro lugar...",
                         icon = icon,
-                        onSave = {viewModel.addCrisisPlace(
-                            CrisisPlace(
-                                name = it,
-                                icon = icon
+                        onSave = {
+                            viewModel.addCrisisPlace(
+                                CrisisPlace(
+                                    name = it,
+                                    icon = icon
+                                )
                             )
-                        )
                             shouldShowAddNewCard = !shouldShowAddNewCard
                         }
                     )
                 }
 
             }
+
             3 -> {
 
                 val icon = Icons.Filled.Accessibility
@@ -229,74 +243,80 @@ fun CrisisRegistrationScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 30.sp,
                     modifier = Modifier
-                        .constrainAs(title){
+                        .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 20.dp)
                         }
                 )
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.constrainAs(elementsGrid){
-                            top.linkTo(title.bottom,margin = 20.dp)
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                        }
-                    ) {
-                        items(bodySensations) { bodySensation ->
-                            val isSelected = selectedBodySensations.contains(bodySensation.name)
-
-                            CrisisRegisterIconButton(
-                                imageVector = bodySensation.icon,
-                                text = bodySensation.name,
-                                isSelected = isSelected,
-                                onClick = {
-                                    if (isSelected) {
-                                        selectedBodySensations = selectedBodySensations - bodySensation.name
-                                        viewModel.updateCrisisBodySensation(bodySensation)
-                                    } else {
-                                        selectedBodySensations = selectedBodySensations + bodySensation.name
-                                        viewModel.updateCrisisBodySensation(bodySensation)
-                                    }
-                                }
-                            )
-                        }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.constrainAs(elementsGrid) {
+                        top.linkTo(title.bottom, margin = 20.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
+                ) {
+                    items(bodySensations) { bodySensation ->
+                        val isSelected = selectedBodySensations.contains(bodySensation.name)
+
+                        CrisisRegisterIconButton(
+                            imageVector = bodySensation.icon,
+                            text = bodySensation.name,
+                            isSelected = isSelected,
+                            onClick = {
+                                if (isSelected) {
+                                    selectedBodySensations =
+                                        selectedBodySensations - bodySensation.name
+                                    viewModel.updateCrisisBodySensation(bodySensation)
+                                } else {
+                                    selectedBodySensations =
+                                        selectedBodySensations + bodySensation.name
+                                    viewModel.updateCrisisBodySensation(bodySensation)
+                                }
+                            }
+                        )
+                    }
+                }
                 IconButtonNoFill(
                     text = "Añadir \n sensación \n corporal",
-                    modifier = Modifier.constrainAs(addNewIcon){
+                    modifier = Modifier.constrainAs(addNewIcon) {
                         top.linkTo(elementsGrid.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
+                    onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
-                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }) {
+                AnimatedVisibility(
+                    visible = shouldShowAddNewCard,
+                    modifier = Modifier.constrainAs(newElementsCard) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }) {
                     NewCrisisElementCard(
                         placeholderText = "Agrega otra sensacion...",
                         icon = icon,
-                        onSave = {viewModel.addCrisisBodySensation(
-                            CrisisBodySensation(
-                                name = it,
-                                icon = icon
+                        onSave = {
+                            viewModel.addCrisisBodySensation(
+                                CrisisBodySensation(
+                                    name = it,
+                                    icon = icon
+                                )
                             )
-                        )
                             shouldShowAddNewCard = !shouldShowAddNewCard
                         }
                     )
                 }
 
             }
-            4 ->{
+
+            4 -> {
                 val icon = Icons.Filled.SentimentNeutral
                 Text(
                     text = "¿Qué emociones sentiste?",
@@ -305,7 +325,7 @@ fun CrisisRegistrationScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 30.sp,
                     modifier = Modifier
-                        .constrainAs(title){
+                        .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 30.dp)
@@ -316,8 +336,8 @@ fun CrisisRegistrationScreen(
                     columns = GridCells.Fixed(3),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.constrainAs(elementsGrid){
-                        top.linkTo(title.bottom,margin = 20.dp)
+                    modifier = Modifier.constrainAs(elementsGrid) {
+                        top.linkTo(title.bottom, margin = 20.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
@@ -343,36 +363,40 @@ fun CrisisRegistrationScreen(
                 }
                 IconButtonNoFill(
                     text = "Añadir \n emoción",
-                    modifier = Modifier.constrainAs(addNewIcon){
+                    modifier = Modifier.constrainAs(addNewIcon) {
                         top.linkTo(elementsGrid.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
+                    onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
-                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }) {
+                AnimatedVisibility(
+                    visible = shouldShowAddNewCard,
+                    modifier = Modifier.constrainAs(newElementsCard) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }) {
                     NewCrisisElementCard(
                         placeholderText = "Agrega otra emoción...",
                         icon = icon,
-                        onSave = {viewModel.addCrisisEmotion(
-                            CrisisEmotion(
-                                name = it,
-                                icon = icon
+                        onSave = {
+                            viewModel.addCrisisEmotion(
+                                CrisisEmotion(
+                                    name = it,
+                                    icon = icon
+                                )
                             )
-                        )
                             shouldShowAddNewCard = !shouldShowAddNewCard
                         }
                     )
                 }
 
             }
-            5 ->{
+
+            5 -> {
                 val icon = Icons.Filled.ChangeHistory
 
                 Text(
@@ -382,7 +406,7 @@ fun CrisisRegistrationScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 30.sp,
                     modifier = Modifier
-                        .constrainAs(title){
+                        .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             top.linkTo(progressBar.bottom, margin = 30.dp)
@@ -420,29 +444,32 @@ fun CrisisRegistrationScreen(
                 }
                 IconButtonNoFill(
                     text = "Agregar otra herramienta",
-                    modifier = Modifier.constrainAs(addNewIcon){
+                    modifier = Modifier.constrainAs(addNewIcon) {
                         top.linkTo(elementsGrid.bottom, margin = 10.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                    onClick = {shouldShowAddNewCard = !shouldShowAddNewCard}
+                    onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
-                AnimatedVisibility(visible = shouldShowAddNewCard, modifier = Modifier.constrainAs(newElementsCard){
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }) {
+                AnimatedVisibility(
+                    visible = shouldShowAddNewCard,
+                    modifier = Modifier.constrainAs(newElementsCard) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }) {
                     NewCrisisElementCard(
                         placeholderText = "Agrega otra herramienta...",
                         icon = icon,
-                        onSave = {viewModel.addCrisisTool(
-                            CrisisTool(
-                                name = it,
-                                icon = icon
+                        onSave = {
+                            viewModel.addCrisisTool(
+                                CrisisTool(
+                                    name = it,
+                                    icon = icon
+                                )
                             )
-                        )
                             shouldShowAddNewCard = !shouldShowAddNewCard
                         }
                     )
@@ -450,6 +477,7 @@ fun CrisisRegistrationScreen(
 
 
             }
+
             6 -> {
                 TextArea(
                     title = "¿Querés agregar algo más?",
@@ -480,48 +508,48 @@ fun CrisisRegistrationScreen(
                 }
         )
 
-            if(screenState.value?.currentStep != 1){
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = ColorPrimary,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .constrainAs(backArrow) {
-                            bottom.linkTo(parent.bottom, margin = 10.dp)
-                            start.linkTo(parent.start, margin = 15.dp)
-                        }
-                        .clickable {
-                            if (screenState.value?.currentStep != 1) {
-                                viewModel.goOneStepBack()
-                                shouldShowAddNewCard = false
-                            }
-                        }
-                )
-            }
-
-
-
+        if (screenState.value?.currentStep != 1) {
             Icon(
-                Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Forward",
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
                 tint = ColorPrimary,
                 modifier = Modifier
                     .size(50.dp)
-                    .constrainAs(forwardArrow) {
+                    .constrainAs(backArrow) {
                         bottom.linkTo(parent.bottom, margin = 10.dp)
-                        end.linkTo(parent.end, margin = 15.dp)
+                        start.linkTo(parent.start, margin = 15.dp)
                     }
                     .clickable {
-                        if (screenState.value?.currentStep!! < 6) {
-                            viewModel.goOneStepForward()
+                        if (screenState.value?.currentStep != 1) {
+                            viewModel.goOneStepBack()
                             shouldShowAddNewCard = false
-                        } else if (screenState.value?.currentStep!! == 6) {
-                            onFinishedRegistration()
                         }
-
                     }
             )
+        }
+
+
+
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = "Forward",
+            tint = ColorPrimary,
+            modifier = Modifier
+                .size(50.dp)
+                .constrainAs(forwardArrow) {
+                    bottom.linkTo(parent.bottom, margin = 10.dp)
+                    end.linkTo(parent.end, margin = 15.dp)
+                }
+                .clickable {
+                    if (screenState.value?.currentStep!! < 6) {
+                        viewModel.goOneStepForward()
+                        shouldShowAddNewCard = false
+                    } else if (screenState.value?.currentStep!! == 6) {
+                        onFinishedRegistration()
+                    }
+
+                }
+        )
 
         Modal(
             show = shouldShowExitModal,
@@ -537,8 +565,8 @@ fun CrisisRegistrationScreen(
     }
 }
 
-object GridElementsRepository{
-    fun returnAvailablePlaces(): List<CrisisPlace>{
+object GridElementsRepository {
+    fun returnAvailablePlaces(): List<CrisisPlace> {
         return listOf(
             CrisisPlace(name = "Casa", icon = Icons.Filled.Home),
             CrisisPlace(name = "Trabajo", icon = Icons.Filled.Work),
@@ -547,27 +575,51 @@ object GridElementsRepository{
         )
     }
 
-    fun returnAvailableEmotions(): List<CrisisEmotion>{
+    fun returnAvailableEmotions(): List<CrisisEmotion> {
         return listOf(
-            CrisisEmotion(name = "Miedo",icon = Icons.Outlined.SentimentVeryDissatisfied, intensity = Intensity.LOW),
-            CrisisEmotion(name = "Tristeza",icon = Icons.Outlined.SentimentDissatisfied, intensity = Intensity.LOW),
-            CrisisEmotion(name = "Enfado",icon = Icons.Outlined.SentimentVeryDissatisfied ,  intensity = Intensity.LOW),
+            CrisisEmotion(
+                name = "Miedo",
+                icon = Icons.Outlined.SentimentVeryDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Tristeza",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Enfado",
+                icon = Icons.Outlined.SentimentVeryDissatisfied,
+                intensity = Intensity.LOW
+            ),
         )
     }
 
-    fun returnAvailableTools(): List<CrisisTool>{
+    fun returnAvailableTools(): List<CrisisTool> {
         return listOf(
-            CrisisTool(name = "Imaginacion guiada",icon = Icons.Outlined.Preview),
-            CrisisTool(name = "Respiracion",icon = Icons.Outlined.Air),
-            CrisisTool(name = "Autoafirmaciones",icon = Icons.Outlined.Psychology),
+            CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview),
+            CrisisTool(name = "Respiracion", icon = Icons.Outlined.Air),
+            CrisisTool(name = "Autoafirmaciones", icon = Icons.Outlined.Psychology),
         )
     }
 
-    fun returnAvailableBodySensations(): List<CrisisBodySensation>{
+    fun returnAvailableBodySensations(): List<CrisisBodySensation> {
         return listOf(
-            CrisisBodySensation(name = "Mareos",icon = Icons.Filled.Cached, intensity = Intensity.LOW),
-            CrisisBodySensation(name = "Temblores",icon = Icons.Filled.Sensors, intensity = Intensity.LOW),
-            CrisisBodySensation(name = "Palpitaciones",icon = Icons.Filled.MonitorHeart, intensity = Intensity.LOW)
+            CrisisBodySensation(
+                name = "Mareos",
+                icon = Icons.Filled.Cached,
+                intensity = Intensity.LOW
+            ),
+            CrisisBodySensation(
+                name = "Temblores",
+                icon = Icons.Filled.Sensors,
+                intensity = Intensity.LOW
+            ),
+            CrisisBodySensation(
+                name = "Palpitaciones",
+                icon = Icons.Filled.MonitorHeart,
+                intensity = Intensity.LOW
+            )
         )
     }
 }

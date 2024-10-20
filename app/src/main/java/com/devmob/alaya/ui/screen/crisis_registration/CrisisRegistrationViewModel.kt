@@ -211,6 +211,17 @@ class CrisisRegistrationViewModel() : ViewModel() {
         }
     }
 
+    fun clearPlaceSelection() {
+        if (_screenState.value?.crisisDetails?.placeList.isNullOrEmpty()) return
+        _screenState.value = _screenState.value?.crisisDetails?.copy(
+            placeList = mutableListOf()
+        )?.let {
+            _screenState.value?.copy(
+                crisisDetails = it
+            )
+        }
+    }
+
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
