@@ -69,7 +69,7 @@ fun CrisisRegistrationSummaryScreen(
     onDelete: () -> Unit = {},
     onEditClick: (Int) -> Unit = {},
     navController: NavController
-    ){
+) {
 
     val screenState = viewModel.screenState.observeAsState()
     //val shouldShowExitModal = viewModel.shouldShowModal
@@ -77,7 +77,7 @@ fun CrisisRegistrationSummaryScreen(
     var showModalConfirm by remember { mutableStateOf(false) }
 
 
-    ConstraintLayout(modifier = modifier.fillMaxSize()){
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
         val (informationColumn, actionButtons) = createRefs()
 
@@ -93,68 +93,88 @@ fun CrisisRegistrationSummaryScreen(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-            item{
-                screenState.value?.crisisDetails?.crisisTimeDetails?.let { date ->
-                    SummaryItemCard(
-                        title = "Inicio y Fin",
-                        startContent = {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
-                                Text(text = dateFormatter(date.startingDate), fontSize = 19.sp,  color = ColorText)
-                                Text(text = dateFormatter(date.endDate), fontSize = 19.sp,  color = ColorText)
-                            }
-                        },
-                        endContent = {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)){
-                                Text(text = timeFormatter(date.startTIme), fontSize = 19.sp, color = ColorText)
-                                Text(text = timeFormatter(date.endTime), fontSize = 19.sp, color = ColorText)
-                            }
-                        },
-                        onEditClick = onEditClick,
-                        step = 1
-                    )
-                }
-            }
-
                 item {
-                    screenState.value?.crisisDetails?.placeList?.let { places ->
-                        if (places.isNotEmpty()){
-                            SummaryItemCard(
-                                title = stringResource(R.string.place),
-                                startContent = {
-                                    Column {
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                places.first().icon,
-                                                contentDescription = stringResource(R.string.place),
-                                                tint = ColorText,
-                                                modifier = Modifier.size(35.dp)
-                                            )
-                                            Text(
-                                                text = places.first().name,
-                                                fontSize = 21.sp,
-                                                color = ColorText,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                        }
-                                    }
-                                },
-                                onEditClick = onEditClick,
-                                step = 2
-                            )
-                        }
+                    screenState.value?.crisisDetails?.crisisTimeDetails?.let { date ->
+                        SummaryItemCard(
+                            title = "Inicio y Fin",
+                            startContent = {
+                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(
+                                        text = dateFormatter(date.startingDate),
+                                        fontSize = 19.sp,
+                                        color = ColorText
+                                    )
+                                    Text(
+                                        text = dateFormatter(date.endDate),
+                                        fontSize = 19.sp,
+                                        color = ColorText
+                                    )
+                                }
+                            },
+                            endContent = {
+                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(
+                                        text = timeFormatter(date.startTIme),
+                                        fontSize = 19.sp,
+                                        color = ColorText
+                                    )
+                                    Text(
+                                        text = timeFormatter(date.endTime),
+                                        fontSize = 19.sp,
+                                        color = ColorText
+                                    )
+                                }
+                            },
+                            onEditClick = onEditClick,
+                            step = 1
+                        )
                     }
                 }
 
                 item {
-                    screenState.value?.crisisDetails?.bodySensationList?.let { sensationsList ->
-                        if (sensationsList.isNotEmpty()) {
-                            SummaryItemCard(
-                                title = stringResource(R.string.body_sensations),
-                                startContent = {
-                                    Column {
+
+
+                    SummaryItemCard(
+                        title = stringResource(R.string.place),
+                        startContent = {
+                            Column {
+                                screenState.value?.crisisDetails?.placeList?.let { places ->
+                                    if (places.isNotEmpty()) {
+                                        places.forEach { place ->
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Icon(
+                                                    places.first().icon,
+                                                    contentDescription = stringResource(R.string.place),
+                                                    tint = ColorText,
+                                                    modifier = Modifier.size(35.dp)
+                                                )
+                                                Text(
+                                                    text = places.first().name,
+                                                    fontSize = 21.sp,
+                                                    color = ColorText,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        onEditClick = onEditClick,
+                        step = 2
+                    )
+                }
+
+                item {
+                    SummaryItemCard(
+                        title = stringResource(R.string.body_sensations),
+                        startContent = {
+                            Column {
+                                screenState.value?.crisisDetails?.bodySensationList?.let { sensationsList ->
+                                    if (sensationsList.isNotEmpty()) {
                                         sensationsList.forEach { sensation ->
                                             Row(
                                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -182,21 +202,21 @@ fun CrisisRegistrationSummaryScreen(
                                             }
                                         }
                                     }
-                                },
-                                onEditClick = onEditClick,
-                                step = 3
-                            )
-                        }
-                    }
+                                }
+                            }
+                        },
+                        onEditClick = onEditClick,
+                        step = 3
+                    )
                 }
 
                 item {
-                    screenState.value?.crisisDetails?.emotionList?.let { emotionList ->
-                        if (emotionList.isNotEmpty()) {
-                            SummaryItemCard(
-                                title = stringResource(R.string.emotions),
-                                startContent = {
-                                    Column {
+                    SummaryItemCard(
+                        title = stringResource(R.string.emotions),
+                        startContent = {
+                            Column {
+                                screenState.value?.crisisDetails?.emotionList?.let { emotionList ->
+                                    if (emotionList.isNotEmpty()) {
                                         emotionList.forEach { emotion ->
                                             Row(
                                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -224,50 +244,51 @@ fun CrisisRegistrationSummaryScreen(
                                             }
                                         }
                                     }
-                                },
-                                onEditClick = onEditClick,
-                                step = 4
-                            )
-                        }
-                    }
-            }
+                                }
+                            }
+                        },
+                        onEditClick = onEditClick,
+                        step = 4
+                    )
+                }
 
-            item{
-                screenState.value?.crisisDetails?.toolList?.let { toolList ->
-                    if (toolList.isNotEmpty()) {
-                        SummaryItemCard(
-                            title = stringResource(R.string.tools),
-                            startContent = {
-                                Column {
-                                    toolList.forEach { tool ->
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                tool.icon,
-                                                contentDescription = stringResource(R.string.place),
-                                                tint = ColorText,
-                                                modifier = Modifier.size(35.dp)
-                                            )
-                                            Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-                                                Text(
-                                                    text = tool.name,
-                                                    fontSize = 21.sp,
-                                                    color = ColorText,
-                                                    fontWeight = FontWeight.Bold
+                item {
+                    SummaryItemCard(
+                        title = stringResource(R.string.tools),
+                        startContent = {
+                            Column {
+                                screenState.value?.crisisDetails?.toolList?.let { toolList ->
+                                    if (toolList.isNotEmpty()) {
+                                        toolList.forEach { tool ->
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Icon(
+                                                    tool.icon,
+                                                    contentDescription = stringResource(R.string.place),
+                                                    tint = ColorText,
+                                                    modifier = Modifier.size(35.dp)
                                                 )
+                                                Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
+                                                    Text(
+                                                        text = tool.name,
+                                                        fontSize = 21.sp,
+                                                        color = ColorText,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            },
-                            onEditClick = onEditClick,
-                            step = 5
-                        )
-                    }
+                            }
+                        },
+                        onEditClick = onEditClick,
+                        step = 5
+                    )
                 }
-            }
+
 
                 item {
                     screenState.value?.crisisDetails?.notes?.let { notes ->
@@ -288,25 +309,26 @@ fun CrisisRegistrationSummaryScreen(
                 }
             }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(5.dp),
-           modifier = Modifier.align(Alignment.CenterHorizontally)
-            ){
-           Button(
-               text = "Eliminar",
-               style = ButtonStyle.Outlined,
-               onClick = { showModalDelete = true }
-           )
-            Button(
-                text = "Confirmar",
-                style = ButtonStyle.Filled,
-                onClick = { showModalConfirm = true }
-            )
-        }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Button(
+                    text = "Eliminar",
+                    style = ButtonStyle.Outlined,
+                    onClick = { showModalDelete = true }
+                )
+                Button(
+                    text = "Confirmar",
+                    style = ButtonStyle.Filled,
+                    onClick = { showModalConfirm = true }
+                )
+            }
             Modal(
                 show = showModalDelete,
                 title = "¿Seguro que quiere eliminar el registro?",
                 primaryButtonText = "Si",
-                secondaryButtonText = "No" ,
+                secondaryButtonText = "No",
                 onDismiss = { showModalDelete = false },
                 onConfirm = {
                     showModalDelete = false
@@ -318,7 +340,7 @@ fun CrisisRegistrationSummaryScreen(
                 show = showModalConfirm,
                 title = "¿Quiere confirmar el registro?",
                 primaryButtonText = "Si",
-                secondaryButtonText = "No" ,
+                secondaryButtonText = "No",
                 onDismiss = { showModalConfirm = false },
                 onConfirm = {
                     showModalConfirm = false
@@ -340,7 +362,7 @@ fun SummaryItemCard(
     onEditClick: (Int) -> Unit,
     startContent: @Composable () -> Unit,
     endContent: @Composable (() -> Unit)? = null
-){
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -348,22 +370,32 @@ fun SummaryItemCard(
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(containerColor = ColorWhite),
         elevation = CardDefaults.cardElevation(4.dp)
-    ){
+    ) {
         Column(
             modifier = Modifier.padding(9.dp),
             verticalArrangement = Arrangement.spacedBy(1.dp)
-        ){
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text = title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = ColorText)
-                Icon(modifier = Modifier
-                    .size(20.dp)
-                    .clickable {
-                        onEditClick(step)
-                    },imageVector = Icons.Outlined.Edit, contentDescription = "Editar", tint = ColorGray)
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = ColorText
+                )
+                Icon(
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable {
+                            onEditClick(step)
+                        },
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = "Editar",
+                    tint = ColorGray
+                )
 
             }
             Spacer(modifier = Modifier.height(3.dp))
@@ -371,7 +403,7 @@ fun SummaryItemCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
 
                 startContent()
                 endContent?.invoke()
@@ -385,8 +417,8 @@ fun SummaryItemCard(
 /**
  * Formateador de Intensidad que devuelve como un String el tipo de intensidad que reciba por parametro
  */
-fun IntensityFormatter(intensity: Intensity): String{
-    return when(intensity){
+fun IntensityFormatter(intensity: Intensity): String {
+    return when (intensity) {
         Intensity.LOW -> R.string.intensity_low.toString()
         Intensity.MEDIUM -> R.string.intensity_medium.toString()
         Intensity.HIGH -> R.string.intensity_high.toString()
