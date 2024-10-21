@@ -58,6 +58,7 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 fun MainContent(navController: NavHostController) {
     val currentRoute = currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -318,7 +319,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
+                ConfigTreatmentScreen(configTreatmentViewModel, navController)
             }
             composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
@@ -340,7 +341,7 @@ fun MainContent(navController: NavHostController) {
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
-                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
+                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController, configTreatmentViewModel)
             }
             composable(NavUtils.PatientRoutes.MenuPatient.route,
                 enterTransition = {
@@ -442,7 +443,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CustomActivityScreen(navController = navController, viewModel = ConfigTreatmentViewModel() )
+                CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
             }
         }
     }

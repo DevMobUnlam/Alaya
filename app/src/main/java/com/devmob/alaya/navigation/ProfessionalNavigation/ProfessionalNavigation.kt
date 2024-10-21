@@ -56,13 +56,13 @@ fun ProfessionalNavigation(navController: NavHostController){
             composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route){
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
             }
-            composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
+         /*   composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
 
                 TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
-            }
+            }*/
 
         }
     }
