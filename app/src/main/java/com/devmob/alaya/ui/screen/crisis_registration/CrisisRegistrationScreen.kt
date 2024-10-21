@@ -192,7 +192,7 @@ fun CrisisRegistrationScreen(
                                     viewModel.clearPlaceSelection()
                                 } else {
                                     selectedPlace = place.name
-                                    viewModel.updatePlaceStatus(place, 0)
+                                    viewModel.updatePlace(place, 0)
                                 }
                             }
                         )

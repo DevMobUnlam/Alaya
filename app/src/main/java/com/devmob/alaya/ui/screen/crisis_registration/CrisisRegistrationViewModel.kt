@@ -9,29 +9,13 @@ import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
-import com.devmob.alaya.domain.model.CrisisRegisterData
-import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
-import com.devmob.alaya.domain.model.Intensity
-import java.time.LocalDate
-import java.time.LocalTime
 import java.util.Date
 
-class CrisisRegistrationViewModel() : ViewModel() {
-
-    var registrationData = mutableStateOf(CrisisRegisterData())
-        private set
-
-    fun updateRegistrationData(data: CrisisRegisterData) {
-        registrationData.value = data
-    }
+class CrisisRegistrationViewModel : ViewModel() {
 
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
-    var startDate by mutableStateOf<LocalDate?>(null)
-    var startTime by mutableStateOf<LocalTime?>(null)
-    var endDate by mutableStateOf<LocalDate?>(null)
-    var endTime by mutableStateOf<LocalTime?>(null)
     private val _places = MutableLiveData<List<CrisisPlace>>()
     val places: LiveData<List<CrisisPlace>> get() = _places
     private val _tools = MutableLiveData<List<CrisisTool>>()
@@ -150,20 +134,6 @@ class CrisisRegistrationViewModel() : ViewModel() {
         )
     }
 
-    fun onBodySensationIntensityChange(
-        intensity: Intensity,
-        index: Int,
-        bodySensation: CrisisBodySensation
-    ) {
-        val updatedBodySensation = bodySensation.copy(intensity = intensity)
-        _screenState.value?.crisisDetails?.bodySensationList?.set(index, updatedBodySensation)
-    }
-
-    fun onEmotionIntensityChange(intensity: Intensity, index: Int, emotion: CrisisEmotion) {
-        val updatedEmotion = emotion.copy(intensity = intensity)
-        _screenState.value?.crisisDetails?.emotionList?.set(index, updatedEmotion)
-    }
-
     fun addCrisisTool(crisisTool: CrisisTool) {
         val currentTools = _tools.value?.toMutableList() ?: mutableListOf()
         if (!currentTools.any { it.name == crisisTool.name }) {
@@ -200,7 +170,7 @@ class CrisisRegistrationViewModel() : ViewModel() {
         }
     }
 
-    fun updatePlaceStatus(place: CrisisPlace, index: Int) {
+    fun updatePlace(place: CrisisPlace, index: Int) {
         val newPlaceList = mutableListOf<CrisisPlace>().apply {
             add(index, place)
         }
@@ -231,16 +201,6 @@ class CrisisRegistrationViewModel() : ViewModel() {
 
     fun showExitModal() {
         shouldShowExitModal = true
-    }
-
-    private fun updateCrisisTimeDetails(updatedDetails: CrisisTimeDetails) {
-        _screenState.value = _screenState.value?.crisisDetails?.copy(
-            crisisTimeDetails = updatedDetails
-        )?.let {
-            _screenState.value?.copy(
-                crisisDetails = it
-            )
-        }
     }
 
     fun updateStartDate(date: Date) {
