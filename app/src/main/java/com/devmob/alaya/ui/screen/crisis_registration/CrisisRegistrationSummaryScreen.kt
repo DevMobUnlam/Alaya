@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -63,9 +64,6 @@ import java.util.Locale
 fun CrisisRegistrationSummaryScreen(
     modifier: Modifier = Modifier,
     viewModel: CrisisRegistrationViewModel,
-    onConfirm: () -> Unit = {},
-    onDelete: () -> Unit = {},
-    onEditClick: (Int) -> Unit = {},
     navController: NavController
 ) {
 
@@ -73,6 +71,7 @@ fun CrisisRegistrationSummaryScreen(
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
+    BackHandler { }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
@@ -420,8 +419,6 @@ fun SummaryItemCard(
                 endContent?.invoke()
             }
         }
-
-
     }
 }
 
