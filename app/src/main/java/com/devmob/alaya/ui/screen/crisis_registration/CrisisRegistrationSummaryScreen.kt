@@ -343,6 +343,7 @@ fun CrisisRegistrationSummaryScreen(
                 onDismiss = { showModalDelete = false },
                 onConfirm = {
                     showModalDelete = false
+                    viewModel.cleanState()
                     navController.navigate(NavUtils.PatientRoutes.Home.route)
                 }
             )
@@ -355,6 +356,7 @@ fun CrisisRegistrationSummaryScreen(
                 onDismiss = { showModalConfirm = false },
                 onConfirm = {
                     showModalConfirm = false
+                    viewModel.cleanState()
                     navController.navigate(NavUtils.PatientRoutes.Home.route)
                 }
             )

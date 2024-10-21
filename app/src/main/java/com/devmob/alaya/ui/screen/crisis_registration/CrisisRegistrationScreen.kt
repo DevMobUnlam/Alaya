@@ -67,6 +67,7 @@ fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel,
     onClose: () -> Unit,
     onFinishedRegistration: () -> Unit,
+    navController: NavHostController,
 ) {
 
     val screenState = viewModel.screenState.observeAsState()
@@ -530,7 +531,7 @@ fun CrisisRegistrationScreen(
                 }
         )
 
-        if (screenState.value?.currentStep != 1 && viewModel.showArrowBack) {
+        if (screenState.value?.currentStep != 1 && viewModel.shouldGoToBack) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
@@ -561,13 +562,18 @@ fun CrisisRegistrationScreen(
                     end.linkTo(parent.end, margin = 15.dp)
                 }
                 .clickable {
-                    if (screenState.value?.currentStep!! < 6) {
-                        viewModel.goOneStepForward()
-                        shouldShowAddNewCard = false
-                    } else if (screenState.value?.currentStep!! == 6) {
-                        onFinishedRegistration()
+                    when {
+                        viewModel.shouldGoToSummary -> {
+                            navController.popBackStack()
+                        }
+                        screenState.value?.currentStep!! < 6 -> {
+                            viewModel.goOneStepForward()
+                            shouldShowAddNewCard = false
+                        }
+                        screenState.value?.currentStep == 6 -> {
+                            onFinishedRegistration()
+                        }
                     }
-
                 }
         )
 

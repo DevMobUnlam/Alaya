@@ -419,7 +419,7 @@ fun MainContent(navController: NavHostController) {
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }}, viewModel = sharedViewModel)
+                    }}, viewModel = sharedViewModel, navController = navController)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
