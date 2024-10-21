@@ -40,7 +40,7 @@ class CrisisRegistrationViewModel() : ViewModel() {
     val bodySensations: LiveData<List<CrisisBodySensation>> get() = _bodySensations
     private val _emotions = MutableLiveData<List<CrisisEmotion>>()
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
-
+    var showArrowBack by mutableStateOf(true)
 
     init {
         loadPlaces()
@@ -286,6 +286,10 @@ class CrisisRegistrationViewModel() : ViewModel() {
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+    }
+
+    fun hideBackButton() {
+        showArrowBack = false
     }
 
     private fun loadPlaces() {

@@ -119,7 +119,10 @@ fun CrisisRegistrationSummaryScreen(
                                     )
                                 }
                             },
-                            onEditClick = { goToStepScreenToEdit(1, navController, viewModel) },
+                            onEditClick = {
+                                goToStepScreenToEdit(1, navController, viewModel)
+                                viewModel.hideBackButton()
+                            },
                             step = 1
                         )
                     }
@@ -153,7 +156,10 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = { goToStepScreenToEdit(2, navController, viewModel) },
+                        onEditClick = {
+                            goToStepScreenToEdit(2, navController, viewModel)
+                            viewModel.hideBackButton()
+                        },
                         step = 2
                     )
                 }
@@ -195,7 +201,10 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = { goToStepScreenToEdit(3, navController, viewModel) },
+                        onEditClick = {
+                            goToStepScreenToEdit(3, navController, viewModel)
+                            viewModel.hideBackButton()
+                        },
                         step = 3
                     )
                 }
@@ -237,7 +246,10 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = { goToStepScreenToEdit(4, navController, viewModel) },
+                        onEditClick = {
+                            goToStepScreenToEdit(4, navController, viewModel)
+                            viewModel.hideBackButton()
+                        },
                         step = 4
                     )
                 }
@@ -274,7 +286,10 @@ fun CrisisRegistrationSummaryScreen(
                                 }
                             }
                         },
-                        onEditClick = { goToStepScreenToEdit(5, navController, viewModel) },
+                        onEditClick = {
+                            goToStepScreenToEdit(5, navController, viewModel)
+                            viewModel.hideBackButton()
+                        },
                         step = 5
                     )
                 }
@@ -297,6 +312,7 @@ fun CrisisRegistrationSummaryScreen(
                                     navController = navController,
                                     viewModel = viewModel
                                 )
+                                viewModel.hideBackButton()
                             },
                             step = 6
                         )

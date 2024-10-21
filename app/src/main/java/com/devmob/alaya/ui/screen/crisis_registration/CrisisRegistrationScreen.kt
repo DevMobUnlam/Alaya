@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.model.CrisisBodySensation
@@ -529,7 +530,7 @@ fun CrisisRegistrationScreen(
                 }
         )
 
-        if (screenState.value?.currentStep != 1) {
+        if (screenState.value?.currentStep != 1 && viewModel.showArrowBack) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
