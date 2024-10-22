@@ -1,5 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,12 +16,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -52,6 +56,11 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
+    val context = LocalContext.current
+
+    LaunchedEffect(currentStep){
+        viewModel.textToSpeech(context)
+    }
 
     BackHandler {
         // Comportamiento del botón "Atrás"
