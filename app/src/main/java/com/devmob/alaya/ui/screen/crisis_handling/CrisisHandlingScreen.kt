@@ -14,12 +14,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -52,6 +54,17 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
+    val context = LocalContext.current
+
+
+    DisposableEffect(Unit) {
+        viewModel.playSong(context) // Inicia la música cuando se crea la pantalla
+
+        onDispose {
+            viewModel.stopSong() // Detiene la música cuando la pantalla se cierra
+        }
+    }
+
 
     BackHandler {
         // Comportamiento del botón "Atrás"
@@ -170,7 +183,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 bottom.linkTo(parent.bottom, margin = 16.dp)
             },
             ButtonStyle.Filled,
-            onClick = { viewModel.nextStep() })
+            onClick = { viewModel.nextStep()})
 
         Modal(
             show = shouldShowModal,

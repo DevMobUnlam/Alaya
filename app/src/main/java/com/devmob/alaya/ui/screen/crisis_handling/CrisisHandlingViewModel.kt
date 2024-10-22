@@ -1,10 +1,13 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.StepCrisis
 
 class CrisisHandlingViewModel : ViewModel() {
@@ -14,6 +17,7 @@ class CrisisHandlingViewModel : ViewModel() {
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
+    var mediaPlayer: MediaPlayer? = null
 
     val currentStep: StepCrisis
         get() = steps[currentStepIndex]
@@ -69,5 +73,29 @@ class CrisisHandlingViewModel : ViewModel() {
 
     fun dismissExitModal() {
         shouldShowExitModal = false
+    }
+
+    fun playSong(context:Context){
+
+        stopSong()
+        mediaPlayer = MediaPlayer.create(context, R.raw.song)
+        mediaPlayer?.start()
+
+    }
+
+    fun stopSong() {
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.stop()
+                it.reset()
+                it.release()
+            }
+        }
+        mediaPlayer = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopSong()
     }
 }
