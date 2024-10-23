@@ -23,9 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,11 +42,10 @@ import com.devmob.alaya.ui.theme.ColorText
 @Composable
 fun SelectMenu(
     title: String,
-    options: List<OptionTreatment>,
+    options: SnapshotStateList<OptionTreatment>,
     onOptionSelected: (OptionTreatment) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-
     var selectedOption by remember { mutableStateOf<OptionTreatment?>(null) }
 
     Card(
@@ -90,15 +91,17 @@ fun SelectMenu(
             ) {
                 Column {
                     options.forEachIndexed() { index, option ->
-                        OptionItem(
-                            title = option.title,
-                            description = option.description,
-                            isSelected = selectedOption?.title == option.title,
-                            onSelect = {
-                                selectedOption = option
-                                onOptionSelected(option)
-                            }
-                        )
+                        key(option.title) {
+                            OptionItem(
+                                title = option.title,
+                                description = option.description,
+                                isSelected = selectedOption?.title == option.title,
+                                onSelect = {
+                                    selectedOption = option
+                                    onOptionSelected(option)
+                                }
+                            )
+                        }
                         if (index < options.size - 1) {
                             Divider(
                                 color = Color.LightGray,

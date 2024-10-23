@@ -78,13 +78,15 @@ fun ContactScreen(
 
             DetailCardContact(
                 contact = currentContact,
-                modifier = Modifier.constrainAs(contactCard) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }.padding(16.dp),
+                modifier = Modifier
+                    .constrainAs(contactCard) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(16.dp),
             )
-
+        if(currentContact.contactId != "4") {
             Row(
                 modifier = Modifier
                     .constrainAs(actionRow) {
@@ -97,16 +99,17 @@ fun ContactScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { showEditModal = true},
-                    text= "Editar",
+                    onClick = { showEditModal = true },
+                    text = "Editar",
                     style = ButtonStyle.Filled,
                 )
 
                 Button(
                     onClick = { showDeleteModal = true },
-                    text= "Eliminar",
+                    text = "Eliminar",
                     style = ButtonStyle.Outlined
                 )
+            }
         }
 
         Modal(

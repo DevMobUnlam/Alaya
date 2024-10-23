@@ -29,7 +29,7 @@ import com.devmob.alaya.ui.theme.ColorWhite
 @Composable
 fun IconButton(
     symbol: ImageVector,
-    text: String,
+    text: String = "",
     size: Dp = 50.dp,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
