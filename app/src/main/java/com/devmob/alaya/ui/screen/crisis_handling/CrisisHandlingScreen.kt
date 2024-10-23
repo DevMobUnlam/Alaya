@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -23,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -49,17 +47,30 @@ import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavController) {
+fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavController, textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
 
     val currentStep = viewModel.currentStep
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
-    val context = LocalContext.current
 
     LaunchedEffect(currentStep){
-        viewModel.textToSpeech(context)
+        if (isTtsInitialized) {
+            textToSpeech.speak(
+                currentStep.title,
+                TextToSpeech.QUEUE_ADD,
+                null,
+                null
+            )
+            textToSpeech.speak(
+                currentStep.description,
+                TextToSpeech.QUEUE_ADD,
+                null,
+                null
+            )
+
+        }
     }
 
     BackHandler {

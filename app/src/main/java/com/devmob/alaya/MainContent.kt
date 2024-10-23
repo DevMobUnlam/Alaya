@@ -1,14 +1,12 @@
 package com.devmob.alaya
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -53,7 +51,11 @@ import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
-fun MainContent(navController: NavHostController) {
+fun MainContent(
+    navController: NavHostController,
+    textToSpeech: TextToSpeech,
+    isTtsInitialized: Boolean
+) {
     val currentRoute = currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
     val routesWithAppBar = listOf(
@@ -204,7 +206,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+                CrisisHandlingScreen(CrisisHandlingViewModel(), navController, textToSpeech, isTtsInitialized)
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
                 enterTransition = {

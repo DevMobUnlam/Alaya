@@ -1,16 +1,12 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.content.Context
-import android.speech.tts.TextToSpeech
-import android.speech.tts.Voice
-import android.util.Log
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.StepCrisis
-import java.util.Locale
 
 class CrisisHandlingViewModel : ViewModel() {
 
@@ -19,8 +15,6 @@ class CrisisHandlingViewModel : ViewModel() {
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
-
-    private var textToSpeech: TextToSpeech?= null
 
     val currentStep: StepCrisis
         get() = steps[currentStepIndex]
@@ -78,24 +72,5 @@ class CrisisHandlingViewModel : ViewModel() {
         shouldShowExitModal = false
     }
 
-    fun textToSpeech(context: Context){
-        textToSpeech = TextToSpeech(
-            context
-        ){
-            if(it == TextToSpeech.SUCCESS){
-                textToSpeech?.let { txtToSpeech ->
-                    txtToSpeech.language = Locale("es_AR")
-                    txtToSpeech.setSpeechRate(1.0F)
-                    txtToSpeech.speak(
-                        currentStep.title,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-            }else{
-                Log.i("Text-To-Speech", "Fallo Text To Speech")
-            }
-        }
-    }
+
 }
