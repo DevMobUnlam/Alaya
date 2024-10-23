@@ -3,16 +3,13 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
-import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
-import com.devmob.alaya.isLogged
 import com.google.firebase.firestore.Source
 import kotlinx.coroutines.launch
 
@@ -38,7 +35,6 @@ class LoginViewModel(
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>
         get() = _showError
-
 
     fun singInWithEmailAndPassword(
         email: String,

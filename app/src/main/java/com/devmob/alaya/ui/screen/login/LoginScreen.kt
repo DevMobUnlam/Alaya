@@ -62,10 +62,9 @@ fun LoginScreen(
     val auth = FirebaseClient().auth
 
 
-    //Probando corutina desde acá
-    LaunchedEffect(Unit) {
+    //Probamos enmarcar esto en un LaunchedEffect(Unit) pero no anduvo
         viewModel.checkIfUserWasLoggedIn()
-    }
+
 
     if (viewModel.navigateToPatientHome.value) {
         navController.navigate(NavUtils.PatientRoutes.Home.route) {
