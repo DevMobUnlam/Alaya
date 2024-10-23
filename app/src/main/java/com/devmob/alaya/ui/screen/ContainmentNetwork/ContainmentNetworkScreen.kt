@@ -28,6 +28,10 @@ import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.IconButton
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactCard
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
+import com.devmob.alaya.ui.theme.ColorSecondary
+import com.devmob.alaya.ui.theme.ColorTertiary
+import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun ContainmentNetworkScreen(
@@ -84,8 +88,12 @@ fun ContainmentNetworkScreen(
 
             ) {
             items(contacts) { contact ->
+                val isFirstContact = contacts.indexOf(contact) == 0
                 ContactCard(
                     contact = contact,
+                    textColor = if (isFirstContact) ColorWhite else ColorText,
+                    backgroundColor = if (isFirstContact) ColorTertiary else ColorWhite,
+                    showWhatsappButton = !isFirstContact,
                     viewModel = ContactViewModel(),
                     onClick = {
                         navController.navigate("contact_detail/${contact.contactId}")

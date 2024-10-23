@@ -126,7 +126,7 @@ fun TextArea(
                 value = text,
 
                 //onValueChange = { newText -> onTextChange(newText) },
-                onValueChange = { it.text},
+                onValueChange = { text = it},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

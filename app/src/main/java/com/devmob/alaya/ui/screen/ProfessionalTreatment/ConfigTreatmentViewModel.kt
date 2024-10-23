@@ -35,7 +35,5 @@ class ConfigTreatmentViewModel : ViewModel() {
 
     fun addCustomActivity(activity: OptionTreatment) {
         _treatmentOptions.add(activity)
-        println("Actividad agregada: ${activity.title}")
-        println(_treatmentOptions)
     }
 }

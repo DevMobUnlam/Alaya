@@ -37,12 +37,16 @@ import com.devmob.alaya.components.getInitials
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun ContactCard(
     contact: Contact,
     viewModel: ContactViewModel,
     onClick: () -> Unit,
+    backgroundColor: Color = Color.White,
+    textColor: Color = ColorText,
+    showWhatsappButton: Boolean = true
 ){
     val context = LocalContext.current
     ElevatedCard(
@@ -53,7 +57,7 @@ fun ContactCard(
             .wrapContentHeight(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = backgroundColor,
         ),
         elevation = CardDefaults.cardElevation(8.dp),
 
@@ -66,7 +70,6 @@ fun ContactCard(
             horizontalArrangement = Arrangement.SpaceBetween
 
         ) {
-
                 if (contact.photo != null){
                     Image(
                         painter = rememberAsyncImagePainter(
@@ -91,7 +94,7 @@ fun ContactCard(
                     ) {
                         Text(
                             text = initials,
-                            color = Color.White,
+                            color = ColorWhite,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
@@ -100,34 +103,41 @@ fun ContactCard(
                 }
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = contact.name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color= ColorText)
+                Text(text = contact.name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color= textColor)
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(text = contact.numberPhone, fontSize = 14.sp, color = ColorText)
+                    Text(text = contact.numberPhone, fontSize = 14.sp, color = textColor)
             }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
             Column(){
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF25D366)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(
-                        onClick = {
-                            val formattedNumber = viewModel.formatPhoneNumberForWhatsApp(contact.numberPhone)
-                            viewModel.sendWhatsAppMessage(context, formattedNumber, "Hola, necesito apoyo 😔")
-                        },
-                        modifier = Modifier.size(40.dp)
+                if(showWhatsappButton) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF25D366)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.whatsapp),
-                            contentDescription = "Llamar",
-                            tint = Color.White
-                        )
+                        IconButton(
+                            onClick = {
+                                val formattedNumber =
+                                    viewModel.formatPhoneNumberForWhatsApp(contact.numberPhone)
+                                viewModel.sendWhatsAppMessage(
+                                    context,
+                                    formattedNumber,
+                                    "Hola, necesito apoyo 😔"
+                                )
+                            },
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.whatsapp),
+                                contentDescription = "Llamar",
+                                tint = Color.White
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
