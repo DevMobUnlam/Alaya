@@ -1,8 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,31 +9,13 @@ import androidx.lifecycle.ViewModel
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
-import com.devmob.alaya.domain.model.CrisisRegisterData
-import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
-import com.devmob.alaya.domain.model.Intensity
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
-class CrisisRegistrationViewModel(): ViewModel() {
-
-    var registrationData = mutableStateOf(CrisisRegisterData())
-        private set
-
-    fun updateRegistrationData(data: CrisisRegisterData) {
-        registrationData.value = data
-    }
+class CrisisRegistrationViewModel : ViewModel() {
 
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
-    var startDate by mutableStateOf<LocalDate?>(null)
-    var startTime by mutableStateOf<LocalTime?>(null)
-    var endDate by mutableStateOf<LocalDate?>(null)
-    var endTime by mutableStateOf<LocalTime?>(null)
     private val _places = MutableLiveData<List<CrisisPlace>>()
     val places: LiveData<List<CrisisPlace>> get() = _places
     private val _tools = MutableLiveData<List<CrisisTool>>()
@@ -45,8 +24,8 @@ class CrisisRegistrationViewModel(): ViewModel() {
     val bodySensations: LiveData<List<CrisisBodySensation>> get() = _bodySensations
     private val _emotions = MutableLiveData<List<CrisisEmotion>>()
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
-
-
+    var shouldGoToBack by mutableStateOf(true)
+    var shouldGoToSummary by mutableStateOf(false)
 
     init {
         loadPlaces()
@@ -54,21 +33,30 @@ class CrisisRegistrationViewModel(): ViewModel() {
         loadBodySensations()
         loadEmotions()
     }
+
     var shouldShowExitModal by mutableStateOf(false)
 
-    fun cleanState(){
+    fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()
+        shouldGoToBack = true
+        shouldGoToSummary = false
     }
 
-    fun goOneStepForward(){
-        _screenState.value = _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.plus(1))
+    fun goOneStepForward() {
+        _screenState.value =
+            _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.plus(1))
     }
 
-    fun goOneStepBack(){
-        _screenState.value = _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.minus(1))
+    fun goOneStepBack() {
+        _screenState.value =
+            _screenState.value?.copy(currentStep = this._screenState.value?.currentStep!!.minus(1))
     }
 
-    fun addCrisisPlace(place: CrisisPlace){
+    fun updateStep(step: Int) {
+        _screenState.value = _screenState.value?.copy(currentStep = step)
+    }
+
+    fun addCrisisPlace(place: CrisisPlace) {
         val currentPlaces = _places.value?.toMutableList() ?: mutableListOf()
         if (!currentPlaces.any { it.name == place.name }) {
             currentPlaces.add(place)
@@ -94,18 +82,60 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    fun onBodySensationIntensityChange(intensity: Intensity, index: Int,bodySensation: CrisisBodySensation){
-        val updatedBodySensation = bodySensation.copy(intensity = intensity)
-        _screenState.value?.crisisDetails?.bodySensationList?.set(index,updatedBodySensation)
+    fun updateCrisisBodySensation(bodySensation: CrisisBodySensation) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList =
+            currentState.crisisDetails.bodySensationList.toMutableList().apply {
+                if (any { it.name == bodySensation.name }) {
+                    removeIf { it.name == bodySensation.name }
+                } else {
+                    add(bodySensation)
+                }
+            }
+
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                bodySensationList = updatedBodySensationList
+            )
+        )
     }
 
-    fun onEmotionIntensityChange(intensity: Intensity, index: Int, emotion: CrisisEmotion){
-        val updatedEmotion = emotion.copy(intensity = intensity)
-        _screenState.value?.crisisDetails?.emotionList?.set(index,updatedEmotion)
+    fun updateCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList = currentState.crisisDetails.emotionList.toMutableList().apply {
+            if (any { it.name == emotion.name }) {
+                removeIf { it.name == emotion.name }
+            } else {
+                add(emotion)
+            }
+        }
+
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                emotionList = updatedEmotionList
+            )
+        )
+    }
+
+    fun updateCrisisTool(tool: CrisisTool) {
+        val currentState = _screenState.value ?: return
+        val updatedToolList = currentState.crisisDetails.toolList.toMutableList().apply {
+            if (any { it.name == tool.name }) {
+                removeIf { it.name == tool.name }
+            } else {
+                add(tool)
+            }
+        }
+
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                toolList = updatedToolList
+            )
+        )
     }
 
     fun addCrisisTool(crisisTool: CrisisTool) {
-        val currentTools= _tools.value?.toMutableList() ?: mutableListOf()
+        val currentTools = _tools.value?.toMutableList() ?: mutableListOf()
         if (!currentTools.any { it.name == crisisTool.name }) {
             currentTools.add(crisisTool)
             _tools.value = currentTools
@@ -118,7 +148,7 @@ class CrisisRegistrationViewModel(): ViewModel() {
     }
 
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
-        val currentEmotions= _emotions.value?.toMutableList() ?: mutableListOf()
+        val currentEmotions = _emotions.value?.toMutableList() ?: mutableListOf()
         if (!currentEmotions.any { it.name == crisisEmotion.name }) {
             currentEmotions.add(crisisEmotion)
             _emotions.value = currentEmotions
@@ -130,37 +160,47 @@ class CrisisRegistrationViewModel(): ViewModel() {
         }
     }
 
-    fun updateNotes(text: String){
-        _screenState.value = _screenState?.value?.copy(
-            crisisDetails = _screenState?.value?.crisisDetails?.copy(
-                notes = text
-            )!!
-        )
-    }
-
-
-    fun updatePlaceStatus(place: CrisisPlace, index: Int, isActive: Boolean){
-        val updatedElement = place.copy(isActive = isActive)
-        _screenState.value?.crisisDetails?.placeList?.set(index = index, updatedElement)
-    }
-
-
-    fun dismissExitModal() {
-    shouldShowExitModal = false
-    }
-
-    fun showExitModal() {
-        shouldShowExitModal = true
-    }
-
-    private fun updateCrisisTimeDetails(updatedDetails: CrisisTimeDetails) {
+    fun updateNotes(text: String) {
         _screenState.value = _screenState.value?.crisisDetails?.copy(
-            crisisTimeDetails = updatedDetails
+            notes = text
         )?.let {
             _screenState.value?.copy(
                 crisisDetails = it
             )
         }
+    }
+
+    fun updatePlace(place: CrisisPlace, index: Int) {
+        val newPlaceList = mutableListOf<CrisisPlace>().apply {
+            add(index, place)
+        }
+
+        _screenState.value = _screenState.value?.crisisDetails?.copy(
+            placeList = newPlaceList
+        )?.let {
+            _screenState.value?.copy(
+                crisisDetails = it
+            )
+        }
+    }
+
+    fun clearPlaceSelection() {
+        if (_screenState.value?.crisisDetails?.placeList.isNullOrEmpty()) return
+        _screenState.value = _screenState.value?.crisisDetails?.copy(
+            placeList = mutableListOf()
+        )?.let {
+            _screenState.value?.copy(
+                crisisDetails = it
+            )
+        }
+    }
+
+    fun dismissExitModal() {
+        shouldShowExitModal = false
+    }
+
+    fun showExitModal() {
+        shouldShowExitModal = true
     }
 
     fun updateStartDate(date: Date) {
@@ -209,6 +249,11 @@ class CrisisRegistrationViewModel(): ViewModel() {
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+    }
+
+    fun hideBackButton() {
+        shouldGoToBack = false
+        shouldGoToSummary = true
     }
 
     private fun loadPlaces() {

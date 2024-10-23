@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorPrimary
-import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
@@ -64,14 +63,13 @@ import kotlinx.coroutines.launch
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
-    text: String = "",
-    onTextChange: (String) -> Unit = {},
-    onMicClick:() -> Unit = {},
+    textActual: String = "",
+    onTextChange: (String) -> Unit = {}
     )
 {
 
     val context = LocalContext.current
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var text by remember { mutableStateOf(TextFieldValue(textActual.ifEmpty { "" })) }
     val voiceToText = remember { VoiceToText(context) }
     val state by voiceToText.state.collectAsState()
     var isPressed by remember { mutableStateOf(false) }
@@ -88,6 +86,7 @@ fun TextArea(
     LaunchedEffect(state.spokenText) {
         if (state.spokenText.isNotEmpty()) {
             text = text.copy(text = state.spokenText)
+            onTextChange(state.spokenText)
         }
     }
 
@@ -122,8 +121,10 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
-                //onValueChange = { newText -> onTextChange(newText) },
-                onValueChange = { text = it },
+                onValueChange = {
+                    text = it
+                    onTextChange(it.text)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
