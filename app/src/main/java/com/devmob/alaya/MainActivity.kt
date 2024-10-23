@@ -3,6 +3,7 @@ package com.devmob.alaya
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
             textToSpeech.language = Locale("es")
             textToSpeech.setPitch(0.85f)
             textToSpeech.setSpeechRate(1.08F)
-            textToSpeech
             isTtsInitialized.value = true
         } else{
             isTtsInitialized.value = false
