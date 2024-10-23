@@ -1,6 +1,7 @@
 package com.devmob.alaya
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -13,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -20,6 +22,8 @@ import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.domain.model.User
+import com.devmob.alaya.domain.model.UserRole
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
@@ -51,6 +55,11 @@ import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
+import com.google.android.play.integrity.internal.o
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainContent(navController: NavHostController) {
@@ -66,6 +75,7 @@ fun MainContent(navController: NavHostController) {
         ProfessionalRoutes.TreatmentSummary.route
 
     )
+    Log.d("leandro", "Logeado en MainContent con ${FirebaseClient().auth.currentUser?.email}")
 
     Scaffold(
         topBar = {
@@ -79,8 +89,6 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-
-
             if (currentRoute in NavUtils.routesWithBottomBar) {
                 GetBottomBarNavigation(navController)
             }
@@ -108,7 +116,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                HomeScreen(PatientHomeScreenViewmodel(),navController)
+                HomeScreen(PatientHomeScreenViewmodel(), navController)
             }
             composable(NavUtils.ProfessionalRoutes.Home.route,
                 enterTransition = {
@@ -404,31 +412,53 @@ fun MainContent(navController: NavHostController) {
                 )
             }
             composable(NavUtils.PatientRoutes.CrisisRegistration.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                    popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                CrisisRegistrationScreen(onClose = {
+                    navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                        popUpTo(NavUtils.PatientRoutes.Home.route) {
                             inclusive = true
                         }
-                    }})
+                    }
+                },
+                    onFinishedRegistration = {
+                        navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                            popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                                inclusive = true
+                            }
+                        }
+                    })
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 CrisisRegistrationSummaryScreen(navController = navController)
             }
@@ -478,22 +508,3 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
-            /*composable(NavUtils.Routes.CrisisRegistration.route) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
-                    popUpTo(NavUtils.Routes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                            inclusive = true
-                        }
-                    }})
-            }
-
-            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                CrisisRegistrationSummaryScreen(navController = navController)
-            }*/
-
-
-

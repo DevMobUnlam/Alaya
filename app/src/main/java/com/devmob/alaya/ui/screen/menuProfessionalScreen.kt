@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
@@ -21,6 +23,7 @@ import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun MenuProfessionalScreen(navController: NavController){
+    val auth = FirebaseClient().auth
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,11 +42,17 @@ fun MenuProfessionalScreen(navController: NavController){
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = ColorText,
-                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
-                        navController.navigate(
-                            NavUtils.LoginRoutes.Login.route
-                        )
-                    }
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.LoginRoutes.Login.route
+                            )
+                            val unloggedUser = auth.currentUser?.email
+                            auth.signOut()
+                            Log.d("leandro", "Deslogueado de ${unloggedUser}")
+                        }
                 )
             }
         )
