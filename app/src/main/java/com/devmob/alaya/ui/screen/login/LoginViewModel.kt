@@ -18,7 +18,10 @@ class LoginViewModel(
     private val getRoleUseCase: GetRoleUseCase,
     private val prefs: SharedPreferences
 ) : ViewModel() {
-    private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
+
+    private val _loading = mutableStateOf(false)
+    val loading: MutableState<Boolean>
+        get() = _loading
 
     private val _navigateToPatientHome = mutableStateOf(false)
     val navigateToPatientHome: MutableState<Boolean>

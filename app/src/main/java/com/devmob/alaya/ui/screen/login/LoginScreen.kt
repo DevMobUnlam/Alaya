@@ -3,8 +3,10 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,12 +21,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -55,7 +60,7 @@ fun LoginScreen(
 
     val context = LocalContext.current
     Log.d("leandro", "Log del loginScreen")
-    var checkLogin by rememberSaveable { mutableStateOf(false)}
+    var checkLogin by rememberSaveable { mutableStateOf(false) }
 
 
     if (viewModel.navigateToPatientHome.value) {
@@ -121,34 +126,34 @@ fun LoginScreen(
                     modifier = Modifier.size(230.dp)
                 )
 
-            Spacer(modifier = Modifier.height(32.dp))
-            UserForm { email, password ->
-                Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
-                viewModel.singInWithEmailAndPassword(email, password)
-            }
+                Spacer(modifier = Modifier.height(32.dp))
+                UserForm { email, password ->
+                    Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
+                    viewModel.singInWithEmailAndPassword(email, password)
+                }
 
-            Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = stringResource(R.string.no_tenes_cuenta))
-                Text(text = stringResource(R.string.registrate),
-                    color = ColorPrimary,
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate(NavUtils.LoginRoutes.Register.route) {
-                                popUpTo(NavUtils.LoginRoutes.Register.route) {
-                                    inclusive = true
+                Spacer(modifier = Modifier.height(15.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(R.string.no_tenes_cuenta))
+                    Text(text = stringResource(R.string.registrate),
+                        color = ColorPrimary,
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(NavUtils.LoginRoutes.Register.route) {
+                                    popUpTo(NavUtils.LoginRoutes.Register.route) {
+                                        inclusive = true
+                                    }
                                 }
                             }
-                        }
-                        .padding(start = 5.dp))
+                            .padding(start = 5.dp))
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun UserForm(
