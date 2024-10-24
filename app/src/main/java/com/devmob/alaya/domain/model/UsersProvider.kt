@@ -10,7 +10,8 @@ data class User (
     val email: String,
     val image: Int = R.drawable.logounologin,
     val hour: String = "No tiene sesiones",
-    val role: UserRole
+    val role: UserRole,
+    val containmentNetwork: List<Contact>? = null
 ) : Serializable {
     constructor() : this("", "", "", 0, "", UserRole.PROFESSIONAL)
 }

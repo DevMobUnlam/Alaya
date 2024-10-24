@@ -30,18 +30,28 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
+import com.devmob.alaya.components.getInitials
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun ContactScreen(
@@ -51,9 +61,14 @@ fun ContactScreen(
 ) {
     val contacts by viewModel.contacts.observeAsState(emptyList())
     val contact = contacts.find { it.contactId == contactId }
+    val email = FirebaseClient().auth.currentUser?.email
 
     var showDeleteModal by remember { mutableStateOf(false) }
     var showEditModal by remember { mutableStateOf(false) }
+
+    LaunchedEffect(contactId) {
+        viewModel.listenToContacts()
+    }
 
     contact?.let { currentContact ->
         ConstraintLayout(
@@ -118,7 +133,9 @@ fun ContactScreen(
             primaryButtonText = "Sí",
             secondaryButtonText = "No",
             onConfirm = {
-                viewModel.deleteContact(currentContact)
+                if (email != null) {
+                    viewModel.deleteContact(email, currentContact)
+                }
                 showDeleteModal = false
                 navController.popBackStack()
             },
@@ -132,7 +149,9 @@ fun ContactScreen(
                 contact = currentContact,
                 onDismiss = { showEditModal = false },
                 onSave = { updatedContact ->
-                    viewModel.editContact(updatedContact)
+                    if (email != null) {
+                        viewModel.editContact(email, updatedContact)
+                    }
                     showEditModal = false
                 }
             )
@@ -151,7 +170,7 @@ fun EditContactModal(
 ) {
     var name by remember { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.numberPhone) }
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
+    var photoUri by rememberSaveable { mutableStateOf(contact.photo?.let { Uri.parse(it) }) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -159,20 +178,44 @@ fun EditContactModal(
         photoUri = uri
     }
 
+    val isModified = remember(name, phone, photoUri) {
+        name != contact.name || phone != contact.numberPhone || photoUri?.toString() != contact.photo
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Editar Contacto") },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                photoUri?.let {
-                    Image(
-                        painter = rememberImagePainter(it),
-                        contentDescription = "Imagen de contacto",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .clickable { galleryLauncher.launch("image/*") },
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .clickable { galleryLauncher.launch("image/*") }
+                ) {
+                    if (photoUri != null) {
+                        Image(
+                            painter = rememberImagePainter(photoUri),
+                            contentDescription = "Imagen de contacto",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        val initials = getInitials(name)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(ColorPrimary),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = initials,
+                                color = ColorWhite,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -185,7 +228,8 @@ fun EditContactModal(
             TextButton(
                 onClick = {
                     onSave(Contact(contact.contactId, name, phone, photoUri?.toString() ?: contact.photo))
-                }
+                },
+                enabled = isModified
             ) { Text("Guardar") }
         },
         dismissButton = {

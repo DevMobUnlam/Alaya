@@ -25,10 +25,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.IconButton
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactCard
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
-import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -40,12 +40,15 @@ fun ContainmentNetworkScreen(
     ) {
     val contacts by viewModel.contacts.observeAsState(initial = emptyList())
     val context = LocalContext.current
+    val email = FirebaseClient().auth.currentUser?.email
 
     val contactPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickContact()
     ) { contactUri: Uri? ->
         contactUri?.let {
-            viewModel.addContactFromPhone(context, it)
+            if (email != null) {
+                viewModel.addContactFromPhone(context, email,it)
+            }
         }
     }
 
@@ -86,14 +89,15 @@ fun ContainmentNetworkScreen(
                 }
                 .padding(16.dp),
 
-            ) {
+            ) {if (contacts.isEmpty()) {
+                println("No hay contactos")
+        }
             items(contacts) { contact ->
-                val isFirstContact = contacts.indexOf(contact) == 0
                 ContactCard(
                     contact = contact,
-                    textColor = if (isFirstContact) ColorWhite else ColorText,
-                    backgroundColor = if (isFirstContact) ColorTertiary else ColorWhite,
-                    showWhatsappButton = !isFirstContact,
+                    textColor = if (contact.contactId == "4") ColorWhite else ColorText,
+                    backgroundColor = if (contact.contactId == "4") ColorTertiary else ColorWhite,
+                    showWhatsappButton = contact.contactId != "4",
                     viewModel = ContactViewModel(),
                     onClick = {
                         navController.navigate("contact_detail/${contact.contactId}")

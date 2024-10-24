@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
+import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
@@ -25,7 +26,6 @@ import com.devmob.alaya.ui.screen.HomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
@@ -56,7 +56,8 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = currentRoute(navController)
-    val containmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val contactUseCase = ContactUseCase()
+    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -81,7 +82,6 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-
 
             if (currentRoute in NavUtils.routesWithBottomBar) {
                 GetBottomBarNavigation(navController)
@@ -255,25 +255,6 @@ fun MainContent(navController: NavHostController) {
                         navController = navController
                     )
                 }
-            }
-            composable("add_contact",
-                enterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                },
-                exitTransition = {
-                    return@composable slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
-                    )
-                },
-                popEnterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                }
-            ) {
-                AddContactScreen(containmentViewModel, navController)
             }
 
             composable("feedback_screen/{feedbackType}",
