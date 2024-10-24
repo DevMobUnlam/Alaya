@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,13 +15,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun MenuPatientScreen(navController: NavController){
+fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
+    val auth = FirebaseClient().auth
+    Log.d("leandro","Usuario logeado ${auth.currentUser?.email}")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,11 +44,17 @@ fun MenuPatientScreen(navController: NavController){
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = ColorText,
-                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
-                        navController.navigate(
-                            NavUtils.LoginRoutes.Login.route
-                        )
-                    }
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.LoginRoutes.Login.route
+                            )
+                            auth.signOut()
+                            prefs.signOut()
+                            Log.d("leandro", "Deslogueado de ${auth.currentUser?.email}")
+                        }
                 )
             }
         )

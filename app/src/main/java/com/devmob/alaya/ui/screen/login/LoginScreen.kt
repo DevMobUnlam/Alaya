@@ -26,9 +26,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,7 +52,11 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
+
     val context = LocalContext.current
+    Log.d("leandro", "Log del loginScreen")
+    var checkLogin by rememberSaveable { mutableStateOf(false)}
+
 
     if (viewModel.navigateToPatientHome.value) {
         navController.navigate(NavUtils.PatientRoutes.Home.route) {
@@ -77,21 +83,43 @@ fun LoginScreen(
         viewModel.resetError()
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(30.dp)
-        )
-        {
-            Image(
-                painterResource(id = R.drawable.logounologin),
-                contentDescription = stringResource(R.string.logo),
-                modifier = Modifier.size(230.dp)
+    LaunchedEffect(!checkLogin) {
+        viewModel.checkIfUserWasLoggedIn()
+        checkLogin = true
+    }
+
+    if (viewModel.loading.value) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = ColorWhite
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = ColorPrimary
+                )
+            }
+        }
+    } else {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(30.dp)
             )
+            {
+                Image(
+                    painterResource(id = R.drawable.logounologin),
+                    contentDescription = stringResource(R.string.logo),
+                    modifier = Modifier.size(230.dp)
+                )
 
             Spacer(modifier = Modifier.height(32.dp))
             UserForm { email, password ->

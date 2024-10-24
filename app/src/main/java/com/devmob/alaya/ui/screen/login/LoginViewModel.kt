@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val getRoleUseCase: GetRoleUseCase
+    private val getRoleUseCase: GetRoleUseCase,
+    private val prefs: SharedPreferences
 ) : ViewModel() {
     private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
 
@@ -44,7 +46,10 @@ class LoginViewModel(
                 }
 
                 is AuthenticationResult.Success -> {
-                    when (getRoleUseCase(email)) {
+                    Log.d("leandro", "Singin with email fue exitoso")
+                    val role = getRoleUseCase(email)
+                    role?.let { prefs.setUserLoggedIn(email, it) }
+                    when (role) {
                         UserRole.PATIENT ->
                             _navigateToPatientHome.value = true
 
@@ -56,6 +61,33 @@ class LoginViewModel(
                 }
             }
         }
+
+
+    fun checkIfUserWasLoggedIn() {
+        _loading.value = true
+        Log.d("leandro", "viewmodel - chequeando si el user se logeó correctamente")
+        viewModelScope.launch {
+            if (prefs.isLoggedIn()) {
+                when (prefs.getRole()) {
+                    UserRole.PATIENT -> {
+                        _navigateToPatientHome.value = true
+                    }
+
+                    UserRole.PROFESSIONAL -> {
+                        _navigateToProfessionalHome.value = true
+                    }
+
+                    else -> {
+                        Log.d("leandro", "se fue al else del when porque el usuario no tiene rol")
+                        _loading.value = false
+                    }
+                }
+            } else {
+                Log.d("leandro", "el current user es null")
+                _loading.value = false
+            }
+        }
+    }
 
     fun resetError() {
         _showError.value = false

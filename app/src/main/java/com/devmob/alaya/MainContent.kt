@@ -1,15 +1,19 @@
 package com.devmob.alaya
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -52,8 +56,10 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
 fun MainContent(navController: NavHostController) {
+    val context = LocalContext.current
     val currentRoute = currentRoute(navController)
     val containmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val prefs: SharedPreferences = SharedPreferences(context)
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -184,7 +190,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase()))
+                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
@@ -356,7 +362,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuPatientScreen(navController)
+                MenuPatientScreen(navController, prefs)
             }
             composable(NavUtils.ProfessionalRoutes.MenuProfessional.route,
                 enterTransition = {
@@ -375,7 +381,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuProfessionalScreen(navController)
+                MenuProfessionalScreen(navController, prefs)
             }
             composable(NavUtils.LoginRoutes.Register.route,
                 enterTransition = {
