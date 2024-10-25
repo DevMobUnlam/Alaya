@@ -11,7 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
+import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
+import com.devmob.alaya.domain.GetUserNameUseCase
+import com.devmob.alaya.domain.GetUserSurnameUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.model.FeedbackType
@@ -45,6 +48,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewModelFactory
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -85,6 +89,9 @@ fun MainContent(navController: NavHostController) {
         }
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
+        val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
+            factory = PatientHomeScreenViewModelFactory(GetUserNameUseCase(), GetUserSurnameUseCase(), GetInvitationUseCase())
+        )
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -107,7 +114,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                PatientHomeScreen(PatientHomeScreenViewmodel(),navController)
+                PatientHomeScreen(patientHomeScreenViewmodel,navController)
             }
             composable(NavUtils.ProfessionalRoutes.Home.route,
                 enterTransition = {

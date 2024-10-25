@@ -4,9 +4,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.domain.GetInvitationUseCase
+import com.devmob.alaya.domain.GetUserNameUseCase
+import com.devmob.alaya.domain.GetUserSurnameUseCase
+import com.devmob.alaya.domain.model.InvitationStatus
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class PatientHomeScreenViewmodel : ViewModel() {
+class PatientHomeScreenViewmodel(
+    private val getUserName: GetUserNameUseCase,
+    private val getUserSurnameUseCase: GetUserSurnameUseCase,
+    private val getInvitationUseCase: GetInvitationUseCase
+) : ViewModel() {
+
+    private val emailPatient = FirebaseClient().auth.currentUser?.email
+
     var nameProfessional by mutableStateOf("")
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
@@ -19,16 +33,36 @@ class PatientHomeScreenViewmodel : ViewModel() {
     }
 
     private fun fetchPatient() {
-        namePatient = "Flor"
+        if (emailPatient.isNullOrEmpty()) return
+        viewModelScope.launch {
+            namePatient = getUserName(emailPatient) ?: ""
+        }
     }
 
-    private fun fetchProfessional() {
-        nameProfessional = "Patricia Bertero"
+    private fun fetchProfessional(professionalEmail: String) {
+        viewModelScope.launch {
+            val name = getUserName(professionalEmail)
+            val surname = getUserSurnameUseCase(professionalEmail)
+            nameProfessional = "$name $surname"
+        }
     }
 
     private fun checkProfessionalInvitation() {
-        fetchProfessional()
-        isProfessionalInvitation = true
+        if (emailPatient.isNullOrEmpty()) return
+        viewModelScope.launch {
+            getInvitationUseCase.invoke(emailPatient)?.let { invitation ->
+                when (invitation.status) {
+                    InvitationStatus.PENDING -> {
+                        isProfessionalInvitation = true
+                        fetchProfessional(invitation.professionalEmail)
+                    }
+
+                    InvitationStatus.ACCEPTED, InvitationStatus.REJECTED, InvitationStatus.NONE -> {
+                        isProfessionalInvitation = false
+                    }
+                }
+            }
+        }
     }
 
     fun dismissModal() {

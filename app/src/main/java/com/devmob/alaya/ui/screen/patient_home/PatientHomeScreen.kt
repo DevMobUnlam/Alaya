@@ -39,9 +39,9 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
     val nameProfessional = viewmodel.nameProfessional
     val namePatient = viewmodel.namePatient
     val greetingMessage = viewmodel.greetingMessage
-
-    ShowInvitation(nameProfessional, shouldShowModal, viewmodel)
-
+    
+    InvitationModal(nameProfessional, shouldShowModal, viewmodel)
+    
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -138,7 +138,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
 }
 
 @Composable
-private fun ShowInvitation(
+private fun InvitationModal(
     nameProfessional: String,
     shouldShowModal: Boolean,
     viewmodel: PatientHomeScreenViewmodel
