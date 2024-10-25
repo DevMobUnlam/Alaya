@@ -35,7 +35,7 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
 
-    val shouldShowModal = viewmodel.isProfessionalInvitation
+    val shouldShowModal = viewmodel.shouldShowInvitation
     val nameProfessional = viewmodel.nameProfessional
     val namePatient = viewmodel.namePatient
     val greetingMessage = viewmodel.greetingMessage

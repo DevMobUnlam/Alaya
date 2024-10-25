@@ -24,7 +24,7 @@ class PatientHomeScreenViewmodel(
     var nameProfessional by mutableStateOf("")
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
-    var isProfessionalInvitation by mutableStateOf(false)
+    var shouldShowInvitation by mutableStateOf(false)
 
     init {
         fetchPatient()
@@ -53,12 +53,12 @@ class PatientHomeScreenViewmodel(
             getInvitationUseCase.invoke(emailPatient)?.let { invitation ->
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
-                        isProfessionalInvitation = true
+                        shouldShowInvitation = true
                         fetchProfessional(invitation.professionalEmail)
                     }
 
                     InvitationStatus.ACCEPTED, InvitationStatus.REJECTED, InvitationStatus.NONE -> {
-                        isProfessionalInvitation = false
+                        shouldShowInvitation = false
                     }
                 }
             }
@@ -66,7 +66,7 @@ class PatientHomeScreenViewmodel(
     }
 
     fun dismissModal() {
-        isProfessionalInvitation = false
+        shouldShowInvitation = false
     }
 
     private fun updateGreetingMessage() {
