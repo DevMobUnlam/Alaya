@@ -9,6 +9,7 @@ import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserNameUseCase
 import com.devmob.alaya.domain.GetUserSurnameUseCase
+import com.devmob.alaya.domain.UpdateInvitationUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -16,7 +17,8 @@ import java.util.Calendar
 class PatientHomeScreenViewmodel(
     private val getUserName: GetUserNameUseCase,
     private val getUserSurnameUseCase: GetUserSurnameUseCase,
-    private val getInvitationUseCase: GetInvitationUseCase
+    private val getInvitationUseCase: GetInvitationUseCase,
+    private val updateInvitationUseCase: UpdateInvitationUseCase
 ) : ViewModel() {
 
     private val emailPatient = FirebaseClient().auth.currentUser?.email
@@ -65,8 +67,22 @@ class PatientHomeScreenViewmodel(
         }
     }
 
-    fun dismissModal() {
+    fun acceptInvitation() {
+        updateInvitationStatus(InvitationStatus.ACCEPTED.name)
         shouldShowInvitation = false
+    }
+
+    fun rejectInvitation() {
+        updateInvitationStatus(InvitationStatus.REJECTED.name)
+        shouldShowInvitation = false
+    }
+
+    private fun updateInvitationStatus(status: String) {
+        emailPatient?.let {
+            viewModelScope.launch {
+                updateInvitationUseCase(it, status)
+            }
+        }
     }
 
     private fun updateGreetingMessage() {

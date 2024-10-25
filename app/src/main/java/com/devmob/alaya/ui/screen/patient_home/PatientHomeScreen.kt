@@ -153,7 +153,7 @@ private fun InvitationModal(
         show = shouldShowModal,
         primaryButtonText = stringResource(R.string.accept),
         secondaryButtonText = stringResource(R.string.decline),
-        onConfirm = { viewmodel.dismissModal() },
-        onDismiss = { viewmodel.dismissModal() },
+        onConfirm = { viewmodel.acceptInvitation() },
+        onDismiss = { viewmodel.rejectInvitation() },
     )
 }
