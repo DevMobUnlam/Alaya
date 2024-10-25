@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.patient_home
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
@@ -31,7 +31,7 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
+fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()

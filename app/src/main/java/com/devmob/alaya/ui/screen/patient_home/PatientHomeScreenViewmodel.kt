@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.patient_home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
