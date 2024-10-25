@@ -41,6 +41,16 @@ class PatientHomeScreenViewmodel(
         }
     }
 
+    private fun updateGreetingMessage() {
+        val calendar = Calendar.getInstance()
+        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+        greetingMessage = when (hourOfDay) {
+            in 5..11 -> "Buenos días"
+            in 12..19 -> "Buenas tardes"
+            else -> "Buenas noches"
+        }
+    }
+
     private fun fetchProfessional(professionalEmail: String) {
         viewModelScope.launch {
             val name = getUserName(professionalEmail)
@@ -85,13 +95,7 @@ class PatientHomeScreenViewmodel(
         }
     }
 
-    private fun updateGreetingMessage() {
-        val calendar = Calendar.getInstance()
-        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
-        greetingMessage = when (hourOfDay) {
-            in 5..11 -> "Buenos días"
-            in 12..19 -> "Buenas tardes"
-            else -> "Buenas noches"
-        }
+    private fun addProfessionalToPatient(professionalEmail: String) {
+
     }
 }
