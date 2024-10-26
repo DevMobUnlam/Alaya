@@ -13,8 +13,7 @@ import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
-import com.devmob.alaya.domain.GetUserNameUseCase
-import com.devmob.alaya.domain.GetUserSurnameUseCase
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.UpdateInvitationUseCase
@@ -91,7 +90,7 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = PatientHomeScreenViewModelFactory(GetUserNameUseCase(), GetUserSurnameUseCase(), GetInvitationUseCase(), UpdateInvitationUseCase())
+            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase(), UpdateInvitationUseCase())
         )
         NavHost(
             navController = navController,

@@ -7,16 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
-import com.devmob.alaya.domain.GetUserNameUseCase
-import com.devmob.alaya.domain.GetUserSurnameUseCase
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.UpdateInvitationUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class PatientHomeScreenViewmodel(
-    private val getUserName: GetUserNameUseCase,
-    private val getUserSurnameUseCase: GetUserSurnameUseCase,
+    private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
     private val updateInvitationUseCase: UpdateInvitationUseCase
 ) : ViewModel() {
@@ -30,7 +28,7 @@ class PatientHomeScreenViewmodel(
     fun fetchPatient() {
         getEmailPatient()
         viewModelScope.launch {
-            namePatient = getUserName(emailPatient) ?: ""
+            namePatient = getUserData.getName(emailPatient) ?: ""
         }
     }
 
@@ -50,8 +48,8 @@ class PatientHomeScreenViewmodel(
 
     private fun fetchProfessional(professionalEmail: String) {
         viewModelScope.launch {
-            val name = getUserName(professionalEmail)
-            val surname = getUserSurnameUseCase(professionalEmail)
+            val name = getUserData.getName(professionalEmail)
+            val surname = getUserData.getSurname(professionalEmail)
             nameProfessional = "$name $surname"
             shouldShowInvitation = true
         }

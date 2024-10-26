@@ -2,10 +2,14 @@ package com.devmob.alaya.domain
 
 import com.devmob.alaya.data.GetUserRepositoryImpl
 
-class GetUserSurnameUseCase {
+class GetUserDataUseCase {
     private val getUserRepository = GetUserRepositoryImpl()
 
-    suspend operator fun invoke(email: String): String? {
+    suspend fun getName(email: String): String? {
+        return getUserRepository.getUser(email)?.name
+    }
+
+    suspend fun getSurname(email: String): String? {
         return getUserRepository.getUser(email)?.surname
     }
 }
