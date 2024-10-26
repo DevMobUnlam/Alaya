@@ -21,27 +21,24 @@ class PatientHomeScreenViewmodel(
     private val updateInvitationUseCase: UpdateInvitationUseCase
 ) : ViewModel() {
 
-    private val emailPatient = FirebaseClient().auth.currentUser?.email
-
     var nameProfessional by mutableStateOf("")
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
+    private var emailPatient by mutableStateOf("")
 
-    init {
-        fetchPatient()
-        updateGreetingMessage()
-        checkProfessionalInvitation()
-    }
-
-    private fun fetchPatient() {
-        if (emailPatient.isNullOrEmpty()) return
+    fun fetchPatient() {
+        getEmailPatient()
         viewModelScope.launch {
             namePatient = getUserName(emailPatient) ?: ""
         }
     }
 
-    private fun updateGreetingMessage() {
+    private fun getEmailPatient() {
+        emailPatient = FirebaseClient().auth.currentUser?.email.toString()
+    }
+
+    fun updateGreetingMessage() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         greetingMessage = when (hourOfDay) {
@@ -56,16 +53,15 @@ class PatientHomeScreenViewmodel(
             val name = getUserName(professionalEmail)
             val surname = getUserSurnameUseCase(professionalEmail)
             nameProfessional = "$name $surname"
+            shouldShowInvitation = true
         }
     }
 
-    private fun checkProfessionalInvitation() {
-        if (emailPatient.isNullOrEmpty()) return
+    fun checkProfessionalInvitation() {
         viewModelScope.launch {
             getInvitationUseCase.invoke(emailPatient)?.let { invitation ->
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
-                        shouldShowInvitation = true
                         fetchProfessional(invitation.professionalEmail)
                     }
 
@@ -88,7 +84,7 @@ class PatientHomeScreenViewmodel(
     }
 
     private fun updateInvitationStatus(status: String) {
-        emailPatient?.let {
+        emailPatient.let {
             viewModelScope.launch {
                 updateInvitationUseCase(it, status)
             }
