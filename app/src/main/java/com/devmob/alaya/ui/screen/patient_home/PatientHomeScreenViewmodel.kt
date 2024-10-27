@@ -24,8 +24,8 @@ class PatientHomeScreenViewmodel(
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
-    private var emailPatient by mutableStateOf("")
-    private var emailProfessional by mutableStateOf("")
+    var emailPatient by mutableStateOf("")
+    var emailProfessional by mutableStateOf("")
 
     fun fetchPatient() {
         getEmailPatient()
