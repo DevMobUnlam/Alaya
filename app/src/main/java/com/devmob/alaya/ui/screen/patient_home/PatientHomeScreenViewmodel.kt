@@ -24,8 +24,8 @@ class PatientHomeScreenViewmodel(
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
-    var emailPatient by mutableStateOf("")
-    var emailProfessional by mutableStateOf("")
+    private var emailPatient by mutableStateOf("")
+    private var emailProfessional by mutableStateOf("")
 
     fun fetchPatient() {
         getEmailPatient()
@@ -48,16 +48,15 @@ class PatientHomeScreenViewmodel(
         }
     }
 
-    private fun fetchProfessional(professionalEmail: String) {
-        viewModelScope.launch {
-            val name = getUserData.getName(professionalEmail)
-            val surname = getUserData.getSurname(professionalEmail)
-            nameProfessional = "$name $surname"
-            shouldShowInvitation = true
-        }
+    private suspend fun fetchProfessional(professionalEmail: String) {
+        val name = getUserData.getName(professionalEmail)
+        val surname = getUserData.getSurname(professionalEmail)
+        nameProfessional = "$name $surname"
+        shouldShowInvitation = true
     }
 
     fun checkProfessionalInvitation() {
+        getEmailPatient()
         viewModelScope.launch {
             getInvitationUseCase.getInvitationProfessional(emailPatient)?.let { invitation ->
                 when (invitation.status) {
