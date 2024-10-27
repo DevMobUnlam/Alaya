@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -55,12 +56,23 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
 
+    val params = Bundle().apply {
+        putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 0.75f)
+    }
+
     LaunchedEffect(currentStep){
+
+        println("LaunchedEffect lanzado")
+
+        if(textToSpeech.isSpeaking){
+            textToSpeech.stop()
+        }
+
         if (isTtsInitialized) {
             textToSpeech.speak(
                 currentStep.title,
                 TextToSpeech.QUEUE_ADD,
-                null,
+               params,
                 null
             )
             textToSpeech.speak(

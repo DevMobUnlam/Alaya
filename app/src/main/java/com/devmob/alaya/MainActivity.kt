@@ -49,4 +49,18 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
         }
         super.onDestroy()
     }
+
+    override fun onPause(){
+        if(::textToSpeech.isInitialized){
+            textToSpeech.stop()
+        }
+        super.onPause()
+    }
+
+    override fun onStop(){
+        if(::textToSpeech.isInitialized){
+            textToSpeech.stop()
+        }
+        super.onStop()
+    }
 }
