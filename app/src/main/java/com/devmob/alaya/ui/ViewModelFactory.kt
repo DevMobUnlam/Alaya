@@ -1,4 +1,4 @@
-package com.devmob.alaya
+package com.devmob.alaya.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
