@@ -1,18 +1,26 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.util.toDB
+import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 
 class CrisisRegistrationViewModel : ViewModel() {
+    private val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase()
 
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
@@ -204,10 +212,11 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateStartDate(date: Date) {
+        val newDate =
+            updateDate(date, _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startingDate = date
+            startTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -215,11 +224,12 @@ class CrisisRegistrationViewModel : ViewModel() {
         )
     }
 
-    fun updateStartTime(time: Date) {
+    fun updateStartTime(hour: Date) {
+        val newDate =
+            updateHour(hour, _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startTIme = time
+            startTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -228,8 +238,11 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateEndDate(date: Date) {
+        val newDate =
+            updateDate(date, _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime)
+
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endDate = date
+            endTime = newDate
         )
 
         _screenState.value = _screenState.value?.copy(
@@ -239,9 +252,12 @@ class CrisisRegistrationViewModel : ViewModel() {
         )
     }
 
-    fun updateEndTime(time: Date) {
+    fun updateEndTime(hour: Date) {
+        val newDate =
+            updateHour(hour, _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime)
+
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endTime = time
+            endTime = newDate
         )
 
         _screenState.value = _screenState.value?.copy(
@@ -249,6 +265,31 @@ class CrisisRegistrationViewModel : ViewModel() {
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+    }
+
+    private fun updateDate(date: Date, oldTime: Date?): Date {
+        val dateCalendar = Calendar.getInstance()
+        dateCalendar.time = date
+        val newDate = Calendar.getInstance()
+        oldTime?.let {
+            newDate.time = it
+        }
+        newDate.set(Calendar.DAY_OF_MONTH, dateCalendar.get(Calendar.DAY_OF_MONTH))
+        newDate.set(Calendar.MONTH, dateCalendar.get(Calendar.MONTH))
+        newDate.set(Calendar.YEAR, dateCalendar.get(Calendar.YEAR))
+        return newDate.time
+    }
+
+    private fun updateHour(date: Date, oldTime: Date?): Date {
+        val dateCalendar = Calendar.getInstance()
+        dateCalendar.time = date
+        val newDate = Calendar.getInstance()
+        oldTime?.let {
+            newDate.time = it
+        }
+        newDate.set(Calendar.HOUR_OF_DAY, dateCalendar.get(Calendar.HOUR_OF_DAY))
+        newDate.set(Calendar.MINUTE, dateCalendar.get(Calendar.MINUTE))
+        return newDate.time
     }
 
     fun hideBackButton() {
