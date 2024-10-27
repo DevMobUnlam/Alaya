@@ -14,17 +14,29 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.util.Date
+import java.util.Calendar
+
+private const val YEAR_MOCK = 2020
+
+private const val MONTH_MOCK = 12
+
+private const val DAY_MOCK = 15
+
+private const val HOUR_MOCK = 13
+
+private const val MINUTE_MOCK = 59
 
 @RunWith(RobolectricTestRunner::class)
 class CrisisRegistrationViewModelTest {
-
+    private lateinit var calendar: Calendar
     private lateinit var viewModel: CrisisRegistrationViewModel
-
+    private val dateMock: Calendar = Calendar.getInstance()
     @Before
     fun setUp() {
+        dateMock.set(YEAR_MOCK, MONTH_MOCK, DAY_MOCK, HOUR_MOCK, MINUTE_MOCK)
+        calendar = mockk<Calendar>()
         MockKAnnotations.init(this, relaxed = true)
-        viewModel = CrisisRegistrationViewModel()
+        viewModel = CrisisRegistrationViewModel(mockk())
     }
 
     @Test
@@ -195,41 +207,68 @@ class CrisisRegistrationViewModelTest {
 
     @Test
     fun `when updateStartDate is called, then update starting date`() {
-        val date = mockk<Date>()
-        viewModel.updateStartDate(date)
+        viewModel.updateStartDate(dateMock.toDate())
+
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
         assertEquals(
-            date,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startingDate
+            dateMock.get(Calendar.YEAR),
+            actual?.toCalendar()?.get(Calendar.YEAR)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MONTH),
+            actual?.toCalendar()?.get(Calendar.MONTH)
+        )
+        assertEquals(
+            dateMock.get(Calendar.DAY_OF_MONTH),
+            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
         )
     }
 
     @Test
     fun `when updateStartTime is called, then update start time`() {
-        val time = mockk<Date>()
-        viewModel.updateStartTime(time)
+
+        viewModel.updateStartTime(dateMock.toDate())
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
         assertEquals(
-            time,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTIme
+            dateMock.get(Calendar.HOUR_OF_DAY),
+            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MINUTE),
+            actual?.toCalendar()?.get(Calendar.MINUTE)
         )
     }
 
     @Test
     fun `when updateEndDate is called, then update end date`() {
-        val date = mockk<Date>()
-        viewModel.updateEndDate(date)
+        viewModel.updateEndDate(dateMock.toDate())
+
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
         assertEquals(
-            date,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endDate
+            dateMock.get(Calendar.YEAR),
+            actual?.toCalendar()?.get(Calendar.YEAR)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MONTH),
+            actual?.toCalendar()?.get(Calendar.MONTH)
+        )
+        assertEquals(
+            dateMock.get(Calendar.DAY_OF_MONTH),
+            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
         )
     }
 
     @Test
     fun `when updateEndTime is called, then update end time`() {
-        val time = mockk<Date>()
-        viewModel.updateEndTime(time)
+        viewModel.updateEndTime(dateMock.toDate())
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
         assertEquals(
-            time,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+            dateMock.get(Calendar.HOUR_OF_DAY),
+            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MINUTE),
+            actual?.toCalendar()?.get(Calendar.MINUTE)
         )
     }
 
@@ -240,3 +279,4 @@ class CrisisRegistrationViewModelTest {
         assertTrue(viewModel.shouldGoToSummary)
     }
 }
+
