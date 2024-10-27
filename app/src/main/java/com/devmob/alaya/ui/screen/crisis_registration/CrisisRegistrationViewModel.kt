@@ -15,6 +15,8 @@ import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.utils.toCalendar
+import com.devmob.alaya.utils.toDate
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -320,16 +322,4 @@ class CrisisRegistrationViewModel(
             }
         }
     }
-}
-
-fun Date?.toCalendar(): Calendar {
-    val result = Calendar.getInstance()
-    this?.let {
-        result.time = this
-    }
-    return result
-}
-
-fun Calendar?.toDate(): Date {
-    return this?.time ?: Date()
 }
