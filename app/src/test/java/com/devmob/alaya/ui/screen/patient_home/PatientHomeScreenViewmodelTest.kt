@@ -90,6 +90,7 @@ class PatientHomeScreenViewmodelTest {
 
     @Test
     fun `given invitation status is ACCEPTED, when checkProfessionalInvitation, then shouldShowInvitation is false`() {
+        // GIVEN
         val emailPatient = "emailPatient"
         every { firebaseClient.auth.currentUser?.email } returns emailPatient
         coEvery { getInvitationUseCase.getInvitationProfessional(emailPatient) } returns Invitation(
@@ -97,14 +98,17 @@ class PatientHomeScreenViewmodelTest {
             InvitationStatus.ACCEPTED
         )
 
+        // WHEN
         viewModel.checkProfessionalInvitation()
 
+        // THEN
         assertFalse(viewModel.shouldShowInvitation)
         coVerify(exactly = 0) { getUserData.getName(any()) }
     }
 
     @Test
     fun `given invitation status is REJECTED, when checkProfessionalInvitation, then shouldShowInvitation is false`() {
+        // GIVEN
         val emailPatient = "emailPatient"
         every { firebaseClient.auth.currentUser?.email } returns emailPatient
         coEvery { getInvitationUseCase.getInvitationProfessional(emailPatient) } returns Invitation(
@@ -112,14 +116,17 @@ class PatientHomeScreenViewmodelTest {
             InvitationStatus.REJECTED
         )
 
+        // WHEN
         viewModel.checkProfessionalInvitation()
 
+        // THEN
         assertFalse(viewModel.shouldShowInvitation)
         coVerify(exactly = 0) { getUserData.getName(any()) }
     }
 
     @Test
     fun `given invitation status is NONE, when checkProfessionalInvitation, then shouldShowInvitation is false`() {
+        // GIVEN
         val emailPatient = "emailPatient"
         every { firebaseClient.auth.currentUser?.email } returns emailPatient
         coEvery { getInvitationUseCase.getInvitationProfessional(emailPatient) } returns Invitation(
@@ -127,9 +134,35 @@ class PatientHomeScreenViewmodelTest {
             InvitationStatus.NONE
         )
 
+        // WHEN
         viewModel.checkProfessionalInvitation()
 
+        // THEN
         assertFalse(viewModel.shouldShowInvitation)
         coVerify(exactly = 0) { getUserData.getName(any()) }
+    }
+
+    @Test
+    fun `when acceptInvitation, then verify updateInvitationStatus`() {
+        // WHEN
+        viewModel.acceptInvitation()
+
+        // THEN
+        coVerify { getInvitationUseCase.updateInvitation(any(), any(), InvitationStatus.ACCEPTED) }
+        coVerify { getInvitationUseCase.addProfessional(any(), any()) }
+        coVerify { getInvitationUseCase.addPatient(any(), any()) }
+        assertFalse(viewModel.shouldShowInvitation)
+    }
+
+    @Test
+    fun `when rejectInvitation, then verify updateInvitationStatus`() {
+        // WHEN
+        viewModel.rejectInvitation()
+
+        // THEN
+        coVerify { getInvitationUseCase.updateInvitation(any(), any(), InvitationStatus.REJECTED) }
+        coVerify (exactly = 0) { getInvitationUseCase.addProfessional(any(), any()) }
+        coVerify (exactly = 0) { getInvitationUseCase.addPatient(any(), any()) }
+        assertFalse(viewModel.shouldShowInvitation)
     }
 }
