@@ -48,7 +48,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewModelFactory
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -90,7 +89,13 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase(), FirebaseClient())
+            factory = ViewModelFactory {
+                PatientHomeScreenViewmodel(
+                    GetUserDataUseCase(),
+                    GetInvitationUseCase(),
+                    FirebaseClient()
+                )
+            }
         )
         NavHost(
             navController = navController,
