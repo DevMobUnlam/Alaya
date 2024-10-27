@@ -17,6 +17,7 @@ import java.util.Calendar
 class PatientHomeScreenViewmodel(
     private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
+    private val firebaseClient: FirebaseClient = FirebaseClient()
 ) : ViewModel() {
 
     var nameProfessional by mutableStateOf("")
@@ -34,7 +35,7 @@ class PatientHomeScreenViewmodel(
     }
 
     private fun getEmailPatient() {
-        emailPatient = FirebaseClient().auth.currentUser?.email.toString()
+        emailPatient = firebaseClient.auth.currentUser?.email.toString()
     }
 
     fun updateGreetingMessage() {

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
@@ -89,7 +90,7 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase())
+            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase(), FirebaseClient())
         )
         NavHost(
             navController = navController,
