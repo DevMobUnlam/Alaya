@@ -1,12 +1,17 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.GetInvitationProfessionalRepositoryImpl
+import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.model.Invitation
+import com.devmob.alaya.domain.model.InvitationStatus
 
 class GetInvitationUseCase {
-    private val getInvitationProfessionalRepository = GetInvitationProfessionalRepositoryImpl()
+    private val getUserUseCase = GetUserRepositoryImpl()
 
-    suspend operator fun invoke(email: String): Invitation? {
-        return getInvitationProfessionalRepository.getInvitationProfessional(email)
+    suspend fun getInvitationProfessional(email: String): Invitation? {
+        return getUserUseCase.getUser(email)?.invitation
+    }
+
+    suspend fun updateInvitation(email: String, fieldName: String, status: InvitationStatus) {
+        getUserUseCase.updateUserField(email, fieldName, status.name)
     }
 }

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
-import com.devmob.alaya.domain.UpdateInvitationUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -16,7 +15,6 @@ import java.util.Calendar
 class PatientHomeScreenViewmodel(
     private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
-    private val updateInvitationUseCase: UpdateInvitationUseCase
 ) : ViewModel() {
 
     var nameProfessional by mutableStateOf("")
@@ -57,7 +55,7 @@ class PatientHomeScreenViewmodel(
 
     fun checkProfessionalInvitation() {
         viewModelScope.launch {
-            getInvitationUseCase.invoke(emailPatient)?.let { invitation ->
+            getInvitationUseCase.getInvitationProfessional(emailPatient)?.let { invitation ->
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
                         fetchProfessional(invitation.professionalEmail)
@@ -72,19 +70,19 @@ class PatientHomeScreenViewmodel(
     }
 
     fun acceptInvitation() {
-        updateInvitationStatus(InvitationStatus.ACCEPTED.name)
+        updateInvitationStatus(InvitationStatus.ACCEPTED)
         shouldShowInvitation = false
     }
 
     fun rejectInvitation() {
-        updateInvitationStatus(InvitationStatus.REJECTED.name)
+        updateInvitationStatus(InvitationStatus.REJECTED)
         shouldShowInvitation = false
     }
 
-    private fun updateInvitationStatus(status: String) {
+    private fun updateInvitationStatus(status: InvitationStatus) {
         emailPatient.let {
             viewModelScope.launch {
-                updateInvitationUseCase(it, status)
+                getInvitationUseCase.updateInvitation(it, "invitation.status", status)
             }
         }
     }

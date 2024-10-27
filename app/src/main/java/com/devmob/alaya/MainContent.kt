@@ -16,7 +16,6 @@ import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
-import com.devmob.alaya.domain.UpdateInvitationUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -90,7 +89,7 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase(), UpdateInvitationUseCase())
+            factory = PatientHomeScreenViewModelFactory(GetUserDataUseCase(), GetInvitationUseCase())
         )
         NavHost(
             navController = navController,
