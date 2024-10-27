@@ -28,13 +28,12 @@ private const val MINUTE_MOCK = 59
 
 @RunWith(RobolectricTestRunner::class)
 class CrisisRegistrationViewModelTest {
-    private lateinit var calendar: Calendar
     private lateinit var viewModel: CrisisRegistrationViewModel
     private val dateMock: Calendar = Calendar.getInstance()
+
     @Before
     fun setUp() {
         dateMock.set(YEAR_MOCK, MONTH_MOCK, DAY_MOCK, HOUR_MOCK, MINUTE_MOCK)
-        calendar = mockk<Calendar>()
         MockKAnnotations.init(this, relaxed = true)
         viewModel = CrisisRegistrationViewModel(mockk())
     }
