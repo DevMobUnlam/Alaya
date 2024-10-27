@@ -14,6 +14,7 @@ import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -64,6 +65,8 @@ fun MainContent(navController: NavHostController) {
         ProfessionalRoutes.TreatmentSummary.route
 
     )
+    val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }//.create(CrisisRegistrationViewModel::class.java)
+    val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
 
     Scaffold(
         topBar = {
@@ -84,7 +87,6 @@ fun MainContent(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
-        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -419,7 +421,7 @@ fun MainContent(navController: NavHostController) {
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }}, viewModel = sharedViewModel, navController = navController)
+                    }}, viewModel = crisisRegistrationViewModel, navController = navController)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -429,7 +431,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController, viewModel = sharedViewModel)
+                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
         }
     }

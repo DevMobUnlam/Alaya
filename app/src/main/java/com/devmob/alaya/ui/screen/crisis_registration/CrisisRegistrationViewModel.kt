@@ -19,8 +19,9 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-class CrisisRegistrationViewModel : ViewModel() {
-    private val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase()
+class CrisisRegistrationViewModel(
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase
+) : ViewModel() {
 
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
@@ -212,8 +213,8 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateStartDate(date: Date) {
-        val newDate =
-            updateDate(date, _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime)
+        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
+        val newDate = updateDate(date, oldDate)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             startTime = newDate
         )
@@ -222,11 +223,12 @@ class CrisisRegistrationViewModel : ViewModel() {
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+
     }
 
     fun updateStartTime(hour: Date) {
-        val newDate =
-            updateHour(hour, _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime)
+        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
+        val newDate = updateHour(hour, oldDate)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             startTime = newDate
         )
@@ -238,13 +240,11 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateEndDate(date: Date) {
-        val newDate =
-            updateDate(date, _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime)
-
+        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+        val newDate = updateDate(date, oldTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             endTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -253,13 +253,11 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateEndTime(hour: Date) {
-        val newDate =
-            updateHour(hour, _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime)
-
+        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+        val newDate = updateHour(hour, oldTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
             endTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -267,29 +265,21 @@ class CrisisRegistrationViewModel : ViewModel() {
         )
     }
 
-    private fun updateDate(date: Date, oldTime: Date?): Date {
-        val dateCalendar = Calendar.getInstance()
-        dateCalendar.time = date
-        val newDate = Calendar.getInstance()
-        oldTime?.let {
-            newDate.time = it
-        }
-        newDate.set(Calendar.DAY_OF_MONTH, dateCalendar.get(Calendar.DAY_OF_MONTH))
-        newDate.set(Calendar.MONTH, dateCalendar.get(Calendar.MONTH))
-        newDate.set(Calendar.YEAR, dateCalendar.get(Calendar.YEAR))
-        return newDate.time
+    private fun updateDate(newDate: Date, oldTime: Date?): Date {
+        val newDateCalendar = newDate.toCalendar()
+        val oldTimeCalendar = oldTime.toCalendar()
+        oldTimeCalendar.set(Calendar.DAY_OF_MONTH, newDateCalendar.get(Calendar.DAY_OF_MONTH))
+        oldTimeCalendar.set(Calendar.MONTH, newDateCalendar.get(Calendar.MONTH))
+        oldTimeCalendar.set(Calendar.YEAR, newDateCalendar.get(Calendar.YEAR))
+        return oldTimeCalendar.toDate()
     }
 
-    private fun updateHour(date: Date, oldTime: Date?): Date {
-        val dateCalendar = Calendar.getInstance()
-        dateCalendar.time = date
-        val newDate = Calendar.getInstance()
-        oldTime?.let {
-            newDate.time = it
-        }
-        newDate.set(Calendar.HOUR_OF_DAY, dateCalendar.get(Calendar.HOUR_OF_DAY))
-        newDate.set(Calendar.MINUTE, dateCalendar.get(Calendar.MINUTE))
-        return newDate.time
+    private fun updateHour(newDate: Date, oldTime: Date?): Date {
+        val newDateCalendar = newDate.toCalendar()
+        val oldTimeCalendar = oldTime.toCalendar()
+        oldTimeCalendar.set(Calendar.HOUR_OF_DAY, newDateCalendar.get(Calendar.HOUR_OF_DAY))
+        oldTimeCalendar.set(Calendar.MINUTE, newDateCalendar.get(Calendar.MINUTE))
+        return oldTimeCalendar.toDate()
     }
 
     fun hideBackButton() {
@@ -330,4 +320,16 @@ class CrisisRegistrationViewModel : ViewModel() {
             }
         }
     }
+}
+
+fun Date?.toCalendar(): Calendar {
+    val result = Calendar.getInstance()
+    this?.let {
+        result.time = this
+    }
+    return result
+}
+
+fun Calendar?.toDate(): Date {
+    return this?.time ?: Date()
 }
