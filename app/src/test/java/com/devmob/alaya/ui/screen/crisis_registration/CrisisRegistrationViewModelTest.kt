@@ -1,12 +1,29 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
+import com.devmob.alaya.domain.model.CrisisDetails
+import com.devmob.alaya.domain.model.CrisisDetailsDB
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.utils.toCalendar
+import com.devmob.alaya.utils.toDate
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -17,25 +34,26 @@ import org.robolectric.RobolectricTestRunner
 import java.util.Calendar
 
 private const val YEAR_MOCK = 2020
-
 private const val MONTH_MOCK = 12
-
 private const val DAY_MOCK = 15
-
 private const val HOUR_MOCK = 13
-
 private const val MINUTE_MOCK = 59
 
 @RunWith(RobolectricTestRunner::class)
 class CrisisRegistrationViewModelTest {
     private lateinit var viewModel: CrisisRegistrationViewModel
+
+    @RelaxedMockK
+    private lateinit var saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase
     private val dateMock: Calendar = Calendar.getInstance()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         dateMock.set(YEAR_MOCK, MONTH_MOCK, DAY_MOCK, HOUR_MOCK, MINUTE_MOCK)
         MockKAnnotations.init(this, relaxed = true)
-        viewModel = CrisisRegistrationViewModel(mockk())
+        viewModel = CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
+        Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
     @Test
@@ -276,6 +294,19 @@ class CrisisRegistrationViewModelTest {
         viewModel.hideBackButton()
         assertFalse(viewModel.shouldGoToBack)
         assertTrue(viewModel.shouldGoToSummary)
+    }
+
+    @Test
+    fun `when saveRegister is called, then call SaveCrisisRegistrationUseCase`() = runBlocking {
+
+        mockkStatic("com.devmob.alaya.domain.model.util.MappersToDBKt")
+        val expected = mockk<CrisisDetailsDB>()
+        every { any<CrisisDetails>().toDB() } returns expected
+        coEvery { saveCrisisRegistrationUseCase(expected) } returns FirebaseResult.Success
+
+        viewModel.saveRegister()
+
+        coVerify { saveCrisisRegistrationUseCase(expected) }
     }
 }
 

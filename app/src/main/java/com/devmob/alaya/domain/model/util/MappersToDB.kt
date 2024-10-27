@@ -11,7 +11,7 @@ internal fun CrisisDetails.toDB(): CrisisDetailsDB {
     return CrisisDetailsDB(
         start = this.crisisTimeDetails.startTime,
         end = this.crisisTimeDetails.endTime,
-        place = this.placeList.first().name,
+        place = this.placeList.firstOrNull()?.name,
         bodySensations = this.bodySensationList.map { it.toDB() },
         tools = this.toolList.map { it.name },
         emotions = this.emotionList.map { it.toDB() },
