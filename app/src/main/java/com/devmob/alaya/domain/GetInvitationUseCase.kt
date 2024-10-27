@@ -3,6 +3,7 @@ package com.devmob.alaya.domain
 import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.model.Invitation
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.Professional
 
 class GetInvitationUseCase {
@@ -16,7 +17,11 @@ class GetInvitationUseCase {
         getUserUseCase.updateUserField(email, fieldName, status.name)
     }
 
-    suspend fun addProfessional(userId: String, professional: Professional){
+    suspend fun addProfessional(userId: String, professional: Professional) {
         getUserUseCase.addNewField(userId, "professional", professional)
+    }
+
+    suspend fun addPatient(userId: String, patient: Patient) {
+        getUserUseCase.addNewFieldToList(userId, "patients", patient)
     }
 }

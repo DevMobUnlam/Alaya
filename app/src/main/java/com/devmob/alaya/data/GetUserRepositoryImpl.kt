@@ -22,4 +22,12 @@ class GetUserRepositoryImpl : GetUserRepository {
         db.collection("users").document(userId)
             .set(mapOf(fieldName to newField), SetOptions.merge()).await()
     }
+
+    override suspend fun addNewFieldToList(userId: String, fieldName: String, newField: Any) {
+        val document = db.collection("users").document(userId).get().await()
+        val currentList = document.get(fieldName) as? List<Any> ?: emptyList()
+        val updatedList = currentList + newField
+        db.collection("users").document(userId)
+            .update(fieldName, updatedList).await()
+    }
 }

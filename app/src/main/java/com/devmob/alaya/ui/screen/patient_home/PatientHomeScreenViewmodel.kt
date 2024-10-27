@@ -9,6 +9,7 @@ import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.Professional
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -75,6 +76,7 @@ class PatientHomeScreenViewmodel(
     fun acceptInvitation() {
         updateInvitationStatus(InvitationStatus.ACCEPTED)
         addProfessionalToPatient()
+        addPatientToProfessional()
         shouldShowInvitation = false
     }
 
@@ -101,6 +103,19 @@ class PatientHomeScreenViewmodel(
                 professionalData?.phone ?: ""
             )
             getInvitationUseCase.addProfessional(emailPatient, professional)
+        }
+    }
+
+    private fun addPatientToProfessional() {
+        viewModelScope.launch {
+            val patientData = getUserData.getUser(emailPatient)
+            val patient = Patient(
+                emailPatient,
+                patientData?.name ?: "",
+                patientData?.surname ?: "",
+                patientData?.phone ?: ""
+            )
+            getInvitationUseCase.addPatient(emailProfessional, patient)
         }
     }
 }

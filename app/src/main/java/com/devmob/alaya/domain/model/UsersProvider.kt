@@ -13,7 +13,8 @@ data class User (
     val hour: String = "No tiene sesiones",
     val role: UserRole,
     val invitation: Invitation? = null,
-    val professional: Professional? = null
+    val professional: Professional? = null,
+    val listPatient: List<Patient>? = null
 ) : Serializable {
     constructor() : this("", "", "", "", 0, "", UserRole.PROFESSIONAL)
 }
