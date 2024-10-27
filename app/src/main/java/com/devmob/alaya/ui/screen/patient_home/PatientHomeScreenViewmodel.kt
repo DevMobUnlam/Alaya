@@ -109,6 +109,7 @@ class PatientHomeScreenViewmodel(
 
     private fun addPatientToProfessional() {
         viewModelScope.launch {
+            if (isPatientExist()) return@launch
             val patientData = getUserData.getUser(emailPatient)
             val patient = Patient(
                 emailPatient,
@@ -118,5 +119,14 @@ class PatientHomeScreenViewmodel(
             )
             getInvitationUseCase.addPatient(emailProfessional, patient)
         }
+    }
+
+    private suspend fun isPatientExist(): Boolean {
+        val currentPatients = getCurrentPatients()
+        return currentPatients.any { it.email == emailPatient }
+    }
+
+    private suspend fun getCurrentPatients(): List<Patient> {
+        return getUserData.getUser(emailProfessional)?.patients ?: emptyList()
     }
 }
