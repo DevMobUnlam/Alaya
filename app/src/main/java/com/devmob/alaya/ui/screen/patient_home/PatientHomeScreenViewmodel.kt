@@ -9,6 +9,7 @@ import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.domain.model.Professional
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -22,6 +23,7 @@ class PatientHomeScreenViewmodel(
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
     private var emailPatient by mutableStateOf("")
+    private var emailProfessional by mutableStateOf("")
 
     fun fetchPatient() {
         getEmailPatient()
@@ -59,6 +61,7 @@ class PatientHomeScreenViewmodel(
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
                         fetchProfessional(invitation.professionalEmail)
+                        emailProfessional = invitation.professionalEmail
                     }
 
                     InvitationStatus.ACCEPTED, InvitationStatus.REJECTED, InvitationStatus.NONE -> {
@@ -71,6 +74,7 @@ class PatientHomeScreenViewmodel(
 
     fun acceptInvitation() {
         updateInvitationStatus(InvitationStatus.ACCEPTED)
+        addProfessionalToPatient()
         shouldShowInvitation = false
     }
 
@@ -87,7 +91,16 @@ class PatientHomeScreenViewmodel(
         }
     }
 
-    private fun addProfessionalToPatient(professionalEmail: String) {
-
+    private fun addProfessionalToPatient() {
+        viewModelScope.launch {
+            val professionalData = getUserData.getUser(emailProfessional)
+            val professional = Professional(
+                emailProfessional,
+                professionalData?.name ?: "",
+                professionalData?.surname ?: "",
+                professionalData?.phone ?: ""
+            )
+            getInvitationUseCase.addProfessional(emailPatient, professional)
+        }
     }
 }
