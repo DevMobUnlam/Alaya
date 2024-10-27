@@ -354,6 +354,7 @@ fun CrisisRegistrationSummaryScreen(
                 secondaryButtonText = "No",
                 onDismiss = { showModalConfirm = false },
                 onConfirm = {
+                    viewModel.saveRegister()
                     showModalConfirm = false
                     viewModel.cleanState()
                     navController.navigate(NavUtils.PatientRoutes.Home.route)

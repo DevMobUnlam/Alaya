@@ -312,4 +312,22 @@ class CrisisRegistrationViewModel : ViewModel() {
     private fun loadEmotions() {
         _emotions.value = GridElementsRepository.returnAvailableEmotions()
     }
+
+    fun saveRegister() {
+        viewModelScope.launch {
+            val crisis = _screenState.value?.crisisDetails?.toDB()
+            val response = crisis?.let { saveCrisisRegistrationUseCase(it) }
+            when (response) {
+                is FirebaseResult.Success -> {
+                    Log.d("CrisisRegistrationViewModel", "saveRegister: Success")
+                }
+
+                is FirebaseResult.Error -> {
+                    Log.d("CrisisRegistrationViewModel", "saveRegister: Error")
+                }
+
+                null -> Log.d("CrisisRegistrationViewModel", "saveRegister: null ")
+            }
+        }
+    }
 }
