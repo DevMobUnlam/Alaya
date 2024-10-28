@@ -47,8 +47,8 @@ import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
-import com.devmob.alaya.components.getInitials
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.ui.components.getInitials
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorWhite
