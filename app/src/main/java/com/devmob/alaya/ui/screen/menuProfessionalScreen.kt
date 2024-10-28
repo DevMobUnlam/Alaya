@@ -31,6 +31,26 @@ fun MenuProfessionalScreen(navController: NavController){
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+            ,
+            enabled = true,
+            content = {
+                Text(
+                    text = "Agregar paciente",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = ColorText,
+                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
+                        navController.navigate(
+                            NavUtils.LoginRoutes.Login.route
+                        )
+                    }
+                )
+            }
+        )
+        CardContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
                 ,
             enabled = true,
             content = {

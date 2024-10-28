@@ -6,7 +6,6 @@ import com.devmob.alaya.domain.ContactRepository
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
 class ContactRepositoryImpl() : ContactRepository {
