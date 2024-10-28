@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.login
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -7,7 +7,6 @@ import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.UserRole
-import com.devmob.alaya.ui.screen.login.LoginViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
