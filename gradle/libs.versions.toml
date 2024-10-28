@@ -1,15 +1,19 @@
 [versions]
 agp = "8.2.0"
+coilCompose = "2.1.0"
+firebaseBom = "33.3.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
+kotlinReflect = "1.9.10"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 iconExtended = "1.7.0"
 constraintLayoutVersion = "1.0.1"
+material = "1.9.0"
 runtimeLivedata = "1.7.3"
 mockkVersion = "1.13.12"
 firebaseAuthKtx = "23.0.0"
@@ -18,16 +22,18 @@ core-testing = "2.1.0"
 mockito = "4.0.0"
 navVersion = "2.8.0"
 appcompat = "1.7.0"
-material = "1.12.0"
 lottieVersion = "6.0.0"
 constraintlayout = "2.1.4"
 navigationRuntimeKtx = "2.8.2"
 robolectricVersion = "4.13"
-
+coroutineTest = "1.6.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended= {group= "androidx.compose.material" , name = "material-icons-extended", version.ref= "iconExtended"}
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -46,17 +52,17 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-constraint = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintLayoutVersion"}
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinReflect" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockk = {group = "io.mockk", name = "mockk", version.ref = "mockkVersion"}
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion" }
 android-compose-lottie ={group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion"}
-
+coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

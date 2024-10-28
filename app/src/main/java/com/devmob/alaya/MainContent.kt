@@ -14,6 +14,7 @@ import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -64,6 +65,8 @@ fun MainContent(navController: NavHostController) {
         ProfessionalRoutes.TreatmentSummary.route
 
     )
+    val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
+    val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
 
     Scaffold(
         topBar = {
@@ -84,7 +87,6 @@ fun MainContent(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
-        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -109,7 +111,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 HomeScreen(PatientHomeScreenViewmodel(),navController)
             }
-            composable(NavUtils.ProfessionalRoutes.Home.route,
+            composable(ProfessionalRoutes.Home.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -148,7 +150,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 PatientProfileScreen(navController)
             }
-            composable(NavUtils.ProfessionalRoutes.SearchPatient.route,
+            composable(ProfessionalRoutes.SearchPatient.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -358,7 +360,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 MenuPatientScreen(navController)
             }
-            composable(NavUtils.ProfessionalRoutes.MenuProfessional.route,
+            composable(ProfessionalRoutes.MenuProfessional.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -419,7 +421,7 @@ fun MainContent(navController: NavHostController) {
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }}, viewModel = sharedViewModel, navController = navController)
+                    }}, viewModel = crisisRegistrationViewModel, navController = navController)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -429,7 +431,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController, viewModel = sharedViewModel)
+                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
         }
     }
@@ -444,7 +446,7 @@ fun GetBottomBarNavigation(navController: NavHostController) {
                 route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
                     NavUtils.PatientRoutes.MenuPatient.route
                 } else {
-                    NavUtils.ProfessionalRoutes.MenuProfessional.route
+                    ProfessionalRoutes.MenuProfessional.route
                 },
                 contentDescription = "",
                 order = 3
@@ -458,7 +460,7 @@ fun GetBottomBarNavigation(navController: NavHostController) {
                 route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
                     NavUtils.PatientRoutes.Crisis.route
                 } else {
-                    NavUtils.ProfessionalRoutes.SearchPatient.route
+                    ProfessionalRoutes.SearchPatient.route
                 },
                 contentDescription = "",
                 order = 2
@@ -468,7 +470,7 @@ fun GetBottomBarNavigation(navController: NavHostController) {
                 route = if (NavUtils.isPatientRoute(currentRoute(navController))) {
                     NavUtils.PatientRoutes.Home.route
                 } else {
-                    NavUtils.ProfessionalRoutes.Home.route
+                    ProfessionalRoutes.Home.route
                 },
                 contentDescription = "",
                 order = 1
