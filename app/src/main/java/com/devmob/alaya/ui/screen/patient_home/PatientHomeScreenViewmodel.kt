@@ -7,41 +7,38 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
-import com.devmob.alaya.domain.GetUserNameUseCase
-import com.devmob.alaya.domain.GetUserSurnameUseCase
-import com.devmob.alaya.domain.UpdateInvitationUseCase
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.domain.model.Patient
+import com.devmob.alaya.domain.model.Professional
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class PatientHomeScreenViewmodel(
-    private val getUserName: GetUserNameUseCase,
-    private val getUserSurnameUseCase: GetUserSurnameUseCase,
+    private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
-    private val updateInvitationUseCase: UpdateInvitationUseCase
+    private val firebaseClient: FirebaseClient = FirebaseClient()
 ) : ViewModel() {
-
-    private val emailPatient = FirebaseClient().auth.currentUser?.email
 
     var nameProfessional by mutableStateOf("")
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
+    private var emailPatient by mutableStateOf("")
+    private var emailProfessional by mutableStateOf("")
 
-    init {
-        fetchPatient()
-        updateGreetingMessage()
-        checkProfessionalInvitation()
-    }
-
-    private fun fetchPatient() {
-        if (emailPatient.isNullOrEmpty()) return
+    fun fetchPatient() {
+        getEmailPatient()
         viewModelScope.launch {
-            namePatient = getUserName(emailPatient) ?: ""
+            namePatient = getUserData.getName(emailPatient) ?: ""
         }
     }
 
-    private fun updateGreetingMessage() {
+    private fun getEmailPatient() {
+        emailPatient = firebaseClient.auth.currentUser?.email.toString()
+    }
+
+    fun updateGreetingMessage() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         greetingMessage = when (hourOfDay) {
@@ -51,22 +48,21 @@ class PatientHomeScreenViewmodel(
         }
     }
 
-    private fun fetchProfessional(professionalEmail: String) {
-        viewModelScope.launch {
-            val name = getUserName(professionalEmail)
-            val surname = getUserSurnameUseCase(professionalEmail)
-            nameProfessional = "$name $surname"
-        }
+    private suspend fun fetchProfessional(professionalEmail: String) {
+        val name = getUserData.getName(professionalEmail)
+        val surname = getUserData.getSurname(professionalEmail)
+        nameProfessional = "$name $surname"
+        shouldShowInvitation = true
     }
 
-    private fun checkProfessionalInvitation() {
-        if (emailPatient.isNullOrEmpty()) return
+    fun checkProfessionalInvitation() {
+        getEmailPatient()
         viewModelScope.launch {
-            getInvitationUseCase.invoke(emailPatient)?.let { invitation ->
+            getInvitationUseCase.getInvitationProfessional(emailPatient)?.let { invitation ->
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
-                        shouldShowInvitation = true
                         fetchProfessional(invitation.professionalEmail)
+                        emailProfessional = invitation.professionalEmail
                     }
 
                     InvitationStatus.ACCEPTED, InvitationStatus.REJECTED, InvitationStatus.NONE -> {
@@ -78,24 +74,58 @@ class PatientHomeScreenViewmodel(
     }
 
     fun acceptInvitation() {
-        updateInvitationStatus(InvitationStatus.ACCEPTED.name)
+        updateInvitationStatus(InvitationStatus.ACCEPTED)
+        addProfessionalToPatient()
+        addPatientToProfessional()
         shouldShowInvitation = false
     }
 
     fun rejectInvitation() {
-        updateInvitationStatus(InvitationStatus.REJECTED.name)
+        updateInvitationStatus(InvitationStatus.REJECTED)
         shouldShowInvitation = false
     }
 
-    private fun updateInvitationStatus(status: String) {
-        emailPatient?.let {
+    private fun updateInvitationStatus(status: InvitationStatus) {
+        emailPatient.let {
             viewModelScope.launch {
-                updateInvitationUseCase(it, status)
+                getInvitationUseCase.updateInvitation(it, "invitation.status", status)
             }
         }
     }
 
-    private fun addProfessionalToPatient(professionalEmail: String) {
+    private fun addProfessionalToPatient() {
+        viewModelScope.launch {
+            val professionalData = getUserData.getUser(emailProfessional)
+            val professional = Professional(
+                emailProfessional,
+                professionalData?.name ?: "",
+                professionalData?.surname ?: "",
+                professionalData?.phone ?: ""
+            )
+            getInvitationUseCase.addProfessional(emailPatient, professional)
+        }
+    }
 
+    private fun addPatientToProfessional() {
+        viewModelScope.launch {
+            if (isPatientExist()) return@launch
+            val patientData = getUserData.getUser(emailPatient)
+            val patient = Patient(
+                emailPatient,
+                patientData?.name ?: "",
+                patientData?.surname ?: "",
+                patientData?.phone ?: ""
+            )
+            getInvitationUseCase.addPatient(emailProfessional, patient)
+        }
+    }
+
+    private suspend fun isPatientExist(): Boolean {
+        val currentPatients = getCurrentPatients()
+        return currentPatients.any { it.email == emailPatient }
+    }
+
+    private suspend fun getCurrentPatients(): List<Patient> {
+        return getUserData.getUser(emailProfessional)?.patients ?: emptyList()
     }
 }

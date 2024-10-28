@@ -15,6 +15,19 @@ class GetUserRepositoryImpl : GetUserRepository {
 
     override suspend fun updateUserField(userId: String, fieldName: String, fieldValue: Any) {
         db.collection("users").document(userId)
-            .set(mapOf(fieldName to fieldValue), SetOptions.merge()).await()
+            .update(fieldName, fieldValue).await()
+    }
+
+    override suspend fun addNewField(userId: String, fieldName: String, newField: Any) {
+        db.collection("users").document(userId)
+            .set(mapOf(fieldName to newField), SetOptions.merge()).await()
+    }
+
+    override suspend fun addNewFieldToList(userId: String, fieldName: String, newField: Any) {
+        val document = db.collection("users").document(userId).get().await()
+        val currentList = document.get(fieldName) as? List<Any> ?: emptyList()
+        val updatedList = currentList + newField
+        db.collection("users").document(userId)
+            .update(fieldName, updatedList).await()
     }
 }

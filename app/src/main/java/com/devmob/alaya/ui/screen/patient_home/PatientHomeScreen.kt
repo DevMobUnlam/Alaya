@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +40,12 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
     val nameProfessional = viewmodel.nameProfessional
     val namePatient = viewmodel.namePatient
     val greetingMessage = viewmodel.greetingMessage
+
+    LaunchedEffect(Unit) {
+        viewmodel.fetchPatient()
+        viewmodel.updateGreetingMessage()
+        viewmodel.checkProfessionalInvitation()
+    }
     
     InvitationModal(nameProfessional, shouldShowModal, viewmodel)
     

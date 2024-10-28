@@ -4,11 +4,10 @@ import java.io.Serializable
 
 data class Invitation(
     val professionalEmail: String,
-    val patientEmail: String,
     val status: InvitationStatus
 ) :
     Serializable {
-    constructor() : this("", "", InvitationStatus.NONE)
+    constructor() : this("", InvitationStatus.NONE)
 }
 
 enum class InvitationStatus {

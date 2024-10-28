@@ -10,17 +10,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
-import com.devmob.alaya.domain.GetUserNameUseCase
-import com.devmob.alaya.domain.GetUserSurnameUseCase
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
-import com.devmob.alaya.domain.UpdateInvitationUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
@@ -49,7 +49,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewModelFactory
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -91,7 +90,13 @@ fun MainContent(navController: NavHostController) {
     ) { paddingValues ->
         val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = PatientHomeScreenViewModelFactory(GetUserNameUseCase(), GetUserSurnameUseCase(), GetInvitationUseCase(), UpdateInvitationUseCase())
+            factory = ViewModelFactory {
+                PatientHomeScreenViewmodel(
+                    GetUserDataUseCase(),
+                    GetInvitationUseCase(),
+                    FirebaseClient()
+                )
+            }
         )
         NavHost(
             navController = navController,
