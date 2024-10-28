@@ -24,10 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.components.Card
+import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
@@ -36,6 +35,7 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         val (backgroundImage, greetingText, cardColumn) = createRefs()
 
@@ -57,28 +57,29 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
             text = "Hola ${viewmodel.namePatient}, ${viewmodel.greetingMessage}!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
+            lineHeight = 32.sp,
             color = ColorText,
             textAlign = TextAlign.Center,
+            maxLines = 2,
             modifier = Modifier
-                .fillMaxWidth()
                 .constrainAs(greetingText) {
-                    top.linkTo(parent.top, margin = 25.dp)
+                    top.linkTo(parent.top)
                     start.linkTo(parent.start)
-                    end.linkTo(parent.end, margin = 15.dp)
+                    end.linkTo(parent.end)
                 }
+                .padding(16.dp)
         )
 
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
                 .constrainAs(cardColumn) {
                     top.linkTo(greetingText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-
                 }
+                .padding(16.dp)
         ) {
             Card(
                 title = "¿Cómo me siento hoy?",
@@ -90,7 +91,7 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
             Card(
                 title = "Mi red de contención",
                 subtitle = "Accede a tus contactos de confianza",
-                onClick = { navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route)},
+                onClick = { navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route) },
                 leftIcon = Icons.Outlined.Groups,
                 rightIcon = Icons.Filled.ArrowForwardIos
             )
@@ -107,14 +108,14 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
                 onClick = { },
                 rightIcon = Icons.Filled.ArrowForwardIos,
                 leftIconBitmap = BitmapFactory.decodeResource(
-                        LocalContext.current.resources,
-                R.drawable.hand_heart
-            )
+                    LocalContext.current.resources,
+                    R.drawable.hand_heart
+                )
             )
             Card(
                 title = "Registro de crisis",
                 subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
-                onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)},
+                onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route) },
                 leftIcon = Icons.Outlined.Mood,
                 rightIcon = Icons.Filled.ArrowForwardIos,
                 leftIconBitmap = BitmapFactory.decodeResource(

@@ -1,5 +1,6 @@
 package com.devmob.alaya
 
+
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -45,6 +46,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -88,6 +90,7 @@ fun MainContent(
             }
         }
     ) { paddingValues ->
+        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -422,7 +425,7 @@ fun MainContent(
                         popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             inclusive = true
                         }
-                    }})
+                    }}, viewModel = sharedViewModel, navController = navController)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -432,7 +435,7 @@ fun MainContent(
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController)
+                CrisisRegistrationSummaryScreen(navController = navController, viewModel = sharedViewModel)
             }
         }
     }
