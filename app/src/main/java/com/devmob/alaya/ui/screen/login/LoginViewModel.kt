@@ -3,7 +3,6 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.preferences.SharedPreferences
@@ -49,7 +48,7 @@ class LoginViewModel(
                 }
 
                 is AuthenticationResult.Success -> {
-                    Log.d("leandro", "Singin with email fue exitoso")
+                    Log.d("login", "singInWithEmailAndPassword successful with $email")
                     val role = getRoleUseCase(email)
                     role?.let { prefs.setUserLoggedIn(email, it) }
                     when (role) {
@@ -68,7 +67,7 @@ class LoginViewModel(
 
     fun checkIfUserWasLoggedIn() {
         _loading.value = true
-        Log.d("leandro", "viewmodel - chequeando si el user se logeó correctamente")
+        Log.d("login", "checking if user was logged in")
         viewModelScope.launch {
             if (prefs.isLoggedIn()) {
                 when (prefs.getRole()) {
@@ -81,12 +80,11 @@ class LoginViewModel(
                     }
 
                     else -> {
-                        Log.d("leandro", "se fue al else del when porque el usuario no tiene rol")
                         _loading.value = false
                     }
                 }
             } else {
-                Log.d("leandro", "el current user es null")
+                Log.d("login", "current user is null")
                 _loading.value = false
             }
         }

@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,6 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
     val auth = FirebaseClient().auth
-    Log.d("leandro","Usuario logeado ${auth.currentUser?.email}")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +51,6 @@ fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
                             )
                             auth.signOut()
                             prefs.signOut()
-                            Log.d("leandro", "Deslogueado de ${auth.currentUser?.email}")
                         }
                 )
             }

@@ -59,7 +59,6 @@ fun LoginScreen(
 ) {
 
     val context = LocalContext.current
-    Log.d("leandro", "Log del loginScreen")
     var checkLogin by rememberSaveable { mutableStateOf(false) }
 
 

@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -53,7 +52,6 @@ fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreference
                             val unloggedUser = auth.currentUser?.email
                             auth.signOut()
                             prefs.signOut()
-                            Log.d("leandro", "Deslogueado de ${unloggedUser}")
                         }
                 )
             }
