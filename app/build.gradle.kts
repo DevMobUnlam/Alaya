@@ -89,4 +89,5 @@ dependencies {
     testImplementation(libs.mockito)
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     testImplementation (libs.robolectric)
+    testImplementation (libs.coroutine.test)
 }

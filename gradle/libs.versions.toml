@@ -23,6 +23,7 @@ lottieVersion = "6.0.0"
 constraintlayout = "2.1.4"
 navigationRuntimeKtx = "2.8.2"
 robolectricVersion = "4.13"
+coroutineTest = "1.6.4"
 
 
 [libraries]
@@ -56,6 +57,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion" }
 android-compose-lottie ={group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion"}
+coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest" }
 
 
 [plugins]
