@@ -1,6 +1,5 @@
 package com.devmob.alaya.data.mapper
 
-import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.FirebaseResult
 
 fun <T> Result<T>.toResponseFirebase(): FirebaseResult {

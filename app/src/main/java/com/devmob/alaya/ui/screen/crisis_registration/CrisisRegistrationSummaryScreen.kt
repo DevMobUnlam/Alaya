@@ -93,12 +93,12 @@ fun CrisisRegistrationSummaryScreen(
                             startContent = {
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(
-                                        text = dateFormatter(date.startingDate),
+                                        text = dateFormatter(date.startTime),
                                         fontSize = 19.sp,
                                         color = ColorText
                                     )
                                     Text(
-                                        text = dateFormatter(date.endDate),
+                                        text = dateFormatter(date.endTime),
                                         fontSize = 19.sp,
                                         color = ColorText
                                     )
@@ -107,7 +107,7 @@ fun CrisisRegistrationSummaryScreen(
                             endContent = {
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(
-                                        text = timeFormatter(date.startTIme),
+                                        text = timeFormatter(date.startTime),
                                         fontSize = 19.sp,
                                         color = ColorText
                                     )
@@ -354,6 +354,7 @@ fun CrisisRegistrationSummaryScreen(
                 secondaryButtonText = "No",
                 onDismiss = { showModalConfirm = false },
                 onConfirm = {
+                    viewModel.saveRegister()
                     showModalConfirm = false
                     viewModel.cleanState()
                     navController.navigate(NavUtils.PatientRoutes.Home.route)
