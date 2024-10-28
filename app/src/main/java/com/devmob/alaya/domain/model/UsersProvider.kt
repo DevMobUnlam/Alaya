@@ -17,7 +17,7 @@ data class User (
     val patients: List<Patient>? = null,
     val containmentNetwork: List<Contact>? = null
 ) : Serializable {
-    constructor() : this("", "", "", "", 0, "", UserRole.PROFESSIONAL)
+    constructor() : this("", "", "","", 0, "", UserRole.PROFESSIONAL)
 }
 
 

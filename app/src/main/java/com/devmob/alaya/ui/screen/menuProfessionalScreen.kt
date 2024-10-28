@@ -41,7 +41,7 @@ fun MenuProfessionalScreen(navController: NavController){
                     color = ColorText,
                     modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
                         navController.navigate(
-                            NavUtils.LoginRoutes.Login.route
+                            NavUtils.ProfessionalRoutes.SendInvitation.route
                         )
                     }
                 )

@@ -8,5 +8,4 @@ import javax.inject.Singleton
 class FirebaseClient {
     val auth: FirebaseAuth get() = FirebaseAuth.getInstance()
     val db = FirebaseFirestore.getInstance()
-
 }

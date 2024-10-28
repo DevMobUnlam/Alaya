@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
+import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -22,14 +23,14 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
@@ -49,6 +50,8 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -57,7 +60,9 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 @Composable
 fun MainContent(navController: NavHostController) {
     val currentRoute = currentRoute(navController)
-    val containmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val contactUseCase = ContactUseCase()
+    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
+    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -65,8 +70,9 @@ fun MainContent(navController: NavHostController) {
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.ConfigTreatment.route,
-        ProfessionalRoutes.TreatmentSummary.route
-
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.SendInvitation.route
     )
 
     Scaffold(
@@ -81,7 +87,6 @@ fun MainContent(navController: NavHostController) {
         bottomBar = {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
-
 
             if (currentRoute in NavUtils.routesWithBottomBar) {
                 GetBottomBarNavigation(navController)
@@ -266,25 +271,6 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             }
-            composable("add_contact",
-                enterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                },
-                exitTransition = {
-                    return@composable slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
-                    )
-                },
-                popEnterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                }
-            ) {
-                AddContactScreen(containmentViewModel, navController)
-            }
 
             composable("feedback_screen/{feedbackType}",
                 enterTransition = {
@@ -328,7 +314,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
+                ConfigTreatmentScreen(configTreatmentViewModel, navController)
             }
             composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
@@ -350,7 +336,7 @@ fun MainContent(navController: NavHostController) {
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
-                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
+                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController, configTreatmentViewModel)
             }
             composable(NavUtils.PatientRoutes.MenuPatient.route,
                 enterTransition = {
@@ -443,6 +429,26 @@ fun MainContent(navController: NavHostController) {
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
                 CrisisRegistrationSummaryScreen(navController = navController, viewModel = sharedViewModel)
+            }
+            composable(ProfessionalRoutes.AddCustomActivity.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
+            }
+            composable(ProfessionalRoutes.SendInvitation.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                SendInvitationScreen()
             }
         }
     }
