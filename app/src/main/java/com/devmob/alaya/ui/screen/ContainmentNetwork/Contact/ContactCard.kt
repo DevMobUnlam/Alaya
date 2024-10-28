@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.devmob.alaya.R
-import com.devmob.alaya.components.getInitials
+import com.devmob.alaya.ui.components.getInitials
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
