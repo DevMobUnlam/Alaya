@@ -52,6 +52,7 @@ import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryS
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -63,6 +64,9 @@ fun MainContent(navController: NavHostController) {
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
+    val SendInvitationUseCase = GetInvitationUseCase()
+    val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
+
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -448,7 +452,7 @@ fun MainContent(navController: NavHostController) {
                 popEnterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
-                SendInvitationScreen()
+                SendInvitationScreen(sendInvitationViewModel)
             }
         }
     }
