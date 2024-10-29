@@ -1,7 +1,6 @@
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,16 +28,14 @@ import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun ExpandableButton() {
+fun ExpandableButton(modifier: Modifier) {
     var isExpanded by remember { mutableStateOf(false) }
 
     val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp, label = "")
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
@@ -96,5 +93,5 @@ fun ExpandableButton() {
 @Preview
 @Composable
 fun ExpandableButtonPreview() {
-    ExpandableButton()
+    ExpandableButton(modifier = Modifier)
 }
