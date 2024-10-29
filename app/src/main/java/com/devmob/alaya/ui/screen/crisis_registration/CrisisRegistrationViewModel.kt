@@ -138,6 +138,51 @@ class CrisisRegistrationViewModel(
         )
     }
 
+    fun unselectCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (any { it.name == emotion.name }) {
+                    removeIf { it.name == emotion.name }
+                }
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    fun selectCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (!any { it.name == emotion.name }) {
+                    add(emotion)
+                }
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    fun updateIntensityEmotion(crisisEmotion: CrisisEmotion, intensity: Intensity) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (any { it.name == crisisEmotion.name }) {
+                    removeIf { it.name == crisisEmotion.name }
+                }
+                add(crisisEmotion.copy(intensity = intensity))
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    private fun updateStateEmotionList(
+        currentState: CrisisRegistrationScreenState,
+        updatedEmotionList: MutableList<CrisisEmotion>
+    ) {
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                emotionList = updatedEmotionList
+            )
+        )
+    }
+
     fun updateCrisisEmotion(emotion: CrisisEmotion) {
         val currentState = _screenState.value ?: return
         val updatedEmotionList = currentState.crisisDetails.emotionList.toMutableList().apply {

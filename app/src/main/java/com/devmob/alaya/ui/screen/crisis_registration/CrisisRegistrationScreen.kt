@@ -1,7 +1,6 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,7 +76,7 @@ fun CrisisRegistrationScreen(
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
-    var messageTextSize = 30.sp
+    val messageTextSize = 30.sp
     val horizontalMargin = 15.dp
     var shouldShowAddNewCard by remember { mutableStateOf(false) }
     val places by viewModel.places.observeAsState(emptyList())
@@ -102,7 +101,7 @@ fun CrisisRegistrationScreen(
             .fillMaxSize()
             .background(ColorWhite)
     ) {
-        val (progressBar, datePickerComponent, closeIcon, title, backArrow, forwardArrow, saveEditingButton) = createRefs()
+        val (progressBar, datePickerComponent, closeIcon, title, backArrow, forwardArrow) = createRefs()
         val (elementsGrid, addNewIcon, newElementsCard, addMoreStep) = createRefs()
 
 
@@ -289,7 +288,6 @@ fun CrisisRegistrationScreen(
                                 viewModel.screenState.value?.crisisDetails?.bodySensationList?.any { it.name == bodySensation.name } ?: false
                             }
                         val intensity = viewModel.screenState.value?.crisisDetails?.bodySensationList?.find { it.name == bodySensation.name }?.intensity?:bodySensation.intensity
-                        Log.d("BREN", "crisisRegistrationScreen: isSelected: $isSelected Intensity: $intensity")
                         EmotionIconButton(
                             symbol = bodySensation.icon,
                             text = bodySensation.name,
@@ -302,17 +300,14 @@ fun CrisisRegistrationScreen(
                                         selectedBodySensations - bodySensation.name
                                     viewModel.unselectCrisisBodySensation(bodySensation)
                                 } else {
-                                    //Mostrar intensity
                                     selectedBodySensations.plus(bodySensation.name to intensity)
                                     viewModel.selectCrisisBodySensation(bodySensation)
                                 }
                             },
                             onChangedIntensity = {
-                                Log.d("BREN", "CrisisRegistrationScreen: onChangedIntensity = ${ it.name }")
                                 if (isSelected) {
                                     selectedBodySensations.plus(bodySensation.name to it)
                                     viewModel.updateIntensityBodySensation(bodySensation, it)
-                                    Log.d("BREN", "CrisisRegistrationScreen: onChangedIntensity = ${ viewModel.screenState.value?.crisisDetails?.bodySensationList }")
                                 }
                             }
                         )
@@ -385,27 +380,35 @@ fun CrisisRegistrationScreen(
                     items(emotions) { emotion ->
                         val isSelected =
                             if (viewModel.screenState.value?.crisisDetails?.emotionList?.isEmpty() == true) {
-                                selectedBodySensations.contains(emotion.name)
+                                selectedEmotions.contains(emotion.name)
                             } else {
-                                viewModel.screenState.value?.crisisDetails?.emotionList?.contains(
-                                    emotion
-                                ) ?: false
+                                viewModel.screenState.value?.crisisDetails?.emotionList?.any { it.name == emotion.name } ?: false
                             }
+                        val intensity = viewModel.screenState.value?.crisisDetails?.emotionList?.find { it.name == emotion.name }?.intensity?:emotion.intensity
 
-
-                        CrisisRegisterIconButton(
-                            imageVector = emotion.icon,
+                        EmotionIconButton(
+                            symbol = emotion.icon,
                             text = emotion.name,
-                            isSelected = isSelected,
+                            size = 70.dp,
+                            isActive = isSelected,
+                            intensity = intensity,
                             onClick = {
                                 if (isSelected) {
-                                    selectedEmotions = selectedEmotions - emotion.name
-                                    viewModel.updateCrisisEmotion(emotion)
+                                    selectedEmotions =
+                                        selectedEmotions - emotion.name
+                                    viewModel.unselectCrisisEmotion(emotion)
                                 } else {
-                                    selectedEmotions = selectedEmotions + emotion.name
-                                    viewModel.updateCrisisEmotion(emotion)
+                                    selectedEmotions.plus(emotion.name)
+                                    viewModel.selectCrisisEmotion(emotion)
+                                }
+                            },
+                            onChangedIntensity = {
+                                if (isSelected) {
+                                    selectedEmotions.plus(emotion.name to it)
+                                    viewModel.updateIntensityEmotion(emotion, it)
                                 }
                             }
+
                         )
                     }
                 }
