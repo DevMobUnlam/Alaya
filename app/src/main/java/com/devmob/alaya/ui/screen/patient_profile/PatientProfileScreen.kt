@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -53,8 +55,10 @@ fun PatientProfileScreen(navController: NavController) {
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState())
+
     ) {
-        val (image, header, summaryCard, treatmentButton, sessionButton, whatsappButton) = createRefs()
+        val (image, header, summaryCard, treatmentButton, sessionButton, whatsappButton, summaryButton) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.brenda_rodriguez),
@@ -114,10 +118,23 @@ fun PatientProfileScreen(navController: NavController) {
         )
 
         ButtonAlaya(
+            text = "Ver resumen",
+            modifier = Modifier.constrainAs(summaryButton) {
+                start.linkTo(parent.start)
+                top.linkTo(summaryCard.bottom, margin = 10.dp)
+                end.linkTo(parent.end)
+            },
+            ButtonStyle.Outlined,
+            {navController.navigate(NavUtils.ProfessionalRoutes.PatientSummary.route)},
+            containerColor = ColorWhite
+        )
+
+        ButtonAlaya(
             text = stringResource(R.string.treatment_text_button_professional),
             modifier = Modifier.constrainAs(treatmentButton) {
                 start.linkTo(parent.start)
-                top.linkTo(summaryCard.bottom, margin = 16.dp)
+                top.linkTo(summaryButton.bottom, margin = 16.dp)
+                // TODO() volver a poner margen de 16.dp, y summaryCard.bottom
                 end.linkTo(parent.end)
             },
             ButtonStyle.Outlined,

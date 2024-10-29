@@ -40,6 +40,7 @@ object NavUtils {
                 "treatment_summary/$firstStep/$secondStep/$thirdStep"
         }
         data object MenuProfessional : ProfessionalRoutes("menu_professional")
+        data object PatientSummary: ProfessionalRoutes("patient_summary")
     }
 
     val routeTitleAppBar = mapOf(

@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.screen.patientSummary
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.CrisisRepositoryImpl
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +20,10 @@ class PatientSummaryViewModel(
     val uiState: StateFlow<SummaryUIState> = _uiState.asStateFlow()
 
     init{
-        summarize(savedStateHandle["patientId"] ?:"")
-    }
+        //summarize(savedStateHandle["patientId"] ?:"")
+        // TODO() Implementar nav argument con id de paciente
+        summarize("maurojose029@gmail.com")
+     }
 
     private fun summarize(patientId: String){
         _uiState.value = SummaryUIState.Loading
@@ -37,7 +40,7 @@ class PatientSummaryViewModel(
 
         viewModelScope.launch {
             try{
-                val response = GetIASummaryUseCase()(instructions = instructions, generativeModel = generativeModel, patientId = patientId)
+                val response = GetIASummaryUseCase()(instructions = instructions, generativeModel = generativeModel, patientId = patientId, CrisisRepositoryImpl())
                 response.let {outputContent ->
                     _uiState.value = SummaryUIState.Success(outputContent?: "")
                 }
