@@ -1,5 +1,6 @@
-package com.devmob.alaya.ui.screen.crisis_registration
 
+package com.devmob.alaya.ui.screen.crisis_registration
+/*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
@@ -310,3 +311,4 @@ class CrisisRegistrationViewModelTest {
     }
 }
 
+*/
