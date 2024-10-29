@@ -71,25 +71,23 @@ class LoginViewModel(
         val userRole = prefs.getRole()
         Log.d("login", "user was logged in: $userIsLoggedIn")
 
-        viewModelScope.launch {
-            if (userIsLoggedIn) {
-                when (userRole) {
-                    UserRole.PATIENT -> {
-                        _navigateToPatientHome.value = true
-                    }
-
-                    UserRole.PROFESSIONAL -> {
-                        _navigateToProfessionalHome.value = true
-                    }
-
-                    else -> {
-                        _loading.value = false
-                    }
+        if (userIsLoggedIn) {
+            when (userRole) {
+                UserRole.PATIENT -> {
+                    _navigateToPatientHome.value = true
                 }
-            } else {
-                Log.d("login", "current user is null")
-                _loading.value = false
+
+                UserRole.PROFESSIONAL -> {
+                    _navigateToProfessionalHome.value = true
+                }
+
+                else -> {
+                    _loading.value = false
+                }
             }
+        } else {
+            Log.d("login", "current user is null")
+            _loading.value = false
         }
     }
 
