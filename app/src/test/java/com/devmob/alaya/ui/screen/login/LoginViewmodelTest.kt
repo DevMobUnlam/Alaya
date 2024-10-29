@@ -31,7 +31,6 @@ class LoginViewmodelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @MockK
     private lateinit var viewModel: LoginViewModel
 
     @MockK
@@ -59,7 +58,7 @@ class LoginViewmodelTest {
     }
 
     @Test
-    fun `given a patient, try to login successfully and navigate to patientHomeScreen`() {
+    fun `given a patient, when login is successfully, then navigate to patientHomeScreen`() {
         //GIVEN
         val email = "emailPatient"
         val password = "passwordPatient"
@@ -75,7 +74,9 @@ class LoginViewmodelTest {
 
 
     @Test
-    fun `given a professional, try to login successfully and navigate to ProfessionalHomeScreen`() {
+    fun `given a professional, when login is successfully, then navigate to ProfessionalHomeScreen`() {
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
         //GIVEN
         val email = "emailProfessional"
         val password = "passwordProfessional"
@@ -90,7 +91,7 @@ class LoginViewmodelTest {
     }
 
     @Test
-    fun `given a incorrect login user, then show error`() {
+    fun `given a incorrect login user, when tru to log in, then show error`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         //GIVEN
@@ -106,7 +107,7 @@ class LoginViewmodelTest {
     }
 
     @Test
-    fun `given a patient logged in user, then navigate to PatientHomeScreen`() {
+    fun `given a patient logged in user, when check if user was already logged in, then navigate to PatientHomeScreen`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         //GIVEN
@@ -121,7 +122,7 @@ class LoginViewmodelTest {
     }
 
     @Test
-    fun `given a professional logged in user, then navigate ProfessionalHomeScreen`() {
+    fun `given a professional logged in user, when check if user was already logged in, then navigate ProfessionalHomeScreen`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         //GIVEN
@@ -137,7 +138,7 @@ class LoginViewmodelTest {
 
 
     @Test
-    fun `if there are not a logged in user, then not navigate and stop loading screen`() {
+    fun `given a not a logged in user, when check if user was already logged in, then not navigate and stop loading screen`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         //GIVEN
@@ -148,5 +149,7 @@ class LoginViewmodelTest {
 
         //THEN
         assertFalse(viewModel.loading.value)
+        assertFalse(viewModel.navigateToPatientHome.value)
+        assertFalse(viewModel.navigateToProfessionalHome.value)
     }
 }

@@ -31,21 +31,15 @@ class RegisterViewmodelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @MockK
     private lateinit var viewModel: RegisterViewmodel
+    private lateinit var userPatient: User
+    private lateinit var userProfessional: User
 
     @MockK
     private lateinit var  registerNewUserUseCase: RegisterNewUserUseCase
 
     @MockK
     private lateinit var addUserToFirestoreUseCase: AddUserToFirestoreUseCase
-
-    @MockK
-    private lateinit var userPatient: User
-
-    @MockK
-    private lateinit var userProfessional: User
-
 
     private val testDispatcher = UnconfinedTestDispatcher()
 

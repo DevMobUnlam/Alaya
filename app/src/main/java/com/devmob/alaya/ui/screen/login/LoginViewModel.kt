@@ -67,10 +67,13 @@ class LoginViewModel(
 
     fun checkIfUserWasLoggedIn() {
         _loading.value = true
-        Log.d("login", "checking if user was logged in")
+        val userIsLoggedIn = prefs.isLoggedIn()
+        val userRole = prefs.getRole()
+        Log.d("login", "user was logged in: $userIsLoggedIn")
+
         viewModelScope.launch {
-            if (prefs.isLoggedIn()) {
-                when (prefs.getRole()) {
+            if (userIsLoggedIn) {
+                when (userRole) {
                     UserRole.PATIENT -> {
                         _navigateToPatientHome.value = true
                     }
