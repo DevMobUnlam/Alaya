@@ -1,18 +1,29 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.utils.toCalendar
+import com.devmob.alaya.utils.toDate
+import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 
-class CrisisRegistrationViewModel : ViewModel() {
+class CrisisRegistrationViewModel(
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase
+) : ViewModel() {
 
     private val _screenState = MutableLiveData(CrisisRegistrationScreenState())
     val screenState: LiveData<CrisisRegistrationScreenState> = _screenState
@@ -204,22 +215,25 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateStartDate(date: Date) {
+        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
+        val newDate = updateDate(date, oldDate)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startingDate = date
+            startTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+
     }
 
-    fun updateStartTime(time: Date) {
+    fun updateStartTime(hour: Date) {
+        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
+        val newDate = updateHour(hour, oldDate)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startTIme = time
+            startTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -228,10 +242,11 @@ class CrisisRegistrationViewModel : ViewModel() {
     }
 
     fun updateEndDate(date: Date) {
+        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+        val newDate = updateDate(date, oldTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endDate = date
+            endTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
@@ -239,16 +254,34 @@ class CrisisRegistrationViewModel : ViewModel() {
         )
     }
 
-    fun updateEndTime(time: Date) {
+    fun updateEndTime(hour: Date) {
+        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+        val newDate = updateHour(hour, oldTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endTime = time
+            endTime = newDate
         )
-
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
+    }
+
+    private fun updateDate(newDate: Date, oldTime: Date?): Date {
+        val newDateCalendar = newDate.toCalendar()
+        val oldTimeCalendar = oldTime.toCalendar()
+        oldTimeCalendar.set(Calendar.DAY_OF_MONTH, newDateCalendar.get(Calendar.DAY_OF_MONTH))
+        oldTimeCalendar.set(Calendar.MONTH, newDateCalendar.get(Calendar.MONTH))
+        oldTimeCalendar.set(Calendar.YEAR, newDateCalendar.get(Calendar.YEAR))
+        return oldTimeCalendar.toDate()
+    }
+
+    private fun updateHour(newDate: Date, oldTime: Date?): Date {
+        val newDateCalendar = newDate.toCalendar()
+        val oldTimeCalendar = oldTime.toCalendar()
+        oldTimeCalendar.set(Calendar.HOUR_OF_DAY, newDateCalendar.get(Calendar.HOUR_OF_DAY))
+        oldTimeCalendar.set(Calendar.MINUTE, newDateCalendar.get(Calendar.MINUTE))
+        return oldTimeCalendar.toDate()
     }
 
     fun hideBackButton() {
@@ -270,5 +303,23 @@ class CrisisRegistrationViewModel : ViewModel() {
 
     private fun loadEmotions() {
         _emotions.value = GridElementsRepository.returnAvailableEmotions()
+    }
+
+    fun saveRegister() {
+        viewModelScope.launch {
+            val crisis = _screenState.value?.crisisDetails?.toDB()
+            val response = crisis?.let { saveCrisisRegistrationUseCase(it) }
+            when (response) {
+                is FirebaseResult.Success -> {
+                    Log.d("CrisisRegistrationViewModel", "saveRegister: Success")
+                }
+
+                is FirebaseResult.Error -> {
+                    Log.d("CrisisRegistrationViewModel", "saveRegister: Error")
+                }
+
+                null -> Log.d("CrisisRegistrationViewModel", "saveRegister: null ")
+            }
+        }
     }
 }

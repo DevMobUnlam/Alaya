@@ -89,6 +89,5 @@ dependencies {
     testImplementation(libs.mockito)
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     testImplementation (libs.robolectric)
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-storage")
 }
