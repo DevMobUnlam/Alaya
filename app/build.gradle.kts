@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.android.compose.lottie)
     implementation(libs.androidx.constraint)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.generativeai)
     testImplementation(libs.mockk)
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)
