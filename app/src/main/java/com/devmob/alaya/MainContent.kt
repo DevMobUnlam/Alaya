@@ -479,22 +479,3 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
-            /*composable(NavUtils.Routes.CrisisRegistration.route) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
-                    popUpTo(NavUtils.Routes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                            inclusive = true
-                        }
-                    }})
-            }
-
-            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                CrisisRegistrationSummaryScreen(navController = navController)
-            }*/
-
-
-

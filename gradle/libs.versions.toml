@@ -26,6 +26,8 @@ lottieVersion = "6.0.0"
 constraintlayout = "2.1.4"
 navigationRuntimeKtx = "2.8.2"
 robolectricVersion = "4.13"
+generativeai = "0.9.0"
+
 coroutineTest = "1.6.4"
 
 [libraries]
@@ -62,6 +64,7 @@ firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-fires
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion" }
 android-compose-lottie ={group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion"}
+generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest" }
 
 [plugins]

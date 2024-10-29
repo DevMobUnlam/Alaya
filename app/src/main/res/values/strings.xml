@@ -59,4 +59,5 @@
     <string name="intensity_medium">Media</string>
     <string name="intensity_high">Alta</string>
     <string name="text_tooltip_text_area">¿Prefieres hablar en lugar de escribir? Mantén presionado el botón para dictar tu mensaje.</string>
+    <string name="patient_summary_error">Hubo un error inesperado al generar el resumen, por favor intenta mas tarde</string>
 </resources>
