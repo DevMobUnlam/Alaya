@@ -39,10 +39,8 @@ fun DateTimePicker(
 ) {
     val calendar = Calendar.getInstance()
 
-    var selectedStartDate = crisisTimeDetails.startingDate
-    var selectedStartTime = crisisTimeDetails.startTIme
-    var selectedEndDate = crisisTimeDetails.endDate
-    var selectedEndTime = crisisTimeDetails.endTime
+    val selectedStartTime = crisisTimeDetails.startTime
+    val selectedEndTime = crisisTimeDetails.endTime
 
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -101,7 +99,7 @@ fun DateTimePicker(
                     Spacer(modifier = Modifier.height(50.dp))
 
                     OutlinedTextField(
-                        value = dateFormat.format(selectedStartDate),
+                        value = dateFormat.format(selectedStartTime),
                         onValueChange = {},
                         label = {
                             Text(text = "Inicio (Fecha)", color = Color(0xFF2E4D83))
@@ -153,7 +151,7 @@ fun DateTimePicker(
 
                 Column {
                     OutlinedTextField(
-                        value = dateFormat.format(selectedEndDate),
+                        value = dateFormat.format(selectedEndTime),
                         onValueChange = {},
                         label = {
                             Text(text = "Fin (Fecha)", color = Color(0xFF2E4D83))
