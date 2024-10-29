@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.ui.theme.LightBlueColor
@@ -54,7 +55,7 @@ fun EmotionIconButton(
     modifier: Modifier = Modifier,
     isActive: Boolean = true,
     onClick: () -> Unit = {},
-    intensity: Intensity = Intensity.LOW,
+    intensity: Intensity,
     onChangedIntensity: (Intensity) -> Unit,
 ){
 
@@ -99,13 +100,12 @@ fun EmotionIconButton(
 
             FilledIconButton(
                 onClick = {
-                    showIntensitySelector = !showIntensitySelector
+                    showIntensitySelector = !isActive
                     onClick()
-                    },
+                },
                 shape = CircleShape,
-                //TODO() AGREGAR CONDICIONAL PARA QUE EL COLOR SE ELIJA SEGUN ESTA ACTIVADO O NO CON ISACTIVE
                 colors = IconButtonColors(
-                    containerColor = ColorText,
+                    containerColor = if (isActive) ColorText else ColorPrimary,
                     contentColor = ColorWhite,
                     disabledContentColor = ColorGray,
                     disabledContainerColor = ColorWhite

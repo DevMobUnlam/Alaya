@@ -14,6 +14,7 @@ import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
 import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
@@ -92,18 +93,44 @@ class CrisisRegistrationViewModel(
             )
         }
     }
-
-    fun updateCrisisBodySensation(bodySensation: CrisisBodySensation) {
+    fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
         val currentState = _screenState.value ?: return
         val updatedBodySensationList =
             currentState.crisisDetails.bodySensationList.toMutableList().apply {
                 if (any { it.name == bodySensation.name }) {
                     removeIf { it.name == bodySensation.name }
-                } else {
+                }
+            }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
+
+    fun selectCrisisBodySensation(bodySensation: CrisisBodySensation) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList =
+            currentState.crisisDetails.bodySensationList.toMutableList().apply {
+                if (!any { it.name == bodySensation.name }) {
                     add(bodySensation)
                 }
             }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
 
+    fun updateIntensityBodySensation(bodySensation: CrisisBodySensation, intensity: Intensity) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList =
+            currentState.crisisDetails.bodySensationList.toMutableList().apply {
+                if (any { it.name == bodySensation.name }) {
+                    removeIf { it.name == bodySensation.name }
+                }
+                add(bodySensation.copy(intensity = intensity))
+            }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
+
+    private fun updateStateBodySensationList(
+        currentState: CrisisRegistrationScreenState,
+        updatedBodySensationList: MutableList<CrisisBodySensation>
+    ) {
         _screenState.value = currentState.copy(
             crisisDetails = currentState.crisisDetails.copy(
                 bodySensationList = updatedBodySensationList

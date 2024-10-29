@@ -1,5 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
+
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +55,7 @@ import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.components.CrisisRegisterIconButton
 import com.devmob.alaya.ui.components.DateTimePicker
+import com.devmob.alaya.ui.components.EmotionIconButton
 import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.components.NewCrisisElementCard
@@ -62,6 +65,7 @@ import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
+
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel,
@@ -69,6 +73,7 @@ fun CrisisRegistrationScreen(
     onFinishedRegistration: () -> Unit,
     navController: NavHostController,
 ) {
+
 
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
@@ -80,15 +85,17 @@ fun CrisisRegistrationScreen(
     val tools by viewModel.tools.observeAsState(emptyList())
     var selectedTools by remember { mutableStateOf<Set<String>>(emptySet()) }
     val bodySensations by viewModel.bodySensations.observeAsState(emptyList())
-    var selectedBodySensations by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var selectedBodySensations by remember { mutableStateOf<Map<String, Intensity>>(emptyMap()) }
     val emotions by viewModel.emotions.observeAsState(emptyList())
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
+
 
     GridElementsRepository.returnAvailableTools().let { list ->
         for (tool in list) {
             viewModel.addCrisisTool(tool)
         }
     }
+
 
     ConstraintLayout(
         modifier = Modifier
@@ -97,6 +104,7 @@ fun CrisisRegistrationScreen(
     ) {
         val (progressBar, datePickerComponent, closeIcon, title, backArrow, forwardArrow, saveEditingButton) = createRefs()
         val (elementsGrid, addNewIcon, newElementsCard, addMoreStep) = createRefs()
+
 
         SegmentedProgressBar(
             totalSteps = screenState.value!!.totalSteps,
@@ -107,6 +115,7 @@ fun CrisisRegistrationScreen(
                 end.linkTo(parent.end)
             }
         )
+
 
         when (screenState.value?.currentStep) {
             1 -> {
@@ -123,7 +132,9 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 20.dp)
                         }
 
+
                 )
+
 
                 viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
                     DateTimePicker(
@@ -148,6 +159,7 @@ fun CrisisRegistrationScreen(
                     )
                 }
             }
+
 
             2 -> {
                 val icon = Icons.Filled.LocationOn
@@ -182,6 +194,7 @@ fun CrisisRegistrationScreen(
                                 viewModel.screenState.value?.crisisDetails?.placeList?.get(0)?.name == place.name
                             }
 
+
                         CrisisRegisterIconButton(
                             imageVector = place.icon,
                             text = place.name,
@@ -197,6 +210,7 @@ fun CrisisRegistrationScreen(
                             }
                         )
 
+
                     }
                 }
                 IconButtonNoFill(
@@ -208,6 +222,7 @@ fun CrisisRegistrationScreen(
                     },
                     onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
+
 
                 AnimatedVisibility(
                     visible = shouldShowAddNewCard,
@@ -232,11 +247,15 @@ fun CrisisRegistrationScreen(
                     )
                 }
 
+
             }
+
 
             3 -> {
 
+
                 val icon = Icons.Filled.Accessibility
+
 
                 Text(
                     text = "¿Que sensaciones\ncorporales sentiste?",
@@ -263,29 +282,37 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(bodySensations) { bodySensation ->
-
-                        val isSelected =
+                        val isSelected:Boolean =
                             if (viewModel.screenState.value?.crisisDetails?.bodySensationList?.isEmpty() == true) {
                                 selectedBodySensations.contains(bodySensation.name)
                             } else {
-                                viewModel.screenState.value?.crisisDetails?.bodySensationList?.contains(
-                                    bodySensation
-                                ) ?: false
+                                viewModel.screenState.value?.crisisDetails?.bodySensationList?.any { it.name == bodySensation.name } ?: false
                             }
-
-                        CrisisRegisterIconButton(
-                            imageVector = bodySensation.icon,
+                        val intensity = viewModel.screenState.value?.crisisDetails?.bodySensationList?.find { it.name == bodySensation.name }?.intensity?:bodySensation.intensity
+                        Log.d("BREN", "crisisRegistrationScreen: isSelected: $isSelected Intensity: $intensity")
+                        EmotionIconButton(
+                            symbol = bodySensation.icon,
                             text = bodySensation.name,
-                            isSelected = isSelected,
+                            size = 70.dp,
+                            isActive = isSelected,
+                            intensity = intensity,
                             onClick = {
                                 if (isSelected) {
                                     selectedBodySensations =
                                         selectedBodySensations - bodySensation.name
-                                    viewModel.updateCrisisBodySensation(bodySensation)
+                                    viewModel.unselectCrisisBodySensation(bodySensation)
                                 } else {
-                                    selectedBodySensations =
-                                        selectedBodySensations + bodySensation.name
-                                    viewModel.updateCrisisBodySensation(bodySensation)
+                                    //Mostrar intensity
+                                    selectedBodySensations.plus(bodySensation.name to intensity)
+                                    viewModel.selectCrisisBodySensation(bodySensation)
+                                }
+                            },
+                            onChangedIntensity = {
+                                Log.d("BREN", "CrisisRegistrationScreen: onChangedIntensity = ${ it.name }")
+                                if (isSelected) {
+                                    selectedBodySensations.plus(bodySensation.name to it)
+                                    viewModel.updateIntensityBodySensation(bodySensation, it)
+                                    Log.d("BREN", "CrisisRegistrationScreen: onChangedIntensity = ${ viewModel.screenState.value?.crisisDetails?.bodySensationList }")
                                 }
                             }
                         )
@@ -324,7 +351,9 @@ fun CrisisRegistrationScreen(
                     )
                 }
 
+
             }
+
 
             4 -> {
                 val icon = Icons.Filled.SentimentNeutral
@@ -341,6 +370,7 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
+
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
@@ -361,6 +391,7 @@ fun CrisisRegistrationScreen(
                                     emotion
                                 ) ?: false
                             }
+
 
                         CrisisRegisterIconButton(
                             imageVector = emotion.icon,
@@ -388,6 +419,7 @@ fun CrisisRegistrationScreen(
                     onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
+
                 AnimatedVisibility(
                     visible = shouldShowAddNewCard,
                     modifier = Modifier.constrainAs(newElementsCard) {
@@ -411,10 +443,13 @@ fun CrisisRegistrationScreen(
                     )
                 }
 
+
             }
+
 
             5 -> {
                 val icon = Icons.Filled.ChangeHistory
+
 
                 Text(
                     text = "¿Qué herramientas usaste para calmarte?",
@@ -429,6 +464,7 @@ fun CrisisRegistrationScreen(
                             top.linkTo(progressBar.bottom, margin = 30.dp)
                         }
                 )
+
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
@@ -448,6 +484,7 @@ fun CrisisRegistrationScreen(
                                 viewModel.screenState.value?.crisisDetails?.toolList?.contains(tool)
                                     ?: false
                             }
+
 
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
@@ -475,6 +512,7 @@ fun CrisisRegistrationScreen(
                     onClick = { shouldShowAddNewCard = !shouldShowAddNewCard }
                 )
 
+
                 AnimatedVisibility(
                     visible = shouldShowAddNewCard,
                     modifier = Modifier.constrainAs(newElementsCard) {
@@ -501,6 +539,7 @@ fun CrisisRegistrationScreen(
 
             }
 
+
             6 -> {
                 TextArea(
                     title = "¿Querés agregar algo más?",
@@ -516,6 +555,7 @@ fun CrisisRegistrationScreen(
             }
         }
 
+
         Icon(
             Icons.Default.Close,
             contentDescription = "Close",
@@ -530,6 +570,7 @@ fun CrisisRegistrationScreen(
                     viewModel.showExitModal()
                 }
         )
+
 
         if (screenState.value?.currentStep != 1 && viewModel.shouldGoToBack) {
             Icon(
@@ -551,6 +592,7 @@ fun CrisisRegistrationScreen(
             )
         }
 
+
         Icon(
             Icons.AutoMirrored.Filled.ArrowForward,
             contentDescription = "Forward",
@@ -566,16 +608,21 @@ fun CrisisRegistrationScreen(
                         viewModel.shouldGoToSummary -> {
                             navController.popBackStack()
                         }
+
+
                         screenState.value?.currentStep!! < 6 -> {
                             viewModel.goOneStepForward()
                             shouldShowAddNewCard = false
                         }
+
+
                         screenState.value?.currentStep == 6 -> {
                             onFinishedRegistration()
                         }
                     }
                 }
         )
+
 
         Modal(
             show = shouldShowExitModal,
@@ -591,6 +638,7 @@ fun CrisisRegistrationScreen(
     }
 }
 
+
 object GridElementsRepository {
     fun returnAvailablePlaces(): List<CrisisPlace> {
         return listOf(
@@ -600,6 +648,7 @@ object GridElementsRepository {
             CrisisPlace(name = "Universidad", icon = Icons.Filled.School),
         )
     }
+
 
     fun returnAvailableEmotions(): List<CrisisEmotion> {
         return listOf(
@@ -621,6 +670,7 @@ object GridElementsRepository {
         )
     }
 
+
     fun returnAvailableTools(): List<CrisisTool> {
         return listOf(
             CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview),
@@ -628,6 +678,7 @@ object GridElementsRepository {
             CrisisTool(name = "Autoafirmaciones", icon = Icons.Outlined.Psychology),
         )
     }
+
 
     fun returnAvailableBodySensations(): List<CrisisBodySensation> {
         return listOf(
@@ -649,3 +700,4 @@ object GridElementsRepository {
         )
     }
 }
+
