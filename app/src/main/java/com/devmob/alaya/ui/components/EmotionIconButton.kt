@@ -37,7 +37,6 @@ import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
-import com.devmob.alaya.ui.theme.LightBlueColor
 
 /**
  * IconButton que representa la emocion
@@ -57,81 +56,88 @@ fun EmotionIconButton(
     onClick: () -> Unit = {},
     intensity: Intensity,
     onChangedIntensity: (Intensity) -> Unit,
-){
-
-    // Este atributo determina si esta abierto o no el IntensitySelector
-    var showIntensitySelector by remember{mutableStateOf(false)}
-        Column(
-            verticalArrangement = Arrangement.spacedBy((-3).dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-        ) {
-                AnimatedVisibility(visible = showIntensitySelector) {
-                    IntensitySelector(
-                        onIntensityChange = {
-                            showIntensitySelector = !showIntensitySelector
-                            onChangedIntensity(it)
-                        },
-                        selectedIntensity = intensity,
-                    )
-                }
-                AnimatedVisibility(visible = !showIntensitySelector) {
-                    Box(modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            repeat(intensity.ordinal + 1) {
-                                OutlinedButton(
-                                    modifier = Modifier.size(15.dp),
-                                    contentPadding = PaddingValues(0.dp),
-                                    enabled = false,
-                                    shape = CircleShape,
-                                    colors = ButtonDefaults.outlinedButtonColors(
-                                        containerColor = LightBlueColor
-                                    ),
-                                    border = BorderStroke(width = 1.dp, color = ColorWhite),
-                                    onClick = { showIntensitySelector = !showIntensitySelector }
-                                ) {}
-                            }
-                        }
+) {
+    /**
+     * showIntensitySelector determina si esta abierto o no el IntensitySelector
+     * */
+    var showIntensitySelector by remember { mutableStateOf(false) }
+    Column(
+        verticalArrangement = Arrangement.spacedBy((-3).dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        AnimatedVisibility(visible = showIntensitySelector) {
+            IntensitySelector(
+                onIntensityChange = {
+                    showIntensitySelector = !showIntensitySelector
+                    onChangedIntensity(it)
+                },
+                selectedIntensity = intensity,
+            )
+        }
+        AnimatedVisibility(visible = !showIntensitySelector) {
+            Box(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    repeat(intensity.ordinal + 1) {
+                        OutlinedButton(
+                            modifier = Modifier.size(15.dp),
+                            contentPadding = PaddingValues(0.dp),
+                            enabled = true,
+                            shape = CircleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isActive && !showIntensitySelector) ColorText else ColorWhite
+                            ),
+                            border = BorderStroke(width = 1.dp, color = ColorWhite),
+                            onClick = { showIntensitySelector = !showIntensitySelector }
+                        ) {}
                     }
                 }
-
-            FilledIconButton(
-                onClick = {
-                    showIntensitySelector = !isActive
-                    onClick()
-                },
-                shape = CircleShape,
-                colors = IconButtonColors(
-                    containerColor = if (isActive) ColorText else ColorPrimary,
-                    contentColor = ColorWhite,
-                    disabledContentColor = ColorGray,
-                    disabledContainerColor = ColorWhite
-                ),
-                modifier = Modifier.size(size)
-            ) {
-                Icon(
-                    symbol,
-                    contentDescription = text,
-                    tint = ColorWhite,
-                    modifier = Modifier.fillMaxSize(0.75f)
-                )
             }
-            Spacer(modifier = Modifier.height(7.dp))
-            Text(
-                text = text,
-                color = ColorText,
-                fontSize = 16.sp
-            )
-
         }
+        FilledIconButton(
+            onClick = {
+                showIntensitySelector = !isActive
+                onClick()
+            },
+            shape = CircleShape,
+            colors = IconButtonColors(
+                containerColor = if (isActive) ColorText else ColorPrimary,
+                contentColor = ColorWhite,
+                disabledContentColor = ColorGray,
+                disabledContainerColor = ColorWhite
+            ),
+            modifier = Modifier.size(size)
+        ) {
+            Icon(
+                symbol,
+                contentDescription = text,
+                tint = ColorWhite,
+                modifier = Modifier.fillMaxSize(0.75f)
+            )
+        }
+        Spacer(modifier = Modifier.height(7.dp))
+        Text(
+            text = text,
+            color = ColorText,
+            fontSize = 16.sp
+        )
     }
+}
 
 @Preview
 @Composable
 
-fun EmotionIconButtonPreview(){
-    EmotionIconButton(Icons.Outlined.Refresh, "Mareos", size = 70.dp,isActive = true, onChangedIntensity = {}, intensity = Intensity.LOW, onClick = {})
+fun EmotionIconButtonPreview() {
+    EmotionIconButton(
+        Icons.Outlined.Refresh,
+        "Mareos",
+        size = 70.dp,
+        isActive = true,
+        onChangedIntensity = {},
+        intensity = Intensity.MEDIUM,
+        onClick = {})
 }
