@@ -32,7 +32,13 @@ class GetIASummaryUseCase @Inject constructor(
             crisisRepository.getRegisters(patientId).collect { crisisDetailsDBList ->
                 val json = gson.toJson(crisisDetailsDBList?.map { it.toIASummaryModel("$patientName") })
                 val prompt = "$instructions \n $json"
-                emit(generativeModel.generateContent(prompt).text?: "")
+
+                Log.i("GetIASummaryUseCase", json)
+                if(json.equals("[]")){
+                    emit("")
+                }else{
+                    emit(generativeModel.generateContent(prompt).text?: "")
+                }
             }
         }
     }

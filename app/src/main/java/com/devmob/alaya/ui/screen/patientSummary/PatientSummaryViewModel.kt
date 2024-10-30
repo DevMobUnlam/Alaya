@@ -28,7 +28,7 @@ class PatientSummaryViewModel @Inject constructor(
         //summarize(savedStateHandle["patientId"] ?:"")
         // TODO() Implementar nav argument con id de paciente
         summarize("maurojose029@gmail.com")
-     }
+    }
 
     private fun summarize(patientId: String){
         _uiState.value = SummaryUIState.Loading
@@ -50,7 +50,13 @@ class PatientSummaryViewModel @Inject constructor(
                     if(_uiState.value is SummaryUIState.Success){
                         _uiState.value = SummaryUIState.Loading
                     }
-                    _uiState.value = SummaryUIState.Success(outputContent)
+
+                    if(outputContent.isNotEmpty()){
+                        _uiState.value = SummaryUIState.Success(outputContent)
+
+                    }else{
+                        _uiState.value = SummaryUIState.Success("No hay contenido para resumir")
+                    }
                 }
 
             }catch(e:Exception){
@@ -58,6 +64,11 @@ class PatientSummaryViewModel @Inject constructor(
             }
         }
 
+
+    }
+
+    fun onRetryClick(){
+        summarize("maurojose029@gmail.com")
     }
 
 }

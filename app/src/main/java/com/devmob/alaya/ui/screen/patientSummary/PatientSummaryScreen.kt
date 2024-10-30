@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devmob.alaya.R
+import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
@@ -54,9 +55,9 @@ fun PatientSummaryScreen(
     }
 
     ConstraintLayout(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ){
-        val (progressIndicator, headerText, summaryText) = createRefs()
+        val (progressIndicator, headerText, summaryText, retryButton) = createRefs()
 
         when(uiState.value){
             is SummaryUIState.Loading -> {
@@ -68,6 +69,7 @@ fun PatientSummaryScreen(
                         end.linkTo(parent.end)
                     }
                 )
+
             }
             is SummaryUIState.Initial -> {}
             is SummaryUIState.Error -> {
@@ -83,6 +85,16 @@ fun PatientSummaryScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 25.sp,
                     color = ColorText
+                )
+
+                Button(
+                    modifier = Modifier.constrainAs(retryButton){
+                      top.linkTo(headerText.bottom, margin = 10.dp)
+                      start.linkTo(parent.start)
+                      end.linkTo(parent.end)
+                    },
+                    text = "Reintentar",
+                    onClick = {viewModel.onRetryClick()}
                 )
 
                 Toast.makeText(
@@ -120,13 +132,23 @@ fun PatientSummaryScreen(
                     ),
                 ) {
                     Text(modifier = Modifier
-                        .padding(horizontal = 9.dp, vertical = 9.dp),
+                        .padding(9.dp),
                         text = (uiState.value as SummaryUIState.Success).outputText,
                         textAlign = TextAlign.Center,
                         color = ColorText
 
                     )
                 }
+
+                Button(
+                    modifier = Modifier.constrainAs(retryButton){
+                        top.linkTo(summaryText.bottom, margin = 10.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    text = "Actualizar resumen",
+                    onClick = {viewModel.onRetryClick()}
+                )
 
 
             }
