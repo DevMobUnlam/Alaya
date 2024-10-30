@@ -13,6 +13,4 @@ class UserFirestoreRepositoryImpl : UserFirestoreRepository{
     override suspend fun addUser(user: User) : FirebaseResult = runCatching {
         db.collection("users").document(user.email).set(user).await()
     }.toResponseFirebase()
-
 }
-
