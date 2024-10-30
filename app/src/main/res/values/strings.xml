@@ -59,4 +59,12 @@
     <string name="intensity_medium">Media</string>
     <string name="intensity_high">Alta</string>
     <string name="text_tooltip_text_area">¿Prefieres hablar en lugar de escribir? Mantén presionado el botón para dictar tu mensaje.</string>
+    <string name="mi_red_de_contenci_n">Mi red de contención</string>
+    <string name="ir_a_inicio">Ir a inicio</string>
+    <string name="est_bien_lo_importante_es_que_lo_intentaste">Está bien, lo importante es que lo intentaste</string>
+    <string name="todo_va_a_estar_bien">¡Todo va a estar bien!</string>
+    <string name="registrar_el_episodio_m_s_tarde">Registrar el episodio más tarde</string>
+    <string name="registrar_el_episodio">Registrar el episodio</string>
+    <string name="lograste_superar_este_momento_segu_as">Lograste superar este momento. ¡Seguí así!</string>
+    <string name="felicidades">¡Felicidades!</string>
 </resources>
