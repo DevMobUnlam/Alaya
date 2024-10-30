@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.patient_home
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
@@ -15,10 +15,12 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,11 +29,26 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Card
+import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
+fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavController) {
+
+    val shouldShowModal = viewmodel.shouldShowInvitation
+    val nameProfessional = viewmodel.nameProfessional
+    val namePatient = viewmodel.namePatient
+    val greetingMessage = viewmodel.greetingMessage
+
+    LaunchedEffect(Unit) {
+        viewmodel.fetchPatient()
+        viewmodel.updateGreetingMessage()
+        viewmodel.checkProfessionalInvitation()
+    }
+
+    InvitationModal(nameProfessional, shouldShowModal, viewmodel)
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +71,7 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
         )
 
         Text(
-            text = "Hola ${viewmodel.namePatient}, ${viewmodel.greetingMessage}!",
+            text = "Hola ${namePatient}, ${greetingMessage}!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 32.sp,
@@ -125,4 +142,25 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
             )
         }
     }
+}
+
+@Composable
+private fun InvitationModal(
+    nameProfessional: String,
+    shouldShowModal: Boolean,
+    viewmodel: PatientHomeScreenViewmodel
+) {
+    Modal(
+        title = stringResource(R.string.title_modal_patient_invitation),
+        description = stringResource(
+            R.string.description_modal_patient_invitation,
+            nameProfessional,
+            nameProfessional
+        ),
+        show = shouldShowModal,
+        primaryButtonText = stringResource(R.string.accept),
+        secondaryButtonText = stringResource(R.string.decline),
+        onConfirm = { viewmodel.acceptInvitation() },
+        onDismiss = { viewmodel.rejectInvitation() },
+    )
 }
