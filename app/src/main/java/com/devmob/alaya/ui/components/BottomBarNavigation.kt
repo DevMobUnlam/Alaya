@@ -37,10 +37,13 @@ import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.theme.ColorLightGray
 import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -66,7 +69,7 @@ fun BottomBarNavigation(items: List<ItemMenu>, navHostController: NavHostControl
                 colors = NavigationBarItemColors(
                     selectedIconColor = ColorTertiary, unselectedIconColor = ColorText, disabledIconColor = ColorText,
                     selectedTextColor = ColorTertiary, unselectedTextColor = ColorText, disabledTextColor = ColorText,
-                    selectedIndicatorColor = ColorTertiary,
+                    selectedIndicatorColor = LightBlueColor,
                 )
             )
         }
