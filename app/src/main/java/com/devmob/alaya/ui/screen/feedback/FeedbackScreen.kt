@@ -61,8 +61,6 @@ fun FeedbackScreen(
                         ),
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
-//                    Spacer(modifier = Modifier.height(8.dp))
-
                     Text(
                         text = stringResource(R.string.lograste_superar_este_momento_segu_as),
                         color = ColorText,
@@ -196,10 +194,4 @@ fun FeedbackScreen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    FeedbackScreen(FeedbackType.TodoVaAEstarBien, rememberNavController())
 }
