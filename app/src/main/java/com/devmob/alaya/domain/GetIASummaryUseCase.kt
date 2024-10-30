@@ -1,33 +1,39 @@
 package com.devmob.alaya.domain
 
+import android.icu.util.Calendar
 import android.util.Log
 import com.devmob.alaya.data.mapper.toIASummaryModel
+import com.devmob.alaya.utils.toCalendar
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class GetIASummaryUseCase {
+
+class GetIASummaryUseCase @Inject constructor(
+    private val gson: Gson,
+    private val crisisRepository: CrisisRepository,
+    private val getUserRepository: GetUserRepository,
+    ) {
 
     suspend operator fun invoke(
         instructions: String,
         generativeModel: GenerativeModel,
-        patientId: String,
-        crisisRepository: CrisisRepository): String? {
+        patientId: String
+): Flow<String> {
 
-        val gson = Gson()
+        return flow {
 
-        // TODO() Obtener Nombre de Paciente de base de datos
-        // TODO() Inyectar repositorio con hilt
-
-        val crisisRegisters = crisisRepository.getRegisters(patientId)?.map { it.toIASummaryModel("Mauro") }
+            val patientName =  getUserRepository.getUser(patientId)?.name
 
 
-        val json = gson.toJson(crisisRegisters)
-
-        Log.v("Json Prompt", json)
-
-        val prompt = "$instructions \n $json"
-
-        return generativeModel.generateContent(prompt).text
-
+            crisisRepository.getRegisters(patientId).collect { crisisDetailsDBList ->
+                val json = gson.toJson(crisisDetailsDBList?.map { it.toIASummaryModel("$patientName") })
+                val prompt = "$instructions \n $json"
+                emit(generativeModel.generateContent(prompt).text?: "")
+            }
+        }
     }
 }
