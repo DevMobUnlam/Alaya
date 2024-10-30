@@ -39,15 +39,16 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
 /**
- * IconButton que representa la emocion
- *     isActive -> Atributo que indica si esta activo el boton o no, el cual se usa para cambiarlo de color
- *     onClick -> Accion a ejecutar una vez se presiona en el iconButton
- *     intensity -> La intensidad que va a mostrar los radioButton, la intensidad seleccionada va a ser la que va a estar pintada
- *     onChangedIntensity -> Accion a ejecutar una vez se cambia la intensidad seleccionada con el tooltip
+ * IconButton que muestra un selector de intensidad cuando se selecciona. Utilizado en el registro de crisis
+ * para seleccionar las emociones y sensaciones corporales.
+ * @param isActive Atributo que indica si esta activo el boton o no, el cual se usa para cambiarlo de color.
+ * @param onClick Accion a ejecutar una vez se presiona en el iconButton.
+ * @param intensity La intensidad que va a mostrar los radioButton, la intensidad seleccionada va a ser la que va a estar pintada.
+ * @param onChangedIntensity Accion a ejecutar una vez se cambia la intensidad seleccionada con el tooltip.
  */
 
 @Composable
-fun EmotionIconButton(
+fun IconButtonWithIntensity(
     symbol: ImageVector,
     text: String,
     size: Dp,
@@ -130,9 +131,8 @@ fun EmotionIconButton(
 
 @Preview
 @Composable
-
 fun EmotionIconButtonPreview() {
-    EmotionIconButton(
+    IconButtonWithIntensity(
         Icons.Outlined.Refresh,
         "Mareos",
         size = 70.dp,

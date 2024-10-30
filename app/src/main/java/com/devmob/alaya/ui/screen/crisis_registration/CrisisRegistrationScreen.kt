@@ -54,7 +54,7 @@ import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.components.CrisisRegisterIconButton
 import com.devmob.alaya.ui.components.DateTimePicker
-import com.devmob.alaya.ui.components.EmotionIconButton
+import com.devmob.alaya.ui.components.IconButtonWithIntensity
 import com.devmob.alaya.ui.components.IconButtonNoFill
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.components.NewCrisisElementCard
@@ -267,7 +267,7 @@ fun CrisisRegistrationScreen(
                         val intensity =
                             viewModel.screenState.value?.crisisDetails?.bodySensationList?.find { it.name == bodySensation.name }?.intensity
                                 ?: bodySensation.intensity
-                        EmotionIconButton(
+                        IconButtonWithIntensity(
                             symbol = bodySensation.icon,
                             text = bodySensation.name,
                             size = 70.dp,
@@ -361,7 +361,7 @@ fun CrisisRegistrationScreen(
                         val intensity =
                             viewModel.screenState.value?.crisisDetails?.emotionList?.find { it.name == emotion.name }?.intensity
                                 ?: emotion.intensity
-                        EmotionIconButton(
+                        IconButtonWithIntensity(
                             symbol = emotion.icon,
                             text = emotion.name,
                             size = 70.dp,
