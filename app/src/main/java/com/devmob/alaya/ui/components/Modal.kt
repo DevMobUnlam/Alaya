@@ -16,6 +16,7 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 fun Modal(
     show: Boolean,
     title: String,
+    description: String? = null,
     primaryButtonText: String,
     secondaryButtonText: String? = null,
     onDismiss: () -> Unit = {},
@@ -52,7 +53,19 @@ fun Modal(
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center
             )
-        })
+        },
+        text = {
+            description?.let {
+                Text(
+                    text = description,
+                    color = ColorText,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    )
 }
 
 @Preview
@@ -61,7 +74,7 @@ fun ModalPreview() {
     Modal(
         true,
         "¿Te sentís más calmado ahora?",
-        "Sí, me siento mejor",
-        "No, aún necesito apoyo"
+        primaryButtonText = "Sí, me siento mejor",
+        secondaryButtonText = "No, aún necesito apoyo"
     )
 }

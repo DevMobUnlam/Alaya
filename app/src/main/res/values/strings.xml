@@ -59,4 +59,8 @@
     <string name="intensity_medium">Media</string>
     <string name="intensity_high">Alta</string>
     <string name="text_tooltip_text_area">¿Prefieres hablar en lugar de escribir? Mantén presionado el botón para dictar tu mensaje.</string>
+    <string name="description_modal_patient_invitation">%1$s te ha invitado a vincularte como su paciente. Al aceptar, %2$s podrá asignarte y ajustar tu tratamiento, así como hacer un seguimiento de tu progreso. ¿Deseas aceptar esta invitación?</string>
+    <string name="title_modal_patient_invitation">Invitación de Vinculación</string>
+    <string name="accept">Aceptar</string>
+    <string name="decline">Rechazar</string>
 </resources>
