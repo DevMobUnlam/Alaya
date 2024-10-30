@@ -138,6 +138,10 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                     contentDescription = null
                 )
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -156,6 +160,10 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                     contentDescription = null
                 )
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -174,7 +182,10 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                     imageVector = Icons.Default.Email,
                     contentDescription = null
                 )
-            },
+            },keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
