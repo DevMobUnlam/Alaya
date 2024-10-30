@@ -3,11 +3,11 @@ package com.devmob.alaya.ui.screen
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Checklist
@@ -35,8 +35,9 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        val (backgroundImage, greetingText, cardColumn, bottomBar) = createRefs()
+        val (backgroundImage, greetingText, cardColumn) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.fondo_home),
@@ -51,8 +52,9 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
                 },
             contentScale = ContentScale.Crop
         )
+
         Text(
-            text = "Hola ${viewmodel.namePatient}, ¡${viewmodel.greetingMessage}!",
+            text = "Hola ${viewmodel.namePatient}, ${viewmodel.greetingMessage}!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 32.sp,
@@ -61,22 +63,23 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
             maxLines = 2,
             modifier = Modifier
                 .constrainAs(greetingText) {
-                    top.linkTo(parent.top, margin = 30.dp)
+                    top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
         )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(cardColumn) {
-                    top.linkTo(greetingText.bottom, margin = 40.dp)
+                    top.linkTo(greetingText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(bottomBar.top)
+                    bottom.linkTo(parent.bottom)
                 }
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
         ) {
             Card(
                 title = "¿Cómo me siento hoy?",
@@ -121,14 +124,5 @@ fun HomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavControll
                 )
             )
         }
-        //Spacer para simular la bottom bar que no está en este composable
-        //el height default de la Navigation bar es 80dp, pero me funcionó bien con 50
-        Spacer(
-            modifier = Modifier.constrainAs(bottomBar) {
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }.height(50.dp)
-        )
     }
 }
