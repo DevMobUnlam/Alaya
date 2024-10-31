@@ -25,8 +25,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.ButtonStyle
+import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.utils.NavUtils
