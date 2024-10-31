@@ -20,6 +20,7 @@ data class User (
     // Constructor vacío requerido para Firestore
     constructor() : this("", "", "", "", R.drawable.logounologin, "No tiene sesiones", UserRole.PATIENT)
     constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
+    constructor() : this(name = "",surname = "",phone = "",email = "",image = R.drawable.logounologin,hour = "No tiene sesiones",role = UserRole.PATIENT)
 }
 
 
