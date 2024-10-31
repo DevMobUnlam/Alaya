@@ -265,6 +265,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewmodel) {
                     val newUser = User(
                         name = name,
                         surname = surname,
+                        phone = "", //TODO solicitar este dato en el registro
                         email = email,
                         role = resolveRole(isProfessional)
                     )

@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.storage)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
@@ -91,4 +92,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+    implementation("com.google.firebase:firebase-storage")
 }

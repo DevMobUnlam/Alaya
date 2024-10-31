@@ -52,6 +52,7 @@ class CrisisRegistrationViewModel(
         _screenState.value = CrisisRegistrationScreenState()
         shouldGoToBack = true
         shouldGoToSummary = false
+        shouldShowExitModal = false
     }
 
     fun goOneStepForward() {
