@@ -92,4 +92,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+    implementation("com.google.firebase:firebase-storage")
 }

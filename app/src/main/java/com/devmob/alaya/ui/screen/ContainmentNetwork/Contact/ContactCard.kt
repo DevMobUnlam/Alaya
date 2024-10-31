@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +53,7 @@ fun ContactCard(
     textColor: Color = ColorText,
     showWhatsappButton: Boolean = true
 ){
+
     val context = LocalContext.current
     ElevatedCard(
         onClick = onClick,
@@ -70,7 +76,7 @@ fun ContactCard(
             horizontalArrangement = Arrangement.SpaceBetween
 
         ) {
-                if (contact.photo != null){
+                if (contact.photo?.isNotEmpty() == true){
                     Image(
                         painter = rememberAsyncImagePainter(
                             model = contact.photo,

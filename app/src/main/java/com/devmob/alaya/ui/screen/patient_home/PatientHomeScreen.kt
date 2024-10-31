@@ -59,7 +59,6 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         val (greetingText, cardColumn) = createRefs()
         Text(
