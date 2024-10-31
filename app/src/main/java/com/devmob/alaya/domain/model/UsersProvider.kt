@@ -5,19 +5,21 @@ import java.io.Serializable
 
 
 data class User (
-    val name: String,
-    val surname: String,
-    val phone: String,
-    val email: String,
+    val name: String = "",
+    val surname: String = "",
+    val phone: String = "",
+    val email: String = "",
     val image: Int = R.drawable.logounologin,
     val hour: String = "No tiene sesiones",
-    val role: UserRole,
+    val role: UserRole = UserRole.PATIENT,
     val invitation: Invitation? = null,
     val professional: Professional? = null,
-    val patients: List<Patient>? = null
+    val patients: List<Patient>? = null,
+    val containmentNetwork: List<Contact>? = null
 ) : Serializable {
+    // Constructor vacío requerido para Firestore
+    constructor() : this("", "", "", "", R.drawable.logounologin, "No tiene sesiones", UserRole.PATIENT)
     constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
-    constructor() : this(name = "",surname = "",phone = "",email = "",image = R.drawable.logounologin,hour = "No tiene sesiones",role = UserRole.PATIENT)
 }
 
 
