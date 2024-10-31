@@ -48,29 +48,21 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
     }
     
     InvitationModal(nameProfessional, shouldShowModal, viewmodel)
-    
+
+    Image(
+        painter = painterResource(id = R.drawable.fondo_home),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (backgroundImage, greetingText, cardColumn) = createRefs()
-
-        Image(
-            painter = painterResource(id = R.drawable.fondo_home),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .constrainAs(backgroundImage) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            contentScale = ContentScale.Crop
-        )
-
+        val (greetingText, cardColumn) = createRefs()
         Text(
-            text = "Hola ${namePatient}, ${greetingMessage}!",
+            text = "Hola ${namePatient}, ¡${greetingMessage}!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 32.sp,
@@ -93,7 +85,6 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
                     top.linkTo(greetingText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
                 }
                 .padding(16.dp)
         ) {
