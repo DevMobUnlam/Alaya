@@ -63,7 +63,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
     ) {
         val (greetingText, cardColumn) = createRefs()
         Text(
-            text = "Hola ${namePatient}, ${greetingMessage}!",
+            text = "Hola ${namePatient}, ¡${greetingMessage}!",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             lineHeight = 32.sp,
