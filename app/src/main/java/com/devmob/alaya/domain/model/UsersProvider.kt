@@ -19,6 +19,7 @@ data class User (
     val containmentNetwork: List<Contact>? = null
 ) : Serializable {
     constructor() : this("", "", "","", 0, "", UserRole.PROFESSIONAL)
+    constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
 }
 
 

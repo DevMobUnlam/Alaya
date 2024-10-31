@@ -1,19 +1,22 @@
 package com.devmob.alaya
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
-import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.ContactUseCase
+import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -24,6 +27,7 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
@@ -51,7 +55,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.utils.NavUtils
@@ -61,7 +64,9 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
 fun MainContent(navController: NavHostController) {
+    val context = LocalContext.current
     val currentRoute = currentRoute(navController)
+    val prefs: SharedPreferences = SharedPreferences(context)
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
@@ -81,7 +86,15 @@ fun MainContent(navController: NavHostController) {
     )
     val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
-
+    val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
+        factory = ViewModelFactory {
+            PatientHomeScreenViewmodel(
+                GetUserDataUseCase(),
+                GetInvitationUseCase(),
+                FirebaseClient()
+            )
+        }
+    )
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -209,7 +222,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase()))
+                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
@@ -362,7 +375,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuPatientScreen(navController)
+                MenuPatientScreen(navController, prefs)
             }
             composable(ProfessionalRoutes.MenuProfessional.route,
                 enterTransition = {
@@ -381,7 +394,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuProfessionalScreen(navController)
+                MenuProfessionalScreen(navController, prefs)
             }
             composable(NavUtils.LoginRoutes.Register.route,
                 enterTransition = {
