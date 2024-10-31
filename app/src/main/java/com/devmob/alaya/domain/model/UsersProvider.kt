@@ -19,6 +19,7 @@ data class User (
 ) : Serializable {
     // Constructor vacío requerido para Firestore
     constructor() : this("", "", "", "", R.drawable.logounologin, "No tiene sesiones", UserRole.PATIENT)
+    constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
 }
 
 
