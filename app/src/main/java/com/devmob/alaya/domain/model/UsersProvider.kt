@@ -17,6 +17,7 @@ data class User (
     val patients: List<Patient>? = null
 ) : Serializable {
     constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
+    constructor() : this(name = "",surname = "",phone = "",email = "",image = R.drawable.logounologin,hour = "No tiene sesiones",role = UserRole.PATIENT)
 }
 
 
