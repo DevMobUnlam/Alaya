@@ -66,9 +66,9 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 fun MainContent(navController: NavHostController) {
     val context = LocalContext.current
     val currentRoute = currentRoute(navController)
-    val prefs: SharedPreferences = SharedPreferences(context)
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
+    val prefs: SharedPreferences = SharedPreferences(context)
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
@@ -80,6 +80,8 @@ fun MainContent(navController: NavHostController) {
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.ConfigTreatment.route,
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route
@@ -450,7 +452,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
-            composable(ProfessionalRoutes.AddCustomActivity.route,
+            composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
                 enterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
                 exitTransition = { return@composable slideOutOfContainer(
@@ -460,6 +462,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
             }
+
             composable(ProfessionalRoutes.SendInvitation.route,
                 enterTransition = { return@composable slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
