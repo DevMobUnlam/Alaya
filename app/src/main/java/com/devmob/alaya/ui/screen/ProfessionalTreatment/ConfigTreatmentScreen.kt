@@ -88,9 +88,9 @@ fun ConfigTreatmentScreen(viewModel: ConfigTreatmentViewModel, navController: Na
                 onClick = {
                     navController.navigate(
                         NavUtils.ProfessionalRoutes.TreatmentSummary.createRoute(
-                            viewModel.firstSelectOption.value?.title ?: "",
-                            viewModel.secondSelectOption.value?.title ?: "",
-                            viewModel.thirdSelectOption.value?.title ?: ""
+                            firstStep = viewModel.firstSelectOption.value?.title ?: "",
+                            secondStep = viewModel.secondSelectOption.value?.title ?: "",
+                            thirdStep = viewModel.thirdSelectOption.value?.title ?: ""
                         )
                     )
                 },

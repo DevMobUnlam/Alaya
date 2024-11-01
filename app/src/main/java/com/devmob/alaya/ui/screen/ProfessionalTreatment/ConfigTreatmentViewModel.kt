@@ -4,9 +4,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.model.OptionTreatment
 
 class ConfigTreatmentViewModel : ViewModel() {
+
+    val db = FirebaseClient().db
+
 
     var firstSelectOption = mutableStateOf<OptionTreatment?>(null)
     var secondSelectOption = mutableStateOf<OptionTreatment?>(null)
