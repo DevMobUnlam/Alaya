@@ -61,8 +61,8 @@ class PatientHomeScreenViewmodel(
             getInvitationUseCase.getInvitationProfessional(emailPatient)?.let { invitation ->
                 when (invitation.status) {
                     InvitationStatus.PENDING -> {
-                        fetchProfessional(invitation.professionalEmail)
-                        emailProfessional = invitation.professionalEmail
+                        fetchProfessional(invitation.email)
+                        emailProfessional = invitation.email
                     }
 
                     InvitationStatus.ACCEPTED, InvitationStatus.REJECTED, InvitationStatus.NONE -> {
@@ -88,7 +88,8 @@ class PatientHomeScreenViewmodel(
     private fun updateInvitationStatus(status: InvitationStatus) {
         emailPatient.let {
             viewModelScope.launch {
-                getInvitationUseCase.updateInvitation(it, "invitation.status", status)
+                getInvitationUseCase.updateInvitation(emailPatient, "invitation.status", status)
+                getInvitationUseCase.updateProfessionalInvitationList(emailProfessional, emailPatient, status)
             }
         }
     }

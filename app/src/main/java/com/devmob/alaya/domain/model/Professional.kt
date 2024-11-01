@@ -7,7 +7,7 @@ data class Professional (
     val name: String,
     val surname: String,
     val phone: String,
-    val nextSession: String? = null
+    val nextSession: String? = null,
 ): Serializable {
     constructor() : this("", "", "", "", "")
 }

@@ -72,7 +72,6 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraint)
-    implementation(libs.androidx.runtime.livedata)
     implementation(libs.coil.compose)
     implementation(libs.android.compose.lottie)
     implementation(libs.androidx.constraint)
@@ -92,6 +91,4 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-    implementation("com.google.firebase:firebase-storage")
 }

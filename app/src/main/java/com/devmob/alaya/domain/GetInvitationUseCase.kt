@@ -24,4 +24,16 @@ class GetInvitationUseCase {
     suspend fun addPatient(userId: String, patient: Patient) {
         getUserUseCase.addNewFieldToList(userId, "patients", patient)
     }
+
+    suspend fun sendInvitation(email: String, professionalEmail: String): Result<Unit> {
+        return getUserUseCase.sendInvitation(email, professionalEmail)
+    }
+
+    suspend fun updateProfessionalInvitationList(
+        professionalEmail: String,
+        patientEmail: String,
+        status: InvitationStatus
+    ) {
+        return getUserUseCase.updateProfessionalInvitationList(professionalEmail,patientEmail, status)
+    }
 }

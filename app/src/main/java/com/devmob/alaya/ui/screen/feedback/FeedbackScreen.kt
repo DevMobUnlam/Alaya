@@ -29,7 +29,6 @@ import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
-
 @Composable
 fun FeedbackScreen(
     feedbackType: FeedbackType,

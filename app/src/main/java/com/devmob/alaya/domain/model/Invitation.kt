@@ -3,7 +3,7 @@ package com.devmob.alaya.domain.model
 import java.io.Serializable
 
 data class Invitation(
-    val professionalEmail: String,
+    val email: String,
     val status: InvitationStatus
 ) :
     Serializable {
