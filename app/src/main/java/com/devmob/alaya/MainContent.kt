@@ -12,8 +12,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.preferences.SharedPreferences
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
@@ -29,6 +29,7 @@ import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
@@ -54,6 +55,8 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -65,8 +68,11 @@ fun MainContent(navController: NavHostController) {
     val currentRoute = currentRoute(navController)
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
-    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val prefs: SharedPreferences = SharedPreferences(context)
+    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
+    val SendInvitationUseCase = GetInvitationUseCase()
+    val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
+
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -75,7 +81,10 @@ fun MainContent(navController: NavHostController) {
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
-        ProfessionalRoutes.AddCustomActivity.route
+        ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.SendInvitation.route
     )
     val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
@@ -106,6 +115,16 @@ fun MainContent(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
+        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
+        val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
+            factory = ViewModelFactory {
+                PatientHomeScreenViewmodel(
+                    GetUserDataUseCase(),
+                    GetInvitationUseCase(),
+                    FirebaseClient()
+                )
+            }
+        )
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -442,6 +461,17 @@ fun MainContent(navController: NavHostController) {
                     AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
             ) {
                 CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
+            }
+
+            composable(ProfessionalRoutes.SendInvitation.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                SendInvitationScreen(sendInvitationViewModel)
             }
         }
     }

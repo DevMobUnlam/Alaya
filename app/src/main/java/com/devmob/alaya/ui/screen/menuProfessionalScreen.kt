@@ -34,6 +34,26 @@ fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreference
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+            ,
+            enabled = true,
+            content = {
+                Text(
+                    text = "Agregar paciente",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = ColorText,
+                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
+                        navController.navigate(
+                            NavUtils.ProfessionalRoutes.SendInvitation.route
+                        )
+                    }
+                )
+            }
+        )
+        CardContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
                 ,
             enabled = true,
             content = {
