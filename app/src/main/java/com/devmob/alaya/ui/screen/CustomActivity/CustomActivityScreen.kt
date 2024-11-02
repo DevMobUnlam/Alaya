@@ -44,7 +44,7 @@ import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.ui.components.Input
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite

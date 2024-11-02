@@ -10,9 +10,8 @@ import androidx.navigation.compose.composable
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
-import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel

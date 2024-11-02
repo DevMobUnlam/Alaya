@@ -1,6 +1,5 @@
 package com.devmob.alaya
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -29,7 +28,6 @@ import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
@@ -39,8 +37,8 @@ import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
