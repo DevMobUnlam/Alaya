@@ -1,7 +1,7 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -19,42 +19,36 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
-import com.devmob.alaya.ui.components.Button as ButtonAlaya
 import com.devmob.alaya.ui.components.ButtonStyle
-import com.devmob.alaya.ui.components.DashboardCard
+import com.devmob.alaya.ui.components.HorizontalCardCarousel
 import com.devmob.alaya.ui.components.NextAppointmentHeader
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
+import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 import java.time.LocalDateTime
+import com.devmob.alaya.ui.components.Button as ButtonAlaya
 
 @Composable
 fun PatientProfileScreen(navController: NavController) {
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = viewModel()
     val phoneNumber = "1166011371"
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.fondo_home),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
 
     ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
     ) {
-        val (image, header, summaryCard, treatmentButton, sessionButton, whatsappButton) = createRefs()
+        val (image, header, titleCarousel, treatmentButton, sessionButton, whatsappButton, carousel) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.brenda_rodriguez),
@@ -71,8 +65,8 @@ fun PatientProfileScreen(navController: NavController) {
         )
 
         NextAppointmentHeader(
-             "Brenda",
-             "Rodriguez",
+            "Brenda",
+            "Rodriguez",
             date = LocalDateTime.now(),
             modifier = Modifier.constrainAs(header) {
                 start.linkTo(image.end, margin = 8.dp)
@@ -105,9 +99,20 @@ fun PatientProfileScreen(navController: NavController) {
             Text(text = "Enviar mensaje", color = Color.White)
         }
 
-        DashboardCard(
-            modifier = Modifier.constrainAs(summaryCard) {
-                top.linkTo(whatsappButton.bottom, margin = 16.dp)
+        Text(
+            text = "Esta semana",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = ColorText,
+            modifier = Modifier.constrainAs(titleCarousel) {
+                top.linkTo(whatsappButton.bottom, margin = 8.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+            }
+        )
+
+        HorizontalCardCarousel(
+            modifier = Modifier.constrainAs(carousel) {
+                top.linkTo(titleCarousel.bottom, margin = 8.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
@@ -117,11 +122,11 @@ fun PatientProfileScreen(navController: NavController) {
             text = stringResource(R.string.treatment_text_button_professional),
             modifier = Modifier.constrainAs(treatmentButton) {
                 start.linkTo(parent.start)
-                top.linkTo(summaryCard.bottom, margin = 16.dp)
+                top.linkTo(carousel.bottom, margin = 16.dp)
                 end.linkTo(parent.end)
             },
             ButtonStyle.Outlined,
-            {navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)},
+            { navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route) },
             containerColor = ColorWhite
         )
 
@@ -139,3 +144,8 @@ fun PatientProfileScreen(navController: NavController) {
     }
 }
 
+@Preview
+@Composable
+fun PatientProfileScreenPreview() {
+    PatientProfileScreen(navController = NavController(LocalContext.current))
+}
