@@ -57,7 +57,7 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Header(viewModel.nameProfessional,viewModel.greetingMessage)
+            viewModel.nameProfessional?.let { Header(it,viewModel.greetingMessage) }
             Spacer(modifier = Modifier.width(16.dp))
             CardContainer(
                 modifier = Modifier.fillMaxHeight(),
@@ -94,11 +94,11 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                             color = ColorQuaternary,
                             thickness = 1.dp
                         )
-                        LazyColumn(
+                       LazyColumn(
                             modifier = Modifier.wrapContentHeight()
                         ) {
-                            items(viewModel.users) { user ->
-                                UserItem(user, true) {
+                            items(viewModel.patients) { patient ->
+                                UserItem(patient, true) {
                                     navController.navigate(NavUtils.ProfessionalRoutes.PatientProfile.route)
                                 }
                             }
@@ -110,9 +110,3 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewProfessionalHomeScreen() {
-    val navController = rememberNavController()
-    ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
-}

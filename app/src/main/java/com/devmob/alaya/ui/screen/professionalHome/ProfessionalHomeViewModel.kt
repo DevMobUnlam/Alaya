@@ -4,30 +4,50 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.devmob.alaya.domain.model.User
-import com.devmob.alaya.domain.model.UsersProvider
+import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.domain.GetUserDataUseCase
+import com.devmob.alaya.domain.model.Patient
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
-class ProfessionalHomeViewModel : ViewModel() {
-    var nameProfessional by mutableStateOf("")
-    var users by mutableStateOf<List<User>>(emptyList())
+class ProfessionalHomeViewModel(
+    private val getUserData: GetUserDataUseCase
+) : ViewModel() {
+    var patients by mutableStateOf<List<Patient>>(emptyList())
     var greetingMessage by mutableStateOf("")
+    var currentEmail = FirebaseClient().auth.currentUser?.email
+    var nameProfessional by mutableStateOf("")
 
     init {
         fetchProfessional()
-        fetchUsers()
+        currentEmail?.let { loadPatients(it) }
         updateGreetingMessage()
     }
 
     private fun fetchProfessional() {
-        nameProfessional = "Patricia"
+        viewModelScope.launch {
+            nameProfessional = currentEmail?.let { getUserData.getName(it) } ?: ""
+        }
     }
 
-    private fun fetchUsers() {
-        users = UsersProvider.users
+    fun loadPatients(professionalEmail: String) {
+        viewModelScope.launch {
+            val professional = getUserData.getUser(professionalEmail)
+            professional?.let {
+                val today = Calendar.getInstance()
+                val todayString = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today.time)
+
+                patients = (it.patients ?: emptyList()).filter { patient ->
+                    patient.nextSessionDate == todayString
+                }
+            }
+        }
     }
 
-    private fun updateGreetingMessage() {
+    fun updateGreetingMessage() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         greetingMessage = when (hourOfDay) {
