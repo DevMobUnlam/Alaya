@@ -31,7 +31,7 @@ class CrisisHandlingViewModelTest {
     @Test
     fun `when showModal is called, shouldShowModal is true`() {
         viewModel.showModal()
-        assertTrue(false)
+        assertTrue(viewModel.shouldShowModal)
     }
 
     @Test
