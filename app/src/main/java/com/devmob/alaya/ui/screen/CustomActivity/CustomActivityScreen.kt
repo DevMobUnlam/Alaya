@@ -160,7 +160,7 @@ fun CustomActivityScreen(
 
         Button(
             onClick = {
-                viewModel.addCustomActivity(OptionTreatment(title, description/*, imageUri*/)) //TODO DESCOMENTAR URI
+                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri))
                 navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)
             },
             modifier = Modifier
