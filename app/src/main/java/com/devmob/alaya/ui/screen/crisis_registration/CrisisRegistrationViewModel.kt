@@ -14,6 +14,7 @@ import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
 import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
@@ -93,21 +94,92 @@ class CrisisRegistrationViewModel(
             )
         }
     }
-
-    fun updateCrisisBodySensation(bodySensation: CrisisBodySensation) {
+    fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
         val currentState = _screenState.value ?: return
         val updatedBodySensationList =
             currentState.crisisDetails.bodySensationList.toMutableList().apply {
                 if (any { it.name == bodySensation.name }) {
                     removeIf { it.name == bodySensation.name }
-                } else {
+                }
+            }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
+
+    fun selectCrisisBodySensation(bodySensation: CrisisBodySensation) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList =
+            currentState.crisisDetails.bodySensationList.toMutableList().apply {
+                if (!any { it.name == bodySensation.name }) {
                     add(bodySensation)
                 }
             }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
 
+    fun updateIntensityBodySensation(bodySensation: CrisisBodySensation, intensity: Intensity) {
+        val currentState = _screenState.value ?: return
+        val updatedBodySensationList =
+            currentState.crisisDetails.bodySensationList.toMutableList().apply {
+                if (any { it.name == bodySensation.name }) {
+                    removeIf { it.name == bodySensation.name }
+                }
+                add(bodySensation.copy(intensity = intensity))
+            }
+        updateStateBodySensationList(currentState, updatedBodySensationList)
+    }
+
+    private fun updateStateBodySensationList(
+        currentState: CrisisRegistrationScreenState,
+        updatedBodySensationList: MutableList<CrisisBodySensation>
+    ) {
         _screenState.value = currentState.copy(
             crisisDetails = currentState.crisisDetails.copy(
                 bodySensationList = updatedBodySensationList
+            )
+        )
+    }
+
+    fun unselectCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (any { it.name == emotion.name }) {
+                    removeIf { it.name == emotion.name }
+                }
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    fun selectCrisisEmotion(emotion: CrisisEmotion) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (!any { it.name == emotion.name }) {
+                    add(emotion)
+                }
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    fun updateIntensityEmotion(crisisEmotion: CrisisEmotion, intensity: Intensity) {
+        val currentState = _screenState.value ?: return
+        val updatedEmotionList =
+            currentState.crisisDetails.emotionList.toMutableList().apply {
+                if (any { it.name == crisisEmotion.name }) {
+                    removeIf { it.name == crisisEmotion.name }
+                }
+                add(crisisEmotion.copy(intensity = intensity))
+            }
+        updateStateEmotionList(currentState, updatedEmotionList)
+    }
+
+    private fun updateStateEmotionList(
+        currentState: CrisisRegistrationScreenState,
+        updatedEmotionList: MutableList<CrisisEmotion>
+    ) {
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                emotionList = updatedEmotionList
             )
         )
     }
