@@ -20,6 +20,7 @@ class ProfessionalHomeViewModel(
     var greetingMessage by mutableStateOf("")
     var currentEmail = FirebaseClient().auth.currentUser?.email
     var nameProfessional by mutableStateOf("")
+    var isLoading by mutableStateOf(true)
 
     init {
         fetchProfessional()
@@ -30,6 +31,13 @@ class ProfessionalHomeViewModel(
     private fun fetchProfessional() {
         viewModelScope.launch {
             nameProfessional = currentEmail?.let { getUserData.getName(it) } ?: ""
+            checkIfLoadingCompleted()
+        }
+    }
+
+    private fun checkIfLoadingCompleted() {
+        if (nameProfessional.isNotEmpty()) {
+            isLoading = false
         }
     }
 
@@ -44,6 +52,7 @@ class ProfessionalHomeViewModel(
                     patient.nextSessionDate == todayString
                 }
             }
+            checkIfLoadingCompleted()
         }
     }
 
