@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -26,10 +28,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import co.yml.charts.common.model.Point
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.HorizontalCardCarousel
 import com.devmob.alaya.ui.components.NextAppointmentHeader
+import com.devmob.alaya.ui.components.SingleLineChartWithGridLines
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -46,9 +50,10 @@ fun PatientProfileScreen(navController: NavController) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .verticalScroll(rememberScrollState()),
     ) {
-        val (image, header, titleCarousel, treatmentButton, sessionButton, whatsappButton, carousel) = createRefs()
+        val (image, header, treatmentButton, sessionButton, whatsappButton, titleCarousel, carousel, titleLineCharts, lineCharts) = createRefs()
 
         Image(
             painter = painterResource(id = R.drawable.brenda_rodriguez),
@@ -118,11 +123,44 @@ fun PatientProfileScreen(navController: NavController) {
             }
         )
 
+        //TODO llevar al viewModel
+        val pointsData = listOf(
+            Point(0f, 8f, "Dic"),
+            Point(1f, 6f, "Ene"),
+            Point(2f, 0f, "Feb"),
+            Point(3f, 2f, "Mar"),
+            Point(4f, 6f, "Abr"),
+            Point(5f, 0f, "May"),
+            Point(6f, 4f, "Jun"),
+            Point(7f, 5f, "Jul"),
+            Point(8f, 0f,"Ago"),
+            Point(9f, 2f, "Sep"),
+            Point(10f, 1f, "Oct"),
+            Point(11f, 5f, "Nov"),
+            Point(12f, 0f, "Dic"),
+        )
+
+        Text(
+            text = "Eventos de crisis",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            color = ColorText,
+            modifier = Modifier.constrainAs(titleLineCharts) {
+                top.linkTo(carousel.bottom, margin = 16.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+            }
+        )
+        SingleLineChartWithGridLines(pointsData, modifier = Modifier.constrainAs(lineCharts) {
+            top.linkTo(titleLineCharts.bottom, margin = 4.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        })
+
         ButtonAlaya(
             text = stringResource(R.string.treatment_text_button_professional),
             modifier = Modifier.constrainAs(treatmentButton) {
                 start.linkTo(parent.start)
-                top.linkTo(carousel.bottom, margin = 16.dp)
+                top.linkTo(lineCharts.bottom, margin = 16.dp)
                 end.linkTo(parent.end)
             },
             ButtonStyle.Outlined,
