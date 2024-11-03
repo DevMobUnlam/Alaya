@@ -108,6 +108,7 @@ class CrisisHandlingViewModel (
 
     fun showModal() {
         shouldShowModal = true
+        addTool(currentStep.title) //cuando se muestra el modal puede tomar 2 caminos, ahi tambien doy por hecho que realizo la herramienta del paso actual
     }
 
     fun dismissModal() {
