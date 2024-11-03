@@ -1,5 +1,6 @@
 package com.devmob.alaya
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -7,31 +8,39 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.preferences.SharedPreferences
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
+import com.devmob.alaya.domain.ContactUseCase
+import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
-import com.devmob.alaya.ui.screen.HomeScreen
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.PatientHomeScreenViewmodel
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
@@ -48,6 +57,8 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
+import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
 import com.devmob.alaya.utils.NavUtils
@@ -57,8 +68,15 @@ import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
 fun MainContent(navController: NavHostController) {
+    val context = LocalContext.current
     val currentRoute = currentRoute(navController)
-    val containmentViewModel: ContainmentNetworkViewModel = viewModel()
+    val contactUseCase = ContactUseCase()
+    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
+    val prefs: SharedPreferences = SharedPreferences(context)
+    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
+    val SendInvitationUseCase = GetInvitationUseCase()
+    val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
+
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
         NavUtils.PatientRoutes.AddContact.route,
@@ -66,13 +84,23 @@ fun MainContent(navController: NavHostController) {
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.ConfigTreatment.route,
-        ProfessionalRoutes.TreatmentSummary.route
-
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.TreatmentSummary.route,
+        ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.SendInvitation.route
     )
     val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
-    val contactViewModel: ContactViewModel = viewModel()
-
+    val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
+        factory = ViewModelFactory {
+            PatientHomeScreenViewmodel(
+                GetUserDataUseCase(),
+                GetInvitationUseCase(),
+                FirebaseClient()
+            )
+        }
+    )
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -86,12 +114,21 @@ fun MainContent(navController: NavHostController) {
             //condicion para mostrar o no el bottom
             //agregar a la lista las rutas que no deberian mostrarse!!
 
-
             if (currentRoute in NavUtils.routesWithBottomBar) {
                 GetBottomBarNavigation(navController)
             }
         }
     ) { paddingValues ->
+        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
+        val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
+            factory = ViewModelFactory {
+                PatientHomeScreenViewmodel(
+                    GetUserDataUseCase(),
+                    GetInvitationUseCase(),
+                    FirebaseClient()
+                )
+            }
+        )
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -114,7 +151,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                HomeScreen(PatientHomeScreenViewmodel(),navController)
+                PatientHomeScreen(patientHomeScreenViewmodel,navController)
             }
             composable(ProfessionalRoutes.Home.route,
                 enterTransition = {
@@ -153,7 +190,7 @@ fun MainContent(navController: NavHostController) {
                 }
 
             ) {
-                PatientProfileScreen(navController,contactViewModel)
+                PatientProfileScreen(navController)
             }
             composable(ProfessionalRoutes.SearchPatient.route,
                 enterTransition = {
@@ -201,7 +238,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase()))
+                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
@@ -270,25 +307,6 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             }
-            composable("add_contact",
-                enterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                },
-                exitTransition = {
-                    return@composable slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
-                    )
-                },
-                popEnterTransition = {
-                    return@composable slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
-                    )
-                }
-            ) {
-                AddContactScreen(containmentViewModel, navController)
-            }
 
             composable("feedback_screen/{feedbackType}",
                 enterTransition = {
@@ -332,7 +350,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
+                ConfigTreatmentScreen(configTreatmentViewModel, navController)
             }
             composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
@@ -354,7 +372,7 @@ fun MainContent(navController: NavHostController) {
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
-                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController)
+                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController, configTreatmentViewModel)
             }
             composable(NavUtils.PatientRoutes.MenuPatient.route,
                 enterTransition = {
@@ -373,7 +391,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuPatientScreen(navController)
+                MenuPatientScreen(navController, prefs)
             }
             composable(ProfessionalRoutes.MenuProfessional.route,
                 enterTransition = {
@@ -392,7 +410,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                MenuProfessionalScreen(navController)
+                MenuProfessionalScreen(navController, prefs)
             }
             composable(NavUtils.LoginRoutes.Register.route,
                 enterTransition = {
@@ -448,6 +466,27 @@ fun MainContent(navController: NavHostController) {
             ) {
                 CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
+            composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
+            }
+
+            composable(ProfessionalRoutes.SendInvitation.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                SendInvitationScreen(sendInvitationViewModel)
+            }
 
         }
     }
@@ -495,3 +534,22 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
+            /*composable(NavUtils.Routes.CrisisRegistration.route) {
+                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
+                    popUpTo(NavUtils.Routes.Home.route) {
+                        inclusive = true
+                    }
+                }},
+                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                            inclusive = true
+                        }
+                    }})
+            }
+
+            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
+                CrisisRegistrationSummaryScreen(navController = navController)
+            }*/
+
+
+
