@@ -33,11 +33,11 @@ object NavUtils {
         data object Home : ProfessionalRoutes("home_profesional")
         data object PatientProfile : ProfessionalRoutes("patient_profile")
         data object SearchPatient : ProfessionalRoutes("search_patient")
-        data object ConfigTreatment : ProfessionalRoutes("config_treatment")
+        data object ConfigTreatment : ProfessionalRoutes("config_treatment/{patientEmail}")
         data object TreatmentSummary :
-            ProfessionalRoutes("treatment_summary/{firstStep}/{secondStep}/{thirdStep}") {
-            fun createRoute(firstStep: String, secondStep: String, thirdStep: String) =
-                "treatment_summary/$firstStep/$secondStep/$thirdStep"
+            ProfessionalRoutes("treatment_summary/{firstStep}/{secondStep}/{thirdStep}/{patientEmail}") {
+            fun createRoute(firstStep: String, secondStep: String, thirdStep: String, patientEmail: String) =
+                "treatment_summary/$firstStep/$secondStep/$thirdStep/$patientEmail"
         }
         data object MenuProfessional : ProfessionalRoutes("menu_professional")
         data object AddCustomActivity : ProfessionalRoutes("add_custom_activity")

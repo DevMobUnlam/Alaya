@@ -5,5 +5,5 @@ import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
 
 interface SaveCrisisTreatmentRepository {
-    suspend fun addCustomTreatment(patientEmail: String, treatment: SnapshotStateList<OptionTreatment>) : FirebaseResult
+    suspend fun addCustomTreatment(patientEmail: String, treatment: List<OptionTreatment?>) : FirebaseResult
 }

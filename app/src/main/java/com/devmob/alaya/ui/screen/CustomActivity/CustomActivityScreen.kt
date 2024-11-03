@@ -55,7 +55,7 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun CustomActivityScreen(
     navController: NavController,
-    viewModel: ConfigTreatmentViewModel,
+    viewModel: ConfigTreatmentViewModel
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
@@ -160,7 +160,7 @@ fun CustomActivityScreen(
 
         Button(
             onClick = {
-                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri))
+                viewModel.addCustomActivity(OptionTreatment(title, description/*, imageUri*/)) //TODO DESCOMENTAR URI
                 navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)
             },
             modifier = Modifier

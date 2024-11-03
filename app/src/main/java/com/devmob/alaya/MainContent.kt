@@ -21,6 +21,7 @@ import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
+import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -67,7 +68,8 @@ fun MainContent(navController: NavHostController) {
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val prefs: SharedPreferences = SharedPreferences(context)
-    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
+    val saveCrisisUseCase = SaveCrisisTreatmentUseCase()
+    val configTreatmentViewModel = ConfigTreatmentViewModel(saveCrisisUseCase)
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
 
@@ -84,8 +86,10 @@ fun MainContent(navController: NavHostController) {
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route
     )
-    val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
-    val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
+    val factoryCrisisRegistrationVM =
+        ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
+    val crisisRegistrationViewModel: CrisisRegistrationViewModel =
+        viewModel(factory = factoryCrisisRegistrationVM)
     val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
         factory = ViewModelFactory {
             PatientHomeScreenViewmodel(
@@ -145,7 +149,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                PatientHomeScreen(patientHomeScreenViewmodel,navController)
+                PatientHomeScreen(patientHomeScreenViewmodel, navController)
             }
             composable(ProfessionalRoutes.Home.route,
                 enterTransition = {
@@ -333,8 +337,13 @@ fun MainContent(navController: NavHostController) {
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
                     )
                 }
-            ) {
-                ConfigTreatmentScreen(configTreatmentViewModel, navController)
+            ) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                ConfigTreatmentScreen(
+                    patientEmail = patientEmail,
+                    configTreatmentViewModel,
+                    navController
+                )
             }
             composable(ProfessionalRoutes.TreatmentSummary.route,
                 enterTransition = {
@@ -356,7 +365,15 @@ fun MainContent(navController: NavHostController) {
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
                 val thirdStep = backStackEntry.arguments?.getString("thirdStep") ?: ""
-                TreatmentSummaryScreen(firstStep, secondStep, thirdStep, navController, configTreatmentViewModel)
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                TreatmentSummaryScreen(
+                    firstStep,
+                    secondStep,
+                    thirdStep,
+                    patientEmail,
+                    navController,
+                    configTreatmentViewModel
+                )
             }
             composable(NavUtils.PatientRoutes.MenuPatient.route,
                 enterTransition = {
@@ -422,52 +439,99 @@ fun MainContent(navController: NavHostController) {
                 )
             }
             composable(NavUtils.PatientRoutes.CrisisRegistration.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                    popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                CrisisRegistrationScreen(onClose = {
+                    navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                        popUpTo(NavUtils.PatientRoutes.Home.route) {
                             inclusive = true
                         }
-                    }}, viewModel = crisisRegistrationViewModel, navController = navController)
+                    }
+                },
+                    onFinishedRegistration = {
+                        navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                            popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
+                                inclusive = true
+                            }
+                        }
+                    }, viewModel = crisisRegistrationViewModel, navController = navController
+                )
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
+                CrisisRegistrationSummaryScreen(
+                    navController = navController,
+                    viewModel = crisisRegistrationViewModel
+                )
             }
             composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
+                CustomActivityScreen(
+                    navController = navController,
+                    viewModel = configTreatmentViewModel
+                )
             }
 
             composable(ProfessionalRoutes.SendInvitation.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 SendInvitationScreen(sendInvitationViewModel)
             }
@@ -517,22 +581,22 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
-            /*composable(NavUtils.Routes.CrisisRegistration.route) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
-                    popUpTo(NavUtils.Routes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                            inclusive = true
-                        }
-                    }})
+/*composable(NavUtils.Routes.CrisisRegistration.route) {
+    CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
+        popUpTo(NavUtils.Routes.Home.route) {
+            inclusive = true
+        }
+    }},
+        onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
+            popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
+                inclusive = true
             }
+        }})
+}
 
-            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                CrisisRegistrationSummaryScreen(navController = navController)
-            }*/
+composable(NavUtils.Routes.CrisisRegistrationSummary.route){
+    CrisisRegistrationSummaryScreen(navController = navController)
+}*/
 
 
 

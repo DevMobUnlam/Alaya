@@ -1,12 +1,28 @@
 package com.devmob.alaya.ui.screen.professionalCrisisTreatment
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
+import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
+import kotlinx.coroutines.launch
 
-class ConfigTreatmentViewModel : ViewModel() {
+class ConfigTreatmentViewModel(
+    private val saveCrisisUseCase: SaveCrisisTreatmentUseCase
+) : ViewModel() {
+
+    private val _showError = mutableStateOf(false)
+    val showError: MutableState<Boolean>
+        get() = _showError
+
+    private val _navigate = mutableStateOf(false)
+    val navigate: MutableState<Boolean>
+        get() = _navigate
 
     var firstSelectOption = mutableStateOf<OptionTreatment?>(null)
     var secondSelectOption = mutableStateOf<OptionTreatment?>(null)
@@ -35,5 +51,22 @@ class ConfigTreatmentViewModel : ViewModel() {
 
     fun addCustomActivity(activity: OptionTreatment) {
         _treatmentOptions.add(activity)
+    }
+
+    fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment> ) {
+        viewModelScope.launch {
+            when (saveCrisisUseCase(patientEmail, listOfTreatment)) {
+                is FirebaseResult.Error -> {
+                    Log.d("saveCrisisTreatment", "No se pudo guardar el tratamiento de crisis")
+                    Log.d("leandro", "No se pudo guardar el tratamiento de crisis.")
+                    _showError.value = true
+                }
+
+                FirebaseResult.Success -> {
+                    Log.d("leandro", "Se guardó el registro de crisis")
+                    _navigate.value = true
+                }
+            }
+        }
     }
 }

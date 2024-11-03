@@ -1,5 +1,6 @@
 package com.devmob.alaya.domain
 
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.devmob.alaya.data.SaveCrisisTreatmentRepositoryImpl
 import com.devmob.alaya.domain.model.FirebaseResult
@@ -10,8 +11,11 @@ class SaveCrisisTreatmentUseCase {
 
     suspend operator fun invoke(
         patientEmail: String,
-        treatment: SnapshotStateList<OptionTreatment>
+        treatment: List<OptionTreatment?>
     ): FirebaseResult {
-        return saveCustomTreatmentRepository.addCustomTreatment(patientEmail, treatment)
+        Log.d("leandro", "usecase usuario $patientEmail")
+        val result = saveCustomTreatmentRepository.addCustomTreatment(patientEmail, treatment)
+        Log.d("leandro", "usecase usuario return $result")
+        return result
     }
 }

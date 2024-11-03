@@ -40,6 +40,8 @@ fun PatientProfileScreen(navController: NavController) {
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = viewModel()
     val phoneNumber = "1166011371"
+    val patientEmail = "lmuia@gmail.com" //TODO Cambiar este val por el email del paciente
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -71,8 +73,8 @@ fun PatientProfileScreen(navController: NavController) {
         )
 
         NextAppointmentHeader(
-             "Brenda",
-             "Rodriguez",
+            "Brenda",
+            "Rodriguez",
             date = LocalDateTime.now(),
             modifier = Modifier.constrainAs(header) {
                 start.linkTo(image.end, margin = 8.dp)
@@ -120,8 +122,15 @@ fun PatientProfileScreen(navController: NavController) {
                 top.linkTo(summaryCard.bottom, margin = 16.dp)
                 end.linkTo(parent.end)
             },
-            ButtonStyle.Outlined,
-            {navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)},
+            style = ButtonStyle.Outlined,
+            onClick = {
+                navController.navigate(
+                    NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
+                        "{patientEmail}",
+                        patientEmail
+                    )
+                )
+            },
             containerColor = ColorWhite
         )
 

@@ -36,8 +36,9 @@ fun TreatmentSummaryScreen(
     firstStep: String,
     secondStep: String,
     thirdStep: String,
+    patientEmail: String,
     navController: NavController,
-    viewModel: ConfigTreatmentViewModel,
+    viewModel: ConfigTreatmentViewModel
 ) {
 
     val selectedOptions = listOfNotNull(
@@ -122,6 +123,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
+                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"
