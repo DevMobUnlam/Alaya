@@ -26,7 +26,8 @@ fun Input(
     onValueChange: (String) -> Unit,
     label: String = "",
     placeholder: String,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    modifier: Modifier = Modifier
 ) {
     TextField(
         value = value,
@@ -43,7 +44,7 @@ fun Input(
             focusedLabelColor = ColorPrimary,
             containerColor = ColorWhite
         ),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(0.9f)
             .height(56.dp)
             .background(ColorWhite)

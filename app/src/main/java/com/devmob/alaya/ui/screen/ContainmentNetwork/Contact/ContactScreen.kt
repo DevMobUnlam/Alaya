@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,18 +29,36 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import coil.compose.rememberAsyncImagePainter
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.ui.components.getInitials
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
+import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
 fun ContactScreen(
@@ -51,15 +68,19 @@ fun ContactScreen(
 ) {
     val contacts by viewModel.contacts.observeAsState(emptyList())
     val contact = contacts.find { it.contactId == contactId }
+    val email = FirebaseClient().auth.currentUser?.email
 
     var showDeleteModal by remember { mutableStateOf(false) }
     var showEditModal by remember { mutableStateOf(false) }
+
+    LaunchedEffect(contactId) {
+        viewModel.listenToContacts()
+    }
 
     contact?.let { currentContact ->
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
             val (backgroundImage, contactCard, actionRow) = createRefs()
             Image(
@@ -76,15 +97,23 @@ fun ContactScreen(
                 contentScale = ContentScale.Crop
             )
 
-            DetailCardContact(
-                contact = currentContact,
-                modifier = Modifier.constrainAs(contactCard) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }.padding(16.dp),
-            )
+            Box(
+                modifier = Modifier
+                    .constrainAs(contactCard) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(16.dp)
+            ) {
+                DetailCardContact(
+                    contact = currentContact,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
+
+        if(currentContact.contactId != "4") {
             Row(
                 modifier = Modifier
                     .constrainAs(actionRow) {
@@ -97,16 +126,17 @@ fun ContactScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { showEditModal = true},
-                    text= "Editar",
+                    onClick = { showEditModal = true },
+                    text = "Editar",
                     style = ButtonStyle.Filled,
                 )
 
                 Button(
                     onClick = { showDeleteModal = true },
-                    text= "Eliminar",
+                    text = "Eliminar",
                     style = ButtonStyle.Outlined
                 )
+            }
         }
 
         Modal(
@@ -115,7 +145,9 @@ fun ContactScreen(
             primaryButtonText = "Sí",
             secondaryButtonText = "No",
             onConfirm = {
-                viewModel.deleteContact(currentContact)
+                if (email != null) {
+                    viewModel.deleteContact(email, currentContact)
+                }
                 showDeleteModal = false
                 navController.popBackStack()
             },
@@ -129,7 +161,9 @@ fun ContactScreen(
                 contact = currentContact,
                 onDismiss = { showEditModal = false },
                 onSave = { updatedContact ->
-                    viewModel.editContact(updatedContact)
+                    if (email != null) {
+                        viewModel.editContact(email, updatedContact)
+                    }
                     showEditModal = false
                 }
             )
@@ -139,21 +173,37 @@ fun ContactScreen(
 }}
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditContactModal(
     contact: Contact,
     onDismiss: () -> Unit,
     onSave: (Contact) -> Unit
 ) {
-    var name by remember { mutableStateOf(contact.name) }
+    var name by rememberSaveable { mutableStateOf(contact.name) }
     var phone by remember { mutableStateOf(contact.numberPhone) }
-    var photoUri by remember { mutableStateOf<Uri?>(null) }
+    var photoUri by rememberSaveable {
+        mutableStateOf(contact.photo?.let { Uri.parse(it) })
+    }
+    val initials = remember { getInitials(name) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        photoUri = uri
+        if (uri != null) {
+            photoUri = uri
+        }
+    }
+
+    LaunchedEffect(contact.photo) {
+        if (photoUri == null && !contact.photo.isNullOrBlank()) {
+            photoUri = Uri.parse(contact.photo)
+        }
+    }
+
+    val isModified = remember(name, phone, photoUri) {
+        name != contact.name ||
+                phone != contact.numberPhone ||
+                photoUri?.toString() != contact.photo
     }
 
     AlertDialog(
@@ -161,28 +211,81 @@ fun EditContactModal(
         title = { Text("Editar Contacto") },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                photoUri?.let {
-                    Image(
-                        painter = rememberImagePainter(it),
-                        contentDescription = "Imagen de contacto",
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(ColorPrimary)
+                        .clickable { galleryLauncher.launch("image/*") },
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (photoUri == null) {
+                        val initials = initials
+                        Text(
+                            text = initials,
+                            color = ColorWhite,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    } else {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = photoUri),
+                            contentDescription = "Imagen de contacto",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    IconButton(
+                        onClick = { galleryLauncher.launch("image/*") },
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .clickable { galleryLauncher.launch("image/*") },
-                    )
+                            .offset(
+                                x = 30.dp,
+                                y = 20.dp
+                            )
+                            .size(36.dp)
+                            .background(LightBlueColor.copy(0.5f), CircleShape)
+                            .zIndex(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = "Editar imagen",
+                            tint = ColorPrimary
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Input(value = name, onValueChange = { name = it }, label = "Nombre", placeholder = "Ingresa el nombre")
+
+                Input(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = "Nombre",
+                    placeholder = "Ingresa el nombre"
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Input(value = phone, onValueChange = { phone = it }, label = "Teléfono", placeholder = "Ingresa el teléfono", keyboardType = KeyboardType.Phone)
+
+                Input(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = "Teléfono",
+                    placeholder = "Ingresa el teléfono",
+                    keyboardType = KeyboardType.Phone
+                )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSave(Contact(contact.contactId, name, phone, photoUri?.toString() ?: contact.photo))
-                }
+                    onSave(
+                        contact.copy(
+                            name = name,
+                            numberPhone = phone,
+                            photo = photoUri?.toString()
+                        )
+                    )
+                },
+                enabled = isModified
             ) { Text("Guardar") }
         },
         dismissButton = {
@@ -190,4 +293,5 @@ fun EditContactModal(
         }
     )
 }
+
 

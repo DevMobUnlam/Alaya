@@ -2,14 +2,13 @@ package com.devmob.alaya.ui.screen.crisis_handling
 
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import ExpandableButton
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,12 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,24 +115,16 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                     shouldVoiceSpeak = false
                     viewModel.showExitModal() }
                 .constrainAs(closeIcon) {
-                    top.linkTo(progressBar.bottom, margin = 8.dp)
+                    top.linkTo(audioIcon.top)
+                    bottom.linkTo(audioIcon.bottom)
                     end.linkTo(parent.end, margin = 16.dp)
                 }
         )
 
-        var isVolumeUp by remember { mutableStateOf(true) }
-        Image(
-            painter = painterResource(id = if (isVolumeUp) R.drawable.volume_up else R.drawable.volume_off),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(32.dp)
-                .clickable { isVolumeUp = !isVolumeUp }
-                .constrainAs(audioIcon) {
-                    top.linkTo(progressBar.bottom, margin = 8.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-        )
+        ExpandableButton(modifier = Modifier.constrainAs(audioIcon) {
+            top.linkTo(progressBar.bottom, margin = 8.dp)
+            start.linkTo(parent.start, margin = 16.dp)
+        })
 
         Text(
             text = currentStep.title,
@@ -285,4 +271,10 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 }
             })
     }
+}
+
+@Preview
+@Composable
+fun CrisisHandlingScreenPreview() {
+    CrisisHandlingScreen(CrisisHandlingViewModel(), rememberNavController())
 }

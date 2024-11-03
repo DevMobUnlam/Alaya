@@ -3,9 +3,9 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
@@ -14,9 +14,13 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val getRoleUseCase: GetRoleUseCase
+    private val getRoleUseCase: GetRoleUseCase,
+    private val prefs: SharedPreferences
 ) : ViewModel() {
-    private val _loading = MutableLiveData(false) //BORRAR LUEGO DE IMPLEMENTAR REGISTERVIEWMODEL
+
+    private val _loading = mutableStateOf(false)
+    val loading: MutableState<Boolean>
+        get() = _loading
 
     private val _navigateToPatientHome = mutableStateOf(false)
     val navigateToPatientHome: MutableState<Boolean>
@@ -44,7 +48,10 @@ class LoginViewModel(
                 }
 
                 is AuthenticationResult.Success -> {
-                    when (getRoleUseCase(email)) {
+                    Log.d("login", "singInWithEmailAndPassword successful with $email")
+                    val role = getRoleUseCase(email)
+                    role?.let { prefs.setUserLoggedIn(email, it) }
+                    when (role) {
                         UserRole.PATIENT ->
                             _navigateToPatientHome.value = true
 
@@ -56,6 +63,33 @@ class LoginViewModel(
                 }
             }
         }
+
+
+    fun checkIfUserWasLoggedIn() {
+        _loading.value = true
+        val userIsLoggedIn = prefs.isLoggedIn()
+        val userRole = prefs.getRole()
+        Log.d("login", "user was logged in: $userIsLoggedIn")
+
+        if (userIsLoggedIn) {
+            when (userRole) {
+                UserRole.PATIENT -> {
+                    _navigateToPatientHome.value = true
+                }
+
+                UserRole.PROFESSIONAL -> {
+                    _navigateToProfessionalHome.value = true
+                }
+
+                else -> {
+                    _loading.value = false
+                }
+            }
+        } else {
+            Log.d("login", "current user is null")
+            _loading.value = false
+        }
+    }
 
     fun resetError() {
         _showError.value = false

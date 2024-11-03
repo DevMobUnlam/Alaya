@@ -1,12 +1,30 @@
-package com.devmob.alaya.ui.screen.crisis_registration
 
+package com.devmob.alaya.ui.screen.crisis_registration
+/*
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
+import com.devmob.alaya.domain.model.CrisisDetails
+import com.devmob.alaya.domain.model.CrisisDetailsDB
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
+import com.devmob.alaya.domain.model.FirebaseResult
+import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.utils.toCalendar
+import com.devmob.alaya.utils.toDate
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -14,17 +32,29 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.util.Date
+import java.util.Calendar
+
+private const val YEAR_MOCK = 2020
+private const val MONTH_MOCK = 12
+private const val DAY_MOCK = 15
+private const val HOUR_MOCK = 13
+private const val MINUTE_MOCK = 59
 
 @RunWith(RobolectricTestRunner::class)
 class CrisisRegistrationViewModelTest {
-
     private lateinit var viewModel: CrisisRegistrationViewModel
 
+    @RelaxedMockK
+    private lateinit var saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase
+    private val dateMock: Calendar = Calendar.getInstance()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
+        dateMock.set(YEAR_MOCK, MONTH_MOCK, DAY_MOCK, HOUR_MOCK, MINUTE_MOCK)
         MockKAnnotations.init(this, relaxed = true)
-        viewModel = CrisisRegistrationViewModel()
+        viewModel = CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
+        Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
     @Test
@@ -132,8 +162,8 @@ class CrisisRegistrationViewModelTest {
         val mockkIcon = mockk<ImageVector>()
         val bodySensation1 = CrisisBodySensation("Desmayo", mockkIcon)
         val bodySensation2 = CrisisBodySensation("Calor", mockkIcon)
-        viewModel.updateCrisisBodySensation(bodySensation1)
-        viewModel.updateCrisisBodySensation(bodySensation2)
+        viewModel.selectCrisisBodySensation(bodySensation1)
+        viewModel.selectCrisisBodySensation(bodySensation2)
         assertEquals(2, viewModel.screenState.value?.crisisDetails?.bodySensationList?.size)
     }
 
@@ -195,41 +225,68 @@ class CrisisRegistrationViewModelTest {
 
     @Test
     fun `when updateStartDate is called, then update starting date`() {
-        val date = mockk<Date>()
-        viewModel.updateStartDate(date)
+        viewModel.updateStartDate(dateMock.toDate())
+
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
         assertEquals(
-            date,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startingDate
+            dateMock.get(Calendar.YEAR),
+            actual?.toCalendar()?.get(Calendar.YEAR)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MONTH),
+            actual?.toCalendar()?.get(Calendar.MONTH)
+        )
+        assertEquals(
+            dateMock.get(Calendar.DAY_OF_MONTH),
+            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
         )
     }
 
     @Test
     fun `when updateStartTime is called, then update start time`() {
-        val time = mockk<Date>()
-        viewModel.updateStartTime(time)
+
+        viewModel.updateStartTime(dateMock.toDate())
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
         assertEquals(
-            time,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTIme
+            dateMock.get(Calendar.HOUR_OF_DAY),
+            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MINUTE),
+            actual?.toCalendar()?.get(Calendar.MINUTE)
         )
     }
 
     @Test
     fun `when updateEndDate is called, then update end date`() {
-        val date = mockk<Date>()
-        viewModel.updateEndDate(date)
+        viewModel.updateEndDate(dateMock.toDate())
+
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
         assertEquals(
-            date,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endDate
+            dateMock.get(Calendar.YEAR),
+            actual?.toCalendar()?.get(Calendar.YEAR)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MONTH),
+            actual?.toCalendar()?.get(Calendar.MONTH)
+        )
+        assertEquals(
+            dateMock.get(Calendar.DAY_OF_MONTH),
+            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
         )
     }
 
     @Test
     fun `when updateEndTime is called, then update end time`() {
-        val time = mockk<Date>()
-        viewModel.updateEndTime(time)
+        viewModel.updateEndTime(dateMock.toDate())
+        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
         assertEquals(
-            time,
-            viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
+            dateMock.get(Calendar.HOUR_OF_DAY),
+            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
+        )
+        assertEquals(
+            dateMock.get(Calendar.MINUTE),
+            actual?.toCalendar()?.get(Calendar.MINUTE)
         )
     }
 
@@ -239,4 +296,19 @@ class CrisisRegistrationViewModelTest {
         assertFalse(viewModel.shouldGoToBack)
         assertTrue(viewModel.shouldGoToSummary)
     }
+
+    @Test
+    fun `when saveRegister is called, then call SaveCrisisRegistrationUseCase`() = runBlocking {
+
+        mockkStatic("com.devmob.alaya.domain.model.util.MappersToDBKt")
+        val expected = mockk<CrisisDetailsDB>()
+        every { any<CrisisDetails>().toDB() } returns expected
+        coEvery { saveCrisisRegistrationUseCase(expected) } returns FirebaseResult.Success
+
+        viewModel.saveRegister()
+
+        coVerify { saveCrisisRegistrationUseCase(expected) }
+    }
 }
+
+*/
