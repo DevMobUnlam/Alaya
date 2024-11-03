@@ -1,7 +1,12 @@
 package com.devmob.alaya.domain
 
+import android.content.Context
 import android.icu.util.Calendar
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.util.Log
+import com.devmob.alaya.R
 import com.devmob.alaya.data.mapper.toIASummaryModel
 import com.devmob.alaya.utils.toCalendar
 import com.google.ai.client.generativeai.GenerativeModel
@@ -28,8 +33,8 @@ class GetIASummaryUseCase @Inject constructor(
 
         return flow {
 
-            val patientName =  getUserRepository.getUser(patientId)?.name
 
+            val patientName =  getUserRepository.getUser(patientId)?.name
 
             crisisRepository.getRegisters(patientId, onRegisterUpdate).collect { crisisDetailsDBList ->
 
@@ -48,3 +53,4 @@ class GetIASummaryUseCase @Inject constructor(
         }
     }
 }
+

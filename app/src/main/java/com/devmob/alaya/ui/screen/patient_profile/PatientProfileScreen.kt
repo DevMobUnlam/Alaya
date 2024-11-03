@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button as ButtonAlaya
@@ -35,9 +36,10 @@ import com.devmob.alaya.utils.NavUtils
 import java.time.LocalDateTime
 
 @Composable
-fun PatientProfileScreen(navController: NavController, contactViewModel: ContactViewModel) {
+fun PatientProfileScreen(navController: NavController) {
     val context = LocalContext.current
     val phoneNumber = "1166011371"
+    val contactViewModel: ContactViewModel = viewModel()
 
     Box(
         modifier = Modifier.fillMaxSize()

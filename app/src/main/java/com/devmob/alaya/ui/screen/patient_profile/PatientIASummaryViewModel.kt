@@ -48,7 +48,7 @@ class PatientIASummaryViewModel @Inject constructor(
             try{
 
                 if(patientId == ""){
-                    _uiState.update { IASummaryUIState.Error("The patient doesn't exist") }
+                    _uiState.update { IASummaryUIState.Error("El paciente no existe") }
                 }else{
                     val response = getIASummaryUseCase(instructions = instructions, patientId = patientId, onRegisterUpdate = {
                         _uiState.value = IASummaryUIState.Loading
@@ -68,7 +68,7 @@ class PatientIASummaryViewModel @Inject constructor(
 
 
             }catch(e:Exception){
-                _uiState.update{ IASummaryUIState.Error(e.localizedMessage ?: "") }
+                _uiState.update{ IASummaryUIState.Error(e.message ?: "") }
             }
         }
 
