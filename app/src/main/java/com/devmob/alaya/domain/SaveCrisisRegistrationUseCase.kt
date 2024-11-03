@@ -11,4 +11,8 @@ class SaveCrisisRegistrationUseCase {
     suspend operator fun invoke(register: CrisisDetailsDB): FirebaseResult {
         return crisisRepository.addRegister(register)
     }
+
+    suspend fun getLastCrisisDetails(): CrisisDetailsDB? {
+        return crisisRepository.getLastCrisisDetails()
+    }
 }

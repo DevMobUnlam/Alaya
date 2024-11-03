@@ -33,6 +33,7 @@ import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -86,6 +87,13 @@ fun CrisisRegistrationScreen(
     var selectedBodySensations by remember { mutableStateOf<Map<String, Intensity>>(emptyMap()) }
     val emotions by viewModel.emotions.observeAsState(emptyList())
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
+
+    val crisisTimeDetails by viewModel.crisisTimeDetails
+
+    // Carga el último registro cuando se inicializa la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.loadLastCrisisDetails()
+    }
 
     GridElementsRepository.returnAvailableTools().let { list ->
         for (tool in list) {
@@ -145,7 +153,7 @@ fun CrisisRegistrationScreen(
                         onEndTimeChange = { newTime ->
                             viewModel.updateEndTime(newTime)
                         },
-                        crisisTimeDetails = it
+                        crisisTimeDetails = crisisTimeDetails
                     )
                 }
             }
@@ -446,25 +454,19 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(tools) { tool ->
-                        val isSelected =
-                            if (viewModel.screenState.value?.crisisDetails?.toolList?.isEmpty() == true) {
-                                selectedTools.contains(tool.name)
-                            } else {
-                                viewModel.screenState.value?.crisisDetails?.toolList?.contains(tool)
-                                    ?: false
-                            }
+                        val isSelected = viewModel.selectedTools.contains(tool.id)
+
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
                             text = tool.name,
                             isSelected = isSelected,
                             onClick = {
                                 if (isSelected) {
-                                    selectedTools = selectedTools - tool.name
-                                    viewModel.updateCrisisTool(tool)
+                                    viewModel.selectedTools.remove(tool.id)
                                 } else {
-                                    selectedTools = selectedTools + tool.name
-                                    viewModel.updateCrisisTool(tool)
+                                    viewModel.selectedTools.add(tool.id)
                                 }
+                                viewModel.updateCrisisTool(tool)
                             }
                         )
                     }
@@ -493,7 +495,8 @@ fun CrisisRegistrationScreen(
                             viewModel.addCrisisTool(
                                 CrisisTool(
                                     name = it,
-                                    icon = icon
+                                    icon = icon,
+                                    id = it
                                 )
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
@@ -625,9 +628,9 @@ object GridElementsRepository {
 
     fun returnAvailableTools(): List<CrisisTool> {
         return listOf(
-            CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview),
-            CrisisTool(name = "Respiracion", icon = Icons.Outlined.Air),
-            CrisisTool(name = "Autoafirmaciones", icon = Icons.Outlined.Psychology),
+            CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview, id = "Imaginación guiada"), //Id temporal, para que coincida con el texto de la db
+            CrisisTool(name = "Respiracion", icon = Icons.Outlined.Air, id = "Controlar la respiración"),
+            CrisisTool(name = "Autoafirmaciones", icon = Icons.Outlined.Psychology, id = "Autoafirmaciones"),
         )
     }
 

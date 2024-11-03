@@ -4,18 +4,23 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
+import com.devmob.alaya.domain.model.CrisisDetailsDB
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
+import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository.returnAvailableTools
 import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
 import kotlinx.coroutines.launch
@@ -38,15 +43,50 @@ class CrisisRegistrationViewModel(
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
     var shouldGoToBack by mutableStateOf(true)
     var shouldGoToSummary by mutableStateOf(false)
+    private val _crisisTimeDetails = mutableStateOf(CrisisTimeDetails())
+    val crisisTimeDetails: State<CrisisTimeDetails> = _crisisTimeDetails
+
+    var selectedTools = mutableStateListOf<String>()
 
     init {
         loadPlaces()
         loadTools()
         loadBodySensations()
         loadEmotions()
+        loadLastCrisisDetails()
     }
 
+
     var shouldShowExitModal by mutableStateOf(false)
+
+    private val _crisisDetails = MutableLiveData<CrisisDetailsDB?>()
+    val crisisDetails: LiveData<CrisisDetailsDB?> get() = _crisisDetails
+
+    fun loadLastCrisisDetails() { //me trae el ultimo registro y le mapeo inicio, fin y herramientas
+        viewModelScope.launch {
+            val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
+            _crisisDetails.value = result
+
+            if (result != null) {
+                val startTime = result.start
+                val endTime = result.end
+
+                if (startTime != null && endTime != null) {
+                    val crisisTimeDetails = CrisisTimeDetails(
+                        startTime = startTime,
+                        endTime = endTime
+                    )
+                    _crisisTimeDetails.value = crisisTimeDetails
+                }
+
+                val availableTools = returnAvailableTools()
+                for (tool in availableTools) {
+                    if (result.tools.contains(tool.id)) {
+                        selectedTools.add(tool.id)
+                    }
+            }
+        }}
+    }
 
     fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()

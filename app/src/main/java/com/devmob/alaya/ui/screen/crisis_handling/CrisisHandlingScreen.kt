@@ -118,8 +118,8 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             composition = composition,
             progress = progress,
             modifier = Modifier
-                .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+                .fillMaxWidth(0.8f)
+                .aspectRatio(1f)
                 .constrainAs(lottieAnimation) {
                     top.linkTo(title.bottom, margin = 24.dp)
                     start.linkTo(parent.start)
@@ -164,6 +164,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             primaryButtonText = stringResource(R.string.primary_button_modal_crisis_handling),
             secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
             onConfirm = {
+                viewModel.endCrisisHandling()
                 viewModel.dismissModal()
                 navController.navigate(
                     NavUtils.PatientRoutes.Feedback.route.replace(
@@ -173,6 +174,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 )
             },
             onDismiss = {
+                viewModel.endCrisisHandling()
                 viewModel.dismissModal()
                 navController.navigate(
                     NavUtils.PatientRoutes.Feedback.route.replace(
