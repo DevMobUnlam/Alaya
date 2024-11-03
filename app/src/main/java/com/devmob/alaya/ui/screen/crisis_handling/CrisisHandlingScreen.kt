@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,12 +41,18 @@ import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavController) {
-
     val currentStep = viewModel.currentStep
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
+
+    DisposableEffect(Unit) {
+     viewModel.startMusic()
+        onDispose {
+            viewModel.stopMusic()
+        }
+    }
 
     BackHandler {
         // Comportamiento del botón "Atrás"
@@ -82,10 +89,14 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 }
         )
 
-        ExpandableButton(modifier = Modifier.constrainAs(audioIcon) {
-            top.linkTo(progressBar.bottom, margin = 8.dp)
-            start.linkTo(parent.start, margin = 16.dp)
-        })
+        ExpandableButton(
+            modifier = Modifier.constrainAs(audioIcon) {
+                top.linkTo(progressBar.bottom, margin = 8.dp)
+                start.linkTo(parent.start, margin = 16.dp)
+            },
+            onPlayMusic = { viewModel.startMusic()},
+            onPauseMusic = { viewModel.stopMusic()}
+        )
 
         Text(
             text = currentStep.title,
@@ -169,8 +180,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                     NavUtils.PatientRoutes.Feedback.route.replace(
                         "{feedbackType}",
                         "Felicitaciones"
-                    )
-                )
+                    ))
             },
             onDismiss = {
                 viewModel.dismissModal()

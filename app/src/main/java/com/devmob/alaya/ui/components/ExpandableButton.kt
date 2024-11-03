@@ -21,17 +21,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun ExpandableButton(modifier: Modifier) {
+fun ExpandableButton(
+    modifier: Modifier,
+    onPlayMusic: () -> Unit,
+    onPauseMusic: () -> Unit
+) {
     var isExpanded by remember { mutableStateOf(false) }
-
-    val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp, label = "")
+    var isMusicPlaying by remember { mutableStateOf(true) }
+    val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp)
 
     Row(
         modifier = modifier
@@ -60,26 +63,39 @@ fun ExpandableButton(modifier: Modifier) {
                     modifier = Modifier
                         .fillMaxHeight()
                         .padding(start = 8.dp, end = 8.dp)
-                        .align(Alignment.CenterEnd), verticalAlignment = Alignment.CenterVertically
+                        .align(Alignment.CenterEnd),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    var isMusicPlaying by remember { mutableStateOf(true) }
                     IconButton(
-                        onClick = { isMusicPlaying = !isMusicPlaying },
+                        onClick = {
+                            isMusicPlaying = !isMusicPlaying
+                            if (isMusicPlaying) {
+                                onPlayMusic()
+                            } else {
+                                onPauseMusic()
+                            }
+                        },
                         modifier = Modifier.size(50.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = if (isMusicPlaying) R.drawable.music_on else R.drawable.music_off),
-                            contentDescription = "Icon 1",
+                            painter = painterResource(
+                                id = if (isMusicPlaying) R.drawable.music_on else R.drawable.music_off
+                            ),
+                            contentDescription = "Music",
                             tint = ColorText
                         )
                     }
+
                     var isVoiceOn by remember { mutableStateOf(true) }
                     IconButton(
-                        onClick = { isVoiceOn = !isVoiceOn }, modifier = Modifier.size(50.dp)
+                        onClick = { isVoiceOn = !isVoiceOn },
+                        modifier = Modifier.size(50.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = if (isVoiceOn) R.drawable.voice_on else R.drawable.voice_off),
-                            contentDescription = "Icon 2",
+                            painter = painterResource(
+                                id = if (isVoiceOn) R.drawable.voice_on else R.drawable.voice_off
+                            ),
+                            contentDescription = "Voice",
                             tint = ColorText
                         )
                     }
@@ -87,11 +103,4 @@ fun ExpandableButton(modifier: Modifier) {
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-fun ExpandableButtonPreview() {
-    ExpandableButton(modifier = Modifier)
 }
