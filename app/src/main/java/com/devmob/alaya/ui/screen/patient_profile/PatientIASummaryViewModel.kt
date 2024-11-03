@@ -24,7 +24,7 @@ class PatientIASummaryViewModel @Inject constructor(
     val uiState: StateFlow<IASummaryUIState> = _uiState.asStateFlow()
 
 
-    private val patientId: String = checkNotNull(savedStateHandle["patientID"])
+    private val patientId: String = savedStateHandle["patientID"]?:""
 
 
     init {
@@ -50,20 +50,25 @@ class PatientIASummaryViewModel @Inject constructor(
 
             try{
 
-                val response = getIASummaryUseCase(instructions = instructions, generativeModel = generativeModel, patientId = patientId, onRegisterUpdate = {
-                    _uiState.value = IASummaryUIState.Loading
-                }
-                )
+                if(patientId == ""){
+                    _uiState.update { IASummaryUIState.Error("The patient doesn't exist") }
+                }else{
+                    val response = getIASummaryUseCase(instructions = instructions, generativeModel = generativeModel, patientId = patientId, onRegisterUpdate = {
+                        _uiState.value = IASummaryUIState.Loading
+                    }
+                    )
 
-                response.collect{ outputContent ->
+                    response.collect{ outputContent ->
 
-                    if(outputContent.isNotEmpty()){
-                        _uiState.update { IASummaryUIState.Success(outputContent) }
+                        if(outputContent.isNotEmpty()){
+                            _uiState.update { IASummaryUIState.Success(outputContent) }
 
-                    }else{
-                        _uiState.update{ IASummaryUIState.Success("No hay contenido para resumir") }
+                        }else{
+                            _uiState.update{ IASummaryUIState.Success("No hay contenido para resumir") }
+                        }
                     }
                 }
+
 
             }catch(e:Exception){
                 _uiState.update{ IASummaryUIState.Error(e.localizedMessage ?: "") }

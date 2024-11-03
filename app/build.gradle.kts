@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.gson)
     implementation(libs.hilt.android)
+    testImplementation(libs.junit.junit)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(platform(libs.firebase.bom))
