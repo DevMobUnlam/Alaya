@@ -31,7 +31,7 @@ object NavUtils {
 
     sealed class ProfessionalRoutes(val route: String) {
         data object Home : ProfessionalRoutes("home_profesional")
-        data object PatientProfile : ProfessionalRoutes("patient_profile")
+        data object PatientProfile : ProfessionalRoutes("patient_profile/{email}")
         data object SearchPatient : ProfessionalRoutes("search_patient")
         data object ConfigTreatment : ProfessionalRoutes("config_treatment")
         data object TreatmentSummary :

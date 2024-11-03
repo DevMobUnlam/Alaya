@@ -48,9 +48,6 @@ fun ProfessionalNavigation(navController: NavHostController){
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
-                PatientProfileScreen(navController)
-            }
-            composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(SearchUserViewModel(), navController)
             }
             composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route){

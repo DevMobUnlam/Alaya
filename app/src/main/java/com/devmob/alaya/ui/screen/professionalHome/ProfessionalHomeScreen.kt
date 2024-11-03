@@ -99,7 +99,7 @@ fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: 
                         ) {
                             items(viewModel.users) { user ->
                                 UserItem(user, true) {
-                                    navController.navigate(NavUtils.ProfessionalRoutes.PatientProfile.route)
+                                    navController.navigate("${NavUtils.ProfessionalRoutes.PatientProfile.route}/${user.email}")
                                 }
                             }
                         }

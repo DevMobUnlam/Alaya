@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import co.yml.charts.common.model.Point
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.HorizontalCardCarousel
 import com.devmob.alaya.ui.components.NextAppointmentHeader
@@ -42,10 +44,20 @@ import java.time.LocalDateTime
 import com.devmob.alaya.ui.components.Button as ButtonAlaya
 
 @Composable
-fun PatientProfileScreen(navController: NavController) {
+fun PatientProfileScreen(
+    navController: NavController,
+    viewModel: PatientProfileViewModel,
+    email: String
+) {
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = viewModel()
     val phoneNumber = "1166011371"
+    val namePatient = viewModel.patientData?.name
+    val surnamePatient = viewModel.patientData?.surname
+
+    LaunchedEffect(Unit) {
+        viewModel.getPatientData(email)
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -70,8 +82,8 @@ fun PatientProfileScreen(navController: NavController) {
         )
 
         NextAppointmentHeader(
-            "Brenda",
-            "Rodriguez",
+            namePatient ?: "",
+            surnamePatient ?: "",
             date = LocalDateTime.now(),
             modifier = Modifier.constrainAs(header) {
                 start.linkTo(image.end, margin = 8.dp)
@@ -133,7 +145,7 @@ fun PatientProfileScreen(navController: NavController) {
             Point(5f, 0f, "May"),
             Point(6f, 4f, "Jun"),
             Point(7f, 5f, "Jul"),
-            Point(8f, 0f,"Ago"),
+            Point(8f, 0f, "Ago"),
             Point(9f, 2f, "Sep"),
             Point(10f, 1f, "Oct"),
             Point(11f, 5f, "Nov"),
@@ -185,5 +197,9 @@ fun PatientProfileScreen(navController: NavController) {
 @Preview
 @Composable
 fun PatientProfileScreenPreview() {
-    PatientProfileScreen(navController = NavController(LocalContext.current))
+    PatientProfileScreen(
+        navController = NavController(LocalContext.current),
+        PatientProfileViewModel(GetUserDataUseCase()),
+        ""
+    )
 }
