@@ -78,7 +78,7 @@ class CrisisRegistrationViewModel(
                     )
                     _crisisTimeDetails.value = crisisTimeDetails
                 }
-
+                selectedTools.clear()
                 val availableTools = returnAvailableTools()
                 for (tool in availableTools) {
                     if (result.tools.contains(tool.id)) {
