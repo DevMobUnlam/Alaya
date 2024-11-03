@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +26,7 @@ class CrisisHandlingViewModel (
     private var startTime: Date? = null
     private var endTime: Date? = null
 
-    private val toolsUsed = mutableListOf<String>()
+    val toolsUsed = mutableListOf<String>()
 
     val currentStep: StepCrisis
         get() = steps[currentStepIndex]
@@ -81,7 +80,7 @@ class CrisisHandlingViewModel (
         }
     }
 
-    private fun saveCrisisData() {
+    fun saveCrisisData() {
         viewModelScope.launch {
             val crisisDetails = CrisisDetailsDB(
                 start = startTime,
