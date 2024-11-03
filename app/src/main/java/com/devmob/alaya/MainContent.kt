@@ -26,6 +26,7 @@ import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.AddContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
+import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.MenuPatientScreen
@@ -47,8 +48,8 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
-import com.devmob.alaya.ui.screen.patientSummary.PatientSummaryScreen
-import com.devmob.alaya.ui.screen.patientSummary.PatientSummaryViewModel
+import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
+import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -70,7 +71,7 @@ fun MainContent(navController: NavHostController) {
     )
     val factoryCrisisRegistrationVM = ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel = viewModel(factory = factoryCrisisRegistrationVM)
-    val patientSummaryViewModel: PatientSummaryViewModel = hiltViewModel()
+    val contactViewModel: ContactViewModel = viewModel()
 
     Scaffold(
         topBar = {
@@ -152,7 +153,7 @@ fun MainContent(navController: NavHostController) {
                 }
 
             ) {
-                PatientProfileScreen(navController)
+                PatientProfileScreen(navController,contactViewModel)
             }
             composable(ProfessionalRoutes.SearchPatient.route,
                 enterTransition = {
@@ -172,6 +173,16 @@ fun MainContent(navController: NavHostController) {
                 }
             ) {
                 SearchUserScreen(SearchUserViewModel(), navController)
+            }
+            composable(ProfessionalRoutes.PatientIASummary.route,
+                enterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popEnterTransition = { return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+            ) {
+                PatientIASummaryScreen()
             }
             composable(NavUtils.LoginRoutes.Login.route,
                 enterTransition = {
@@ -437,16 +448,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
             }
-            composable(NavUtils.ProfessionalRoutes.PatientSummary.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
-            ) {
-                PatientSummaryScreen(viewModel = patientSummaryViewModel)
-            }
+
         }
     }
 }

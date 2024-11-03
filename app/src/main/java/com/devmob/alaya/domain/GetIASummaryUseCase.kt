@@ -21,7 +21,8 @@ class GetIASummaryUseCase @Inject constructor(
     suspend operator fun invoke(
         instructions: String,
         generativeModel: GenerativeModel,
-        patientId: String
+        patientId: String,
+        onRegisterUpdate: () -> Unit,
 ): Flow<String> {
 
         return flow {
@@ -29,14 +30,17 @@ class GetIASummaryUseCase @Inject constructor(
             val patientName =  getUserRepository.getUser(patientId)?.name
 
 
-            crisisRepository.getRegisters(patientId).collect { crisisDetailsDBList ->
-                val json = gson.toJson(crisisDetailsDBList?.map { it.toIASummaryModel("$patientName") })
-                val prompt = "$instructions \n $json"
+            crisisRepository.getRegisters(patientId, onRegisterUpdate).collect { crisisDetailsDBList ->
 
-                Log.i("GetIASummaryUseCase", json)
-                if(json.equals("[]")){
+                val mappedList = crisisDetailsDBList?.map { it.toIASummaryModel() }
+
+
+                if(mappedList?.isEmpty() == true){
                     emit("")
                 }else{
+                    val json = gson.toJson(IASummaryPrompt(patientName = patientName?:"", input = mappedList?: emptyList()))
+
+                    val prompt = "$instructions \n $json"
                     emit(generativeModel.generateContent(prompt).text?: "")
                 }
             }

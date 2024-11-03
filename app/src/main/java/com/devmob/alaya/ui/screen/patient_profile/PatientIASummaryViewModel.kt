@@ -1,37 +1,40 @@
-package com.devmob.alaya.ui.screen.patientSummary
+package com.devmob.alaya.ui.screen.patient_profile
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devmob.alaya.data.CrisisRepositoryImpl
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.google.ai.client.generativeai.GenerativeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PatientSummaryViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+class PatientIASummaryViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getIASummaryUseCase: GetIASummaryUseCase
 ): ViewModel() {
 
 
-    private val _uiState: MutableStateFlow<SummaryUIState> = MutableStateFlow(SummaryUIState.Initial)
-    val uiState: StateFlow<SummaryUIState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<IASummaryUIState> = MutableStateFlow(IASummaryUIState.Initial)
+    val uiState: StateFlow<IASummaryUIState> = _uiState.asStateFlow()
 
-    init{
-        //summarize(savedStateHandle["patientId"] ?:"")
-        // TODO() Implementar nav argument con id de paciente
-        summarize("maurojose029@gmail.com")
+
+    private val patientId: String = checkNotNull(savedStateHandle["patientID"])
+
+
+    init {
+        summarize()
     }
 
-    private fun summarize(patientId: String){
-        _uiState.value = SummaryUIState.Loading
+    private fun summarize(){
+
+        _uiState.value = IASummaryUIState.Loading
+
 
         val instructions = "-Generar un resumen a partir del siguiente JSON,emociones sentidas,comentarios adicionales, para poder realizar una lectura posterior\n" +
                 "- El resumen deberia tener 2 parrafos como maximo, con informacion comprimida\n" +
@@ -43,24 +46,27 @@ class PatientSummaryViewModel @Inject constructor(
             apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs")
 
         viewModelScope.launch {
+
+
             try{
-                val response = getIASummaryUseCase(instructions = instructions, generativeModel = generativeModel, patientId = patientId)
+
+                val response = getIASummaryUseCase(instructions = instructions, generativeModel = generativeModel, patientId = patientId, onRegisterUpdate = {
+                    _uiState.value = IASummaryUIState.Loading
+                }
+                )
 
                 response.collect{ outputContent ->
-                    if(_uiState.value is SummaryUIState.Success){
-                        _uiState.value = SummaryUIState.Loading
-                    }
 
                     if(outputContent.isNotEmpty()){
-                        _uiState.value = SummaryUIState.Success(outputContent)
+                        _uiState.update { IASummaryUIState.Success(outputContent) }
 
                     }else{
-                        _uiState.value = SummaryUIState.Success("No hay contenido para resumir")
+                        _uiState.update{ IASummaryUIState.Success("No hay contenido para resumir") }
                     }
                 }
 
             }catch(e:Exception){
-                _uiState.value = SummaryUIState.Error(e.localizedMessage?: "")
+                _uiState.update{ IASummaryUIState.Error(e.localizedMessage ?: "") }
             }
         }
 
@@ -68,7 +74,8 @@ class PatientSummaryViewModel @Inject constructor(
     }
 
     fun onRetryClick(){
-        summarize("maurojose029@gmail.com")
+        summarize()
     }
+
 
 }
