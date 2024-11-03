@@ -18,10 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -52,6 +56,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val currentStepIndex = viewModel.currentStepIndex
 
     var shouldVoiceSpeak by remember{mutableStateOf(true)}
+    var isVoiceOn by remember{mutableStateOf(true)}
 
 
     LaunchedEffect(currentStepIndex){
@@ -60,7 +65,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             textToSpeech.stop()
         }
 
-        if (shouldVoiceSpeak) {
+        if (shouldVoiceSpeak && isVoiceOn) {
             if (isTtsInitialized) {
                 textToSpeech.speak(
                     currentStep.title,
@@ -124,7 +129,40 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
         ExpandableButton(modifier = Modifier.constrainAs(audioIcon) {
             top.linkTo(progressBar.bottom, margin = 8.dp)
             start.linkTo(parent.start, margin = 16.dp)
-        })
+        },
+            isVoiceOn = isVoiceOn,
+            onMuteVoice = {
+                if(isVoiceOn){
+                    if(textToSpeech.isSpeaking){
+                        textToSpeech.stop()
+                    }
+                    isVoiceOn = false
+                }else{
+                    isVoiceOn = true
+
+                    if (isTtsInitialized) {
+
+                        if(textToSpeech.isSpeaking){
+                            textToSpeech.stop()
+                        }
+
+                        textToSpeech.speak(
+                            currentStep.title,
+                            TextToSpeech.QUEUE_ADD,
+                            null,
+                            null
+                        )
+                        textToSpeech.speak(
+                            currentStep.description,
+                            TextToSpeech.QUEUE_ADD,
+                            null,
+                            null
+                        )
+
+                    }
+                }
+            }
+            )
 
         Text(
             text = currentStep.title,
@@ -254,7 +292,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             onDismiss = {
                 viewModel.dismissExitModal()
                 shouldVoiceSpeak = true
-                if (isTtsInitialized) {
+                if (isTtsInitialized && isVoiceOn) {
                     textToSpeech.speak(
                         currentStep.title,
                         TextToSpeech.QUEUE_ADD,
@@ -276,5 +314,5 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
 @Preview
 @Composable
 fun CrisisHandlingScreenPreview() {
-    CrisisHandlingScreen(CrisisHandlingViewModel(), rememberNavController())
+    //CrisisHandlingScreen(CrisisHandlingViewModel(), rememberNavController(), isTtsInitialized = true, textToSpeech = )
 }

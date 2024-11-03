@@ -28,7 +28,7 @@ import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun ExpandableButton(modifier: Modifier) {
+fun ExpandableButton(modifier: Modifier, isVoiceOn: Boolean = true, onMuteVoice: () -> Unit = {}) {
     var isExpanded by remember { mutableStateOf(false) }
 
     val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp, label = "")
@@ -73,9 +73,8 @@ fun ExpandableButton(modifier: Modifier) {
                             tint = ColorText
                         )
                     }
-                    var isVoiceOn by remember { mutableStateOf(true) }
                     IconButton(
-                        onClick = { isVoiceOn = !isVoiceOn }, modifier = Modifier.size(50.dp)
+                        onClick = { onMuteVoice()}, modifier = Modifier.size(50.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = if (isVoiceOn) R.drawable.voice_on else R.drawable.voice_off),

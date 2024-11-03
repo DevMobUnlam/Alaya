@@ -1,7 +1,5 @@
 package com.devmob.alaya
 
-import android.content.SharedPreferences
-import android.util.Log
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween

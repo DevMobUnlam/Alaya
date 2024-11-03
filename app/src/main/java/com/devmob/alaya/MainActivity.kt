@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
         if(status == TextToSpeech.SUCCESS){
             textToSpeech.language = Locale("es")
             textToSpeech.setPitch(0.85f)
-            textToSpeech.setSpeechRate(1.08F)
+            textToSpeech.setSpeechRate(0.95F)
             isTtsInitialized.value = true
         } else{
             isTtsInitialized.value = false
