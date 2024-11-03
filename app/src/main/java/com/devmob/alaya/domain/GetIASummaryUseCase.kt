@@ -14,13 +14,14 @@ import javax.inject.Inject
 
 class GetIASummaryUseCase @Inject constructor(
     private val gson: Gson,
+    private val generativeModel: GenerativeModel,
     private val crisisRepository: CrisisRepository,
     private val getUserRepository: GetUserRepository,
     ) {
 
     suspend operator fun invoke(
         instructions: String,
-        generativeModel: GenerativeModel,
+
         patientId: String,
         onRegisterUpdate: () -> Unit,
 ): Flow<String> {

@@ -3,6 +3,7 @@ package com.devmob.alaya.core.di
 import com.devmob.alaya.domain.CrisisRepository
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.devmob.alaya.domain.GetUserRepository
+import com.google.ai.client.generativeai.GenerativeModel
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,15 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideGetIASummaryUseCase(gson: Gson, crisisRepository: CrisisRepository, getUserRepository: GetUserRepository): GetIASummaryUseCase {
-        return GetIASummaryUseCase(gson, crisisRepository, getUserRepository)
+    fun providesGenerativeModel(): GenerativeModel{
+        return GenerativeModel(
+            modelName = "gemini-1.5-flash",
+            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs")
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetIASummaryUseCase(gson: Gson, generativeModel: GenerativeModel, crisisRepository: CrisisRepository, getUserRepository: GetUserRepository): GetIASummaryUseCase {
+        return GetIASummaryUseCase(gson, generativeModel, crisisRepository, getUserRepository)
     }
 }

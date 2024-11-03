@@ -41,9 +41,6 @@ class PatientIASummaryViewModel @Inject constructor(
                 "- El resumen debe abarcar la semana entera, no es necesario resumir cada dia individualmente\n" +
                 "- Usar el nombre de la persona de la cual se esta resumiendo su semana."
 
-        val generativeModel = GenerativeModel(
-            modelName = "gemini-1.5-flash",
-            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs")
 
         viewModelScope.launch {
 
@@ -53,7 +50,7 @@ class PatientIASummaryViewModel @Inject constructor(
                 if(patientId == ""){
                     _uiState.update { IASummaryUIState.Error("The patient doesn't exist") }
                 }else{
-                    val response = getIASummaryUseCase(instructions = instructions, generativeModel = generativeModel, patientId = patientId, onRegisterUpdate = {
+                    val response = getIASummaryUseCase(instructions = instructions, patientId = patientId, onRegisterUpdate = {
                         _uiState.value = IASummaryUIState.Loading
                     }
                     )
