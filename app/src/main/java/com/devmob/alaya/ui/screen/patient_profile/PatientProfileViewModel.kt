@@ -13,10 +13,13 @@ class PatientProfileViewModel(private val getEmailUseCase: GetUserDataUseCase) :
     ViewModel() {
 
     var patientData by mutableStateOf<User?>(null)
+    var isLoading by mutableStateOf(false)
 
     fun getPatientData(email: String) {
         viewModelScope.launch {
+            isLoading = true
             patientData = getEmailUseCase.getUser(email)
+            isLoading = false
         }
     }
 }
