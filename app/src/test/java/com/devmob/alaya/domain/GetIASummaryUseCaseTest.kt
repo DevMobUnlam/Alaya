@@ -25,19 +25,15 @@ class GetIASummaryUseCaseTest{
 
     lateinit var getIASummaryUseCase: GetIASummaryUseCase
 
-    @MockK
-    private lateinit var generativeModel: GenerativeModel
-
     @Before
     fun onBefore(){
         MockKAnnotations.init(this)
         gson = Gson()
-        getIASummaryUseCase = GetIASummaryUseCase(gson,crisisRepository,getUserRepository)
     }
 
     //TODO si no existe el usuario
     @Test
-    fun `when patient doesn't exist then return an emptyList`() = runBlocking {
+    fun `when patient doesn't exist then return an emptyList`(): Unit = runBlocking {
         //GIVEN
         val patientID = ""
             coEvery{crisisRepository.getRegisters(patientId = patientID, onRegisterUpdate = {})} returns flow{emit(
@@ -46,7 +42,7 @@ class GetIASummaryUseCaseTest{
 
         //WHEN
 
-        getIASummaryUseCase(instructions = "", generativeModel = generativeModel, onRegisterUpdate = {}, patientId = patientID)
+        getIASummaryUseCase(instructions = "",onRegisterUpdate = {}, patientId = patientID)
 
         //THEN
 
