@@ -14,8 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,13 +49,20 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val totalSteps = viewModel.steps.size
     val currentStepIndex = viewModel.currentStepIndex
 
-    DisposableEffect(Unit) {
-     viewModel.startMusic()
+    val context = LocalContext.current
+    val isPlaying = viewModel.isPlaying
+
+
+    DisposableEffect(isPlaying) {
+        if (isPlaying) {
+            viewModel.playMusic(context)
+        } else {
+            viewModel.stopMusic()
+        }
         onDispose {
             viewModel.stopMusic()
         }
     }
-
     BackHandler {
         // Comportamiento del botón "Atrás"
     }
@@ -94,8 +103,13 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 top.linkTo(progressBar.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
             },
-            onPlayMusic = { viewModel.startMusic()},
-            onPauseMusic = { viewModel.stopMusic()}
+            onPlayMusic = {   if (isPlaying) {
+                viewModel.pauseMusic()
+            } else {
+                viewModel.playMusic(context)
+            }
+            },
+            onPauseMusic = { viewModel.pauseMusic()}
         )
 
         Text(
@@ -156,7 +170,8 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 bottom.linkTo(parent.bottom, margin = 16.dp)
             },
             ButtonStyle.Outlined,
-            { viewModel.showModal() })
+            { viewModel.showModal()
+                viewModel.stopMusic()})
 
         Button(
             stringResource(R.string.secondary_button_crisis_handling),
@@ -190,6 +205,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                         "TodoVaAEstarBien"
                     )
                 )
+                viewModel.stopMusic()
             }
         )
 
@@ -199,13 +215,15 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             primaryButtonText = stringResource(R.string.confirm),
             secondaryButtonText = stringResource(R.string.dismiss),
             onConfirm = {
+                viewModel.stopMusic()
                 navController.navigate(NavUtils.PatientRoutes.Home.route) {
                     popUpTo(NavUtils.PatientRoutes.Home.route) {
                         inclusive = true
                     }
                 }
             },
-            onDismiss = { viewModel.dismissExitModal() })
+            onDismiss = {
+                viewModel.dismissExitModal() })
     }
 }
 

@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -19,7 +20,8 @@ class CrisisHandlingViewModel : ViewModel() {
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
-    private var mediaPlayer: MediaPlayer? = null
+    var isPlaying by mutableStateOf(false)
+    private var player: MediaPlayer? = null
 
     val currentStep: StepCrisis
         get() = steps[currentStepIndex]
@@ -57,6 +59,7 @@ class CrisisHandlingViewModel : ViewModel() {
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
         } else {
+            stopMusic()
             shouldShowModal = true
         }
     }
@@ -76,36 +79,40 @@ class CrisisHandlingViewModel : ViewModel() {
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
+    fun playMusic(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val storage = FirebaseStorage.getInstance()
+            val audioRef = storage.reference.child("Songs/song.mp3")
+            val url = audioRef.downloadUrl.await().toString()
+            player = MediaPlayer().apply {
+                setDataSource(url)
+                prepare()
+                start()
 
-    fun startMusic() {
-        if (mediaPlayer == null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val storage = FirebaseStorage.getInstance()
-                val audioRef = storage.reference.child("Songs/song.mp3")
-                try {
-                    val url = audioRef.downloadUrl.await().toString()
-                    mediaPlayer = MediaPlayer().apply {
-                        setDataSource(url)
-                        prepare()
-                        start()
+                setOnCompletionListener {
+                    start()
 
-                        setOnCompletionListener {
-                            seekTo(0)
-                            start()
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
-        } else {
-            mediaPlayer?.start()
-        }
+
+
+            }
+
+                }
+
+    fun pauseMusic() {
+        player?.pause()
+        isPlaying = false
     }
 
     fun stopMusic() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        player?.release()
+        player = null
+        isPlaying = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopMusic()
     }
 }

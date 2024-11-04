@@ -33,7 +33,7 @@ fun ExpandableButton(
     onPauseMusic: () -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    var isMusicPlaying by remember { mutableStateOf(true) }
+    var isMusicPlaying by remember { mutableStateOf(false) }
     val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp)
 
     Row(
