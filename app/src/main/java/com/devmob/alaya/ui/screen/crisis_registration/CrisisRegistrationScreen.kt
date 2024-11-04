@@ -184,6 +184,7 @@ fun CrisisRegistrationScreen(
                             }
                         CrisisRegisterIconButton(
                             imageVector = place.icon,
+                            size = 70.dp,
                             text = place.name,
                             isSelected = isSelected,
                             onClick = {
@@ -455,6 +456,7 @@ fun CrisisRegistrationScreen(
                             }
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
+                            size = 70.dp,
                             text = tool.name,
                             isSelected = isSelected,
                             onClick = {
