@@ -1,13 +1,12 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,9 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,28 +62,14 @@ fun PatientProfileScreen(
             .background(Color.White)
             .verticalScroll(rememberScrollState()),
     ) {
-        val (image, header, treatmentButton, sessionButton, whatsappButton, titleCarousel, carousel, titleLineCharts, lineCharts) = createRefs()
-
-        Image(
-            painter = painterResource(id = R.drawable.brenda_rodriguez),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .constrainAs(image) {
-                    top.linkTo(header.top)
-                    bottom.linkTo(header.bottom)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-        )
+        val (header, treatmentButton, sessionButton, whatsappButton, titleCarousel, carousel, titleLineCharts, lineCharts) = createRefs()
 
         NextAppointmentHeader(
             namePatient ?: "",
             surnamePatient ?: "",
             date = LocalDateTime.now(),
-            modifier = Modifier.constrainAs(header) {
-                start.linkTo(image.end, margin = 8.dp)
+            modifier = Modifier.fillMaxWidth().constrainAs(header) {
+                start.linkTo(parent.start, margin = 16.dp)
                 top.linkTo(parent.top, margin = 16.dp)
                 end.linkTo(parent.end, margin = 16.dp)
             }

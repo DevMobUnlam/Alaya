@@ -54,7 +54,7 @@ fun SingleLineChartWithGridLines(pointsData: List<Point>, modifier: Modifier) {
                     dataPoints = pointsData,
                     LineStyle(colorFilter = ColorFilter.tint(ColorPrimary)),
                     IntersectionPoint(color = ColorText, radius = 2.dp),
-                    SelectionHighlightPoint(color = ColorText),
+                    SelectionHighlightPoint(color = ColorText, radius = 2.dp),
                     ShadowUnderLine(color = ColorSecondary),
                     SelectionHighlightPopUp(popUpLabel = { _, y -> "Cant de crisis : ${y.toInt()}" })
                 )
