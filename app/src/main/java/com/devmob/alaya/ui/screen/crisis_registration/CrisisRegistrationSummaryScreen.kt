@@ -429,9 +429,9 @@ fun SummaryItemCard(
 @Composable
 fun intensityFormatter(intensity: Intensity): String {
     return when (intensity) {
-        Intensity.LOW -> stringResource(R.string.intensity_low)
-        Intensity.MEDIUM -> stringResource(R.string.intensity_medium)
-        Intensity.HIGH -> stringResource(R.string.intensity_high)
+        Intensity.LOW -> "Intensidad: " + stringResource(R.string.intensity_low)
+        Intensity.MEDIUM -> "Intensidad: " + stringResource(R.string.intensity_medium)
+        Intensity.HIGH -> "Intensidad: " + stringResource(R.string.intensity_high)
     }
 }
 
