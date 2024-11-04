@@ -189,7 +189,7 @@ fun CrisisRegistrationSummaryScreen(
                                                         fontWeight = FontWeight.Bold,
                                                     )
                                                     Text(
-                                                        text = sensation.intensity.name,
+                                                        text = intensityFormatter(sensation.intensity),
                                                         fontSize = 19.sp,
                                                         color = ColorText,
                                                     )
@@ -234,8 +234,8 @@ fun CrisisRegistrationSummaryScreen(
                                                         fontWeight = FontWeight.Bold
                                                     )
                                                     Text(
-                                                        text = emotion.intensity.name,
-                                                        fontSize = 21.sp,
+                                                        text = intensityFormatter(emotion.intensity),
+                                                        fontSize = 19.sp,
                                                         color = ColorText
                                                     )
                                                 }
@@ -426,11 +426,12 @@ fun SummaryItemCard(
 /**
  * Formateador de Intensidad que devuelve como un String el tipo de intensidad que reciba por parametro
  */
-fun IntensityFormatter(intensity: Intensity): String {
+@Composable
+fun intensityFormatter(intensity: Intensity): String {
     return when (intensity) {
-        Intensity.LOW -> R.string.intensity_low.toString()
-        Intensity.MEDIUM -> R.string.intensity_medium.toString()
-        Intensity.HIGH -> R.string.intensity_high.toString()
+        Intensity.LOW -> stringResource(R.string.intensity_low)
+        Intensity.MEDIUM -> stringResource(R.string.intensity_medium)
+        Intensity.HIGH -> stringResource(R.string.intensity_high)
     }
 }
 
