@@ -68,8 +68,6 @@ fun MainContent(navController: NavHostController) {
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val prefs: SharedPreferences = SharedPreferences(context)
-    val saveCrisisUseCase = SaveCrisisTreatmentUseCase()
-    val configTreatmentViewModel = ConfigTreatmentViewModel(saveCrisisUseCase)
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
 
@@ -99,6 +97,12 @@ fun MainContent(navController: NavHostController) {
             )
         }
     )
+    val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel(
+        factory = ViewModelFactory {
+            ConfigTreatmentViewModel(SaveCrisisTreatmentUseCase())
+        }
+    )
+
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -455,13 +459,14 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                CrisisRegistrationScreen(onClose = {
-                    navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                        popUpTo(NavUtils.PatientRoutes.Home.route) {
-                            inclusive = true
+                CrisisRegistrationScreen(
+                    onClose = {
+                        navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                            popUpTo(NavUtils.PatientRoutes.Home.route) {
+                                inclusive = true
+                            }
                         }
-                    }
-                },
+                    },
                     onFinishedRegistration = {
                         navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
                             popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
@@ -509,8 +514,10 @@ fun MainContent(navController: NavHostController) {
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
                     )
                 }
-            ) {
+            ) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
                 CustomActivityScreen(
+                    patientEmail = patientEmail,
                     navController = navController,
                     viewModel = configTreatmentViewModel
                 )

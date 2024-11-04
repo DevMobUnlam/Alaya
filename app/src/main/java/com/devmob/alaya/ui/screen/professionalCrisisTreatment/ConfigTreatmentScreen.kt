@@ -37,6 +37,8 @@ fun ConfigTreatmentScreen(
     navController: NavController
 ) {
     val treatmentOptions = remember { viewModel.treatmentOptions }
+    Log.d("leandro", "configtreatment screen emailPatient es $patientEmail")
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +107,13 @@ fun ConfigTreatmentScreen(
 
             Button(
                 text = "Actividad personalizada",
-                onClick = { navController.navigate(NavUtils.ProfessionalRoutes.AddCustomActivity.route) },
+                onClick = {
+                    navController.navigate(
+                        NavUtils.ProfessionalRoutes.AddCustomActivity.createRoute(
+                            patientEmail = patientEmail
+                        )
+                    )
+                },
                 style = ButtonStyle.Filled,
                 modifier = Modifier.fillMaxWidth()
             )

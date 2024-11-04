@@ -16,6 +16,8 @@ class ConfigTreatmentViewModel(
     private val saveCrisisUseCase: SaveCrisisTreatmentUseCase
 ) : ViewModel() {
 
+    var patientEmail = mutableStateOf("")
+
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>
         get() = _showError

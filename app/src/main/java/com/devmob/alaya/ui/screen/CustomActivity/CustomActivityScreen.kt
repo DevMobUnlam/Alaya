@@ -54,6 +54,7 @@ import com.devmob.alaya.utils.NavUtils
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomActivityScreen(
+    patientEmail: String,
     navController: NavController,
     viewModel: ConfigTreatmentViewModel
 ) {
@@ -117,7 +118,7 @@ fun CustomActivityScreen(
                 unfocusedIndicatorColor = Color.LightGray,
             ),
 
-        )
+            )
         Box(
             modifier = Modifier
                 .constrainAs(imageBox) {
@@ -144,7 +145,9 @@ fun CustomActivityScreen(
                 Image(
                     painter = rememberImagePainter(imageUri),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
                 )
             }
         }
@@ -161,7 +164,12 @@ fun CustomActivityScreen(
         Button(
             onClick = {
                 viewModel.addCustomActivity(OptionTreatment(title, description, imageUri))
-                navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)
+                navController.navigate(
+                    NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
+                        "{patientEmail}",
+                        patientEmail
+                    )
+                )
             },
             modifier = Modifier
                 .constrainAs(saveButton) {

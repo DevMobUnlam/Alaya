@@ -40,7 +40,10 @@ object NavUtils {
                 "treatment_summary/$firstStep/$secondStep/$thirdStep/$patientEmail"
         }
         data object MenuProfessional : ProfessionalRoutes("menu_professional")
-        data object AddCustomActivity : ProfessionalRoutes("add_custom_activity")
+        data object AddCustomActivity : ProfessionalRoutes("add_custom_activity/{patientEmail}"){
+            fun createRoute(patientEmail: String) =
+                "add_custom_activity/$patientEmail"
+        }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
     }
 
