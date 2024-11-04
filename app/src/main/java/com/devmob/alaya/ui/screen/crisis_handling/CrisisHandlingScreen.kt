@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.screen.crisis_handling
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import ExpandableButton
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -258,6 +259,9 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             primaryButtonText = stringResource(R.string.primary_button_modal_crisis_handling),
             secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
             onConfirm = {
+                if(isVoiceOn){
+                    isVoiceOn = false
+                }
                 viewModel.dismissModal()
                 navController.navigate(
                     NavUtils.PatientRoutes.Feedback.route.replace(
