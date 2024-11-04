@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.yml.charts.common.model.Point
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.User
 import kotlinx.coroutines.launch
@@ -21,5 +22,24 @@ class PatientProfileViewModel(private val getEmailUseCase: GetUserDataUseCase) :
             patientData = getEmailUseCase.getUser(email)
             isLoading = false
         }
+    }
+
+    fun getPointsData(): List<Point> {
+        // TODO obtener los datos de la base de datos
+        return listOf(
+            Point(0f, 8f, "Dic"),
+            Point(1f, 6f, "Ene"),
+            Point(2f, 0f, "Feb"),
+            Point(3f, 2f, "Mar"),
+            Point(4f, 6f, "Abr"),
+            Point(5f, 0f, "May"),
+            Point(6f, 4f, "Jun"),
+            Point(7f, 5f, "Jul"),
+            Point(8f, 0f, "Ago"),
+            Point(9f, 2f, "Sep"),
+            Point(10f, 1f, "Oct"),
+            Point(11f, 5f, "Nov"),
+            Point(12f, 0f, "Dic"),
+        )
     }
 }
