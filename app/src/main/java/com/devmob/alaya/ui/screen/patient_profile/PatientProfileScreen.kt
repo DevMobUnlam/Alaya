@@ -1,23 +1,17 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,42 +56,52 @@ fun PatientProfileScreen(
             .background(Color.White)
             .verticalScroll(rememberScrollState()),
     ) {
-        val (header, treatmentButton, sessionButton, whatsappButton, titleCarousel, carousel, titleLineCharts, lineCharts) = createRefs()
+        val (header, treatmentButton, sessionButton, titleCarousel, carousel, titleLineCharts, lineCharts) = createRefs()
 
         NextAppointmentHeader(
             namePatient ?: "",
             surnamePatient ?: "",
             date = LocalDateTime.now(),
-            modifier = Modifier.fillMaxWidth().constrainAs(header) {
-                start.linkTo(parent.start, margin = 16.dp)
-                top.linkTo(parent.top, margin = 16.dp)
-                end.linkTo(parent.end, margin = 16.dp)
-            }
+
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(header) {
+                    start.linkTo(parent.start, margin = 16.dp)
+                    top.linkTo(parent.top, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                },
+            contactViewModel, phoneNumber, context
         )
 
-        Button(
-            onClick = {
-                val formattedNumber = contactViewModel.formatPhoneNumberForWhatsApp(phoneNumber)
-                contactViewModel.sendWhatsAppMessage(context, formattedNumber, "Hola, ¿cómo estás?")
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF25D366)
-            ),
-            modifier = Modifier.constrainAs(whatsappButton) {
-                top.linkTo(header.bottom, margin = 16.dp)
-                start.linkTo(header.start)
-                end.linkTo(header.end)
-            }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.whatsapp),
-                contentDescription = "WhatsApp",
-                modifier = Modifier.size(24.dp),
-                tint = Color.White,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Enviar mensaje", color = Color.White)
-        }
+        ButtonAlaya(
+            text = stringResource(R.string.treatment_text_button_professional),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .constrainAs(treatmentButton) {
+                    start.linkTo(parent.start)
+                    top.linkTo(header.bottom, margin = 4.dp)
+                    end.linkTo(parent.end)
+                },
+            ButtonStyle.Outlined,
+            { navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route) },
+            containerColor = ColorWhite
+        )
+
+        ButtonAlaya(
+            text = stringResource(R.string.session_text_button_professional),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .constrainAs(sessionButton) {
+                    start.linkTo(parent.start)
+                    top.linkTo(treatmentButton.bottom, margin = 2.dp)
+                    end.linkTo(parent.end)
+                },
+            style = ButtonStyle.Outlined,
+            onClick = {},
+            containerColor = ColorWhite
+        )
 
         Text(
             text = "Esta semana",
@@ -105,7 +109,7 @@ fun PatientProfileScreen(
             fontSize = 18.sp,
             color = ColorText,
             modifier = Modifier.constrainAs(titleCarousel) {
-                top.linkTo(whatsappButton.bottom, margin = 8.dp)
+                top.linkTo(sessionButton.bottom, margin = 8.dp)
                 start.linkTo(parent.start, margin = 16.dp)
             }
         )
@@ -150,30 +154,6 @@ fun PatientProfileScreen(
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         })
-
-        ButtonAlaya(
-            text = stringResource(R.string.treatment_text_button_professional),
-            modifier = Modifier.constrainAs(treatmentButton) {
-                start.linkTo(parent.start)
-                top.linkTo(lineCharts.bottom, margin = 16.dp)
-                end.linkTo(parent.end)
-            },
-            ButtonStyle.Outlined,
-            { navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route) },
-            containerColor = ColorWhite
-        )
-
-        ButtonAlaya(
-            text = stringResource(R.string.session_text_button_professional),
-            modifier = Modifier.constrainAs(sessionButton) {
-                start.linkTo(parent.start)
-                top.linkTo(treatmentButton.bottom, margin = 16.dp)
-                end.linkTo(parent.end)
-            },
-            style = ButtonStyle.Outlined,
-            onClick = {},
-            containerColor = ColorWhite
-        )
     }
 }
 
