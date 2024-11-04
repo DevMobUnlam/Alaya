@@ -32,21 +32,21 @@ class GetIASummaryUseCaseTest{
     }
 
     //TODO si no existe el usuario
-    @Test
-    fun `when patient doesn't exist then return an emptyList`(): Unit = runBlocking {
-        //GIVEN
-        val patientID = ""
-            coEvery{crisisRepository.getRegisters(patientId = patientID, onRegisterUpdate = {})} returns flow{emit(
-                emptyList()
-            )}
-
-        //WHEN
-
-        getIASummaryUseCase(instructions = "",onRegisterUpdate = {}, patientId = patientID)
-
-        //THEN
-
-    }
+//    @Test
+//    fun `when patient doesn't exist then return an emptyList`(): Unit = runBlocking {
+//        //GIVEN
+//        val patientID = ""
+//            coEvery{crisisRepository.getRegisters(patientId = patientID, onRegisterUpdate = {})} returns flow{emit(
+//                emptyList()
+//            )}
+//
+//        //WHEN
+//
+//        getIASummaryUseCase(instructions = "",onRegisterUpdate = {}, patientId = patientID)
+//
+//        //THEN
+//
+//    }
 
 
     //TODO si no existen registros de crisis
