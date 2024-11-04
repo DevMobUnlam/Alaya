@@ -46,7 +46,7 @@ fun PatientProfileScreen(
 ) {
     val context = LocalContext.current
     val contactViewModel: ContactViewModel = viewModel()
-    val phoneNumber = "1166011371"
+    val phoneNumber = viewModel.patientData?.phone
     val namePatient = viewModel.patientData?.name
     val surnamePatient = viewModel.patientData?.surname
 

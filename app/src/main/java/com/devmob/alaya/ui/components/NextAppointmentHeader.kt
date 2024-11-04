@@ -44,7 +44,7 @@ fun NextAppointmentHeader(
     date: LocalDateTime,
     modifier: Modifier,
     contactViewModel: ContactViewModel,
-    phoneNumber: String,
+    phoneNumber: String?,
     context: Context
 ) {
     Card(
@@ -98,7 +98,7 @@ fun NextAppointmentHeader(
                     color = ColorText,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                WhatsAppButton(contactViewModel, phoneNumber, context)
+                WhatsAppButton(contactViewModel, phoneNumber ?: "", context)
             }
 
         }
@@ -117,7 +117,7 @@ fun NextAppointmentHeaderPreview(
         lastName = lastName,
         date,
         Modifier,
-       ContactViewModel(),
+        ContactViewModel(),
         "1166011371",
         LocalContext.current
     )
