@@ -73,6 +73,8 @@ fun MainContent(navController: NavHostController) {
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
+    val getUserDataUseCase = GetUserDataUseCase();
+    val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -159,7 +161,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
             }
             composable(
                 route = "${ProfessionalRoutes.PatientProfile.route}/{email}",
@@ -201,7 +203,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                SearchUserScreen(SearchUserViewModel(), navController)
+                SearchUserScreen(searchUserViewModel, navController)
             }
             composable(NavUtils.LoginRoutes.Login.route,
                 enterTransition = {
