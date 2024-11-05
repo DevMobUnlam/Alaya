@@ -20,34 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devmob.alaya.ui.screen.patient_profile.CarouselItem
 import com.devmob.alaya.ui.theme.ColorQuaternary
-import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
-fun HorizontalCardCarousel(modifier: Modifier) {
-
-    val items = listOf(
-        CarouselItem.GenerateSummary(ColorQuaternary),
-        CarouselItem.Crisis("Crisis", "5", ColorTertiary.copy(alpha = 0.2f)),
-        CarouselItem.Activities("Actividades", 0.7f, LightBlueColor),
-        CarouselItem.Tools(
-            "Herramientas", ColorSecondary.copy(alpha = 0.3f), listOf(
-                ToolProgress("Respiración", 0.8f),
-                ToolProgress("Meditación", 0.6f),
-                ToolProgress("Ejercicio", 0.4f)
-            )
-        )
-    )
+fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>) {
 
     LazyRow(
         modifier = modifier
@@ -147,24 +132,5 @@ fun TitleText(title: String) {
 @Preview(showBackground = true)
 @Composable
 fun HorizontalCardCarouselPreview() {
-    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth())
+    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth(), items = listOf())
 }
-
-sealed class CarouselItem(val title: String, val colorBackground: Color) {
-    class GenerateSummary(colorBackground: Color) :
-        CarouselItem("Generar\nResumen", colorBackground)
-
-    class Crisis(title: String, val count: String, colorBackground: Color) :
-        CarouselItem(title, colorBackground)
-
-    class Activities(title: String, val progress: Float, colorBackground: Color) :
-        CarouselItem(title, colorBackground)
-
-    class Tools(
-        title: String,
-        colorBackground: Color,
-        val tools: List<ToolProgress>
-    ) : CarouselItem(title, colorBackground)
-}
-
-data class ToolProgress(val name: String, val progress: Float)

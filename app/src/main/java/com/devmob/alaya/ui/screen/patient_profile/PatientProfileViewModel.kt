@@ -8,6 +8,10 @@ import androidx.lifecycle.viewModelScope
 import co.yml.charts.common.model.Point
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.User
+import com.devmob.alaya.ui.theme.ColorQuaternary
+import com.devmob.alaya.ui.theme.ColorSecondary
+import com.devmob.alaya.ui.theme.ColorTertiary
+import com.devmob.alaya.ui.theme.LightBlueColor
 import kotlinx.coroutines.launch
 
 class PatientProfileViewModel(private val getEmailUseCase: GetUserDataUseCase) :
@@ -40,6 +44,21 @@ class PatientProfileViewModel(private val getEmailUseCase: GetUserDataUseCase) :
             Point(10f, 1f, "Oct"),
             Point(11f, 5f, "Nov"),
             Point(12f, 0f, "Dic"),
+        )
+    }
+
+    fun getCarouselItems(): List<CarouselItem> {
+        return listOf(
+            CarouselItem.GenerateSummary(ColorQuaternary),
+            CarouselItem.Crisis("Crisis", "5", ColorTertiary.copy(alpha = 0.2f)),
+            CarouselItem.Activities("Actividades", 0.7f, LightBlueColor),
+            CarouselItem.Tools(
+                "Herramientas", ColorSecondary.copy(alpha = 0.3f), listOf(
+                    ToolProgress("Respiración", 0.8f),
+                    ToolProgress("Meditación", 0.6f),
+                    ToolProgress("Ejercicio", 0.4f)
+                )
+            )
         )
     }
 }

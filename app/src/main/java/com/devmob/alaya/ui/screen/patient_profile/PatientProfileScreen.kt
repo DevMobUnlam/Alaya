@@ -130,7 +130,7 @@ fun PatientProfileScreen(
                     top.linkTo(titleCarousel.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }
+                }, viewModel.getCarouselItems()
             )
 
             Text(
