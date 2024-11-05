@@ -6,6 +6,6 @@ import com.devmob.alaya.R
 data class OptionTreatment(
     val title: String,
     val description: String,
-    val imageUri: Uri? = null,
+    val imageUri: Uri? = Uri.EMPTY,
     val imageResId: Int = R.drawable.logounologin
 )

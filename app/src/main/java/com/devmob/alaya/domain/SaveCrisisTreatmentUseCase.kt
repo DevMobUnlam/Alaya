@@ -14,6 +14,7 @@ class SaveCrisisTreatmentUseCase {
         treatment: List<OptionTreatment?>
     ): FirebaseResult {
         Log.d("leandro", "usecase usuario $patientEmail")
+        Log.d("leandro", "usecase usuario $treatment")
         val result = saveCustomTreatmentRepository.addCustomTreatment(patientEmail, treatment)
         Log.d("leandro", "usecase usuario return $result")
         return result

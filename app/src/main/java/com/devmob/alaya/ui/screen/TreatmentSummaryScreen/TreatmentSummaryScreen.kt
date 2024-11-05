@@ -1,5 +1,7 @@
 package com.devmob.alaya.ui.screen.TreatmentSummaryScreen
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -82,8 +84,9 @@ fun TreatmentSummaryScreen(
         ) {
             selectedOptions.forEach { option ->
                 val drawableResId = getDrawableResId(option.title)
+                val urivacio = Uri.EMPTY
                 when {
-                    option.imageUri != null ->
+                    option.imageUri != urivacio ->
                         Card(
                             title = option.title,
                             subtitle = option.description,
@@ -123,6 +126,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
+                    Log.d("leandro","saveCrisis Screen list: $selectedOptions")
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
