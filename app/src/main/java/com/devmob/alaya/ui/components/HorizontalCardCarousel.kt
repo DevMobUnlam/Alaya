@@ -58,7 +58,7 @@ fun CarouselCard(item: CarouselItem) {
         elevation = CardDefaults.cardElevation(defaultElevation = 9.dp),
         modifier = Modifier
             .width(150.dp)
-            .height(100.dp)
+            .height(150.dp)
     ) {
         Box(
             modifier = Modifier

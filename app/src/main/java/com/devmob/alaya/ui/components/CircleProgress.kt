@@ -17,7 +17,7 @@ import com.devmob.alaya.ui.theme.ColorText
 @Composable
 fun CircleProgress(progress: Float) {
     Box(
-        modifier = Modifier.size(40.dp),
+        modifier = Modifier.size(80.dp),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
@@ -25,11 +25,11 @@ fun CircleProgress(progress: Float) {
             color = ColorTertiary,
             trackColor = ColorQuaternary,
             strokeWidth = 4.dp,
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(130.dp)
         )
         Text(
             text = "${(progress * 100).toInt()}%",
-            fontSize = 12.sp,
+            fontSize = 24.sp,
             color = ColorText
         )
     }
