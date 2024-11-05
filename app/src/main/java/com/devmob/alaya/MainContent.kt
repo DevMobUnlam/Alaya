@@ -435,7 +435,7 @@ fun MainContent(navController: NavHostController) {
             ) {
                 CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
                     popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = true
+                        inclusive = false
                     }
                 }},
                     onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route)}, viewModel = crisisRegistrationViewModel, navController = navController)

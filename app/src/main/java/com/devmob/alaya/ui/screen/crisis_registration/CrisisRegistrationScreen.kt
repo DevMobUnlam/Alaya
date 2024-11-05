@@ -98,14 +98,9 @@ fun CrisisRegistrationScreen(
     BackHandler {
         when(screenState.value?.currentStep){
             1 -> {
-                viewModel.cleanState()
-                navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                    popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = false
-                    }
-                }
+                viewModel.shouldShowExitModal = true
             }
-            else -> viewModel.goOneStepBack()
+            else -> if(viewModel.shouldGoToSummary) navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) else viewModel.goOneStepBack()
         }
     }
 
@@ -582,7 +577,6 @@ fun CrisisRegistrationScreen(
                         viewModel.shouldGoToSummary -> {
                             navController.popBackStack()
                         }
-
 
                         screenState.value?.currentStep!! < 6 -> {
                             viewModel.goOneStepForward()
