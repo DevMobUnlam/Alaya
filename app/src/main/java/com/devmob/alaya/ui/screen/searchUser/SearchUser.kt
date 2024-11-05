@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.UserItem
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -31,6 +32,13 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavController) {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
+    var currentEmail = FirebaseClient().auth.currentUser?.email
+
+    LaunchedEffect(Unit) {
+        if (currentEmail != null) {
+            viewModel.loadPatients(currentEmail)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -79,7 +87,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(viewModel.getUsersFilter(searchText.text)) { user ->
+                    items(viewModel.patients.filter { it.name.contains(searchText.text, ignoreCase = true) }) { user ->
                         UserItem(
                             user,
                             false
@@ -94,10 +102,3 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchUser() {
-    val navController = rememberNavController()
-    val viewModel = SearchUserViewModel()
-    SearchUserScreen(viewModel, navController)
-}

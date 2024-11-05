@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.BottomBarNavigation
@@ -29,6 +30,9 @@ fun ProfessionalNavigation(navController: NavHostController){
 
     val contactViewModel: ContactViewModel = hiltViewModel()
     val patientIASummaryViewModel: PatientIASummaryViewModel = hiltViewModel()
+
+    val getUserDataUseCase = GetUserDataUseCase();
+    val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
 
     Scaffold(
         bottomBar = {
@@ -52,13 +56,13 @@ fun ProfessionalNavigation(navController: NavHostController){
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.ProfessionalRoutes.Home.route) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 PatientProfileScreen(navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
-                SearchUserScreen(SearchUserViewModel(), navController)
+                SearchUserScreen(searchUserViewModel, navController)
             }
             composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route){
                 ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)

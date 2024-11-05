@@ -85,12 +85,12 @@ fun IconButtonWithIntensity(
                 ) {
                     repeat(intensity.ordinal + 1) {
                         OutlinedButton(
-                            modifier = Modifier.size(15.dp),
+                            modifier = Modifier.size(19.dp),
                             contentPadding = PaddingValues(0.dp),
                             enabled = true,
                             shape = CircleShape,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isActive && !showIntensitySelector) ColorText else ColorWhite
+                                containerColor = if (isActive && !showIntensitySelector) ColorPrimary else ColorWhite
                             ),
                             border = BorderStroke(width = 1.dp, color = ColorWhite),
                             onClick = { showIntensitySelector = !showIntensitySelector }
