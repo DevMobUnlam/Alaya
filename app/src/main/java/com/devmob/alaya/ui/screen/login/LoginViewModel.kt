@@ -80,7 +80,6 @@ class LoginViewModel(
             } ?: {
                 Log.w("LoginViewModel", "El usuario está logeado pero no se puede obtener el email.")
             }
-            Log.d("BREN", "${OneSignal.User}")
             when (userRole) {
                 UserRole.PATIENT -> {
                     _navigateToPatientHome.value = true
