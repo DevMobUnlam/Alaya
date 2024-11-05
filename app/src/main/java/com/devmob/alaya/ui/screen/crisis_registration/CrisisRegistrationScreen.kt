@@ -100,7 +100,7 @@ fun CrisisRegistrationScreen(
             1 -> {
                 viewModel.shouldShowExitModal = true
             }
-            else -> if(viewModel.shouldGoToSummary) navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) else viewModel.goOneStepBack()
+            else -> if(viewModel.shouldGoToSummary && !viewModel.shouldGoToBack) navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) else viewModel.goOneStepBack()
         }
     }
 

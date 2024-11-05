@@ -74,6 +74,9 @@ fun CrisisRegistrationSummaryScreen(
 
     BackHandler{
         navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
+        viewModel.updateStep(6)
+        viewModel.shouldGoToBack = true
+        viewModel.shouldGoToSummary = false
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
