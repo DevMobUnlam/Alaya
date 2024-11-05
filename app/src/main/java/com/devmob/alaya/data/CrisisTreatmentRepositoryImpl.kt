@@ -2,15 +2,15 @@ package com.devmob.alaya.data
 
 import android.net.Uri
 import android.util.Log
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.devmob.alaya.data.mapper.toResponseFirebase
-import com.devmob.alaya.domain.SaveCrisisTreatmentRepository
+import com.devmob.alaya.domain.CrisisTreatmentRepository
 import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
+import com.devmob.alaya.domain.model.User
 import kotlinx.coroutines.tasks.await
 
-class SaveCrisisTreatmentRepositoryImpl : SaveCrisisTreatmentRepository {
+class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
     private val db = FirebaseClient().db
     private val uploadImage = UploadImageToFirestoreUseCase()
 
@@ -38,4 +38,11 @@ class SaveCrisisTreatmentRepositoryImpl : SaveCrisisTreatmentRepository {
         db.collection("users").document(patientEmail)
             .update("crisis_treatment", treatmentList)
     }.toResponseFirebase()
+
+    override suspend fun getCustomTreatment(patientEmail: String): List<OptionTreatment>? {
+        val snapshot = db.collection("users").document(patientEmail).get().await()
+        val treatmentList = snapshot.toObject(User::class.java)?.stepCrisis
+
+        return treatmentList
+    }
 }

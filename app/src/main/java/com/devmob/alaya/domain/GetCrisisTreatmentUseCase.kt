@@ -1,17 +1,16 @@
 package com.devmob.alaya.domain
 
 import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
-import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
 
-class SaveCrisisTreatmentUseCase {
+class GetCrisisTreatmentUseCase {
+
     private val CustomTreatmentRepository = CrisisTreatmentRepositoryImpl()
 
     suspend operator fun invoke(
-        patientEmail: String,
-        treatment: List<OptionTreatment?>
-    ): FirebaseResult {
-        val result = CustomTreatmentRepository.addCustomTreatment(patientEmail, treatment)
+        patientEmail: String
+    ): List<OptionTreatment>? {
+        val result = CustomTreatmentRepository.getCustomTreatment(patientEmail)
         return result
     }
 }

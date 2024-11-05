@@ -15,6 +15,7 @@ import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
+import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
@@ -249,7 +250,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+                CrisisHandlingScreen(CrisisHandlingViewModel(GetCrisisTreatmentUseCase()), navController)
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
                 enterTransition = {
