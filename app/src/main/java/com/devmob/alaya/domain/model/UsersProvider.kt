@@ -15,7 +15,7 @@ data class User (
     val invitation: Invitation? = null,
     val invitations: List<Invitation> = emptyList(),
     val professional: Professional? = null,
-    val patients: List<Patient>? = null,
+    var patients: List<Patient>? = null,
     val containmentNetwork: List<Contact>? = null
 ) : Serializable {
     // Constructor vacío requerido para Firestore
