@@ -89,7 +89,8 @@ class CrisisHandlingViewModel (
                 bodySensations = emptyList(),
                 tools = toolsUsed,
                 emotions = emptyList(),
-                notes = null
+                notes = null,
+                completed = false
             )
 
             val result = saveCrisisRegistrationUseCase(crisisDetails)

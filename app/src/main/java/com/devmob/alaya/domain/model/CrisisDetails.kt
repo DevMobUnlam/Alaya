@@ -6,5 +6,6 @@ data class CrisisDetails(
     val bodySensationList: MutableList<CrisisBodySensation> = mutableListOf(),
     val toolList: MutableList<CrisisTool> = mutableListOf(),
     val emotionList: MutableList<CrisisEmotion> = mutableListOf(),
-    val notes: String = ""
+    val notes: String = "",
+    val completed: Boolean = false
 )

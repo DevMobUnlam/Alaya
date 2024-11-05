@@ -43,8 +43,8 @@ class CrisisRegistrationViewModel(
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
     var shouldGoToBack by mutableStateOf(true)
     var shouldGoToSummary by mutableStateOf(false)
-    private val _crisisTimeDetails = mutableStateOf(CrisisTimeDetails())
-    val crisisTimeDetails: State<CrisisTimeDetails> = _crisisTimeDetails
+    private val _crisisTimeDetails = MutableLiveData(CrisisTimeDetails())
+    val crisisTimeDetails: LiveData<CrisisTimeDetails> get() = _crisisTimeDetails
 
     var selectedTools = mutableStateListOf<String>()
 
@@ -62,30 +62,37 @@ class CrisisRegistrationViewModel(
     private val _crisisDetails = MutableLiveData<CrisisDetailsDB?>()
     val crisisDetails: LiveData<CrisisDetailsDB?> get() = _crisisDetails
 
-    fun loadLastCrisisDetails() { //me trae el ultimo registro y le mapeo inicio, fin y herramientas
+    fun loadLastCrisisDetails() {
         viewModelScope.launch {
             val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
             _crisisDetails.value = result
 
             if (result != null) {
-                val startTime = result.start
-                val endTime = result.end
+                if (result.completed == false) { //opciones precargadas cuando el registro esta incompleto
+                    val startTime = result.start
+                    val endTime = result.end
 
-                if (startTime != null && endTime != null) {
-                    val crisisTimeDetails = CrisisTimeDetails(
-                        startTime = startTime,
-                        endTime = endTime
-                    )
-                    _crisisTimeDetails.value = crisisTimeDetails
-                }
-                selectedTools.clear()
-                val availableTools = returnAvailableTools()
-                for (tool in availableTools) {
-                    if (result.tools.contains(tool.id)) {
-                        selectedTools.add(tool.id)
+                    if (startTime != null && endTime != null) {
+                        val crisisTimeDetails = CrisisTimeDetails(
+                            startTime = startTime,
+                            endTime = endTime
+                        )
+                        _crisisTimeDetails.value = crisisTimeDetails
                     }
+                    selectedTools.clear()
+                    val availableTools = returnAvailableTools()
+                    for (tool in availableTools) {
+                        if (result.tools.contains(tool.id)) {
+                            selectedTools.add(tool.id)
+                        }
+                    }
+                } else {
+                    _crisisTimeDetails.value = CrisisTimeDetails()
+                    selectedTools.clear()
+                }
+
             }
-        }}
+        }
     }
 
     fun cleanState() {
@@ -338,7 +345,6 @@ class CrisisRegistrationViewModel(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
-
     }
 
     fun updateStartTime(hour: Date) {
@@ -421,17 +427,33 @@ class CrisisRegistrationViewModel(
     fun saveRegister() {
         viewModelScope.launch {
             val crisis = _screenState.value?.crisisDetails?.toDB()
-            val response = crisis?.let { saveCrisisRegistrationUseCase(it) }
-            when (response) {
-                is FirebaseResult.Success -> {
-                    Log.d("CrisisRegistrationViewModel", "saveRegister: Success")
-                }
 
-                is FirebaseResult.Error -> {
-                    Log.d("CrisisRegistrationViewModel", "saveRegister: Error")
-                }
+            // Si existe un registro incompleto, lo actualizo
+            if (_crisisDetails.value != null && _crisisDetails.value?.completed == false) {
+                val updatedCrisis = crisis?.copy(completed = true)
+                val response = updatedCrisis?.let { saveCrisisRegistrationUseCase.updateCrisisDetails(it) }
 
-                null -> Log.d("CrisisRegistrationViewModel", "saveRegister: null ")
+                when (response) {
+                    is FirebaseResult.Success -> {
+                        Log.d("CrisisRegistrationViewModel", "Registro actualizado exitosamente")
+                    }
+                    is FirebaseResult.Error -> {
+                        Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
+                    }
+                    null -> Log.d("CrisisRegistrationViewModel", "Respuesta null")
+                }
+            } else {
+                val response = crisis?.let { saveCrisisRegistrationUseCase.invoke(it) }
+
+                when (response) {
+                    is FirebaseResult.Success -> {
+                        Log.d("CrisisRegistrationViewModel", "Nuevo registro guardado exitosamente")
+                    }
+                    is FirebaseResult.Error -> {
+                        Log.d("CrisisRegistrationViewModel", "Error al guardar el nuevo registro")
+                    }
+                    null -> Log.d("CrisisRegistrationViewModel", "Respuesta null")
+                }
             }
         }
     }

@@ -15,7 +15,8 @@ internal fun CrisisDetails.toDB(): CrisisDetailsDB {
         bodySensations = this.bodySensationList.map { it.toDB() },
         tools = this.toolList.map { it.name },
         emotions = this.emotionList.map { it.toDB() },
-        notes = this.notes
+        notes = this.notes,
+        completed = this.completed
     )
 }
 
