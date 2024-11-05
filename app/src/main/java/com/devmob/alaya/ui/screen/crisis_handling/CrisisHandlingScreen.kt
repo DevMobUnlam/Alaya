@@ -153,13 +153,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 viewModel.playMusic(context)
             }
             },
-            onPauseMusic = { viewModel.pauseMusic()}
-        )
-        ExpandableButton(modifier = Modifier.constrainAs(audioIcon) {
-            top.linkTo(progressBar.bottom, margin = 8.dp)
-            start.linkTo(parent.start, margin = 16.dp)
-        },
-            isVoiceOn = isVoiceOn,
+            onPauseMusic = { viewModel.pauseMusic()}, isVoiceOn = isVoiceOn,
             onMuteVoice = {
                 if(isVoiceOn){
                     if(textToSpeech.isSpeaking){
@@ -191,7 +185,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                     }
                 }
             }
-            )
+        )
 
         Text(
             text = currentStep.title,
@@ -252,13 +246,12 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             },
             ButtonStyle.Outlined,
             { viewModel.showModal()
-                viewModel.stopMusic()})
-            {
+                viewModel.stopMusic()
                 if(textToSpeech.isSpeaking){
-                    textToSpeech.stop()
-                }
+                    textToSpeech.stop()}
+
                 shouldVoiceSpeak = false
-                viewModel.showModal() })
+                viewModel.showModal()})
 
         Button(
             stringResource(R.string.secondary_button_crisis_handling),
@@ -340,10 +333,4 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 }
             })
     }
-}
-
-@Preview
-@Composable
-fun CrisisHandlingScreenPreview() {
-    CrisisHandlingScreen(CrisisHandlingViewModel(), rememberNavController())
 }

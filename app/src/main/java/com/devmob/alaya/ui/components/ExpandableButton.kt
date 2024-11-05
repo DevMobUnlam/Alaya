@@ -31,9 +31,10 @@ import com.devmob.alaya.ui.theme.ColorText
 fun ExpandableButton(
     modifier: Modifier,
     onPlayMusic: () -> Unit,
-    onPauseMusic: () -> Unit
+    onPauseMusic: () -> Unit,
+    isVoiceOn: Boolean = true,
+    onMuteVoice: () -> Unit = {}
 ) {
-fun ExpandableButton(modifier: Modifier, isVoiceOn: Boolean = true, onMuteVoice: () -> Unit = {}) {
     var isExpanded by remember { mutableStateOf(false) }
     var isMusicPlaying by remember { mutableStateOf(false) }
     val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp)
@@ -88,11 +89,8 @@ fun ExpandableButton(modifier: Modifier, isVoiceOn: Boolean = true, onMuteVoice:
                         )
                     }
 
-                    var isVoiceOn by remember { mutableStateOf(true) }
                     IconButton(
                         onClick = { onMuteVoice()}, modifier = Modifier.size(50.dp)
-                        onClick = { isVoiceOn = !isVoiceOn },
-                        modifier = Modifier.size(50.dp)
                     ) {
                         Icon(
                             painter = painterResource(
