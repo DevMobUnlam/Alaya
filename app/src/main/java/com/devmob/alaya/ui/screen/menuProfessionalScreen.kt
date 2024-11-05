@@ -20,6 +20,7 @@ import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
+import com.onesignal.OneSignal
 
 @Composable
 fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreferences){
@@ -69,9 +70,9 @@ fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreference
                             navController.navigate(
                                 NavUtils.LoginRoutes.Login.route
                             )
-                            val unloggedUser = auth.currentUser?.email
                             auth.signOut()
                             prefs.signOut()
+                            OneSignal.logout()
                         }
                 )
             }
