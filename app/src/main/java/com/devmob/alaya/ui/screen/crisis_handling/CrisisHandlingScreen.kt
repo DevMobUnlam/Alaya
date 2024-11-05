@@ -307,6 +307,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             primaryButtonText = stringResource(R.string.confirm),
             secondaryButtonText = stringResource(R.string.dismiss),
             onConfirm = {
+                viewModel.stopMusic()
                 navController.navigate(NavUtils.PatientRoutes.Home.route) {
                     popUpTo(NavUtils.PatientRoutes.Home.route) {
                         inclusive = true
