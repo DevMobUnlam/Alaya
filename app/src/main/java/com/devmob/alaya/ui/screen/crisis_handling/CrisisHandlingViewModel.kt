@@ -87,6 +87,7 @@ class CrisisHandlingViewModel : ViewModel() {
             player = MediaPlayer().apply {
                 setDataSource(url)
                 prepare()
+                setVolume(0.45f, 0.45f)
                 start()
 
                 setOnCompletionListener {
