@@ -31,7 +31,7 @@ object NavUtils {
 
     sealed class ProfessionalRoutes(val route: String) {
         data object Home : ProfessionalRoutes("home_profesional")
-        data object PatientProfile : ProfessionalRoutes("patient_profile/{email}")
+        data object PatientProfile : ProfessionalRoutes("patient_profile")
         data object SearchPatient : ProfessionalRoutes("search_patient")
         data object ConfigTreatment : ProfessionalRoutes("config_treatment")
         data object TreatmentSummary :
@@ -50,6 +50,7 @@ object NavUtils {
         "contact_detail/{contactId}" to "Detalles del Contacto",
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
+        "patient_profile/{email}" to "Perfil del paciente",
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",

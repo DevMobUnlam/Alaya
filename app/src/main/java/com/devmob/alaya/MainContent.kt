@@ -82,6 +82,7 @@ fun MainContent(navController: NavHostController) {
         "contact_detail/{contactId}",
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
+        "patient_profile/{email}",
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
