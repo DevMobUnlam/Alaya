@@ -1,6 +1,6 @@
 package com.devmob.alaya
 
-import android.util.Log
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -63,7 +63,11 @@ import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
-fun MainContent(navController: NavHostController) {
+fun MainContent(
+    navController: NavHostController,
+    textToSpeech: TextToSpeech,
+    isTtsInitialized: Boolean
+) {
     val context = LocalContext.current
     val currentRoute = currentRoute(navController)
     val contactUseCase = ContactUseCase()
@@ -72,6 +76,8 @@ fun MainContent(navController: NavHostController) {
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
+    val getUserDataUseCase = GetUserDataUseCase();
+    val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -166,7 +172,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
             }
             composable(ProfessionalRoutes.PatientProfile.route,
                 enterTransition = {
@@ -205,7 +211,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                SearchUserScreen(SearchUserViewModel(), navController)
+                SearchUserScreen(searchUserViewModel, navController)
             }
             composable(NavUtils.LoginRoutes.Login.route,
                 enterTransition = {
@@ -243,7 +249,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+                CrisisHandlingScreen(CrisisHandlingViewModel(), navController, textToSpeech, isTtsInitialized)
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
                 enterTransition = {

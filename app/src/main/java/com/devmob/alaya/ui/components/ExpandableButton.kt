@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorQuaternary
@@ -32,6 +33,7 @@ fun ExpandableButton(
     onPlayMusic: () -> Unit,
     onPauseMusic: () -> Unit
 ) {
+fun ExpandableButton(modifier: Modifier, isVoiceOn: Boolean = true, onMuteVoice: () -> Unit = {}) {
     var isExpanded by remember { mutableStateOf(false) }
     var isMusicPlaying by remember { mutableStateOf(false) }
     val buttonWidth by animateDpAsState(if (isExpanded) 180.dp else 50.dp)
@@ -88,6 +90,7 @@ fun ExpandableButton(
 
                     var isVoiceOn by remember { mutableStateOf(true) }
                     IconButton(
+                        onClick = { onMuteVoice()}, modifier = Modifier.size(50.dp)
                         onClick = { isVoiceOn = !isVoiceOn },
                         modifier = Modifier.size(50.dp)
                     ) {

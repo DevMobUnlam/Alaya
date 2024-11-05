@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
@@ -70,14 +71,15 @@ fun IntensitySelector(
                     .height(IntrinsicSize.Max)
                     .padding(top = 6.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
             ) {
-                Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText,fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(1.dp))
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(text = context.current.resources.getString(R.string.intensity_selector_text), color = ColorText,fontSize = 19.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ){
                     for (i in Intensity.entries) {
                         OutlinedButton(
-                            modifier= Modifier.size(15.dp),
+                            modifier= Modifier.size(25.dp),
                             contentPadding = PaddingValues(0.dp),
                             onClick = {
                                 onIntensityChange(i)
@@ -93,6 +95,7 @@ fun IntensitySelector(
 
                     }
                 }
+                Spacer(modifier = Modifier.height(3.dp))
             }
         }
     }
