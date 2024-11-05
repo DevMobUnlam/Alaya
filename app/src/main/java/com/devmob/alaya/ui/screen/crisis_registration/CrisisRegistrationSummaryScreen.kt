@@ -71,7 +71,6 @@ fun CrisisRegistrationSummaryScreen(
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
-    BackHandler { }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
