@@ -3,5 +3,5 @@ package com.devmob.alaya.domain
 import android.net.Uri
 
 interface UploadImageToFirestore {
-    suspend fun uploadImage(imageUri: Uri, storagePath: String): Uri?
+    suspend fun uploadImage(imageUri: String, storagePath: String): Uri?
 }

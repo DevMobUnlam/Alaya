@@ -9,9 +9,9 @@ class UploadImageToFirestoreUseCase {
     private val email = FirebaseClient().auth.currentUser?.email
     val repository = UploadImageToFirestoreImpl()
 
-    suspend operator fun invoke(imageUri: Uri): Uri? {
+    suspend operator fun invoke(imageUri: String): Uri? {
 
-        val path = "customOptionTreatment/${email}/${imageUri.lastPathSegment}"
+        val path = "customOptionTreatment/${email}/${imageUri}"
         return repository.uploadImage(imageUri, path)
     }
 }

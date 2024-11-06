@@ -1,7 +1,9 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
 import ExpandableButton
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,8 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -53,15 +60,21 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val currentStepIndex = viewModel.currentStepIndex
 
+    var loadingScreen by rememberSaveable { mutableStateOf(true) }
+
     BackHandler {
         // Comportamiento del botón "Atrás"
     }
-
-    LaunchedEffect (viewModel.loading.value) {
-        viewModel.fetchCrisisSteps()
+    if (!viewModel.optionTreatmentsList.isNullOrEmpty()) {
+        viewModel.loading.value = false
+        Log.d("leandro", "este es el if del optiontreatmentlist")
     }
 
-    if (viewModel.loading.value) {
+    viewModel.fetchCrisisSteps()
+
+
+    if (viewModel.currentStep == null) {
+        Log.d("leandro", "este es el if del loading")
         Surface(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -77,6 +90,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             }
         }
     } else {
+        Log.d("leandro", "este es el else de la screen completa")
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,6 +99,9 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             val currentStep = viewModel.currentStep
             val totalSteps = viewModel.steps.size
             val (progressBar, audioIcon, closeIcon, lottieAnimation, title, description, nextButton, goodButton) = createRefs()
+
+            Log.d("leandro", "el current step es: $currentStep")
+            Log.d("leandro", "el current step es: $totalSteps")
 
             SegmentedProgressBar(
                 totalSteps = totalSteps,
@@ -115,36 +132,56 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 start.linkTo(parent.start, margin = 16.dp)
             })
 
-            Text(
-                text = currentStep.title,
-                color = ColorText,
-                fontSize = 24.sp,
-                fontWeight = Bold,
-                modifier = Modifier.constrainAs(title) {
-                    top.linkTo(audioIcon.bottom, margin = 12.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                })
-
+            if (currentStep != null) {
+                Text(
+                    text = currentStep.title,
+                    color = ColorText,
+                    fontSize = 24.sp,
+                    fontWeight = Bold,
+                    modifier = Modifier.constrainAs(title) {
+                        top.linkTo(audioIcon.bottom, margin = 12.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    })
+            }
             // Reemplazo de la imagen con la animación de Lottie
-            val composition by rememberLottieComposition(
-                spec = LottieCompositionSpec.RawRes(
-                    when (currentStep.image) {
-                        "image_step_1" -> R.raw.crisis_step1_animation
-                        "image_step_2" -> R.raw.animation
-                        "image_step_3" -> R.raw.crisis_step3_animation
-                        else -> R.raw.feedback_congratulations_animation // Animación por defecto si no hay un paso válido
-                    }
-                )
-            )
-            val progress by animateLottieCompositionAsState(
-                composition = composition,
-                iterations = LottieConstants.IterateForever
-            )
+            /*
+                        val composition by rememberLottieComposition(
+                            spec = LottieCompositionSpec.RawRes(
+                                when (currentStep?.image) {
+                                    "image_step_1" -> R.raw.crisis_step1_animation
+                                    "image_step_2" -> R.raw.animation
+                                    "image_step_3" -> R.raw.crisis_step3_animation
+                                    else -> R.raw.feedback_congratulations_animation // Animación por defecto si no hay un paso válido
+                                }
+                            )
+                        )*/
+            /*
+                        val composition by rememberLottieComposition(
+                            spec = LottieCompositionSpec.Url(currentStep?.image)
+                        )
 
-            LottieAnimation(
-                composition = composition,
-                progress = progress,
+                        val progress by animateLottieCompositionAsState(
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever
+                        )
+
+                        LottieAnimation(
+                            composition = composition,
+                            progress = progress,
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
+                                .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+                                .constrainAs(lottieAnimation) {
+                                    top.linkTo(title.bottom, margin = 24.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(description.top, margin = 16.dp)
+                                }
+                        )*/
+            Image(
+                painter = rememberImagePainter(data = currentStep?.image),
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
                     .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
@@ -153,17 +190,20 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(description.top, margin = 16.dp)
-                    }
+                    },
+                contentScale = ContentScale.Crop
             )
 
-            TextContainer(
-                currentStep.description,
-                modifier = Modifier.constrainAs(description) {
-                    top.linkTo(lottieAnimation.bottom, margin = 24.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }
-            )
+            if (currentStep != null) {
+                TextContainer(
+                    currentStep.description,
+                    modifier = Modifier.constrainAs(description) {
+                        top.linkTo(lottieAnimation.bottom, margin = 24.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    }
+                )
+            }
 
             Button(
                 stringResource(R.string.primary_button_crisis_handling),

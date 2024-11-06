@@ -9,13 +9,13 @@ class UploadImageToFirestoreImpl : UploadImageToFirestore {
     private val storageRef = storage.reference
     private val email = FirebaseClient().auth.currentUser?.email
 
-    override suspend fun uploadImage(imageUri: Uri, storagePath: String): Uri? {
+    override suspend fun uploadImage(imageUri: String, storagePath: String): Uri? {
 
         return try {
             val imageRef =
                 storageRef.child(storagePath)
 
-            imageRef.putFile(imageUri).await()
+            imageRef.putFile(Uri.parse(imageUri)).await()
             imageRef.downloadUrl.await()
         } catch (e: Exception) {
             null

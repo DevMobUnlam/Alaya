@@ -27,10 +27,10 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
                 val image = uploadImage(imageUri)
 
                 if (image != null) {
-                    val updatedTreatment = optionTreatment.copy(imageUri = image)
+                    val updatedTreatment = optionTreatment.copy(imageUri = image.toString())
                     treatmentList.add(updatedTreatment)
                 } else {
-                    val updatedTreatment = optionTreatment.copy(imageUri = Uri.EMPTY)
+                    val updatedTreatment = optionTreatment.copy(imageUri = "")
                     treatmentList.add(updatedTreatment)
                 }
             }
@@ -41,7 +41,9 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
 
     override suspend fun getCustomTreatment(patientEmail: String): List<OptionTreatment>? {
         val snapshot = db.collection("users").document(patientEmail).get().await()
-        val treatmentList = snapshot.toObject(User::class.java)?.stepCrisis
+        val treatmentList = snapshot.toObject(User::class.java)?.crisis_treatment
+
+        Log.d("leandro", "la lista desde firebase: $treatmentList")
 
         return treatmentList
     }

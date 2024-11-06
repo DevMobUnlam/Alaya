@@ -84,13 +84,13 @@ fun TreatmentSummaryScreen(
         ) {
             selectedOptions.forEach { option ->
                 val drawableResId = getDrawableResId(option.title)
-                val urivacio = Uri.EMPTY
+                val urivacio = ""
                 when {
                     option.imageUri != urivacio ->
                         Card(
                             title = option.title,
                             subtitle = option.description,
-                            imageUrl = option.imageUri.toString(),
+                            imageUrl = option.imageUri,
                             onClick = { }
                         )
                     drawableResId != 0 ->

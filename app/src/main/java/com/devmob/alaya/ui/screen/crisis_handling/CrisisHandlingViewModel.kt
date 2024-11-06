@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -19,17 +20,20 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
 
     val currentUser = FirebaseClient().auth.currentUser
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
-
+    var optionTreatmentsList by mutableStateOf<List<OptionTreatment>?>(null)
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
 
-    private val _loading = mutableStateOf(false)
+    private val _loading = mutableStateOf(true)
     val loading: MutableState<Boolean>
         get() = _loading
 
-    val currentStep: StepCrisis
-        get() = steps[currentStepIndex]
+    val currentStep: StepCrisis?
+        get() = if (steps.isNotEmpty()) {
+            steps[currentStepIndex]
+        } else null
+
 
     init {
         fetchCrisisSteps()
@@ -37,22 +41,31 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
 
     fun fetchCrisisSteps() {
         //TODO consultar al repositorio para obtener los pasos de la crisis
-        _loading.value = true
+        Log.d("leandro", "entró a fetchcrisis")
         var stepCrisisList: List<StepCrisis>
         viewModelScope.launch {
+            _loading.value = true
             try {
-                val optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
-                stepCrisisList = optionTreatmentsList?.map { option ->
-                    StepCrisis(
-                        title = option.title,
-                        description = option.description,
-                        image = option.imageUri.toString() // Convierte Uri a String
-                    )
-                } ?: emptyList()
-                steps = stepCrisisList
-                _loading.value = false
+                Log.d("leandro", "current user ${currentUser?.email}")
+                optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+
+                Log.d("leandro", "la corutina del optiontreatment list : $optionTreatmentsList")
+                if (!optionTreatmentsList.isNullOrEmpty()) {
+                    Log.d("leandro", "el option treatment no es null : $optionTreatmentsList")
+                    stepCrisisList = optionTreatmentsList!!.map { option ->
+                        StepCrisis(
+                            title = option.title,
+                            description = option.description,
+                            image = option.imageUri.toString()
+                        )
+                    }
+                    steps = stepCrisisList
+                    _loading.value = false
+                }
+
             } catch (e: Exception) {
-                _loading.value = true
+                _loading.value = false
+                Log.d("leandro", "catch de fetchcrisis $e")
             }
         }
     }
