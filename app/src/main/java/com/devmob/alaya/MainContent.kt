@@ -451,14 +451,10 @@ fun MainContent(
             ) {
                 CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
                     popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = true
+                        inclusive = false
                     }
                 }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) {
-                            inclusive = true
-                        }
-                    }}, viewModel = crisisRegistrationViewModel, navController = navController)
+                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route)}, viewModel = crisisRegistrationViewModel, navController = navController)
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
                 enterTransition = { return@composable slideIntoContainer(
@@ -538,3 +534,4 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
+
