@@ -55,82 +55,85 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop
     )
-
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        val (greetingText, cardColumn) = createRefs()
-        Text(
-            text = "Hola ${namePatient}, ¡${greetingMessage}!",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 32.sp,
-            color = ColorText,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
+        ConstraintLayout(
             modifier = Modifier
-                .constrainAs(greetingText) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .padding(16.dp)
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(cardColumn) {
-                    top.linkTo(greetingText.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
         ) {
-            Card(
-                title = "¿Cómo me siento hoy?",
-                subtitle = "Evalúa tu estado emocional",
-                onClick = { },
-                leftIcon = Icons.Outlined.Mood,
-                rightIcon = Icons.Filled.ArrowForwardIos
+            val (greetingText, cardColumn) = createRefs()
+            Text(
+                text = "Hola ${namePatient}, ¡${greetingMessage}!",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 32.sp,
+                color = ColorText,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                modifier = Modifier
+                    .constrainAs(greetingText) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(16.dp)
             )
-            Card(
-                title = "Mi red de contención",
-                subtitle = "Accede a tus contactos de confianza",
-                onClick = { navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route) },
-                leftIcon = Icons.Outlined.Groups,
-                rightIcon = Icons.Filled.ArrowForwardIos
-            )
-            Card(
-                title = "Actividades diarias",
-                subtitle = "Prácticas diarias para mejorar el control emocional",
-                onClick = { },
-                leftIcon = Icons.Outlined.Checklist,
-                rightIcon = Icons.Filled.ArrowForwardIos
-            )
-            Card(
-                title = "Herramientas de bienestar",
-                subtitle = "Encuentra recursos para cuidar tu mente y mejorar tu bienestar diario",
-                onClick = { },
-                rightIcon = Icons.Filled.ArrowForwardIos,
-                leftIconBitmap = BitmapFactory.decodeResource(
-                    LocalContext.current.resources,
-                    R.drawable.hand_heart
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(cardColumn) {
+                        top.linkTo(greetingText.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(16.dp)
+            ) {
+                Card(
+                    title = "¿Cómo me siento hoy?",
+                    subtitle = "Evalúa tu estado emocional",
+                    onClick = { },
+                    leftIcon = Icons.Outlined.Mood,
+                    rightIcon = Icons.Filled.ArrowForwardIos
                 )
-            )
-            Card(
-                title = "Registro de crisis",
-                subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
-                onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route) },
-                leftIcon = Icons.Outlined.Mood,
-                rightIcon = Icons.Filled.ArrowForwardIos,
-                leftIconBitmap = BitmapFactory.decodeResource(
-                    LocalContext.current.resources,
-                    R.drawable.head_side_heart
+                Card(
+                    title = "Mi red de contención",
+                    subtitle = "Accede a tus contactos de confianza",
+                    onClick = { navController.navigate(NavUtils.PatientRoutes.ContainmentNetwork.route) },
+                    leftIcon = Icons.Outlined.Groups,
+                    rightIcon = Icons.Filled.ArrowForwardIos
                 )
-            )
+                Card(
+                    title = "Actividades diarias",
+                    subtitle = "Prácticas diarias para mejorar el control emocional",
+                    onClick = { },
+                    leftIcon = Icons.Outlined.Checklist,
+                    rightIcon = Icons.Filled.ArrowForwardIos
+                )
+                Card(
+                    title = "Herramientas de bienestar",
+                    subtitle = "Encuentra recursos para cuidar tu mente y mejorar tu bienestar diario",
+                    onClick = { },
+                    rightIcon = Icons.Filled.ArrowForwardIos,
+                    leftIconBitmap = BitmapFactory.decodeResource(
+                        LocalContext.current.resources,
+                        R.drawable.hand_heart
+                    )
+                )
+                Card(
+                    title = "Registro de crisis",
+                    subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
+                    onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route) },
+                    leftIcon = Icons.Outlined.Mood,
+                    rightIcon = Icons.Filled.ArrowForwardIos,
+                    leftIconBitmap = BitmapFactory.decodeResource(
+                        LocalContext.current.resources,
+                        R.drawable.head_side_heart
+                    )
+                )
+            }
         }
     }
 }

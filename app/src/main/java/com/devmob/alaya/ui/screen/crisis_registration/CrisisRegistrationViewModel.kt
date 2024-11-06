@@ -22,6 +22,7 @@ import com.devmob.alaya.domain.model.util.toDB
 import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository.returnAvailableTools
 import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -62,7 +63,7 @@ class CrisisRegistrationViewModel(
     val crisisDetails: LiveData<CrisisDetailsDB?> get() = _crisisDetails
 
     fun loadLastCrisisDetails() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
             _crisisDetails.value = result
 

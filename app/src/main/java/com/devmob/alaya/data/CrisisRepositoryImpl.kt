@@ -19,8 +19,14 @@ class CrisisRepositoryImpl : CrisisRepository {
     }.toResponseFirebase()
 
     override suspend fun getLastCrisisDetails(): CrisisDetailsDB? {
+        val userEmail = auth.currentUser?.email
+        if (userEmail == null) {
+            Log.d("CrisisRepository", "El usuario no está autenticado.")
+            return null
+        } else {
+
         val querySnapshot = db.collection("users")
-            .document(auth.currentUser?.email!!)
+            .document(userEmail)
             .collection("crisis_registers")
             .whereEqualTo("completed", false)
             .orderBy("start", Query.Direction.DESCENDING)
@@ -38,13 +44,20 @@ class CrisisRepositoryImpl : CrisisRepository {
             Log.d("CrisisRepository", "Última crisis encontrada: ${crisisDetails?.start} - ${crisisDetails?.completed}")
             crisisDetails
         }
-    }
+    }}
+
 
     override suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult {
+        val userEmail = auth.currentUser?.email
+        if (userEmail == null) {
+            Log.d("CrisisRepository", "El usuario no está autenticado.")
+            return FirebaseResult.Error(IllegalStateException("El usuario no está autenticado"))
+        }
+
         val querySnapshot = db.collection("users")
-            .document(auth.currentUser?.email!!)
+            .document(userEmail)
             .collection("crisis_registers")
-            .whereEqualTo("completed", false) // Filtro por registros incompletos
+            .whereEqualTo("completed", false)
             .orderBy("start", Query.Direction.DESCENDING)
             .limit(1)
             .get()
@@ -63,7 +76,6 @@ class CrisisRepositoryImpl : CrisisRepository {
         } catch (e: Exception) {
             FirebaseResult.Error(e)
         }
-    }
-}
+    }}
 
 
