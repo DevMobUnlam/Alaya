@@ -11,4 +11,11 @@ class SaveCrisisRegistrationUseCase {
     suspend operator fun invoke(register: CrisisDetailsDB): FirebaseResult {
         return crisisRepository.addRegister(register)
     }
+
+    suspend fun getLastCrisisDetails(): CrisisDetailsDB? {
+        return crisisRepository.getLastCrisisDetails()
+    }
+    suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult {
+        return crisisRepository.updateCrisisDetails(register)
+    }
 }

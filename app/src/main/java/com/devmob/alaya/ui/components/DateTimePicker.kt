@@ -39,8 +39,8 @@ fun DateTimePicker(
 ) {
     val calendar = Calendar.getInstance()
 
-    val selectedStartTime = crisisTimeDetails.startTime
-    val selectedEndTime = crisisTimeDetails.endTime
+    val selectedStartTime = remember { mutableStateOf(crisisTimeDetails.startTime ?: Date()) }
+    val selectedEndTime = remember { mutableStateOf(crisisTimeDetails.endTime ?: Date()) }
 
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -51,6 +51,7 @@ fun DateTimePicker(
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
+            selectedStartTime.value = calendar.time
             onStartDateChange(calendar.time)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
@@ -62,6 +63,7 @@ fun DateTimePicker(
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
+            selectedEndTime.value = calendar.time
             onEndDateChange(calendar.time)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
@@ -74,6 +76,7 @@ fun DateTimePicker(
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
+            selectedStartTime.value = calendar.time
             onStartTimeChange(calendar.time)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
@@ -84,6 +87,7 @@ fun DateTimePicker(
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
+            selectedEndTime.value = calendar.time
             onEndTimeChange(calendar.time)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
@@ -99,12 +103,12 @@ fun DateTimePicker(
                     Spacer(modifier = Modifier.height(50.dp))
 
                     OutlinedTextField(
-                        value = dateFormat.format(selectedStartTime),
+                        value = if (selectedStartTime.value != null) dateFormat.format(selectedStartTime.value) else "",
                         onValueChange = {},
                         label = {
                             Text(text = "Inicio (Fecha)", color = Color(0xFF2E4D83))
                         },
-                        readOnly = true,
+                        readOnly = false,
                         trailingIcon = {
                             IconButton(onClick = { datePickerDialogStart.show() }) {
                                 Icon(
@@ -124,12 +128,12 @@ fun DateTimePicker(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = timeFormat.format(selectedStartTime),
+                        value = if (selectedStartTime.value != null) timeFormat.format(selectedStartTime.value) else "",
                         onValueChange = {},
                         label = {
                             Text(text = "Inicio (Hora)", color = Color(0xFF2E4D83))
                         },
-                        readOnly = true,
+                        readOnly = false,
                         trailingIcon = {
                             IconButton(onClick = { timePickerDialogStart.show() }) {
                                 Icon(
@@ -151,12 +155,12 @@ fun DateTimePicker(
 
                 Column {
                     OutlinedTextField(
-                        value = dateFormat.format(selectedEndTime),
+                        value = if (selectedEndTime.value != null) dateFormat.format(selectedEndTime.value) else "",
                         onValueChange = {},
                         label = {
                             Text(text = "Fin (Fecha)", color = Color(0xFF2E4D83))
                         },
-                        readOnly = true,
+                        readOnly = false,
                         trailingIcon = {
                             IconButton(onClick = { datePickerDialogEnd.show() }) {
                                 Icon(
@@ -176,12 +180,12 @@ fun DateTimePicker(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = timeFormat.format(selectedEndTime),
+                        value = if (selectedEndTime.value != null) timeFormat.format(selectedEndTime.value) else "",
                         onValueChange = {},
                         label = {
                             Text(text = "Fin (Hora)", color = Color(0xFF2E4D83))
                         },
-                        readOnly = true,
+                        readOnly = false,
                         trailingIcon = {
                             IconButton(onClick = { timePickerDialogEnd.show() }) {
                                 Icon(

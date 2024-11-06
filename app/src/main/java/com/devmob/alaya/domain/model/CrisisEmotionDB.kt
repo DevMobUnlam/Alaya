@@ -4,3 +4,6 @@ data class CrisisEmotionDB(
     val name: String,
     val intensity: Intensity
 )
+{
+    constructor() : this("", Intensity.LOW)
+}
