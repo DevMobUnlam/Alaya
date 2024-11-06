@@ -92,9 +92,9 @@ fun CrisisHandlingScreen(
             viewModel.stopMusic()
         }
     }
-    var shouldVoiceSpeak by remember { mutableStateOf(true) }
-    var isVoiceOn by remember { mutableStateOf(true) }
 
+    var shouldVoiceSpeak by remember{mutableStateOf(true)}
+    var isVoiceOn by remember{mutableStateOf(false)}
 
     LaunchedEffect(currentStepIndex) {
 

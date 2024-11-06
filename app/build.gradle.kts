@@ -77,6 +77,10 @@ dependencies {
     implementation(libs.androidx.constraint)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.kotlin.reflect)
+    implementation(libs.onesignal)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
