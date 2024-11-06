@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,7 @@ import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>) {
+fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>, onGenerateIASummary: () -> Unit) {
 
     LazyRow(
         modifier = modifier
@@ -40,19 +41,22 @@ fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items) { item ->
-            CarouselCard(item)
+            CarouselCard(item, onGenerateIASummary)
         }
     }
 }
 
 @Composable
-fun CarouselCard(item: CarouselItem) {
+fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 9.dp),
         modifier = Modifier
             .width(150.dp)
             .height(150.dp)
+            .clickable{if(item is CarouselItem.GenerateSummary){
+                onGenerateIASummary()
+            } }
     ) {
         Box(
             modifier = Modifier
@@ -132,5 +136,5 @@ fun TitleText(title: String) {
 @Preview(showBackground = true)
 @Composable
 fun HorizontalCardCarouselPreview() {
-    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth(), items = listOf())
+    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth(), items = listOf(), onGenerateIASummary = {})
 }
