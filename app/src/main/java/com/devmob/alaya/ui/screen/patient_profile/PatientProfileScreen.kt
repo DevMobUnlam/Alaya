@@ -145,7 +145,7 @@ fun PatientProfileScreen(
                     top.linkTo(titleCarousel.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }, viewModel.getCarouselItems()
+                }, viewModel.getCarouselItems(), onGenerateIASummary = {navController.navigate("patient_ia_summary/$email")}
             )
 
             Text(

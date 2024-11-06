@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import java.util.Locale
 import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.ui.theme.AlayaTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 
 class MainActivity : ComponentActivity(), TextToSpeech.OnInitListener {
 
