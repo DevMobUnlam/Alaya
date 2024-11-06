@@ -136,6 +136,8 @@ class CrisisRegistrationViewModel(
 
     fun updateStep(step: Int) {
         _screenState.value = _screenState.value?.copy(currentStep = step)
+//        shouldGoToSummary = true
+        hideBackButton()
     }
 
     fun addCrisisPlace(place: CrisisPlace) {
