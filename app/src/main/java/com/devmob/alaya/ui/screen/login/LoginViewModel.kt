@@ -69,11 +69,13 @@ class LoginViewModel(
         _loading.value = true
         val userIsLoggedIn = prefs.isLoggedIn()
         val userRole = prefs.getRole()
+        Log.d("login", "user was logged in: $userIsLoggedIn, role: $userRole")
         Log.d("login", "user was logged in: $userIsLoggedIn")
 
         if (userIsLoggedIn) {
             when (userRole) {
                 UserRole.PATIENT -> {
+                    Log.d("login", "Navigating to Patient Home from checkIfUserWasLoggedIn")
                     _navigateToPatientHome.value = true
                 }
 
