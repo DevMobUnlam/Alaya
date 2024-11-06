@@ -10,6 +10,7 @@ import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.model.UserRole
+import com.onesignal.OneSignal
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -49,6 +50,8 @@ class LoginViewModel(
 
                 is AuthenticationResult.Success -> {
                     Log.d("login", "singInWithEmailAndPassword successful with $email")
+                    OneSignal.login(email)
+                    OneSignal.User.addAlias("ALIAS_FIREBASE_ID", email)
                     val role = getRoleUseCase(email)
                     role?.let { prefs.setUserLoggedIn(email, it) }
                     when (role) {
@@ -64,16 +67,23 @@ class LoginViewModel(
             }
         }
 
-
     fun checkIfUserWasLoggedIn() {
         _loading.value = true
         val userIsLoggedIn = prefs.isLoggedIn()
         val userRole = prefs.getRole()
+        Log.d("login", "user was logged in: $userIsLoggedIn, role: $userRole")
         Log.d("login", "user was logged in: $userIsLoggedIn")
 
         if (userIsLoggedIn) {
+            prefs.getEmail()?.let {
+                OneSignal.login(it)
+                OneSignal.User.addAlias("ALIAS_FIREBASE_ID", it)
+            } ?: {
+                Log.w("LoginViewModel", "El usuario está logeado pero no se puede obtener el email.")
+            }
             when (userRole) {
                 UserRole.PATIENT -> {
+                    Log.d("login", "Navigating to Patient Home from checkIfUserWasLoggedIn")
                     _navigateToPatientHome.value = true
                 }
 

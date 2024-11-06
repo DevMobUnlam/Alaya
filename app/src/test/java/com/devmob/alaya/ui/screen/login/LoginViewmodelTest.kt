@@ -7,12 +7,17 @@ import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.UserRole
+import com.onesignal.OneSignal
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -47,21 +52,28 @@ class LoginViewmodelTest {
     @Before
     fun setUp(){
         MockKAnnotations.init(this, relaxed = true)
+        mockkObject(OneSignal)
         Dispatchers.setMain(testDispatcher)
         viewModel = LoginViewModel(loginUseCase, getRoleUseCase, prefs)
+        justRun { OneSignal.login(any()) }
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","") } returns mockk()
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
         clearMocks(loginUseCase, getRoleUseCase, prefs)
+        unmockkAll()
     }
 
     @Test
     fun `given a patient, when login is successfully, then navigate to patientHomeScreen`() {
         //GIVEN
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
         val email = "emailPatient"
         val password = "passwordPatient"
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","emailPatient") } returns mockk()
         coEvery { loginUseCase(email, password) } returns AuthenticationResult.Success
         coEvery { getRoleUseCase(email) } returns UserRole.PATIENT
 
@@ -82,6 +94,7 @@ class LoginViewmodelTest {
         val password = "passwordProfessional"
         coEvery { loginUseCase(email, password) } returns AuthenticationResult.Success
         coEvery { getRoleUseCase(email) } returns UserRole.PROFESSIONAL
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID",email) } returns mockk()
 
         //WHEN
         viewModel.singInWithEmailAndPassword(email,password)
@@ -110,6 +123,8 @@ class LoginViewmodelTest {
     fun `given a patient logged in user, when check if user was already logged in, then navigate to PatientHomeScreen`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+
         //GIVEN
         every { prefs.isLoggedIn() } returns true
         every { prefs.getRole() } returns UserRole.PATIENT
@@ -125,6 +140,7 @@ class LoginViewmodelTest {
     fun `given a professional logged in user, when check if user was already logged in, then navigate ProfessionalHomeScreen`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
         //GIVEN
         every { prefs.isLoggedIn() } returns true
         every { prefs.getRole() } returns UserRole.PROFESSIONAL

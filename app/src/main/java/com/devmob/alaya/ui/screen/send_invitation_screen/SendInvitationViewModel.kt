@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.send_invitation_screen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,15 @@ class SendInvitationViewModel(
         viewModelScope.launch {
             val result = invitationUseCase.sendInvitation(patientEmail, professionalEmail)
             _sendInvitationStatus.value = result
+            if (result.isSuccess) {
+                val r = invitationUseCase.sendNotification(patientEmail, professionalEmail)
+                if (r.isSuccessful) {
+                    Log.i("SendInvitationViewModel", "Invitación enviada satisfactoriamente a: $patientEmail")
+                }else{
+                    Log.w("SendInvitationViewModel", "No se pudo enviar la invitación  a: $patientEmail")
+                }
+            }
+
         }
     }
 }

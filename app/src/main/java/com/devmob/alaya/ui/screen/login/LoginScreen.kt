@@ -59,20 +59,30 @@ fun LoginScreen(
 ) {
 
     val context = LocalContext.current
-    var checkLogin by rememberSaveable { mutableStateOf(false) }
+    var checkLogin by remember { mutableStateOf(false) }
 
-
-    if (viewModel.navigateToPatientHome.value) {
-        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                inclusive = true
+    LaunchedEffect(!checkLogin) {
+        viewModel.checkIfUserWasLoggedIn()
+        checkLogin = true
+    }
+    LaunchedEffect(viewModel.navigateToPatientHome.value) {
+        if (viewModel.navigateToPatientHome.value) {
+            Log.d("LoginScreen", "Navigating to Patient Home")
+            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                    inclusive = true
+                }
             }
         }
     }
-    if (viewModel.navigateToProfessionalHome.value) {
-        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
-            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
-                inclusive = true
+
+    LaunchedEffect(viewModel.navigateToProfessionalHome.value) {
+        if (viewModel.navigateToProfessionalHome.value) {
+            Log.d("LoginScreen", "Navigating to Professional Home")
+            navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+                popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                    inclusive = true
+                }
             }
         }
     }
@@ -85,11 +95,6 @@ fun LoginScreen(
         )
             .show()
         viewModel.resetError()
-    }
-
-    LaunchedEffect(!checkLogin) {
-        viewModel.checkIfUserWasLoggedIn()
-        checkLogin = true
     }
 
     if (viewModel.loading.value) {

@@ -1,10 +1,13 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisDetailsDB
@@ -12,6 +15,10 @@ import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.StepCrisis
 import kotlinx.coroutines.launch
 import java.util.Date
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class CrisisHandlingViewModel (
     private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase())
@@ -22,6 +29,8 @@ class CrisisHandlingViewModel (
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
+    var isPlaying by mutableStateOf(false)
+    private var player: MediaPlayer? = null
 
     private var startTime: Date? = null
     private var endTime: Date? = null
@@ -75,6 +84,7 @@ class CrisisHandlingViewModel (
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
         } else {
+            stopMusic()
             shouldShowModal = true
             endCrisisHandling()
         }
@@ -103,7 +113,9 @@ class CrisisHandlingViewModel (
     }
 
     fun addTool(tool: String) {
-        toolsUsed.add(tool)
+        if (!toolsUsed.contains(tool)) {
+            toolsUsed.add(tool)
+        }
     }
 
     fun showModal() {
@@ -121,5 +133,42 @@ class CrisisHandlingViewModel (
 
     fun dismissExitModal() {
         shouldShowExitModal = false
+    }
+    fun playMusic(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val storage = FirebaseStorage.getInstance()
+            val audioRef = storage.reference.child("Songs/song.mp3")
+            val url = audioRef.downloadUrl.await().toString()
+            player = MediaPlayer().apply {
+                setDataSource(url)
+                prepare()
+                setVolume(0.45f, 0.45f)
+                start()
+
+                setOnCompletionListener {
+                    start()
+
+                }
+            }
+
+
+            }
+
+                }
+
+    fun pauseMusic() {
+        player?.pause()
+        isPlaying = false
+    }
+
+    fun stopMusic() {
+        player?.release()
+        player = null
+        isPlaying = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopMusic()
     }
 }
