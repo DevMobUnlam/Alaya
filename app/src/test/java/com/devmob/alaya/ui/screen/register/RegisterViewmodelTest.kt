@@ -8,11 +8,15 @@ import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
+import com.onesignal.OneSignal
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +51,9 @@ class RegisterViewmodelTest {
     fun setUp(){
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
+        mockkObject(OneSignal)
+        justRun { OneSignal.login(any()) }
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","mail@mail.com") } returns mockk()
         viewModel = RegisterViewmodel(registerNewUserUseCase, addUserToFirestoreUseCase)
         userPatient = User(name = "Pedro", surname = "Lopez", email = "mail@mail.com", role = UserRole.PATIENT)
         userProfessional = User(name = "Pedro", surname = "Lopez", email = "mail@mail.com", role = UserRole.PROFESSIONAL)
@@ -64,6 +71,7 @@ class RegisterViewmodelTest {
     fun `given an patient user and password, create the user and navigate`() {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
         //GIVEN
         val password = "NewUserPassword"
         coEvery { registerNewUserUseCase(userPatient.email, password) } returns AuthenticationResult.Success
@@ -79,7 +87,8 @@ class RegisterViewmodelTest {
     @Test
     fun `given an professional user and password, create the user and navigate`() {
         mockkStatic(Log::class)
-        every { Log.d(any(), any()) } returns 0
+        coEvery { Log.d(any(), any()) } returns 0
+        coEvery { Log.e(any(), any()) } returns 0
         //GIVEN
         val password = "NewUserPassword"
         coEvery { registerNewUserUseCase(userProfessional.email, password) } returns AuthenticationResult.Success
