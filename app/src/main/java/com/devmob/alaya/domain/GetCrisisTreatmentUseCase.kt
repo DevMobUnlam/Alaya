@@ -12,7 +12,6 @@ class GetCrisisTreatmentUseCase {
         patientEmail: String
     ): List<OptionTreatment>? {
         val result = CustomTreatmentRepository.getCustomTreatment(patientEmail)
-        Log.d("leandro", "el result del caso de uso es: $result")
         return result
     }
 }

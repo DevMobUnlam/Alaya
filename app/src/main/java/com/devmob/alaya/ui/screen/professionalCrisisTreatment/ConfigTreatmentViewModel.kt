@@ -57,21 +57,17 @@ class ConfigTreatmentViewModel(
 
     fun addCustomActivity(activity: OptionTreatment) {
         _treatmentOptions.add(activity)
-        Log.d("leandro", "treatment list vm ${_treatmentOptions.size}")
     }
 
     fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment>) {
         viewModelScope.launch {
-            Log.d("leandro", "treatment list que va a firebase $listOfTreatment")
             when (saveCrisisUseCase(patientEmail, listOfTreatment)) {
                 is FirebaseResult.Error -> {
-                    Log.d("saveCrisisTreatment", "No se pudo guardar el tratamiento de crisis")
-                    Log.d("leandro", "No se pudo guardar el tratamiento de crisis.")
+                    Log.d("saveCrisisTreatment", "Cannot save the CrisisTreatment")
                     _showError.value = true
                 }
 
                 FirebaseResult.Success -> {
-                    Log.d("leandro", "Se guardó el registro de crisis")
                     _navigate.value = true
                 }
             }

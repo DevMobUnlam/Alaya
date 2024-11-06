@@ -14,6 +14,7 @@ import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.domain.model.StepCrisis
 import kotlinx.coroutines.launch
+import kotlin.reflect.jvm.internal.impl.load.java.structure.JavaClass
 
 class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase) :
     ViewModel() {
@@ -44,12 +45,8 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
         viewModelScope.launch {
             _loading.value = true
             try {
-                Log.d("leandro", "current user ${currentUser?.email}")
                 optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
-
-                Log.d("leandro", "la corutina del optiontreatment list : $optionTreatmentsList")
                 if (!optionTreatmentsList.isNullOrEmpty()) {
-                    Log.d("leandro", "el option treatment no es null : $optionTreatmentsList")
                     stepCrisisList = optionTreatmentsList!!.map { option ->
                         StepCrisis(
                             title = option.title,
@@ -63,7 +60,7 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
 
             } catch (e: Exception) {
                 _loading.value = false
-                Log.d("leandro", "catch de fetchcrisis $e")
+                Log.d("CrisisHandlingViewModel", "Exception in fetchCrisisSteps $e")
             }
         }
     }

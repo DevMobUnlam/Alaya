@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
@@ -37,7 +38,6 @@ fun ConfigTreatmentScreen(
     navController: NavController
 ) {
     val treatmentOptions = remember { viewModel.treatmentOptions }
-    Log.d("leandro", "configtreatment screen emailPatient es $patientEmail")
 
     Box(
         modifier = Modifier
@@ -60,21 +60,21 @@ fun ConfigTreatmentScreen(
         ) {
             item {
                 SelectMenu(
-                    title = "Paso 1",
+                    title = stringResource(R.string.paso_1),
                     options = treatmentOptions,
                     onOptionSelected = { viewModel.firstSelectOption.value = it }
                 )
             }
             item {
                 SelectMenu(
-                    title = "Paso 2",
+                    title = stringResource(R.string.paso_2),
                     options = treatmentOptions,
                     onOptionSelected = { viewModel.secondSelectOption.value = it }
                 )
             }
             item {
                 SelectMenu(
-                    title = "Paso 3",
+                    title = stringResource(R.string.paso_3),
                     options = treatmentOptions,
                     onOptionSelected = { viewModel.thirdSelectOption.value = it }
                 )
@@ -88,7 +88,7 @@ fun ConfigTreatmentScreen(
                 .padding(16.dp)
         ) {
             Button(
-                text = "Confirmar tratamiento",
+                text = stringResource(R.string.confirmar_tratamiento),
                 onClick = {
                     navController.navigate(
                         NavUtils.ProfessionalRoutes.TreatmentSummary.createRoute(
@@ -106,7 +106,7 @@ fun ConfigTreatmentScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                text = "Actividad personalizada",
+                text = stringResource(R.string.actividad_personalizada),
                 onClick = {
                     navController.navigate(
                         NavUtils.ProfessionalRoutes.AddCustomActivity.createRoute(

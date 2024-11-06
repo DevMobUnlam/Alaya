@@ -18,15 +18,11 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
         patientEmail: String,
         treatment: List<OptionTreatment?>
     ) = runCatching {
-        Log.d("leandro", "repoimpl usuario $patientEmail")
         val treatmentList = mutableListOf<OptionTreatment>()
-
 
         treatment.forEach { optionTreatment ->
             optionTreatment?.imageUri?.let { imageUri ->
                 val image = uploadImage(imageUri)
-
-                Log.d("leandro123", "EL path de la foto es $image")
                 if (image != null) {
                     val updatedTreatment = optionTreatment.copy(imageUri = image.toString())
                     treatmentList.add(updatedTreatment)
@@ -37,15 +33,12 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
             }
         }
         db.collection("users").document(patientEmail)
-            .update("crisis_treatment", treatmentList)
+            .update("stepCrisis", treatmentList)
     }.toResponseFirebase()
 
     override suspend fun getCustomTreatment(patientEmail: String): List<OptionTreatment>? {
         val snapshot = db.collection("users").document(patientEmail).get().await()
-        val treatmentList = snapshot.toObject(User::class.java)?.crisis_treatment
-
-        Log.d("leandro", "la lista desde firebase: $treatmentList")
-
+        val treatmentList = snapshot.toObject(User::class.java)?.stepCrisis
         return treatmentList
     }
 }

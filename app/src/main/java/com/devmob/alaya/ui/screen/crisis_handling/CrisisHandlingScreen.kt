@@ -67,14 +67,10 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
     }
     if (!viewModel.optionTreatmentsList.isNullOrEmpty()) {
         viewModel.loading.value = false
-        Log.d("leandro", "este es el if del optiontreatmentlist")
     }
-
     viewModel.fetchCrisisSteps()
 
-
     if (viewModel.currentStep == null) {
-        Log.d("leandro", "este es el if del loading")
         Surface(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -90,7 +86,6 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             }
         }
     } else {
-        Log.d("leandro", "este es el else de la screen completa")
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,9 +94,6 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             val currentStep = viewModel.currentStep
             val totalSteps = viewModel.steps.size
             val (progressBar, audioIcon, closeIcon, lottieAnimation, title, description, nextButton, goodButton) = createRefs()
-
-            Log.d("leandro", "el current step es: $currentStep")
-            Log.d("leandro", "el current step es: $totalSteps")
 
             SegmentedProgressBar(
                 totalSteps = totalSteps,
