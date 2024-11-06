@@ -14,22 +14,6 @@ import org.junit.Test
 
 class GetIASummaryUseCaseTest{
 
-    @RelaxedMockK
-    private lateinit var crisisRepository: CrisisRepository
-
-    @RelaxedMockK
-    private lateinit var gson: Gson
-
-    @RelaxedMockK
-    private lateinit var getUserRepository: GetUserRepository
-
-    lateinit var getIASummaryUseCase: GetIASummaryUseCase
-
-    @Before
-    fun onBefore(){
-        MockKAnnotations.init(this)
-        gson = Gson()
-    }
 
     //TODO si no existe el usuario
 //    @Test
