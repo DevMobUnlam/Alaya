@@ -92,7 +92,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                             user,
                             false
                         ) {
-                            navController.navigate(NavUtils.ProfessionalRoutes.PatientProfile.route)
+                            navController.navigate("${NavUtils.ProfessionalRoutes.PatientProfile.route}/${user.email}")
                         }
                     }
                 }

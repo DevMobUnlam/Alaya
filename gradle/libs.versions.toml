@@ -31,6 +31,7 @@ constraintlayout = "2.1.4"
 navigationRuntimeKtx = "2.8.2"
 robolectricVersion = "4.13"
 coroutineTest = "1.6.4"
+libCharts = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectricVersion" }
 android-compose-lottie ={group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieVersion"}
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTest" }
+libCharts = { group = "co.yml", name = "ycharts", version.ref = "libCharts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
