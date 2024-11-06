@@ -72,7 +72,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
         }
     }
     var shouldVoiceSpeak by remember{mutableStateOf(true)}
-    var isVoiceOn by remember{mutableStateOf(true)}
+    var isVoiceOn by remember{mutableStateOf(false)}
 
 
     LaunchedEffect(currentStepIndex){
