@@ -44,7 +44,7 @@ import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.ui.components.Input
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -54,8 +54,9 @@ import com.devmob.alaya.utils.NavUtils
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomActivityScreen(
+    patientEmail: String,
     navController: NavController,
-    viewModel: ConfigTreatmentViewModel,
+    viewModel: ConfigTreatmentViewModel
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
@@ -117,7 +118,7 @@ fun CustomActivityScreen(
                 unfocusedIndicatorColor = Color.LightGray,
             ),
 
-        )
+            )
         Box(
             modifier = Modifier
                 .constrainAs(imageBox) {
@@ -144,7 +145,9 @@ fun CustomActivityScreen(
                 Image(
                     painter = rememberImagePainter(imageUri),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp))
                 )
             }
         }
@@ -160,8 +163,13 @@ fun CustomActivityScreen(
 
         Button(
             onClick = {
-                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri))
-                navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route)
+                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri.toString()))
+                navController.navigate(
+                    NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
+                        "{patientEmail}",
+                        patientEmail
+                    )
+                )
             },
             modifier = Modifier
                 .constrainAs(saveButton) {

@@ -7,14 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
-import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
@@ -22,10 +22,13 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun ProfessionalNavigation(navController: NavHostController){
+fun ProfessionalNavigation(navController: NavHostController) {
     val currentRoute = NavUtilsProfessional.currentRoute(navController)
     val getUserDataUseCase = GetUserDataUseCase();
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val saveCrisisUseCase = SaveCrisisTreatmentUseCase()
+    val configTreatmentViewModel = ConfigTreatmentViewModel(saveCrisisUseCase)
+
     Scaffold(
         bottomBar = {
             //condicion para mostrar o no el bottom
@@ -53,8 +56,14 @@ fun ProfessionalNavigation(navController: NavHostController){
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(searchUserViewModel, navController)
             }
-            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route){
-                ConfigTreatmentScreen(ConfigTreatmentViewModel(), navController)
+            composable(NavUtils.ProfessionalRoutes.ConfigTreatment.route) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                ConfigTreatmentScreen(
+                    patientEmail = patientEmail,
+                    configTreatmentViewModel,
+                    navController
+                )
+
             }
          /*   composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""

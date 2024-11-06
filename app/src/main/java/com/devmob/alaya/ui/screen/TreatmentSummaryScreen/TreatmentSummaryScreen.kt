@@ -1,5 +1,7 @@
 package com.devmob.alaya.ui.screen.TreatmentSummaryScreen
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +30,7 @@ import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -36,8 +38,9 @@ fun TreatmentSummaryScreen(
     firstStep: String,
     secondStep: String,
     thirdStep: String,
+    patientEmail: String,
     navController: NavController,
-    viewModel: ConfigTreatmentViewModel,
+    viewModel: ConfigTreatmentViewModel
 ) {
 
     val selectedOptions = listOfNotNull(
@@ -81,12 +84,13 @@ fun TreatmentSummaryScreen(
         ) {
             selectedOptions.forEach { option ->
                 val drawableResId = getDrawableResId(option.title)
+                val urivacio = ""
                 when {
-                    option.imageUri != null ->
+                    option.imageUri != urivacio ->
                         Card(
                             title = option.title,
                             subtitle = option.description,
-                            imageUrl = option.imageUri.toString(),
+                            imageUrl = option.imageUri,
                             onClick = { }
                         )
                     drawableResId != 0 ->
@@ -122,6 +126,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
+                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"
