@@ -80,7 +80,6 @@ class CrisisRepositoryImpl : CrisisRepository {
 
     }
 
-}
     override suspend fun getLastCrisisDetails(): CrisisDetailsDB? {
         val userEmail = auth.currentUser?.email
         if (userEmail == null) {
@@ -107,7 +106,8 @@ class CrisisRepositoryImpl : CrisisRepository {
             Log.d("CrisisRepository", "Última crisis encontrada: ${crisisDetails?.start} - ${crisisDetails?.completed}")
             crisisDetails
         }
-    }}
+    }
+    }
 
 
     override suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult {
@@ -139,5 +139,6 @@ class CrisisRepositoryImpl : CrisisRepository {
         } catch (e: Exception) {
             FirebaseResult.Error(e)
         }
-    }}
+    }
+}
 
