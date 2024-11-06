@@ -71,7 +71,13 @@ fun CrisisRegistrationSummaryScreen(
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
-    BackHandler { }
+
+    BackHandler{
+        navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
+        viewModel.updateStep(6)
+        viewModel.shouldGoToBack = true
+        viewModel.shouldGoToSummary = false
+    }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
@@ -343,7 +349,7 @@ fun CrisisRegistrationSummaryScreen(
                 onConfirm = {
                     showModalDelete = false
                     viewModel.cleanState()
-                    navController.navigate(NavUtils.PatientRoutes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route){popUpTo(NavUtils.PatientRoutes.Home.route){inclusive = false} }
                 }
             )
 
@@ -357,7 +363,7 @@ fun CrisisRegistrationSummaryScreen(
                     viewModel.saveRegister()
                     showModalConfirm = false
                     viewModel.cleanState()
-                    navController.navigate(NavUtils.PatientRoutes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route){popUpTo(NavUtils.PatientRoutes.Home.route){inclusive = false} }
                 }
             )
         }
