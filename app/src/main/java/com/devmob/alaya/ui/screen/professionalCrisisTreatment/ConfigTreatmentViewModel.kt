@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.R
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
@@ -34,12 +35,14 @@ class ConfigTreatmentViewModel(
         OptionTreatment(
             title = "Controlar la respiración",
             description = "Poner una mano en el pecho y otra en el estómago para tomar aire y soltarlo lentamente",
-            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%201%20RESPIRACION.png?alt=media&token=b8168202-57ca-4d8f-b47a-3c53f45c6b35"
+            animationRes = R.raw.crisis_step1_animation
+            //imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%201%20RESPIRACION.png?alt=media&token=b8168202-57ca-4d8f-b47a-3c53f45c6b35"
         ),
         OptionTreatment(
             title = "Imaginación guiada",
             description = "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
-            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%202%20cerrar%20los%20ojos.png?alt=media&token=958eb6a6-ef06-4af2-ac7b-5c1ec26ba9fc"
+            animationRes = R.raw.crisis_step2_animation
+            //imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%202%20cerrar%20los%20ojos.png?alt=media&token=958eb6a6-ef06-4af2-ac7b-5c1ec26ba9fc"
 
         ),
         OptionTreatment(
@@ -50,7 +53,8 @@ class ConfigTreatmentViewModel(
                 “Tengo el control de mi mente y mi cuerpo”
                 “Me merezco tener alegría y plenitud”
             """.trimIndent(),
-            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%203afirmaciones.png?alt=media&token=b7b51703-7454-4ae3-a531-32205ff310d3"
+            animationRes = R.raw.crisis_step3_animation
+            //imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%203afirmaciones.png?alt=media&token=b7b51703-7454-4ae3-a531-32205ff310d3"
         )
     )
     val treatmentOptions: SnapshotStateList<OptionTreatment> = _treatmentOptions

@@ -52,6 +52,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
+import com.devmob.alaya.domain.model.StepCrisis
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
@@ -285,20 +286,53 @@ fun CrisisHandlingScreen(
                                     bottom.linkTo(description.top, margin = 16.dp)
                                 }
                         )*/
-            Image(
-                painter = rememberImagePainter(data = currentStep?.image),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                    .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
-                    .constrainAs(lottieAnimation) {
-                        top.linkTo(title.bottom, margin = 24.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(description.top, margin = 16.dp)
-                    },
-                contentScale = ContentScale.Crop
-            )
+if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
+    Image(
+        painter = rememberImagePainter(data = currentStep?.image),
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .aspectRatio(1f)
+            .constrainAs(lottieAnimation) {
+                top.linkTo(title.bottom, margin = 24.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(description.top, margin = 16.dp)
+            },
+        contentScale = ContentScale.Crop
+    )
+}  else {
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(
+            when (currentStep?.image) {
+                "image_step_1" -> R.raw.crisis_step1_animation
+                "image_step_2" -> R.raw.animation
+                "image_step_3" -> R.raw.crisis_step3_animation
+                else -> R.raw.feedback_congratulations_animation
+            }
+        )
+    )
+
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+    iterations = LottieConstants.IterateForever
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = progress,
+        modifier = Modifier
+            .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
+            .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+            .constrainAs(lottieAnimation) {
+                top.linkTo(title.bottom, margin = 24.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(description.top, margin = 16.dp)
+            }
+    )
+
+}
 
             if (currentStep != null) {
                 TextContainer(
@@ -415,5 +449,38 @@ fun CrisisHandlingScreen(
                     }
                 })
         }
+    }
+}
+
+@Composable
+fun CrisisStepAnimationView(steps: List<StepCrisis>) {
+    var currentStepIndex by remember { mutableStateOf(0) }
+    val currentStep = steps.getOrNull(currentStepIndex)
+
+    if (currentStep != null) {
+        val composition by rememberLottieComposition(
+            spec = LottieCompositionSpec.RawRes(
+                when (currentStep.image) {
+                    "image_step_1" -> R.raw.crisis_step1_animation
+                    "image_step_2" -> R.raw.crisis_step2_animation
+                    "image_step_3" -> R.raw.crisis_step3_animation
+                    else -> R.raw.feedback_congratulations_animation
+                }
+            )
+        )
+
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            iterations = LottieConstants.IterateForever
+        )
+
+        LottieAnimation(
+            composition = composition,
+            progress = progress,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .aspectRatio(1f)
+        )
+
     }
 }
