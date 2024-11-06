@@ -33,7 +33,12 @@ import com.devmob.alaya.ui.theme.ColorGray
 
 
 @Composable
-fun DashboardCard(modifier : Modifier = Modifier) {
+fun DashboardCard(
+    modifier : Modifier = Modifier,
+    crisisAmount: Int = 0,
+    usedTools: List<String> = emptyList(),
+    dailyActivities: Int = 0,
+) {
     CardContainer(
         modifier = modifier,
         enabled = true,
@@ -80,7 +85,7 @@ fun DashboardCard(modifier : Modifier = Modifier) {
                             modifier = Modifier.size(48.dp)
                         )
                         Text(
-                            text = "60% del tiempo tuvo buen ánimo",
+                            text = "Registro $crisisAmount crisis en la semana",
                             fontWeight = FontWeight.W400,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Center,
@@ -109,7 +114,7 @@ fun DashboardCard(modifier : Modifier = Modifier) {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "2 días realizó las actividades diarias",
+                            text = "$dailyActivities días realizó las actividades diarias",
                             fontWeight = FontWeight.W400,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Center,
@@ -137,9 +142,9 @@ fun DashboardCard(modifier : Modifier = Modifier) {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Registró 8 entradas en su diario",
+                            text = "Las herramientas usadas fueron ${usedTools[0]}, ${usedTools[1]}",
                             fontWeight = FontWeight.W400,
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             textAlign = TextAlign.Center,
                             color = ColorText
                         )
