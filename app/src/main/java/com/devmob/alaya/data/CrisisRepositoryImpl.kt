@@ -25,6 +25,7 @@ class CrisisRepositoryImpl : CrisisRepository {
 
     override suspend fun getRegisters(patientId: String, onRegisterUpdate:() -> Unit): Flow<List<CrisisDetailsDB>?> {
         return callbackFlow{
+
             try {
 
                 val registersCollection =
@@ -52,7 +53,6 @@ class CrisisRepositoryImpl : CrisisRepository {
                                     if(snapshot != null && !snapshot.isEmpty){
 
 
-
                                         val register = snapshot.map { it.toObject(CrisisDetailsDB::class.java) }
                                         onRegisterUpdate()
                                         this.trySend(register)
@@ -62,6 +62,9 @@ class CrisisRepositoryImpl : CrisisRepository {
                                     }
 
                                 }
+                        }else{
+                            Log.i("CrisisRepositoryImpl", "Collection is empty")
+                            this.trySend(emptyList())
                         }
                     }
 
