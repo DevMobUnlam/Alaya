@@ -11,7 +11,7 @@ class UploadImageToFirestoreUseCase {
 
     suspend operator fun invoke(imageUri: String): Uri? {
 
-        val path = "customOptionTreatment/${email}/${imageUri}"
+        val path = "customOptionTreatment/${email}/${imageUri.replace("/", "-")}"
         return repository.uploadImage(imageUri, path)
     }
 }

@@ -26,6 +26,7 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
             optionTreatment?.imageUri?.let { imageUri ->
                 val image = uploadImage(imageUri)
 
+                Log.d("leandro123", "EL path de la foto es $image")
                 if (image != null) {
                     val updatedTreatment = optionTreatment.copy(imageUri = image.toString())
                     treatmentList.add(updatedTreatment)

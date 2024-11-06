@@ -1,6 +1,7 @@
 package com.devmob.alaya.data
 
 import android.net.Uri
+import android.util.Log
 import com.devmob.alaya.domain.UploadImageToFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -15,8 +16,13 @@ class UploadImageToFirestoreImpl : UploadImageToFirestore {
             val imageRef =
                 storageRef.child(storagePath)
 
-            imageRef.putFile(Uri.parse(imageUri)).await()
-            imageRef.downloadUrl.await()
+            if (imageUri.startsWith("https://")) {
+                //Si es un paso predeterminado, la imagen ya está subida a firebase
+                Uri.parse(imageUri)
+            } else {
+                imageRef.putFile(Uri.parse(imageUri)).await()
+                imageRef.downloadUrl.await()
+            }
         } catch (e: Exception) {
             null
         }

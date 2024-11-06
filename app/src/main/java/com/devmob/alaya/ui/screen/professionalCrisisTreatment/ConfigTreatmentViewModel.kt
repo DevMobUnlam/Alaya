@@ -33,11 +33,14 @@ class ConfigTreatmentViewModel(
     private var _treatmentOptions = mutableStateListOf(
         OptionTreatment(
             title = "Controlar la respiración",
-            description = "Poner una mano en el pecho y otra en el estómago para tomar aire y soltarlo lentamente"
+            description = "Poner una mano en el pecho y otra en el estómago para tomar aire y soltarlo lentamente",
+            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%201%20RESPIRACION.png?alt=media&token=b8168202-57ca-4d8f-b47a-3c53f45c6b35"
         ),
         OptionTreatment(
             title = "Imaginación guiada",
-            description = "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea"
+            description = "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
+            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%202%20cerrar%20los%20ojos.png?alt=media&token=958eb6a6-ef06-4af2-ac7b-5c1ec26ba9fc"
+
         ),
         OptionTreatment(
             title = "Autoafirmaciones",
@@ -46,7 +49,8 @@ class ConfigTreatmentViewModel(
                 “Soy fuerte y esto pasará”
                 “Tengo el control de mi mente y mi cuerpo”
                 “Me merezco tener alegría y plenitud”
-            """.trimIndent()
+            """.trimIndent(),
+            imageUri = "https://firebasestorage.googleapis.com/v0/b/alaya-db7b8.appspot.com/o/customOptionTreatment%2FSTEP%203afirmaciones.png?alt=media&token=b7b51703-7454-4ae3-a531-32205ff310d3"
         )
     )
     val treatmentOptions: SnapshotStateList<OptionTreatment> = _treatmentOptions
@@ -56,9 +60,9 @@ class ConfigTreatmentViewModel(
         Log.d("leandro", "treatment list vm ${_treatmentOptions.size}")
     }
 
-    fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment> ) {
+    fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment>) {
         viewModelScope.launch {
-            Log.d("leandro","treatment list que va a firebase $listOfTreatment")
+            Log.d("leandro", "treatment list que va a firebase $listOfTreatment")
             when (saveCrisisUseCase(patientEmail, listOfTreatment)) {
                 is FirebaseResult.Error -> {
                     Log.d("saveCrisisTreatment", "No se pudo guardar el tratamiento de crisis")

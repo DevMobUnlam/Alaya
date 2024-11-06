@@ -144,7 +144,7 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                         end.linkTo(parent.end, margin = 16.dp)
                     })
             }
-            // Reemplazo de la imagen con la animación de Lottie
+            //TODO acá se reemplazó la animación de Lottie por la image de Firestore
             /*
                         val composition by rememberLottieComposition(
                             spec = LottieCompositionSpec.RawRes(

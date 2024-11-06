@@ -40,8 +40,6 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
     }
 
     fun fetchCrisisSteps() {
-        //TODO consultar al repositorio para obtener los pasos de la crisis
-        Log.d("leandro", "entró a fetchcrisis")
         var stepCrisisList: List<StepCrisis>
         viewModelScope.launch {
             _loading.value = true
@@ -56,7 +54,7 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
                         StepCrisis(
                             title = option.title,
                             description = option.description,
-                            image = option.imageUri.toString()
+                            image = option.imageUri
                         )
                     }
                     steps = stepCrisisList

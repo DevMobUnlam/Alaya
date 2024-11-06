@@ -126,7 +126,6 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
-                    Log.d("leandro","saveCrisis Screen list: $selectedOptions")
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
