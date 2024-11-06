@@ -71,7 +71,13 @@ fun CrisisRegistrationSummaryScreen(
     var showModalDelete by remember { mutableStateOf(false) }
     var showModalConfirm by remember { mutableStateOf(false) }
 
-    BackHandler { }
+
+    BackHandler{
+        navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route)
+        viewModel.updateStep(6)
+        viewModel.shouldGoToBack = true
+        viewModel.shouldGoToSummary = false
+    }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
 
@@ -189,7 +195,7 @@ fun CrisisRegistrationSummaryScreen(
                                                         fontWeight = FontWeight.Bold,
                                                     )
                                                     Text(
-                                                        text = sensation.intensity.name,
+                                                        text = intensityFormatter(sensation.intensity),
                                                         fontSize = 19.sp,
                                                         color = ColorText,
                                                     )
@@ -234,8 +240,8 @@ fun CrisisRegistrationSummaryScreen(
                                                         fontWeight = FontWeight.Bold
                                                     )
                                                     Text(
-                                                        text = emotion.intensity.name,
-                                                        fontSize = 21.sp,
+                                                        text = intensityFormatter(emotion.intensity),
+                                                        fontSize = 19.sp,
                                                         color = ColorText
                                                     )
                                                 }
@@ -343,7 +349,7 @@ fun CrisisRegistrationSummaryScreen(
                 onConfirm = {
                     showModalDelete = false
                     viewModel.cleanState()
-                    navController.navigate(NavUtils.PatientRoutes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route){popUpTo(NavUtils.PatientRoutes.Home.route){inclusive = false} }
                 }
             )
 
@@ -357,7 +363,7 @@ fun CrisisRegistrationSummaryScreen(
                     viewModel.saveRegister()
                     showModalConfirm = false
                     viewModel.cleanState()
-                    navController.navigate(NavUtils.PatientRoutes.Home.route)
+                    navController.navigate(NavUtils.PatientRoutes.Home.route){popUpTo(NavUtils.PatientRoutes.Home.route){inclusive = false} }
                 }
             )
         }
@@ -426,11 +432,12 @@ fun SummaryItemCard(
 /**
  * Formateador de Intensidad que devuelve como un String el tipo de intensidad que reciba por parametro
  */
-fun IntensityFormatter(intensity: Intensity): String {
+@Composable
+fun intensityFormatter(intensity: Intensity): String {
     return when (intensity) {
-        Intensity.LOW -> R.string.intensity_low.toString()
-        Intensity.MEDIUM -> R.string.intensity_medium.toString()
-        Intensity.HIGH -> R.string.intensity_high.toString()
+        Intensity.LOW -> "Intensidad: " + stringResource(R.string.intensity_low)
+        Intensity.MEDIUM -> "Intensidad: " + stringResource(R.string.intensity_medium)
+        Intensity.HIGH -> "Intensidad: " + stringResource(R.string.intensity_high)
     }
 }
 
