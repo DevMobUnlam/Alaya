@@ -22,4 +22,5 @@ internal fun CrisisDetails.toDB(): CrisisDetailsDB {
 
 internal fun CrisisEmotion.toDB() = CrisisEmotionDB(this.name, this.intensity)
 
-internal fun CrisisBodySensation.toDB() : BodySensationDB = BodySensationDB(this.name, this.intensity)
+internal fun CrisisBodySensation.toDB(): BodySensationDB =
+    BodySensationDB(this.name, this.intensity)
