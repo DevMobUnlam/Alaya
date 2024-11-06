@@ -87,6 +87,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
                     end.linkTo(parent.end)
                 }
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Card(
                 title = "¿Cómo me siento hoy?",

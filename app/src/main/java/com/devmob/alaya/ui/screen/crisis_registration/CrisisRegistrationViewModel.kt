@@ -67,35 +67,58 @@ class CrisisRegistrationViewModel(
             _crisisDetails.value = result
 
             if (result != null) {
-                if (result.completed == false) { //opciones precargadas cuando el registro esta incompleto
+                if (result.completed == false) {
                     val startTime = result.start
                     val endTime = result.end
-
                     if (startTime != null && endTime != null) {
                         val crisisTimeDetails = CrisisTimeDetails(
                             startTime = startTime,
                             endTime = endTime
                         )
                         _crisisTimeDetails.value = crisisTimeDetails
+                        _screenState.value = _screenState.value?.copy(
+                            crisisDetails = _screenState.value!!.crisisDetails.copy(
+                                crisisTimeDetails = crisisTimeDetails
+                            )
+                        )
                     }
                     selectedTools.clear()
                     val availableTools = returnAvailableTools()
-                    for (tool in availableTools) {
-                        if (result.tools.contains(tool.id)) {
-                            selectedTools.add(tool.id)
-                        }
-                    }
-                } else {
-                    _crisisTimeDetails.value = CrisisTimeDetails()
-                    selectedTools.clear()
-                }
 
+                    val selectedCrisisTools = result.tools.mapNotNull { toolId ->
+                        availableTools.find { it.id == toolId }
+                    }
+                    selectedTools.addAll(selectedCrisisTools.map { it.id })
+
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            toolList = selectedCrisisTools
+                        )
+                    )
+                } else {
+                    _crisisTimeDetails.value = CrisisTimeDetails() // Limpiamos las fechas cuando la crisis está completa
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            crisisTimeDetails = CrisisTimeDetails() // Aquí también reseteamos las fechas en el estado
+                        )
+                    )
+                    selectedTools.clear()
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            toolList = emptyList()
+                        )
+                    )
+                }
             }
         }
     }
 
     fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()
+        selectedTools.clear()
+        _tools.value = emptyList()
+        _crisisTimeDetails.value = CrisisTimeDetails()
+        _crisisDetails.value = null
         shouldGoToBack = true
         shouldGoToSummary = false
         shouldShowExitModal = false

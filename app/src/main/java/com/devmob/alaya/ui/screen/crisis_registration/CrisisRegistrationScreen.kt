@@ -95,6 +95,12 @@ fun CrisisRegistrationScreen(
     LaunchedEffect(Unit) {
         viewModel.loadLastCrisisDetails()
     }
+    LaunchedEffect(screenState.value?.crisisDetails) {
+        val isCompleted = screenState.value?.crisisDetails?.completed == true
+        if (isCompleted) {
+            viewModel.cleanState()
+        }
+    }
 
     GridElementsRepository.returnAvailableTools().let { list ->
         for (tool in list) {
