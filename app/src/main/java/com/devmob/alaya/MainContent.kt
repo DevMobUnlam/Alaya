@@ -1,6 +1,6 @@
 package com.devmob.alaya
 
-import android.util.Log
+import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -11,10 +11,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.devmob.alaya.data.preferences.SharedPreferences
+import androidx.navigation.navArgument
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
@@ -28,11 +30,7 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
-import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
@@ -40,23 +38,27 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
+import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.login.LoginViewModel
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
+import com.devmob.alaya.ui.screen.patient_profile.PatientProfileViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
-import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
-import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
-import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
@@ -67,12 +69,16 @@ import com.devmob.alaya.utils.NavUtils.currentRoute
 import com.devmob.alaya.utils.NavUtils.routeTitleAppBar
 
 @Composable
-fun MainContent(navController: NavHostController) {
+fun MainContent(
+    navController: NavHostController,
+    textToSpeech: TextToSpeech,
+    isTtsInitialized: Boolean
+) {
     val context = LocalContext.current
     val currentRoute = currentRoute(navController)
     val contactUseCase = ContactUseCase()
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
-    val prefs: SharedPreferences = SharedPreferences(context)
+    val prefs = SharedPreferences(context)
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel()
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
@@ -85,6 +91,7 @@ fun MainContent(navController: NavHostController) {
         "contact_detail/{contactId}",
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
+        "patient_profile/{email}",
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
@@ -103,6 +110,8 @@ fun MainContent(navController: NavHostController) {
             )
         }
     )
+    val patientProfileViewModel: PatientProfileViewModel =
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(GetUserDataUseCase()) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -121,16 +130,6 @@ fun MainContent(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
-        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
-        val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = ViewModelFactory {
-                PatientHomeScreenViewmodel(
-                    GetUserDataUseCase(),
-                    GetInvitationUseCase(),
-                    FirebaseClient()
-                )
-            }
-        )
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -174,7 +173,9 @@ fun MainContent(navController: NavHostController) {
             ) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
             }
-            composable(ProfessionalRoutes.PatientProfile.route,
+            composable(
+                route = "${ProfessionalRoutes.PatientProfile.route}/{email}",
+                arguments = listOf(navArgument("email") { type = NavType.StringType }),
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -191,8 +192,9 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
 
-            ) {
-                PatientProfileScreen(navController)
+            ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("email")
+                PatientProfileScreen(navController, patientProfileViewModel, email = email ?: "")
             }
             composable(ProfessionalRoutes.SearchPatient.route,
                 enterTransition = {
@@ -259,7 +261,7 @@ fun MainContent(navController: NavHostController) {
                     )
                 }
             ) {
-                CrisisHandlingScreen(CrisisHandlingViewModel(), navController)
+                CrisisHandlingScreen(CrisisHandlingViewModel(), navController, textToSpeech, isTtsInitialized)
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
                 enterTransition = {
@@ -536,22 +538,3 @@ fun GetBottomBarNavigation(navController: NavHostController) {
         navHostController = navController
     )
 }
-            /*composable(NavUtils.Routes.CrisisRegistration.route) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.Routes.Home.route) {
-                    popUpTo(NavUtils.Routes.Home.route) {
-                        inclusive = true
-                    }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                        popUpTo(NavUtils.Routes.CrisisRegistrationSummary.route) {
-                            inclusive = true
-                        }
-                    }})
-            }
-
-            composable(NavUtils.Routes.CrisisRegistrationSummary.route){
-                CrisisRegistrationSummaryScreen(navController = navController)
-            }*/
-
-
-
