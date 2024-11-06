@@ -22,20 +22,21 @@ class CrisisRepositoryImpl : CrisisRepository {
         val querySnapshot = db.collection("users")
             .document(auth.currentUser?.email!!)
             .collection("crisis_registers")
+            .whereEqualTo("completed", false)
             .orderBy("start", Query.Direction.DESCENDING)
             .limit(1)
             .get()
             .await()
-        return if (!querySnapshot.isEmpty) {
-            var crisisDetails = querySnapshot.documents[0].toObject(CrisisDetailsDB::class.java)
 
-            // Verifico si el registro está marcado como "completado" o no
-            val isCompleted = querySnapshot.documents[0].getBoolean("isCompleted") ?: false
-            crisisDetails?.completed = isCompleted
+        Log.d("CrisisRepository", "Consulta Firestore realizada, resultados encontrados: ${querySnapshot.size()}")
 
-            crisisDetails
-        } else {
+        return if (querySnapshot.isEmpty) {
+            Log.d("CrisisRepository", "No se encontraron registros incompletos.")
             null
+        } else {
+            val crisisDetails = querySnapshot.documents[0].toObject(CrisisDetailsDB::class.java)
+            Log.d("CrisisRepository", "Última crisis encontrada: ${crisisDetails?.start} - ${crisisDetails?.completed}")
+            crisisDetails
         }
     }
 

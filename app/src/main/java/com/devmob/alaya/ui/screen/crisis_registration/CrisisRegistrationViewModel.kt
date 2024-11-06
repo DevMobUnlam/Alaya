@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -141,6 +140,7 @@ class CrisisRegistrationViewModel(
             )
         }
     }
+
     fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
         val currentState = _screenState.value ?: return
         val updatedBodySensationList =
@@ -425,34 +425,57 @@ class CrisisRegistrationViewModel(
     }
 
     fun saveRegister() {
+        val crisis = _screenState.value?.crisisDetails?.toDB()
         viewModelScope.launch {
-            val crisis = _screenState.value?.crisisDetails?.toDB()
+            val lastCrisis = saveCrisisRegistrationUseCase.getLastCrisisDetails()
+            if (lastCrisis != null) {
+                if (lastCrisis.completed == false) {
+                    val updatedCrisis = crisis?.copy(completed = true)
 
-            // Si existe un registro incompleto, lo actualizo
-            if (_crisisDetails.value != null && _crisisDetails.value?.completed == false) {
-                val updatedCrisis = crisis?.copy(completed = true)
-                val response = updatedCrisis?.let { saveCrisisRegistrationUseCase.updateCrisisDetails(it) }
+                    // Llamamos al useCase para actualizar el registro
+                    val response = updatedCrisis?.let {
+                        saveCrisisRegistrationUseCase.updateCrisisDetails(
+                            it
+                        )
+                    }
 
-                when (response) {
-                    is FirebaseResult.Success -> {
-                        Log.d("CrisisRegistrationViewModel", "Registro actualizado exitosamente")
+                    when (response) {
+                        is FirebaseResult.Success -> {
+                            Log.d(
+                                "CrisisRegistrationViewModel",
+                                "Registro actualizado exitosamente"
+                            )
+                        }
+
+                        is FirebaseResult.Error -> {
+                            Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
+                        }
+
+                        null -> {
+                            Log.d("CrisisRegistrationViewModel", "Respuesta null al actualizar")
+                        }
                     }
-                    is FirebaseResult.Error -> {
-                        Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
-                    }
-                    null -> Log.d("CrisisRegistrationViewModel", "Respuesta null")
                 }
             } else {
-                val response = crisis?.let { saveCrisisRegistrationUseCase.invoke(it) }
+                // Si no se encontró crisis incompleta, creo nuevo registro
+                val crisisToSave = crisis?.copy(completed = true)
+                val response = crisisToSave?.let { saveCrisisRegistrationUseCase.invoke(it) }
 
                 when (response) {
                     is FirebaseResult.Success -> {
                         Log.d("CrisisRegistrationViewModel", "Nuevo registro guardado exitosamente")
                     }
+
                     is FirebaseResult.Error -> {
                         Log.d("CrisisRegistrationViewModel", "Error al guardar el nuevo registro")
                     }
-                    null -> Log.d("CrisisRegistrationViewModel", "Respuesta null")
+
+                    null -> {
+                        Log.d(
+                            "CrisisRegistrationViewModel",
+                            "Respuesta null al guardar el nuevo registro"
+                        )
+                    }
                 }
             }
         }
