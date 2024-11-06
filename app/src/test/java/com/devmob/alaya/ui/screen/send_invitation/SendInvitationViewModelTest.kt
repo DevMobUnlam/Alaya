@@ -1,15 +1,22 @@
 package com.devmob.alaya.ui.screen.send_invitation
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
+import com.onesignal.OneSignal
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -42,6 +49,9 @@ class SendInvitationViewModelTest {
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
+        mockkObject(OneSignal)
+        justRun { OneSignal.login(any()) }
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","") } returns mockk()
         viewModel = SendInvitationViewModel(getInvitationUseCase)
     }
 
@@ -53,6 +63,7 @@ class SendInvitationViewModelTest {
 
     @Test
     fun `when sendInvitation is called, then verify sendInvitationUseCase`(): Unit = runBlocking {
+        mockkStatic(Log::class)
         // GIVEN
         val patientEmail = "patient@example.com"
         val professionalEmail = "professional@example.com"
