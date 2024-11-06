@@ -1,6 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,6 +64,7 @@ import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import com.devmob.alaya.utils.NavUtils
 
 
 @Composable
@@ -90,6 +92,15 @@ fun CrisisRegistrationScreen(
     GridElementsRepository.returnAvailableTools().let { list ->
         for (tool in list) {
             viewModel.addCrisisTool(tool)
+        }
+    }
+
+    BackHandler {
+        when(screenState.value?.currentStep){
+            1 -> {
+                viewModel.shouldShowExitModal = true
+            }
+            else -> if(viewModel.shouldGoToSummary && !viewModel.shouldGoToBack) navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) else viewModel.goOneStepBack()
         }
     }
 
@@ -184,6 +195,7 @@ fun CrisisRegistrationScreen(
                             }
                         CrisisRegisterIconButton(
                             imageVector = place.icon,
+                            size = 70.dp,
                             text = place.name,
                             isSelected = isSelected,
                             onClick = {
@@ -455,6 +467,7 @@ fun CrisisRegistrationScreen(
                             }
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
+                            size = 70.dp,
                             text = tool.name,
                             isSelected = isSelected,
                             onClick = {
@@ -564,7 +577,6 @@ fun CrisisRegistrationScreen(
                         viewModel.shouldGoToSummary -> {
                             navController.popBackStack()
                         }
-
 
                         screenState.value?.currentStep!! < 6 -> {
                             viewModel.goOneStepForward()

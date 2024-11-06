@@ -48,7 +48,13 @@ fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
                         .clickable {
                             navController.navigate(
                                 NavUtils.LoginRoutes.Login.route
-                            )
+
+                            ){
+                                popUpTo(NavUtils.LoginRoutes.Login.route) {
+                                    inclusive = true
+                                    saveState = false
+                                }
+                            }
                             auth.signOut()
                             prefs.signOut()
                         }

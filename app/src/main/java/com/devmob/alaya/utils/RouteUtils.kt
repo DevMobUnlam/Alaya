@@ -53,6 +53,7 @@ object NavUtils {
         "contact_detail/{contactId}" to "Detalles del Contacto",
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
+        "patient_profile/{email}" to "Perfil del paciente",
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",

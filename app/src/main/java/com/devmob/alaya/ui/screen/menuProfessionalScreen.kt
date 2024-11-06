@@ -42,11 +42,14 @@ fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreference
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = ColorText,
-                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
-                        navController.navigate(
-                            NavUtils.ProfessionalRoutes.SendInvitation.route
-                        )
-                    }
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.ProfessionalRoutes.SendInvitation.route
+                            )
+                        }
                 )
             }
         )
@@ -68,7 +71,12 @@ fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreference
                         .clickable {
                             navController.navigate(
                                 NavUtils.LoginRoutes.Login.route
-                            )
+                            ) {
+                                popUpTo(NavUtils.LoginRoutes.Login.route) {
+                                    inclusive = true
+                                    saveState = false
+                                }
+                            }
                             val unloggedUser = auth.currentUser?.email
                             auth.signOut()
                             prefs.signOut()
