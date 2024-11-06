@@ -5,4 +5,6 @@ import com.devmob.alaya.domain.model.FirebaseResult
 
 interface CrisisRepository {
     suspend fun addRegister(register: CrisisDetailsDB): FirebaseResult
+    suspend fun getLastCrisisDetails(): CrisisDetailsDB?
+    suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult
 }

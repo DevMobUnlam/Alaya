@@ -93,9 +93,9 @@ fun CrisisHandlingScreen(
             viewModel.stopMusic()
         }
     }
-    var shouldVoiceSpeak by remember { mutableStateOf(true) }
-    var isVoiceOn by remember { mutableStateOf(true) }
 
+    var shouldVoiceSpeak by remember{mutableStateOf(true)}
+    var isVoiceOn by remember{mutableStateOf(false)}
 
     LaunchedEffect(currentStepIndex) {
 
@@ -387,30 +387,32 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 }
             )
 
-            Modal(
-                show = shouldShowModal,
-                title = stringResource(R.string.title_modal_crisis_handling),
-                primaryButtonText = stringResource(R.string.primary_button_modal_crisis_handling),
-                secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
-                onConfirm = {
-                    viewModel.dismissModal()
-                    navController.navigate(
-                        NavUtils.PatientRoutes.Feedback.route.replace(
-                            "{feedbackType}",
-                            "Felicitaciones"
-                        )
+        Modal(
+            show = shouldShowModal,
+            title = stringResource(R.string.title_modal_crisis_handling),
+            primaryButtonText = stringResource(R.string.primary_button_modal_crisis_handling),
+            secondaryButtonText = stringResource(R.string.secondary_button_modal_crisis_handling),
+            onConfirm = {
+                viewModel.endCrisisHandling()
+                viewModel.dismissModal()
+                navController.navigate(
+                    NavUtils.PatientRoutes.Feedback.route.replace(
+                        "{feedbackType}",
+                        "Felicitaciones"
                     )
-                },
-                onDismiss = {
-                    viewModel.dismissModal()
-                    navController.navigate(
-                        NavUtils.PatientRoutes.Feedback.route.replace(
-                            "{feedbackType}",
-                            "TodoVaAEstarBien"
-                        )
+                )
+            },
+            onDismiss = {
+                viewModel.endCrisisHandling()
+                viewModel.dismissModal()
+                navController.navigate(
+                    NavUtils.PatientRoutes.Feedback.route.replace(
+                        "{feedbackType}",
+                        "TodoVaAEstarBien"
                     )
-                }
-            )
+                )
+            }
+        )
 
             Modal(
                 show = shouldShowExitModal,

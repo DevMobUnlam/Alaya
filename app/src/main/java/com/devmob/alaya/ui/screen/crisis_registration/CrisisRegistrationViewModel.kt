@@ -4,20 +4,25 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
+import com.devmob.alaya.domain.model.CrisisDetailsDB
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
+import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
+import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository.returnAvailableTools
 import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -38,18 +43,83 @@ class CrisisRegistrationViewModel(
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
     var shouldGoToBack by mutableStateOf(true)
     var shouldGoToSummary by mutableStateOf(false)
+    private val _crisisTimeDetails = MutableLiveData(CrisisTimeDetails())
+    val crisisTimeDetails: LiveData<CrisisTimeDetails> get() = _crisisTimeDetails
+
+    var selectedTools = mutableStateListOf<String>()
 
     init {
         loadPlaces()
         loadTools()
         loadBodySensations()
         loadEmotions()
+        loadLastCrisisDetails()
     }
+
 
     var shouldShowExitModal by mutableStateOf(false)
 
+    private val _crisisDetails = MutableLiveData<CrisisDetailsDB?>()
+    val crisisDetails: LiveData<CrisisDetailsDB?> get() = _crisisDetails
+
+    fun loadLastCrisisDetails() {
+        viewModelScope.launch(Dispatchers.Main) {
+            val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
+            _crisisDetails.value = result
+
+            if (result != null) {
+                if (result.completed == false) {
+                    val startTime = result.start
+                    val endTime = result.end
+                    if (startTime != null && endTime != null) {
+                        val crisisTimeDetails = CrisisTimeDetails(
+                            startTime = startTime,
+                            endTime = endTime
+                        )
+                        _crisisTimeDetails.value = crisisTimeDetails
+                        _screenState.value = _screenState.value?.copy(
+                            crisisDetails = _screenState.value!!.crisisDetails.copy(
+                                crisisTimeDetails = crisisTimeDetails
+                            )
+                        )
+                    }
+                    selectedTools.clear()
+                    val availableTools = returnAvailableTools()
+
+                    val selectedCrisisTools = result.tools.mapNotNull { toolId ->
+                        availableTools.find { it.id == toolId }
+                    }
+                    selectedTools.addAll(selectedCrisisTools.map { it.id })
+
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            toolList = selectedCrisisTools
+                        )
+                    )
+                } else {
+                    _crisisTimeDetails.value = CrisisTimeDetails() // Limpiamos las fechas cuando la crisis está completa
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            crisisTimeDetails = CrisisTimeDetails() // Aquí también reseteamos las fechas en el estado
+                        )
+                    )
+                    selectedTools.clear()
+                    _screenState.value = _screenState.value?.copy(
+                        crisisDetails = _screenState.value!!.crisisDetails.copy(
+                            toolList = emptyList()
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()
+        selectedTools.clear()
+        _tools.value = emptyList()
+        _crisisTimeDetails.value = CrisisTimeDetails()
+        _crisisDetails.value = null
         shouldGoToBack = true
         shouldGoToSummary = false
         shouldShowExitModal = false
@@ -96,6 +166,7 @@ class CrisisRegistrationViewModel(
             )
         }
     }
+
     fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
         val currentState = _screenState.value ?: return
         val updatedBodySensationList =
@@ -300,7 +371,6 @@ class CrisisRegistrationViewModel(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
-
     }
 
     fun updateStartTime(hour: Date) {
@@ -381,19 +451,58 @@ class CrisisRegistrationViewModel(
     }
 
     fun saveRegister() {
+        val crisis = _screenState.value?.crisisDetails?.toDB()
         viewModelScope.launch {
-            val crisis = _screenState.value?.crisisDetails?.toDB()
-            val response = crisis?.let { saveCrisisRegistrationUseCase(it) }
-            when (response) {
-                is FirebaseResult.Success -> {
-                    Log.d("CrisisRegistrationViewModel", "saveRegister: Success")
-                }
+            val lastCrisis = saveCrisisRegistrationUseCase.getLastCrisisDetails()
+            if (lastCrisis != null) {
+                if (lastCrisis.completed == false) {
+                    val updatedCrisis = crisis?.copy(completed = true)
 
-                is FirebaseResult.Error -> {
-                    Log.d("CrisisRegistrationViewModel", "saveRegister: Error")
-                }
+                    // Llamamos al useCase para actualizar el registro
+                    val response = updatedCrisis?.let {
+                        saveCrisisRegistrationUseCase.updateCrisisDetails(
+                            it
+                        )
+                    }
 
-                null -> Log.d("CrisisRegistrationViewModel", "saveRegister: null ")
+                    when (response) {
+                        is FirebaseResult.Success -> {
+                            Log.d(
+                                "CrisisRegistrationViewModel",
+                                "Registro actualizado exitosamente"
+                            )
+                        }
+
+                        is FirebaseResult.Error -> {
+                            Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
+                        }
+
+                        null -> {
+                            Log.d("CrisisRegistrationViewModel", "Respuesta null al actualizar")
+                        }
+                    }
+                }
+            } else {
+                // Si no se encontró crisis incompleta, creo nuevo registro
+                val crisisToSave = crisis?.copy(completed = true)
+                val response = crisisToSave?.let { saveCrisisRegistrationUseCase.invoke(it) }
+
+                when (response) {
+                    is FirebaseResult.Success -> {
+                        Log.d("CrisisRegistrationViewModel", "Nuevo registro guardado exitosamente")
+                    }
+
+                    is FirebaseResult.Error -> {
+                        Log.d("CrisisRegistrationViewModel", "Error al guardar el nuevo registro")
+                    }
+
+                    null -> {
+                        Log.d(
+                            "CrisisRegistrationViewModel",
+                            "Respuesta null al guardar el nuevo registro"
+                        )
+                    }
+                }
             }
         }
     }

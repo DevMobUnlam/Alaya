@@ -135,16 +135,6 @@ fun MainContent(
             }
         }
     ) { paddingValues ->
-        val sharedViewModel: CrisisRegistrationViewModel = viewModel()
-        val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
-            factory = ViewModelFactory {
-                PatientHomeScreenViewmodel(
-                    GetUserDataUseCase(),
-                    GetInvitationUseCase(),
-                    FirebaseClient()
-                )
-            }
-        )
         NavHost(
             navController = navController,
             startDestination = NavUtils.LoginRoutes.Login.route,
@@ -267,7 +257,7 @@ fun MainContent(
                 }
             ) {
                 CrisisHandlingScreen(
-                    CrisisHandlingViewModel(GetCrisisTreatmentUseCase()),
+                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase()),
                     navController,
                     textToSpeech,
                     isTtsInitialized

@@ -12,6 +12,7 @@ import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.domain.model.UserRole
+import com.onesignal.OneSignal
 import kotlinx.coroutines.launch
 
 class RegisterViewmodel(
@@ -53,6 +54,8 @@ class RegisterViewmodel(
                     is AuthenticationResult.Success -> {
                         when (val result = addUserToFirestoreUseCase(user)) {
                             is FirebaseResult.Success -> {
+                                OneSignal.login(user.email)
+                                OneSignal.User.addAlias("ALIAS_FIREBASE_ID", user.email)
                                 if (user.role == UserRole.PATIENT) {
                                     _navigateToPatientHome.value = true
                                 } else {
