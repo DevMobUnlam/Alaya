@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -53,9 +52,6 @@ fun ProfessionalNavigation(navController: NavHostController) {
         ) {
             composable(NavUtils.ProfessionalRoutes.Home.route) {
                 ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
-            }
-            composable(NavUtils.ProfessionalRoutes.PatientProfile.route) {
-                PatientProfileScreen(navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(searchUserViewModel, navController)

@@ -103,7 +103,14 @@ fun PatientProfileScreen(
                         end.linkTo(parent.end)
                     },
                 ButtonStyle.Outlined,
-                { navController.navigate(NavUtils.ProfessionalRoutes.ConfigTreatment.route) },
+                {
+                    navController.navigate(
+                        NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
+                            "{patientEmail}",
+                            email
+                        )
+                    )
+                },
                 containerColor = ColorWhite
             )
 

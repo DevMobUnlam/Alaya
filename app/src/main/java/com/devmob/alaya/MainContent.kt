@@ -40,8 +40,6 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.ProfessionalTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
@@ -51,11 +49,8 @@ import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
-import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
@@ -271,7 +266,12 @@ fun MainContent(
                     )
                 }
             ) {
-                CrisisHandlingScreen(CrisisHandlingViewModel(GetCrisisTreatmentUseCase()), navController, textToSpeech, isTtsInitialized)
+                CrisisHandlingScreen(
+                    CrisisHandlingViewModel(GetCrisisTreatmentUseCase()),
+                    navController,
+                    textToSpeech,
+                    isTtsInitialized
+                )
 
             }
             composable(NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -466,48 +466,97 @@ fun MainContent(
                 )
             }
             composable(NavUtils.PatientRoutes.CrisisRegistration.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CrisisRegistrationScreen(onClose = {navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                    popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = false
+                CrisisRegistrationScreen(onClose = {
+                    navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                        popUpTo(NavUtils.PatientRoutes.Home.route) {
+                            inclusive = false
+                        }
                     }
-                }},
-                    onFinishedRegistration = {navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route)}, viewModel = crisisRegistrationViewModel, navController = navController)
+                },
+                    onFinishedRegistration = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistrationSummary.route) },
+                    viewModel = crisisRegistrationViewModel,
+                    navController = navController
+                )
             }
             composable(NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
-                CrisisRegistrationSummaryScreen(navController = navController, viewModel = crisisRegistrationViewModel)
+                CrisisRegistrationSummaryScreen(
+                    navController = navController,
+                    viewModel = crisisRegistrationViewModel
+                )
             }
             composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
-            ) {
-                CustomActivityScreen(navController = navController, viewModel = configTreatmentViewModel )
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                CustomActivityScreen(
+                    patientEmail = patientEmail,
+                    navController = navController,
+                    viewModel = configTreatmentViewModel
+                )
             }
 
             composable(ProfessionalRoutes.SendInvitation.route,
-                enterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-                exitTransition = { return@composable slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-                popEnterTransition = { return@composable slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) }
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
             ) {
                 SendInvitationScreen(sendInvitationViewModel)
             }

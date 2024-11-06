@@ -62,12 +62,19 @@ import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavController, textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
+fun CrisisHandlingScreen(
+    viewModel: CrisisHandlingViewModel,
+    navController: NavController,
+    textToSpeech: TextToSpeech,
+    isTtsInitialized: Boolean
+) {
 
 
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val currentStepIndex = viewModel.currentStepIndex
+    val currentStep = viewModel.currentStep
+    val totalSteps = viewModel.steps.size
 
     var loadingScreen by rememberSaveable { mutableStateOf(true) }
 
@@ -85,30 +92,34 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
             viewModel.stopMusic()
         }
     }
-    var shouldVoiceSpeak by remember{mutableStateOf(true)}
-    var isVoiceOn by remember{mutableStateOf(true)}
+    var shouldVoiceSpeak by remember { mutableStateOf(true) }
+    var isVoiceOn by remember { mutableStateOf(true) }
 
 
-    LaunchedEffect(currentStepIndex){
+    LaunchedEffect(currentStepIndex) {
 
-        if(textToSpeech.isSpeaking){
+        if (textToSpeech.isSpeaking) {
             textToSpeech.stop()
         }
 
         if (shouldVoiceSpeak && isVoiceOn) {
             if (isTtsInitialized) {
-                textToSpeech.speak(
-                    currentStep.title,
-                    TextToSpeech.QUEUE_ADD,
-                   null,
-                    null
-                )
-                textToSpeech.speak(
-                    currentStep.description,
-                    TextToSpeech.QUEUE_ADD,
-                    null,
-                    null
-                )
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep.title,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep.description,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
 
             }
         }
@@ -145,8 +156,6 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 .fillMaxSize()
                 .background(ColorWhite)
         ) {
-            val currentStep = viewModel.currentStep
-            val totalSteps = viewModel.steps.size
             val (progressBar, audioIcon, closeIcon, lottieAnimation, title, description, nextButton, goodButton) = createRefs()
 
             SegmentedProgressBar(
@@ -159,69 +168,75 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 }
             )
 
-        Icon(
-            imageVector = Icons.Default.Close,
-            contentDescription = null,
-            tint = ColorText,
-            modifier = Modifier
-                .size(32.dp)
-                .clickable {
-                    if(textToSpeech.isSpeaking){
-                        textToSpeech.stop()
-                    }
-                    shouldVoiceSpeak = false
-                    viewModel.showExitModal() }
-                .constrainAs(closeIcon) {
-                    top.linkTo(audioIcon.top)
-                    bottom.linkTo(audioIcon.bottom)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }
-        )
-
-        ExpandableButton(
-            modifier = Modifier.constrainAs(audioIcon) {
-                top.linkTo(progressBar.bottom, margin = 8.dp)
-                start.linkTo(parent.start, margin = 16.dp)
-            },
-            onPlayMusic = {   if (isPlaying) {
-                viewModel.pauseMusic()
-            } else {
-                viewModel.playMusic(context)
-            }
-            },
-            onPauseMusic = { viewModel.pauseMusic()}, isVoiceOn = isVoiceOn,
-            onMuteVoice = {
-                if(isVoiceOn){
-                    if(textToSpeech.isSpeaking){
-                        textToSpeech.stop()
-                    }
-                    isVoiceOn = false
-                }else{
-                    isVoiceOn = true
-
-                    if (isTtsInitialized) {
-
-                        if(textToSpeech.isSpeaking){
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                tint = ColorText,
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable {
+                        if (textToSpeech.isSpeaking) {
                             textToSpeech.stop()
                         }
+                        shouldVoiceSpeak = false
+                        viewModel.showExitModal()
+                    }
+                    .constrainAs(closeIcon) {
+                        top.linkTo(audioIcon.top)
+                        bottom.linkTo(audioIcon.bottom)
+                        end.linkTo(parent.end, margin = 16.dp)
+                    }
+            )
 
-                        textToSpeech.speak(
-                            currentStep.title,
-                            TextToSpeech.QUEUE_ADD,
-                            null,
-                            null
-                        )
-                        textToSpeech.speak(
-                            currentStep.description,
-                            TextToSpeech.QUEUE_ADD,
-                            null,
-                            null
-                        )
+            ExpandableButton(
+                modifier = Modifier.constrainAs(audioIcon) {
+                    top.linkTo(progressBar.bottom, margin = 8.dp)
+                    start.linkTo(parent.start, margin = 16.dp)
+                },
+                onPlayMusic = {
+                    if (isPlaying) {
+                        viewModel.pauseMusic()
+                    } else {
+                        viewModel.playMusic(context)
+                    }
+                },
+                onPauseMusic = { viewModel.pauseMusic() }, isVoiceOn = isVoiceOn,
+                onMuteVoice = {
+                    if (isVoiceOn) {
+                        if (textToSpeech.isSpeaking) {
+                            textToSpeech.stop()
+                        }
+                        isVoiceOn = false
+                    } else {
+                        isVoiceOn = true
 
+                        if (isTtsInitialized) {
+
+                            if (textToSpeech.isSpeaking) {
+                                textToSpeech.stop()
+                            }
+
+                            if (currentStep != null) {
+                                textToSpeech.speak(
+                                    currentStep.title,
+                                    TextToSpeech.QUEUE_ADD,
+                                    null,
+                                    null
+                                )
+                            }
+                            if (currentStep != null) {
+                                textToSpeech.speak(
+                                    currentStep.description,
+                                    TextToSpeech.QUEUE_ADD,
+                                    null,
+                                    null
+                                )
+                            }
+
+                        }
                     }
                 }
-            }
-        )
+            )
 
             if (currentStep != null) {
                 Text(
@@ -296,44 +311,47 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 )
             }
 
-        Button(
-            stringResource(R.string.primary_button_crisis_handling),
-            Modifier.constrainAs(goodButton) {
-                top.linkTo(description.bottom, margin = 12.dp)
-                start.linkTo(parent.start, margin = 16.dp)
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-            },
-            ButtonStyle.Outlined,
-            { viewModel.showModal()
-                viewModel.stopMusic()
-                if(textToSpeech.isSpeaking){
-                    textToSpeech.stop()}
-
-                shouldVoiceSpeak = false
-                viewModel.showModal()})
-
-        Button(
-            stringResource(R.string.secondary_button_crisis_handling),
-            Modifier.constrainAs(nextButton) {
-                top.linkTo(description.bottom, margin = 12.dp)
-                start.linkTo(goodButton.end, margin = 8.dp)
-                end.linkTo(parent.end, margin = 16.dp)
-                bottom.linkTo(parent.bottom, margin = 16.dp)
-            },
-            ButtonStyle.Filled,
-            onClick = {
-
-                if(currentStepIndex ==2){
-                    if(textToSpeech.isSpeaking){
+            Button(
+                stringResource(R.string.primary_button_crisis_handling),
+                Modifier.constrainAs(goodButton) {
+                    top.linkTo(description.bottom, margin = 12.dp)
+                    start.linkTo(parent.start, margin = 16.dp)
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                },
+                ButtonStyle.Outlined,
+                {
+                    viewModel.showModal()
+                    viewModel.stopMusic()
+                    if (textToSpeech.isSpeaking) {
                         textToSpeech.stop()
                     }
+
                     shouldVoiceSpeak = false
+                    viewModel.showModal()
+                })
+
+            Button(
+                stringResource(R.string.secondary_button_crisis_handling),
+                Modifier.constrainAs(nextButton) {
+                    top.linkTo(description.bottom, margin = 12.dp)
+                    start.linkTo(goodButton.end, margin = 8.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                    bottom.linkTo(parent.bottom, margin = 16.dp)
+                },
+                ButtonStyle.Filled,
+                onClick = {
+
+                    if (currentStepIndex == 2) {
+                        if (textToSpeech.isSpeaking) {
+                            textToSpeech.stop()
+                        }
+                        shouldVoiceSpeak = false
+                    }
+
+                    viewModel.nextStep()
+
                 }
-
-                viewModel.nextStep()
-
-            }
-        )
+            )
 
             Modal(
                 show = shouldShowModal,
@@ -360,37 +378,42 @@ fun CrisisHandlingScreen(viewModel: CrisisHandlingViewModel, navController: NavC
                 }
             )
 
-        Modal(
-            show = shouldShowExitModal,
-            stringResource(R.string.title_exit_modal_crisis_handling),
-            primaryButtonText = stringResource(R.string.confirm),
-            secondaryButtonText = stringResource(R.string.dismiss),
-            onConfirm = {
-                viewModel.stopMusic()
-                navController.navigate(NavUtils.PatientRoutes.Home.route) {
-                    popUpTo(NavUtils.PatientRoutes.Home.route) {
-                        inclusive = true
+            Modal(
+                show = shouldShowExitModal,
+                stringResource(R.string.title_exit_modal_crisis_handling),
+                primaryButtonText = stringResource(R.string.confirm),
+                secondaryButtonText = stringResource(R.string.dismiss),
+                onConfirm = {
+                    viewModel.stopMusic()
+                    navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                        popUpTo(NavUtils.PatientRoutes.Home.route) {
+                            inclusive = true
+                        }
                     }
-                }
-            },
-            onDismiss = {
-                viewModel.dismissExitModal()
-                shouldVoiceSpeak = true
-                if (isTtsInitialized && isVoiceOn) {
-                    textToSpeech.speak(
-                        currentStep.title,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                    textToSpeech.speak(
-                        currentStep.description,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
+                },
+                onDismiss = {
+                    viewModel.dismissExitModal()
+                    shouldVoiceSpeak = true
+                    if (isTtsInitialized && isVoiceOn) {
+                        if (currentStep != null) {
+                            textToSpeech.speak(
+                                currentStep.title,
+                                TextToSpeech.QUEUE_ADD,
+                                null,
+                                null
+                            )
+                        }
+                        if (currentStep != null) {
+                            textToSpeech.speak(
+                                currentStep.description,
+                                TextToSpeech.QUEUE_ADD,
+                                null,
+                                null
+                            )
+                        }
 
-                }
-            })
+                    }
+                })
+        }
     }
 }

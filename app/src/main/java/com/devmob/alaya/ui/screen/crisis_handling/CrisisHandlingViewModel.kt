@@ -24,7 +24,6 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.launch
 import kotlin.reflect.jvm.internal.impl.load.java.structure.JavaClass
 
-class CrisisHandlingViewModel : ViewModel() {
 class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase) :
     ViewModel() {
 
