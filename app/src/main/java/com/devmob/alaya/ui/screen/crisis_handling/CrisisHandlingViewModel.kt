@@ -4,30 +4,29 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import android.content.Context
 import android.media.MediaPlayer
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
+import com.devmob.alaya.domain.model.CrisisDetailsDB
+import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
-import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.domain.model.StepCrisis
+import kotlinx.coroutines.launch
+import java.util.Date
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.launch
-import kotlin.reflect.jvm.internal.impl.load.java.structure.JavaClass
 
-class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase) :
-    ViewModel() {
-
-    val currentUser = FirebaseClient().auth.currentUser
+class CrisisHandlingViewModel (
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(),
+    private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
+): ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
     var optionTreatmentsList by mutableStateOf<List<OptionTreatment>?>(null)
     var currentStepIndex by mutableIntStateOf(0)
@@ -35,6 +34,12 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
     var shouldShowExitModal by mutableStateOf(false)
     var isPlaying by mutableStateOf(false)
     private var player: MediaPlayer? = null
+    val currentUser = FirebaseClient().auth.currentUser
+
+    private var startTime: Date? = null
+    private var endTime: Date? = null
+
+    val toolsUsed = mutableListOf<String>()
 
     private val _loading = mutableStateOf(true)
     val loading: MutableState<Boolean>
@@ -44,10 +49,18 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
         get() = if (steps.isNotEmpty()) {
             steps[currentStepIndex]
         } else null
-
-
     init {
         fetchCrisisSteps()
+        startCrisisHandling()
+    }
+
+    private fun startCrisisHandling() {
+        startTime = Date()
+    }
+
+    fun endCrisisHandling() {
+        endTime = Date()
+        saveCrisisData()
     }
 
     fun fetchCrisisSteps() {
@@ -76,16 +89,47 @@ class CrisisHandlingViewModel(private val getCrisisTreatmentUseCase: GetCrisisTr
     }
 
     fun nextStep() {
+        currentStep?.let { addTool(it.title) } // si voy al siguiente paso doy por hecho que se utilizo la herramienta
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
         } else {
             stopMusic()
             shouldShowModal = true
+            endCrisisHandling()
+        }
+    }
+
+    fun saveCrisisData() {
+        viewModelScope.launch {
+            val crisisDetails = CrisisDetailsDB(
+                start = startTime,
+                end = endTime,
+                place = null,
+                bodySensations = emptyList(),
+                tools = toolsUsed,
+                emotions = emptyList(),
+                notes = null,
+                completed = false
+            )
+
+            val result = saveCrisisRegistrationUseCase(crisisDetails)
+            if (result is FirebaseResult.Success) {
+                println("Registro de crisis guardado exitosamente")
+            } else {
+                println("Error al guardar el registro de crisis")
+            }
+        }
+    }
+
+    fun addTool(tool: String) {
+        if (!toolsUsed.contains(tool)) {
+            toolsUsed.add(tool)
         }
     }
 
     fun showModal() {
         shouldShowModal = true
+        currentStep?.let { addTool(it.title) } //cuando se muestra el modal puede tomar 2 caminos, ahi tambien doy por hecho que realizo la herramienta del paso actual
     }
 
     fun dismissModal() {

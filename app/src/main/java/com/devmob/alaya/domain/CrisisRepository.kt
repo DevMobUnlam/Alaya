@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface CrisisRepository {
     suspend fun addRegister(register: CrisisDetailsDB): FirebaseResult
     suspend fun getRegisters(patientId: String, onRegisterUpdate:() -> Unit): Flow<List<CrisisDetailsDB>?>
+    suspend fun getLastCrisisDetails(): CrisisDetailsDB?
+    suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult
 }
