@@ -23,6 +23,7 @@ class SendInvitationViewModel(
     fun sendInvitation(patientEmail: String, professionalEmail: String) {
         viewModelScope.launch {
             val result = invitationUseCase.sendInvitation(patientEmail, professionalEmail)
+            _sendInvitationStatus.value = result
             if (result.isSuccess) {
                 val r = invitationUseCase.sendNotification(patientEmail, professionalEmail)
                 if (r.isSuccessful) {
@@ -31,7 +32,7 @@ class SendInvitationViewModel(
                     Log.w("SendInvitationViewModel", "No se pudo enviar la invitación  a: $patientEmail")
                 }
             }
-            _sendInvitationStatus.value = result
+
         }
     }
 }
