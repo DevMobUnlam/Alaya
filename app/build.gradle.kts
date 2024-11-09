@@ -77,6 +77,8 @@ dependencies {
     implementation(libs.androidx.constraint)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.kotlin.reflect)
+    implementation(libs.core.ktx)
+    implementation(libs.androidx.ui.test.junit4.android)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -87,8 +89,12 @@ dependencies {
     testImplementation(libs.core.testing)
     testImplementation(libs.mockito)
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation (libs.mockito.inline)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
 }

@@ -19,15 +19,15 @@ class ProfessionalHomeViewModel : ViewModel() {
         updateGreetingMessage()
     }
 
-    private fun fetchProfessional() {
+    fun fetchProfessional() {
         nameProfessional = "Patricia"
     }
 
-    private fun fetchUsers() {
+    fun fetchUsers() {
         users = UsersProvider.users
     }
 
-    private fun updateGreetingMessage() {
+    fun updateGreetingMessage() {
         val calendar = Calendar.getInstance()
         val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
         greetingMessage = when (hourOfDay) {

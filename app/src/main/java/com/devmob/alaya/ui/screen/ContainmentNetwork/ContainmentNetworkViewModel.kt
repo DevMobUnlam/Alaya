@@ -16,7 +16,7 @@ class ContainmentNetworkViewModel(
      val contactUseCase: ContactUseCase
 ) : ViewModel() {
 
-    private val _contacts = MutableLiveData<List<Contact>>(emptyList())
+    val _contacts = MutableLiveData<List<Contact>>(emptyList())
     val contacts: LiveData<List<Contact>> get() = _contacts
 
     init {
@@ -81,7 +81,7 @@ class ContainmentNetworkViewModel(
         }
     }
 
-    private fun loadContactFromUri(contentResolver: ContentResolver, contactUri: Uri): Contact? {
+    fun loadContactFromUri(contentResolver: ContentResolver, contactUri: Uri): Contact? {
         var contact: Contact? = null
         val cursor = contentResolver.query(
             contactUri,

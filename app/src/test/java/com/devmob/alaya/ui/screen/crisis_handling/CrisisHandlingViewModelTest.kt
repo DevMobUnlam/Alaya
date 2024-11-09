@@ -1,6 +1,5 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.crisis_handling
 
-import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

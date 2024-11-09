@@ -1,9 +1,6 @@
-package com.devmob.alaya.ui.screen
+package com.devmob.alaya.ui.screen.contact
 
 import android.content.Context
-import android.content.Intent
-import android.content.pm.ResolveInfo
-import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
