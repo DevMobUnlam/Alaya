@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -16,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.local_storage.CrisisStepsDatabase
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
@@ -33,28 +33,28 @@ import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
+import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
@@ -63,8 +63,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -85,6 +83,7 @@ fun MainContent(
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
     val getUserDataUseCase = GetUserDataUseCase();
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -271,7 +270,7 @@ fun MainContent(
                 }
             ) {
                 CrisisHandlingScreen(
-                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase()),
+                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase(crisisStepsDao)),
                     navController,
                     textToSpeech,
                     isTtsInitialized

@@ -133,7 +133,6 @@ fun CrisisHandlingScreen(
     if (!viewModel.optionTreatmentsList.isNullOrEmpty()) {
         viewModel.loading.value = false
     }
-    viewModel.fetchCrisisSteps()
 
     if (viewModel.currentStep == null) {
         Surface(modifier = Modifier.fillMaxSize()) {
