@@ -74,7 +74,8 @@ class CrisisHandlingViewModel (
                         StepCrisis(
                             title = option.title,
                             description = option.description,
-                            image = option.imageUri
+                            image = option.imageUri,
+                            imageLocalPath = option.imageLocalPath
                         )
                     }
                     steps = stepCrisisList

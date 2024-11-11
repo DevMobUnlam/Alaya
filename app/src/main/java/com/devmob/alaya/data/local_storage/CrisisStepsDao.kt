@@ -9,8 +9,11 @@ import com.devmob.alaya.domain.model.OptionTreatment
 @Dao
 interface CrisisStepsDao {
 
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCrisisStep(crisisStep: OptionTreatment)
+
+    @Query("DELETE FROM crisis_steps")
+    suspend fun deleteAllCrisisSteps()
 
     @Query("SELECT * FROM crisis_steps")
     suspend fun getCrisisSteps(): List<OptionTreatment>

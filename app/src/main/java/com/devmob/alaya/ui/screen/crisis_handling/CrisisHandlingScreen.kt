@@ -1,11 +1,8 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import ExpandableButton
-import android.util.Log
+import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,36 +19,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
+import coil.compose.AsyncImage
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
-import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
@@ -284,8 +269,8 @@ fun CrisisHandlingScreen(
                                     bottom.linkTo(description.top, margin = 16.dp)
                                 }
                         )*/
-            Image(
-                painter = rememberImagePainter(data = currentStep?.image),
+            AsyncImage(
+                model = currentStep?.imageLocalPath ?: currentStep?.image,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla

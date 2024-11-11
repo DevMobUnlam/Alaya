@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.patient_home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,13 +12,15 @@ import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.Professional
+import com.devmob.alaya.utils.CrisisStepsManager
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class PatientHomeScreenViewmodel(
     private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
-    private val firebaseClient: FirebaseClient = FirebaseClient()
+    private val firebaseClient: FirebaseClient = FirebaseClient(),
+    private val crisisStepsManager: CrisisStepsManager
 ) : ViewModel() {
 
     var nameProfessional by mutableStateOf("")

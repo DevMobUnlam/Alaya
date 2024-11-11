@@ -12,12 +12,16 @@ class GetCrisisTreatmentUseCase(private val crisisStepsDao: CrisisStepsDao) {
         patientEmail: String
     ): List<OptionTreatment>? {
         if (getDataFromLocalDatabase().isEmpty()) {
-            val result = CustomTreatmentRepository.getCustomTreatment(patientEmail)
-            result?.let { updateLocalDatabase(it) }
-            return result
+            val crisisSteps = getDataFromRemoteDatabase(patientEmail)
+            crisisSteps?.let { updateLocalDatabase(it) }
+            return crisisSteps
         } else {
             return getDataFromLocalDatabase()
         }
+    }
+
+    suspend fun getDataFromRemoteDatabase(patientEmail: String): List<OptionTreatment>? {
+        return CustomTreatmentRepository.getCustomTreatment(patientEmail)
     }
 
     private suspend fun getDataFromLocalDatabase(): List<OptionTreatment> {

@@ -10,13 +10,15 @@ import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.model.UserRole
+import com.devmob.alaya.utils.CrisisStepsManager
 import com.onesignal.OneSignal
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val getRoleUseCase: GetRoleUseCase,
-    private val prefs: SharedPreferences
+    private val prefs: SharedPreferences,
+    private val crisisStepsManager: CrisisStepsManager
 ) : ViewModel() {
 
     private val _loading = mutableStateOf(false)
@@ -55,8 +57,10 @@ class LoginViewModel(
                     val role = getRoleUseCase(email)
                     role?.let { prefs.setUserLoggedIn(email, it) }
                     when (role) {
-                        UserRole.PATIENT ->
+                        UserRole.PATIENT ->{
                             _navigateToPatientHome.value = true
+                            updateCrisisSteps(email)
+                        }
 
                         UserRole.PROFESSIONAL ->
                             _navigateToProfessionalHome.value = true
@@ -85,6 +89,7 @@ class LoginViewModel(
                 UserRole.PATIENT -> {
                     Log.d("login", "Navigating to Patient Home from checkIfUserWasLoggedIn")
                     _navigateToPatientHome.value = true
+                    prefs.getEmail()?.let { updateCrisisSteps(it) }
                 }
 
                 UserRole.PROFESSIONAL -> {
@@ -103,5 +108,11 @@ class LoginViewModel(
 
     fun resetError() {
         _showError.value = false
+    }
+
+    private fun updateCrisisSteps(patientEmail: String) {
+        viewModelScope.launch {
+            crisisStepsManager.updateCrisisSteps(patientEmail)
+        }
     }
 }

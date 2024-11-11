@@ -63,6 +63,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
+import com.devmob.alaya.utils.CrisisStepsManager
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -108,7 +109,8 @@ fun MainContent(
             PatientHomeScreenViewmodel(
                 GetUserDataUseCase(),
                 GetInvitationUseCase(),
-                FirebaseClient()
+                FirebaseClient(),
+                CrisisStepsManager(crisisStepsDao, GetCrisisTreatmentUseCase(crisisStepsDao), context)
             )
         }
     )
@@ -250,7 +252,19 @@ fun MainContent(
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
+                LoginScreen(
+                    navController,
+                    LoginViewModel(
+                        LoginUseCase(),
+                        GetRoleUseCase(),
+                        prefs,
+                        CrisisStepsManager(
+                            crisisStepsDao,
+                            GetCrisisTreatmentUseCase(crisisStepsDao),
+                            context
+                        )
+                    )
+                )
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
