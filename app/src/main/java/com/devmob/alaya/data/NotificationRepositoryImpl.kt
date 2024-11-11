@@ -21,4 +21,19 @@ class NotificationRepositoryImpl : NotificationRepository {
         )
         return api.sendNotification(body)
     }
+
+    override suspend fun sendNotificationNewTreatment(
+        patientEmail: String,
+        professionalEmail: String
+    ): Response<Unit> {
+        val body = NotificationInvitation(
+            ONESIGNAL_APP_ID,
+            "push",
+            contents = mapOf("en" to "$professionalEmail te configuró un nuevo tratamiento."),
+            include_aliases = IncludeAliases(
+                ALIAS_FIREBASE_ID = listOf(patientEmail)
+            )
+        )
+        return api.sendNotification(body)
+    }
 }

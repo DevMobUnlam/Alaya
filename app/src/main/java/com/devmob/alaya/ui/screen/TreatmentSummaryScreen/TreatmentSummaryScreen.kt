@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
@@ -42,6 +43,7 @@ fun TreatmentSummaryScreen(
     navController: NavController,
     viewModel: ConfigTreatmentViewModel
 ) {
+    val currentEmail = FirebaseClient().auth.currentUser?.email
 
     val selectedOptions = listOfNotNull(
         getTreatmentOption(firstStep, viewModel.treatmentOptions),
@@ -127,6 +129,9 @@ fun TreatmentSummaryScreen(
                 onClick = {
                     showModal = true
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
+                    if (currentEmail != null) {
+                        viewModel.sendNotification(patientEmail, currentEmail)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"

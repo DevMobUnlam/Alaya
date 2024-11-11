@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
@@ -17,6 +18,7 @@ class ConfigTreatmentViewModel(
 ) : ViewModel() {
 
     var patientEmail = mutableStateOf("")
+    val professionalEmail = FirebaseClient().auth.currentUser?.email
 
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>
@@ -73,4 +75,23 @@ class ConfigTreatmentViewModel(
             }
         }
     }
+
+    fun sendNotification(patientEmail: String, professionalEmail: String) {
+        viewModelScope.launch {
+            val notification =
+                saveCrisisUseCase.sendNotification(patientEmail, professionalEmail)
+            if (notification.isSuccessful) {
+                Log.i(
+                    "ConfigTreatmentViewModel",
+                    "Notificacion enviada satisfactoriamente a: $patientEmail"
+                )
+            } else {
+                Log.w(
+                    "ConfigTreatmentViewModel",
+                    "No se pudo enviar la notificación  a: $patientEmail"
+                )
+            }
+        }
+    }
 }
+
