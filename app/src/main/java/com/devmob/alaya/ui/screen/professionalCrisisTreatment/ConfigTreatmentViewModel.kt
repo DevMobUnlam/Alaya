@@ -22,7 +22,7 @@ class ConfigTreatmentViewModel(
 
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>
-        get() = _showError
+        get() = _showError //TODO Manejar error desde la screen
 
     private val _navigate = mutableStateOf(false)
     val navigate: MutableState<Boolean>
