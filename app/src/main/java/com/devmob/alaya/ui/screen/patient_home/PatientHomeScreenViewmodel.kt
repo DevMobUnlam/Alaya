@@ -27,8 +27,16 @@ class PatientHomeScreenViewmodel(
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
-    private var emailPatient by mutableStateOf("")
-    private var emailProfessional by mutableStateOf("")
+
+    private var emailPatient = ""
+    private var emailProfessional = ""
+
+    fun updateCrisisSteps() {
+        getEmailPatient()
+        viewModelScope.launch {
+            crisisStepsManager.updateCrisisSteps(emailPatient)
+        }
+    }
 
     fun fetchPatient() {
         getEmailPatient()

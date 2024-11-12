@@ -65,7 +65,7 @@ class CrisisStepsManager(
         val localStepsData =
             crisisStepsLocalDB?.map { Triple(it.title, it.description, it.imageUri) }
 
-        return remoteStepsData?.toSet() != localStepsData?.toSet() || localStepsData.isNullOrEmpty()
+        return (remoteStepsData?.toSet() != localStepsData?.toSet()) || localStepsData.isNullOrEmpty()
     }
 
     private fun deleteImagesFromCache() {
