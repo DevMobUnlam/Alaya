@@ -82,41 +82,6 @@ class ContactRepositoryImpl : ContactRepository {
         }
     }
 
-    override suspend fun editContact(email: String, contact: Contact): FirebaseResult {
-        return try {
-            val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-            val index = updatedContacts.indexOfFirst { it.contactId == contact.contactId }
-
-            if (index != -1) {
-                val currentContact = updatedContacts[index]
-                var updatedContact = contact
-
-                if (contact.photo != null && contact.photo.isNotEmpty() && contact.photo != currentContact.photo) {
-                    val photoUri = Uri.parse(contact.photo)
-                    val photoUrl = uploadImageToStorage(photoUri, contact.contactId)
-                    if (photoUrl != null) {
-                        updatedContact = contact.copy(photo = photoUrl)
-                    } else {
-                        return FirebaseResult.Error(Exception("Error al subir la foto"))
-                    }
-                }
-
-                updatedContacts[index] = updatedContact
-            }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
-            FirebaseResult.Success
-        } catch (e: Exception) {
-            FirebaseResult.Error(e)
-        }
-    }
-
     override suspend fun uploadImageToStorage(uri: Uri, contactId: String): String? {
         return try {
             val storageRef = FirebaseStorage.getInstance().reference

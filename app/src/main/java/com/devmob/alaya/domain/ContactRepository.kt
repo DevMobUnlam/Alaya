@@ -9,6 +9,5 @@ interface ContactRepository {
     fun listenToContacts(email: String, onContactsUpdated: (List<Contact>) -> Unit)
     suspend fun getContacts(email: String): List<Contact>
     suspend fun deleteContact(email: String, contact: Contact): FirebaseResult
-    suspend fun editContact(email: String, contact: Contact): FirebaseResult
     suspend fun uploadImageToStorage(uri: Uri, contactId: String): String?
 }

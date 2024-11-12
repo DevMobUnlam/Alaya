@@ -31,7 +31,6 @@ class ContainmentNetworkViewModel(
         }
     }
 
-
     private val _operationStatus = MutableLiveData<String>()
 
     fun addContactFromPhone(context: Context, contactUri: Uri) {
@@ -48,9 +47,9 @@ class ContainmentNetworkViewModel(
         }
     }
 
-    fun editContact(email: String, contact: Contact) {
+    fun editContact(contact: Contact) {
         viewModelScope.launch {
-            val result = contactUseCase.editContact(email, contact)
+            val result = contactUseCase.editContact(contact)
             handleFirebaseResult(result, "Contacto editado con éxito", "Error al editar contacto")
 
             if (result is FirebaseResult.Success) {
