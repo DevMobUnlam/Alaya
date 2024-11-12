@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material3.Card
@@ -45,7 +47,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,14 +68,13 @@ import kotlinx.coroutines.launch
 fun TextArea(
     modifier: Modifier = Modifier,
     title: String,
-    text: String = "",
-    onTextChange: (String) -> Unit = {},
-    onMicClick:() -> Unit = {},
+    textActual: String = "",
+    onTextChange: (String) -> Unit = {}
     )
 {
 
     val context = LocalContext.current
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var text by remember { mutableStateOf(TextFieldValue(textActual.ifEmpty { "" })) }
     val voiceToText = remember { VoiceToText(context) }
     val state by voiceToText.state.collectAsState()
     var isPressed by remember { mutableStateOf(false) }
@@ -88,8 +91,10 @@ fun TextArea(
     LaunchedEffect(state.spokenText) {
         if (state.spokenText.isNotEmpty()) {
             text = text.copy(text = state.spokenText)
+            onTextChange(state.spokenText)
         }
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier
@@ -122,8 +127,10 @@ fun TextArea(
         ) {
             BasicTextField(
                 value = text,
-                //onValueChange = { newText -> onTextChange(newText) },
-                onValueChange = { text = it },
+                onValueChange = {
+                    text = it
+                    onTextChange(it.text)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -143,6 +150,15 @@ fun TextArea(
                     }
                     innerTextField()
                 }
+                ,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    }
+                )
             )
         }
         Spacer(modifier = Modifier.height(16.dp))

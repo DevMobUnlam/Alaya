@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.ContainmentNetwork.Contact
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,17 +38,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.devmob.alaya.R
-import com.devmob.alaya.components.getInitials
+import com.devmob.alaya.ui.components.getInitials
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun ContactCard(
     contact: Contact,
     viewModel: ContactViewModel,
     onClick: () -> Unit,
+    backgroundColor: Color = Color.White,
+    textColor: Color = ColorText,
+    showWhatsappButton: Boolean = true
 ){
+
     val context = LocalContext.current
     ElevatedCard(
         onClick = onClick,
@@ -53,7 +63,7 @@ fun ContactCard(
             .wrapContentHeight(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = backgroundColor,
         ),
         elevation = CardDefaults.cardElevation(8.dp),
 
@@ -66,8 +76,7 @@ fun ContactCard(
             horizontalArrangement = Arrangement.SpaceBetween
 
         ) {
-
-                if (contact.photo != null){
+                if (contact.photo?.isNotEmpty() == true){
                     Image(
                         painter = rememberAsyncImagePainter(
                             model = contact.photo,
@@ -91,7 +100,7 @@ fun ContactCard(
                     ) {
                         Text(
                             text = initials,
-                            color = Color.White,
+                            color = ColorWhite,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
@@ -100,34 +109,41 @@ fun ContactCard(
                 }
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = contact.name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color= ColorText)
+                Text(text = contact.name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color= textColor)
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(text = contact.numberPhone, fontSize = 14.sp, color = ColorText)
+                    Text(text = contact.numberPhone, fontSize = 14.sp, color = textColor)
             }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
             Column(){
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF25D366)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(
-                        onClick = {
-                            val formattedNumber = viewModel.formatPhoneNumberForWhatsApp(contact.numberPhone)
-                            viewModel.sendWhatsAppMessage(context, formattedNumber, "Hola, necesito apoyo 😔")
-                        },
-                        modifier = Modifier.size(40.dp)
+                if(showWhatsappButton) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF25D366)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.whatsapp),
-                            contentDescription = "Llamar",
-                            tint = Color.White
-                        )
+                        IconButton(
+                            onClick = {
+                                val formattedNumber =
+                                    viewModel.formatPhoneNumberForWhatsApp(contact.numberPhone)
+                                viewModel.sendWhatsAppMessage(
+                                    context,
+                                    formattedNumber,
+                                    "Hola, necesito apoyo 😔"
+                                )
+                            },
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.whatsapp),
+                                contentDescription = "Llamar",
+                                tint = Color.White
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))

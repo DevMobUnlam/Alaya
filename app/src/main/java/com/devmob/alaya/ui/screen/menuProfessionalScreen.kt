@@ -14,19 +14,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
+import com.onesignal.OneSignal
 
 @Composable
-fun MenuProfessionalScreen(navController: NavController){
+fun MenuProfessionalScreen(navController: NavController, prefs: SharedPreferences){
+    val auth = FirebaseClient().auth
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(LightBlueColor)
             .padding(16.dp)
     ) {
+        CardContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+            ,
+            enabled = true,
+            content = {
+                Text(
+                    text = "Agregar paciente",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = ColorText,
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.ProfessionalRoutes.SendInvitation.route
+                            )
+                        }
+                )
+            }
+        )
         CardContainer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -39,11 +66,23 @@ fun MenuProfessionalScreen(navController: NavController){
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = ColorText,
-                    modifier = Modifier.padding(18.dp).fillMaxWidth().clickable {
-                        navController.navigate(
-                            NavUtils.LoginRoutes.Login.route
-                        )
-                    }
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.LoginRoutes.Login.route
+                            ) {
+                                popUpTo(NavUtils.LoginRoutes.Login.route) {
+                                    inclusive = true
+                                    saveState = false
+                                }
+                            }
+                            val unloggedUser = auth.currentUser?.email
+                            auth.signOut()
+                            prefs.signOut()
+                            OneSignal.logout()
+                        }
                 )
             }
         )

@@ -1,4 +1,4 @@
-package com.devmob.alaya.components
+package com.devmob.alaya.ui.components
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
@@ -30,7 +30,6 @@ import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.theme.ColorWhite
 
 @Composable
 fun Card(

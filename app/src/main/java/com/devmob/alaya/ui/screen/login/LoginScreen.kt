@@ -3,8 +3,10 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,16 +21,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
 
@@ -50,19 +57,32 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
-    val context = LocalContext.current
 
-    if (viewModel.navigateToPatientHome.value) {
-        navController.navigate(NavUtils.PatientRoutes.Home.route) {
-            popUpTo(NavUtils.PatientRoutes.Home.route) {
-                inclusive = true
+    val context = LocalContext.current
+    var checkLogin by remember { mutableStateOf(false) }
+
+    LaunchedEffect(!checkLogin) {
+        viewModel.checkIfUserWasLoggedIn()
+        checkLogin = true
+    }
+    LaunchedEffect(viewModel.navigateToPatientHome.value) {
+        if (viewModel.navigateToPatientHome.value) {
+            Log.d("LoginScreen", "Navigating to Patient Home")
+            navController.navigate(NavUtils.PatientRoutes.Home.route) {
+                popUpTo(NavUtils.PatientRoutes.Home.route) {
+                    inclusive = true
+                }
             }
         }
     }
-    if (viewModel.navigateToProfessionalHome.value) {
-        navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
-            popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
-                inclusive = true
+
+    LaunchedEffect(viewModel.navigateToProfessionalHome.value) {
+        if (viewModel.navigateToProfessionalHome.value) {
+            Log.d("LoginScreen", "Navigating to Professional Home")
+            navController.navigate(NavUtils.ProfessionalRoutes.Home.route) {
+                popUpTo(NavUtils.ProfessionalRoutes.Home.route) {
+                    inclusive = true
+                }
             }
         }
     }
@@ -77,50 +97,68 @@ fun LoginScreen(
         viewModel.resetError()
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(30.dp)
-        )
-        {
-            Image(
-                painterResource(id = R.drawable.logounologin),
-                contentDescription = stringResource(R.string.logo),
-                modifier = Modifier.size(230.dp)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-            UserForm { email, password ->
-                Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
-                viewModel.singInWithEmailAndPassword(email, password)
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+    if (viewModel.loading.value) {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = ColorWhite
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(R.string.no_tenes_cuenta))
-                Text(text = stringResource(R.string.registrate),
-                    color = ColorPrimary,
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate(NavUtils.LoginRoutes.Register.route) {
-                                popUpTo(NavUtils.LoginRoutes.Register.route) {
-                                    inclusive = true
+                CircularProgressIndicator(
+                    color = ColorPrimary
+                )
+            }
+        }
+
+    } else {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(30.dp)
+            )
+            {
+                Image(
+                    painterResource(id = R.drawable.logounologin),
+                    contentDescription = stringResource(R.string.logo),
+                    modifier = Modifier.size(230.dp)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+                UserForm { email, password ->
+                    Log.d(javaClass.name, context.getString(R.string.logeado_con_correctamente))
+                    viewModel.singInWithEmailAndPassword(email, password)
+                }
+
+                Spacer(modifier = Modifier.height(15.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(R.string.no_tenes_cuenta))
+                    Text(text = stringResource(R.string.registrate),
+                        color = ColorPrimary,
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(NavUtils.LoginRoutes.Register.route) {
+                                    popUpTo(NavUtils.LoginRoutes.Register.route) {
+                                        inclusive = true
+                                    }
                                 }
                             }
-                        }
-                        .padding(start = 5.dp))
+                            .padding(start = 5.dp))
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun UserForm(

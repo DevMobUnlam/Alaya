@@ -1,5 +1,7 @@
 package com.devmob.alaya.ui.screen.TreatmentSummaryScreen
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +27,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.components.Card
-import com.devmob.alaya.navigation.ProfessionalNavigation.NavUtilsProfessional
 import com.devmob.alaya.ui.components.ButtonStyle
+import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -36,13 +38,15 @@ fun TreatmentSummaryScreen(
     firstStep: String,
     secondStep: String,
     thirdStep: String,
-    navController: NavController
+    patientEmail: String,
+    navController: NavController,
+    viewModel: ConfigTreatmentViewModel
 ) {
 
     val selectedOptions = listOfNotNull(
-        getTreatmentOption(firstStep),
-        getTreatmentOption(secondStep),
-        getTreatmentOption(thirdStep)
+        getTreatmentOption(firstStep, viewModel.treatmentOptions),
+        getTreatmentOption(secondStep, viewModel.treatmentOptions),
+        getTreatmentOption(thirdStep, viewModel.treatmentOptions)
     )
     var showModal by remember { mutableStateOf(false) }
 
@@ -79,12 +83,32 @@ fun TreatmentSummaryScreen(
                 }
         ) {
             selectedOptions.forEach { option ->
-                Card(
-                    title = option.title,
-                    subtitle = option.description,
-                    imageResId = getDrawableResId(option.title),
-                    onClick = { }
-                )
+                val drawableResId = getDrawableResId(option.title)
+                val urivacio = ""
+                when {
+                    option.imageUri != urivacio ->
+                        Card(
+                            title = option.title,
+                            subtitle = option.description,
+                            imageUrl = option.imageUri,
+                            onClick = { }
+                        )
+                    drawableResId != 0 ->
+                        Card(
+                            title = option.title,
+                            subtitle = option.description,
+                            imageResId = getDrawableResId(option.title),
+                            onClick = { }
+                        )
+
+          else -> {
+                    Card(
+                        title = option.title,
+                        subtitle = option.description,
+                        onClick = { }
+                    )
+                }
+                }
             }
         }
 
@@ -102,6 +126,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
+                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"
@@ -137,28 +162,6 @@ fun getDrawableResId(title: String): Int {
     }
 }
 
-fun getTreatmentOption(title: String): OptionTreatment? {
-    return when (title) {
-        "Controlar la respiración" -> OptionTreatment(
-            "Controlar la respiración",
-            "Poner una mano en el pecho y otra en el estómago para tomar aire y soltarlo lentamente"
-        )
-
-        "Imaginación guiada" -> OptionTreatment(
-            "Imaginación guiada",
-            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea"
-        )
-
-        "Autoafirmaciones" -> OptionTreatment(
-            "Autoafirmaciones",
-            """
-                Repetir frases:
-                “Soy fuerte y esto pasará”
-                “Tengo el control de mi mente y mi cuerpo”
-                “Me merezco tener alegría y plenitud”
-            """.trimIndent()
-        )
-
-        else -> null
-    }
+fun getTreatmentOption(title: String, options: List<OptionTreatment>): OptionTreatment? {
+    return options.find { it.title == title }
 }

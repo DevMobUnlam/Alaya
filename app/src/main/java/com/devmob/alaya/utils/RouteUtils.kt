@@ -33,13 +33,19 @@ object NavUtils {
         data object Home : ProfessionalRoutes("home_profesional")
         data object PatientProfile : ProfessionalRoutes("patient_profile")
         data object SearchPatient : ProfessionalRoutes("search_patient")
-        data object ConfigTreatment : ProfessionalRoutes("config_treatment")
+        data object ConfigTreatment : ProfessionalRoutes("config_treatment/{patientEmail}")
         data object TreatmentSummary :
-            ProfessionalRoutes("treatment_summary/{firstStep}/{secondStep}/{thirdStep}") {
-            fun createRoute(firstStep: String, secondStep: String, thirdStep: String) =
-                "treatment_summary/$firstStep/$secondStep/$thirdStep"
+            ProfessionalRoutes("treatment_summary/{firstStep}/{secondStep}/{thirdStep}/{patientEmail}") {
+            fun createRoute(firstStep: String, secondStep: String, thirdStep: String, patientEmail: String) =
+                "treatment_summary/$firstStep/$secondStep/$thirdStep/$patientEmail"
         }
         data object MenuProfessional : ProfessionalRoutes("menu_professional")
+        data object PatientIASummary: ProfessionalRoutes("patient_ia_summary/{patientID}")
+        data object AddCustomActivity : ProfessionalRoutes("add_custom_activity/{patientEmail}"){
+            fun createRoute(patientEmail: String) =
+                "add_custom_activity/$patientEmail"
+        }
+        data object SendInvitation : ProfessionalRoutes("send_invitation")
     }
 
     val routeTitleAppBar = mapOf(
@@ -48,8 +54,11 @@ object NavUtils {
         "contact_detail/{contactId}" to "Detalles del Contacto",
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
+        "patient_profile/{email}" to "Perfil del paciente",
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
-        ProfessionalRoutes.TreatmentSummary.route to "Resumen"
+        ProfessionalRoutes.TreatmentSummary.route to "Resumen",
+        ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
+        ProfessionalRoutes.SendInvitation.route to "Enviar invitación"
     )
 
     val routesWithBottomBar = listOf(
@@ -59,7 +68,9 @@ object NavUtils {
         ProfessionalRoutes.SearchPatient.route,
         PatientRoutes.MenuPatient.route,
         ProfessionalRoutes.MenuProfessional.route,
-        ProfessionalRoutes.PatientProfile.route
+        ProfessionalRoutes.PatientProfile.route,
+        ProfessionalRoutes.SendInvitation.route
+
     )
 
     fun isProfessionalRoute(route: String?): Boolean {
