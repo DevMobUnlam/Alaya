@@ -145,7 +145,7 @@ fun ContactScreen(
             secondaryButtonText = "No",
             onConfirm = {
                 if (email != null) {
-                    viewModel.deleteContact(email, currentContact)
+                    viewModel.deleteContact(currentContact)
                 }
                 showDeleteModal = false
                 navController.popBackStack()

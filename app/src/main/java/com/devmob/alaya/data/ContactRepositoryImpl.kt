@@ -48,24 +48,6 @@ class ContactRepositoryImpl : ContactRepository {
         }
     }
 
-    override suspend fun deleteContact(email: String, contact: Contact): FirebaseResult {
-        return try {
-            val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-            updatedContacts.removeIf { it.contactId == contact.contactId }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
-            FirebaseResult.Success
-        } catch (e: Exception) {
-            FirebaseResult.Error(e)
-        }
-    }
-
     override suspend fun uploadImageToStorage(uri: Uri, contactId: String): String? {
         return try {
             val storageRef = FirebaseStorage.getInstance().reference

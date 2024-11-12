@@ -60,9 +60,9 @@ class ContainmentNetworkViewModel(
         }
     }
 
-    fun deleteContact(email: String, contact: Contact) {
+    fun deleteContact(contact: Contact) {
         viewModelScope.launch {
-            val result = contactUseCase.deleteContact(email, contact)
+            val result = contactUseCase.deleteContact(contact)
             handleFirebaseResult(result, "Contacto eliminado con éxito", "Error al eliminar contacto")
 
             if (result is FirebaseResult.Success) {

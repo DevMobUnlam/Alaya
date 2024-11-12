@@ -39,8 +39,21 @@ class ContactUseCase(private val prefs: SharedPreferences) {
         }
     }
 
-    suspend fun deleteContact(email: String, contact: Contact): FirebaseResult {
-        return contactRepositoryImpl.deleteContact(email, contact)
+    suspend fun deleteContact(contact: Contact): FirebaseResult {
+        return try {
+            val email = prefs.getEmail()
+            val user = email?.let { userRepository.getUser(it) }
+
+            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
+            updatedContacts.removeIf { it.contactId == contact.contactId }
+            return if (!email.isNullOrEmpty()) {
+                contactRepositoryImpl.updateContacts(email, updatedContacts)
+            } else {
+                FirebaseResult.Error(Throwable("Email is null"))
+            }
+        } catch (e: Exception) {
+            FirebaseResult.Error(e)
+        }
     }
 
     suspend fun editContact(contact: Contact): FirebaseResult {
