@@ -27,6 +27,7 @@ object NavUtils {
         data object MenuPatient : PatientRoutes ("menu_patient")
         data object CrisisRegistration : PatientRoutes ("crisis_registration")
         data object CrisisRegistrationSummary: PatientRoutes("crisis_registration_summary")
+        data object ActivityDay : PatientRoutes("activity_day")
     }
 
     sealed class ProfessionalRoutes(val route: String) {
@@ -53,6 +54,7 @@ object NavUtils {
         PatientRoutes.AddContact.route to "Agregar Contacto",
         "contact_detail/{contactId}" to "Detalles del Contacto",
         PatientRoutes.CrisisRegistrationSummary.route to "Resumen",
+        PatientRoutes.ActivityDay.route to "Actividades diarias",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
         "patient_profile/{email}" to "Perfil del paciente",
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
@@ -69,7 +71,8 @@ object NavUtils {
         PatientRoutes.MenuPatient.route,
         ProfessionalRoutes.MenuProfessional.route,
         ProfessionalRoutes.PatientProfile.route,
-        ProfessionalRoutes.SendInvitation.route
+        ProfessionalRoutes.SendInvitation.route,
+        PatientRoutes.ActivityDay.route
 
     )
 
