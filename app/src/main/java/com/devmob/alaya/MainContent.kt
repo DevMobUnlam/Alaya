@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -36,7 +35,6 @@ import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
 import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
@@ -64,7 +62,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -77,13 +74,13 @@ fun MainContent(
     isTtsInitialized: Boolean
 ) {
     val context = LocalContext.current
-    val currentRoute = currentRoute(navController)
-    val contactUseCase = ContactUseCase()
-    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val prefs = SharedPreferences(context)
+    val currentRoute = currentRoute(navController)
+    val contactUseCase = ContactUseCase(prefs)
+    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
-    val getUserDataUseCase = GetUserDataUseCase();
+    val getUserDataUseCase = GetUserDataUseCase()
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
 
     val routesWithAppBar = listOf(
@@ -520,7 +517,7 @@ fun MainContent(
                     viewModel = crisisRegistrationViewModel
                 )
             }
-            composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
+            composable(ProfessionalRoutes.AddCustomActivity.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)

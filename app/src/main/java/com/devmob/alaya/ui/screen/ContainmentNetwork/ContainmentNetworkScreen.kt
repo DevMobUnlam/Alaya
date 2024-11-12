@@ -47,7 +47,7 @@ fun ContainmentNetworkScreen(
     ) { contactUri: Uri? ->
         contactUri?.let {
             if (email != null) {
-                viewModel.addContactFromPhone(context, email,it)
+                viewModel.addContactFromPhone(context,it)
             }
         }
     }

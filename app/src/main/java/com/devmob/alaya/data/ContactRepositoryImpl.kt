@@ -9,24 +9,13 @@ import com.devmob.alaya.domain.model.User
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
-class ContactRepositoryImpl() : ContactRepository {
+class ContactRepositoryImpl : ContactRepository {
     private val db = FirebaseClient().db
 
-    override suspend fun addContact(email: String, contact: Contact): FirebaseResult {
+    override suspend fun updateContacts(email: String, contacts: List<Contact>): FirebaseResult {
         return try {
             val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-
-            if (!updatedContacts.any { it.contactId == contact.contactId }) {
-                updatedContacts.add(contact)
-            }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
+            userRef.update("containmentNetwork", contacts).await()
             FirebaseResult.Success
         } catch (e: Exception) {
             FirebaseResult.Error(e)
