@@ -1,6 +1,7 @@
 package com.devmob.alaya.domain
 
 import android.net.Uri
+import android.util.Log
 import com.devmob.alaya.data.ContactRepositoryImpl
 import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.data.preferences.SharedPreferences
@@ -25,8 +26,17 @@ class ContactUseCase(private val prefs: SharedPreferences) {
         }
     }
 
-    suspend fun getContacts(email: String): List<Contact> {
-        return contactRepositoryImpl.getContacts(email)
+    suspend fun getContacts(): List<Contact> {
+        return try {
+            val email = prefs.getEmail()
+            val user = email?.let { userRepository.getUser(it) }
+            val contacts = user?.containmentNetwork ?: emptyList()
+            val defaultContact = contactRepositoryImpl.getDefaultContact()
+            listOf(defaultContact) + contacts.filter { it.contactId != defaultContact.contactId }
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error al obtener los contactos", e)
+            emptyList()
+        }
     }
 
     suspend fun deleteContact(email: String, contact: Contact): FirebaseResult {

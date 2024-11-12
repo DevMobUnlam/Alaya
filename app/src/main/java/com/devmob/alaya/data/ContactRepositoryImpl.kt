@@ -48,22 +48,6 @@ class ContactRepositoryImpl : ContactRepository {
         }
     }
 
-
-    override suspend fun getContacts(email: String): List<Contact> {
-        return try {
-            val snapshot = db.collection("users").document(email).get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val contacts = user?.containmentNetwork ?: emptyList()
-            val defaultContact = getDefaultContact()
-
-            listOf(defaultContact) + contacts.filter { it.contactId != defaultContact.contactId }
-        } catch (e: Exception) {
-            Log.e("Firebase", "Error al obtener los contactos", e)
-            emptyList()
-        }
-    }
-
     override suspend fun deleteContact(email: String, contact: Contact): FirebaseResult {
         return try {
             val userRef = db.collection("users").document(email)
@@ -95,7 +79,7 @@ class ContactRepositoryImpl : ContactRepository {
     }
 
 
-    private fun getDefaultContact(): Contact {
+    override fun getDefaultContact(): Contact {
         return Contact(
             contactId = "4",
             name = "Salud Mental Responde",
