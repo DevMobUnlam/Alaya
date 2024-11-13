@@ -16,6 +16,10 @@ class GetInvitationUseCase {
         return getUserUseCase.getUser(email)?.invitation
     }
 
+    suspend fun getInvitations(email: String): List<Invitation>? {
+        return getUserUseCase.getUser(email)?.invitations
+    }
+
     suspend fun updateInvitation(email: String, fieldName: String, status: InvitationStatus) {
         getUserUseCase.updateUserField(email, fieldName, status.name)
     }
@@ -25,11 +29,16 @@ class GetInvitationUseCase {
     }
 
     suspend fun addPatient(userId: String, patient: Patient) {
-        getUserUseCase.addNewFieldToList(userId, "patients", patient)
+        val document = getUserUseCase.getUser(userId)
+        val currentList = document?.patients ?: emptyList()
+        val updatedList = currentList + patient
+        getUserUseCase.updateUserField(userId, "patients", updatedList)
     }
 
     suspend fun sendInvitation(email: String, professionalEmail: String): Result<Unit> {
-        return getUserUseCase.sendInvitation(email, professionalEmail)
+        val invitationForPatient = Invitation(professionalEmail, InvitationStatus.PENDING)
+        val invitationForProfessional = Invitation(email, InvitationStatus.PENDING)
+        return getUserUseCase.sendInvitation(invitationForPatient, invitationForProfessional)
     }
 
     suspend fun updateProfessionalInvitationList(
