@@ -1,7 +1,6 @@
 package com.devmob.alaya.domain
 
 import com.devmob.alaya.domain.model.Invitation
-import com.devmob.alaya.domain.model.InvitationStatus
 import com.devmob.alaya.domain.model.User
 
 interface GetUserRepository {
@@ -9,9 +8,4 @@ interface GetUserRepository {
     suspend fun updateUserField(userId: String, fieldName: String, fieldValue: Any)
     suspend fun addNewField (userId: String, fieldName: String, newField: Any)
     suspend fun sendInvitation(invitationForPatient: Invitation, invitationForProfessional: Invitation): Result<Unit>
-    suspend fun updateProfessionalInvitationList(
-        professionalEmail: String,
-        patientEmail: String,
-        status: InvitationStatus
-    )
 }

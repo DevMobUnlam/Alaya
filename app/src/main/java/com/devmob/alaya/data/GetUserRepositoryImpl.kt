@@ -4,7 +4,6 @@ import android.util.Log
 import com.devmob.alaya.data.mapper.toUser
 import com.devmob.alaya.domain.GetUserRepository
 import com.devmob.alaya.domain.model.Invitation
-import com.devmob.alaya.domain.model.InvitationStatus
 import com.devmob.alaya.domain.model.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
@@ -43,23 +42,5 @@ class GetUserRepositoryImpl : GetUserRepository {
             Log.e("Firestore", "Error al enviar invitación", e)
             Result.failure(e)
         }
-    }
-
-    override suspend fun updateProfessionalInvitationList(
-        professionalEmail: String,
-        patientEmail: String,
-        status: InvitationStatus
-    ) {
-        val professional = getUser(professionalEmail) ?: return
-
-        val updatedInvitations = professional.invitations.map { invitation ->
-            if (invitation.email == patientEmail) {
-                invitation.copy(status = status)
-            } else invitation
-        }
-
-        db.collection("users").document(professionalEmail)
-            .update("invitations", updatedInvitations)
-            .await()
     }
 }

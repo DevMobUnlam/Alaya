@@ -46,7 +46,13 @@ class GetInvitationUseCase {
         patientEmail: String,
         status: InvitationStatus
     ) {
-        return getUserUseCase.updateProfessionalInvitationList(professionalEmail,patientEmail, status)
+        val professional = getUserUseCase.getUser(professionalEmail) ?: return
+        val updatedInvitations = professional.invitations.map { invitation ->
+            if (invitation.email == patientEmail) {
+                invitation.copy(status = status)
+            } else invitation
+        }
+        return getUserUseCase.updateUserField(professionalEmail,"invitations", updatedInvitations)
     }
 
     suspend fun sendNotification(patientEmail: String, professionalEmail: String): Response<Unit> {
