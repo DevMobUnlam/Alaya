@@ -68,7 +68,10 @@ class CrisisHandlingViewModel (
         viewModelScope.launch {
             _loading.value = true
             try {
+                // Obtén los tratamientos del terapeuta
                 optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+
+                // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
                     stepCrisisList = optionTreatmentsList!!.map { option ->
                         StepCrisis(
@@ -78,9 +81,27 @@ class CrisisHandlingViewModel (
                         )
                     }
                     steps = stepCrisisList
-                    _loading.value = false
+                } else {
+                    // Si no hay tratamiento por terapeuta, carga los pasos predeterminados
+                    steps = listOf(
+                        StepCrisis(
+                            "Controlar la respiración",
+                            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
+                            "image_step_1"
+                        ),
+                        StepCrisis(
+                            "Imaginación guiada",
+                            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
+                            "image_step_2"
+                        ),
+                        StepCrisis(
+                            "Autoafirmaciones",
+                            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
+                            "image_step_3"
+                        )
+                    )
                 }
-
+                _loading.value = false
             } catch (e: Exception) {
                 _loading.value = false
                 Log.d("CrisisHandlingViewModel", "Exception in fetchCrisisSteps $e")
@@ -181,3 +202,4 @@ class CrisisHandlingViewModel (
         stopMusic()
     }
 }
+
