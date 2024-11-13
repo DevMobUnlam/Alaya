@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
@@ -268,7 +269,7 @@ fun MainContent(
                 }
             ) {
                 CrisisHandlingScreen(
-                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase()),
+                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase(prefs, GetUserRepositoryImpl())),
                     navController,
                     textToSpeech,
                     isTtsInitialized

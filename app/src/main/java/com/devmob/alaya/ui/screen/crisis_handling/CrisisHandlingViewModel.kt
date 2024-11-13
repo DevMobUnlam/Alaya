@@ -2,7 +2,6 @@ package com.devmob.alaya.ui.screen.crisis_handling
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -69,7 +68,7 @@ class CrisisHandlingViewModel (
             _loading.value = true
             try {
                 // Obtén los tratamientos del terapeuta
-                optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+                optionTreatmentsList = getCrisisTreatmentUseCase()
 
                 // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
@@ -164,7 +163,7 @@ class CrisisHandlingViewModel (
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
-    fun playMusic(context: Context) {
+    fun playMusic() {
         viewModelScope.launch(Dispatchers.IO) {
             val storage = FirebaseStorage.getInstance()
             val audioRef = storage.reference.child("Songs/song.mp3")
@@ -174,17 +173,12 @@ class CrisisHandlingViewModel (
                 prepare()
                 setVolume(0.45f, 0.45f)
                 start()
-
                 setOnCompletionListener {
                     start()
-
                 }
             }
-
-
-            }
-
-                }
+        }
+    }
 
     fun pauseMusic() {
         player?.pause()
