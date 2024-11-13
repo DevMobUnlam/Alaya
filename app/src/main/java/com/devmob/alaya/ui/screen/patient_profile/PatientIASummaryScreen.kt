@@ -175,7 +175,9 @@ fun PatientIASummaryScreen(
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 8.dp),
                             text = stringResource(R.string.empty_generated_summary),
-                            textAlign = TextAlign.Start,
+                            fontSize = 24.sp,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
                             color = ColorText
 
                         )}
