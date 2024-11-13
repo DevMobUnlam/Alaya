@@ -77,4 +77,5 @@
     <string name="paso_3">Paso 3</string>
     <string name="paso_2">Paso 2</string>
     <string name="paso_1">Paso 1</string>
+    <string name="empty_generated_summary">No hay contenido para resumir</string>
 </resources>

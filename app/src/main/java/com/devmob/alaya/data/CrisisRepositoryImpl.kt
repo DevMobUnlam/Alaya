@@ -26,7 +26,7 @@ class CrisisRepositoryImpl : CrisisRepository {
         }
     }.toResponseFirebase()
 
-    override suspend fun getRegisters(patientId: String, onRegisterUpdate:() -> Unit): Flow<List<CrisisDetailsDB>?> {
+    override suspend fun getRegisters(patientId: String): Flow<List<CrisisDetailsDB>?> {
         return callbackFlow{
 
             try {
@@ -35,6 +35,7 @@ class CrisisRepositoryImpl : CrisisRepository {
                     db.collection("users").document(patientId).collection("crisis_registers")
 
                 registersCollection.orderBy("start", Query.Direction.DESCENDING)
+                    .whereEqualTo("completed", true)
                     .limit(1)
                     .get()
                     .addOnSuccessListener { documents ->
@@ -46,6 +47,7 @@ class CrisisRepositoryImpl : CrisisRepository {
                             val startDate = calendar.time
 
                             registersCollection
+                                .whereEqualTo("completed", true)
                                 .whereGreaterThanOrEqualTo("start", startDate)
                                 .orderBy("start", Query.Direction.ASCENDING)
                                 .addSnapshotListener{snapshot, e ->
@@ -57,7 +59,6 @@ class CrisisRepositoryImpl : CrisisRepository {
 
 
                                         val register = snapshot.map { it.toObject(CrisisDetailsDB::class.java) }
-                                        onRegisterUpdate()
                                         this.trySend(register)
                                     }else{
                                         Log.w("Firebase", "Data not found")

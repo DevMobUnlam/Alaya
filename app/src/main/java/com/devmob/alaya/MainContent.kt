@@ -98,7 +98,8 @@ fun MainContent(
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
-        ProfessionalRoutes.SendInvitation.route
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.PatientIASummary.route
     )
     val factoryCrisisRegistrationVM =
         ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }

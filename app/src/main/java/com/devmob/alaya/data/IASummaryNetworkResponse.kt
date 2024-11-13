@@ -1,14 +1,21 @@
 package com.devmob.alaya.data
 
+import com.devmob.alaya.domain.model.BodySensationIAPrompt
+import com.devmob.alaya.domain.model.EmotionIAPrompt
+import com.devmob.alaya.domain.model.TimeAndPlaceIAPrompt
+import com.devmob.alaya.domain.model.ToolsIAPrompt
 import com.google.gson.annotations.SerializedName
 
 data class IASummaryNetworkResponse(
     @SerializedName("additional_comments")
     val additionalComments: String,
-    @SerializedName("place")
-    val place: String,
+    @SerializedName("timeAndPlace")
+    val timeAndPlace: TimeAndPlaceIAPrompt,
     @SerializedName("emotions")
-    val emotions: List<String>,
+    val emotions: List<EmotionIAPrompt>,
     @SerializedName("sensations")
-    val sensations: List<String>,
+    val sensations: List<BodySensationIAPrompt>,
+    @SerializedName("tools")
+    val tools: List<ToolsIAPrompt>
+
 )

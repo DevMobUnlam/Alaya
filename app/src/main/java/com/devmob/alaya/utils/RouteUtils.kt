@@ -58,7 +58,8 @@ object NavUtils {
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
-        ProfessionalRoutes.SendInvitation.route to "Enviar invitación"
+        ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
+        ProfessionalRoutes.PatientIASummary.route to "Resumen"
     )
 
     val routesWithBottomBar = listOf(
