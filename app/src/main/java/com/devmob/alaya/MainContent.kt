@@ -14,8 +14,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.devmob.alaya.data.ContactRepositoryImpl
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.GetUserRepositoryImpl
+import com.devmob.alaya.data.UserFirestoreRepositoryImpl
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
@@ -77,7 +79,11 @@ fun MainContent(
     val context = LocalContext.current
     val prefs = SharedPreferences(context)
     val currentRoute = currentRoute(navController)
-    val contactUseCase = ContactUseCase(prefs)
+    val contactUseCase = ContactUseCase(
+        prefs,
+        ContactRepositoryImpl(),
+        GetUserRepositoryImpl()
+    )
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val SendInvitationUseCase = GetInvitationUseCase()
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
@@ -463,7 +469,7 @@ fun MainContent(
                     navController,
                     RegisterViewmodel(
                         RegisterNewUserUseCase(),
-                        AddUserToFirestoreUseCase()
+                        AddUserToFirestoreUseCase(UserFirestoreRepositoryImpl())
                     )
                 )
             }

@@ -8,10 +8,11 @@ import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.model.Contact
 import com.devmob.alaya.domain.model.FirebaseResult
 
-class ContactUseCase(private val prefs: SharedPreferences) {
-    private val contactRepositoryImpl = ContactRepositoryImpl()
-    private val userRepository = GetUserRepositoryImpl()
-
+class ContactUseCase(
+    private val prefs: SharedPreferences,
+    private val contactRepositoryImpl: ContactRepositoryImpl,
+    private val userRepository: GetUserRepositoryImpl
+) {
     suspend fun addContact(contact: Contact): FirebaseResult {
         val email = prefs.getEmail()
         val user = email?.let { userRepository.getUser(it) }
@@ -67,7 +68,8 @@ class ContactUseCase(private val prefs: SharedPreferences) {
             var updatedContact = contact
             if (!contact.photo.isNullOrEmpty() && contact.photo != currentContact.photo) {
                 val photoUri = Uri.parse(contact.photo)
-                val photoUrl = contactRepositoryImpl.uploadImageToStorage(photoUri, contact.contactId)
+                val photoUrl =
+                    contactRepositoryImpl.uploadImageToStorage(photoUri, contact.contactId)
                 if (photoUrl != null) {
                     updatedContact = contact.copy(photo = photoUrl)
                 } else {
