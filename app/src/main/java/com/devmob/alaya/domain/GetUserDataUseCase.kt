@@ -1,10 +1,10 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.model.User
 
-class GetUserDataUseCase {
-    private val getUserRepository = GetUserRepositoryImpl()
+class GetUserDataUseCase(
+    private val getUserRepository: GetUserRepository
+) {
 
     suspend fun getUser(email: String): User? {
         return getUserRepository.getUser(email)
