@@ -15,8 +15,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devmob.alaya.data.ContactRepositoryImpl
+import com.devmob.alaya.data.CrisisRepositoryImpl
+import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.GetUserRepositoryImpl
+import com.devmob.alaya.data.LoginRepositoryImpl
+import com.devmob.alaya.data.NotificationRepositoryImpl
+import com.devmob.alaya.data.NotificationService
+import com.devmob.alaya.data.RegisterNewUserRepositoryImpl
+import com.devmob.alaya.data.UploadImageToFirestoreRepositoryImpl
 import com.devmob.alaya.data.UserFirestoreRepositoryImpl
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
@@ -29,6 +36,7 @@ import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
+import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -79,16 +87,47 @@ fun MainContent(
     val context = LocalContext.current
     val prefs = SharedPreferences(context)
     val currentRoute = currentRoute(navController)
+
+    val firebaseClient = FirebaseClient()
+    val getUserRepository = GetUserRepositoryImpl(firebaseClient)
+    val notificationRepository = NotificationRepositoryImpl(NotificationService())
     val contactUseCase = ContactUseCase(
         prefs,
-        ContactRepositoryImpl(),
-        GetUserRepositoryImpl()
+        ContactRepositoryImpl(firebaseClient),
+        getUserRepository
+    )
+    val getInvitationUseCase = GetInvitationUseCase(
+        getUserRepository,
+        notificationRepository
     )
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
-    val SendInvitationUseCase = GetInvitationUseCase()
-    val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
-    val getUserDataUseCase = GetUserDataUseCase()
+    val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
+    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val crisisRepository = CrisisRepositoryImpl(firebaseClient)
+    val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(crisisRepository)
+    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient)
+    val uploadImageToFirestoreRepository = UploadImageToFirestoreRepositoryImpl(firebaseClient)
+    val uploadImageToFirestoreUseCase = UploadImageToFirestoreUseCase(
+        uploadImageToFirestoreRepository,
+        prefs
+    )
+    val saveCrisisTreatmentUseCase = SaveCrisisTreatmentUseCase(
+        crisisTreatmentRepository,
+        uploadImageToFirestoreUseCase
+    )
+    val userRepository = GetUserRepositoryImpl(firebaseClient)
+    val loginRepository = LoginRepositoryImpl(firebaseClient)
+    val loginUseCase = LoginUseCase(loginRepository)
+    val getRoleUseCase = GetRoleUseCase(getUserRepository)
+    val getCrisisTreatmentUseCase = GetCrisisTreatmentUseCase(
+        prefs,
+        userRepository
+    )
+    val registerNewUserRepository = RegisterNewUserRepositoryImpl(firebaseClient)
+    val registerNewUserUseCase = RegisterNewUserUseCase(registerNewUserRepository)
+    val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
+    val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -104,27 +143,28 @@ fun MainContent(
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route
     )
-    val factoryCrisisRegistrationVM =
-        ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
+    val factoryCrisisRegistrationVM = ViewModelFactory {
+        CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
+    }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel =
         viewModel(factory = factoryCrisisRegistrationVM)
     val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
         factory = ViewModelFactory {
             PatientHomeScreenViewmodel(
-                GetUserDataUseCase(),
-                GetInvitationUseCase(),
-                FirebaseClient()
+                getUserDataUseCase,
+                getInvitationUseCase,
+                firebaseClient
             )
         }
     )
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel(
         factory = ViewModelFactory {
-            ConfigTreatmentViewModel(SaveCrisisTreatmentUseCase())
+            ConfigTreatmentViewModel(saveCrisisTreatmentUseCase)
         }
     )
 
     val patientProfileViewModel: PatientProfileViewModel =
-        viewModel(factory = ViewModelFactory { PatientProfileViewModel(GetUserDataUseCase()) })
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -255,7 +295,7 @@ fun MainContent(
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
+                LoginScreen(navController, LoginViewModel(loginUseCase, getRoleUseCase, prefs))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
@@ -275,7 +315,10 @@ fun MainContent(
                 }
             ) {
                 CrisisHandlingScreen(
-                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase(prefs, GetUserRepositoryImpl())),
+                    CrisisHandlingViewModel(
+                        saveCrisisRegistrationUseCase,
+                        getCrisisTreatmentUseCase
+                    ),
                     navController,
                     textToSpeech,
                     isTtsInitialized
@@ -468,8 +511,8 @@ fun MainContent(
                 RegisterScreen(
                     navController,
                     RegisterViewmodel(
-                        RegisterNewUserUseCase(),
-                        AddUserToFirestoreUseCase(UserFirestoreRepositoryImpl())
+                        registerNewUserUseCase,
+                        addUserToFirestoreUseCase
                     )
                 )
             }

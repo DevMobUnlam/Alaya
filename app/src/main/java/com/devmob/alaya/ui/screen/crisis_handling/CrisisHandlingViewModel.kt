@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 
 class CrisisHandlingViewModel (
-    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(),
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase,
     private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
 ): ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())

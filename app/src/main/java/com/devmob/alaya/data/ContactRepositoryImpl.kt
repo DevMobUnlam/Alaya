@@ -9,8 +9,10 @@ import com.devmob.alaya.domain.model.User
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
-class ContactRepositoryImpl : ContactRepository {
-    private val db = FirebaseClient().db
+class ContactRepositoryImpl(
+    firebaseClient: FirebaseClient
+) : ContactRepository {
+    private val db = firebaseClient.db
 
     override suspend fun updateContacts(email: String, contacts: List<Contact>): FirebaseResult {
         return try {

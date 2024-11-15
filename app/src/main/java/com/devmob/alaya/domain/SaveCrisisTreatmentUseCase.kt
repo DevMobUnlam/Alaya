@@ -1,12 +1,11 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
 
 class SaveCrisisTreatmentUseCase(
-    private val customTreatmentRepository: CrisisTreatmentRepositoryImpl = CrisisTreatmentRepositoryImpl(),
-    private val uploadImage: UploadImageToFirestoreUseCase = UploadImageToFirestoreUseCase()
+    private val customTreatmentRepository: CrisisTreatmentRepository,
+    private val uploadImage: UploadImageToFirestoreUseCase
 ) {
     suspend operator fun invoke(
         patientEmail: String,

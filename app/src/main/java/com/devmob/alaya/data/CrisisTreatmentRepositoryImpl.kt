@@ -4,8 +4,10 @@ import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.CrisisTreatmentRepository
 import com.devmob.alaya.domain.model.OptionTreatment
 
-class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
-    private val db = FirebaseClient().db
+class CrisisTreatmentRepositoryImpl(
+    firebaseClient: FirebaseClient
+) : CrisisTreatmentRepository {
+    private val db = firebaseClient.db
     override suspend fun saveCustomTreatment(
         patientEmail: String,
         treatment: List<OptionTreatment?>
