@@ -30,8 +30,8 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideGetUserRepository(): GetUserRepository {
-        return GetUserRepositoryImpl(providesFirebaseClient())
+    fun provideGetUserRepository(firebaseClient: FirebaseClient): GetUserRepository {
+        return GetUserRepositoryImpl(firebaseClient)
     }
 
     @Provides
