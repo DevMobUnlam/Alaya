@@ -6,6 +6,7 @@ import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.Invitation
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.utils.CrisisStepsManager
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
@@ -40,13 +41,16 @@ class PatientHomeScreenViewmodelTest {
     @MockK
     private lateinit var firebaseClient: FirebaseClient
 
+    @MockK
+    private lateinit var crisisStepsManager: CrisisStepsManager
+
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
-        viewModel = PatientHomeScreenViewmodel(getUserData, getInvitationUseCase, firebaseClient)
+        viewModel = PatientHomeScreenViewmodel(getUserData, getInvitationUseCase, firebaseClient, crisisStepsManager)
     }
 
     @After

@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
@@ -49,6 +50,7 @@ fun TreatmentSummaryScreen(
         getTreatmentOption(thirdStep, viewModel.treatmentOptions)
     )
     var showModal by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     ConstraintLayout(
         modifier = Modifier
@@ -126,7 +128,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
-                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
+                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions, context)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"

@@ -1,5 +1,6 @@
 package com.devmob.alaya.data
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.devmob.alaya.data.mapper.toResponseFirebase
@@ -16,13 +17,14 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
 
     override suspend fun addCustomTreatment(
         patientEmail: String,
-        treatment: List<OptionTreatment?>
+        treatment: List<OptionTreatment?>,
+        context: Context
     ) = runCatching {
         val treatmentList = mutableListOf<OptionTreatment>()
 
         treatment.forEach { optionTreatment ->
             optionTreatment?.imageUri?.let { imageUri ->
-                val image = uploadImage(imageUri)
+                val image = uploadImage(imageUri, context)
                 if (image != null) {
                     val updatedTreatment = optionTreatment.copy(imageUri = image.toString())
                     treatmentList.add(updatedTreatment)

@@ -257,12 +257,7 @@ fun MainContent(
                     LoginViewModel(
                         LoginUseCase(),
                         GetRoleUseCase(),
-                        prefs,
-                        CrisisStepsManager(
-                            crisisStepsDao,
-                            GetCrisisTreatmentUseCase(crisisStepsDao),
-                            context
-                        )
+                        prefs
                     )
                 )
             }

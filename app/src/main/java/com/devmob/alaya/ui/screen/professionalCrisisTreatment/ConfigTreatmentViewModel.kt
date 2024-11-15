@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.professionalCrisisTreatment
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -59,9 +60,9 @@ class ConfigTreatmentViewModel(
         _treatmentOptions.add(activity)
     }
 
-    fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment>) {
+    fun saveCrisisTreatment(patientEmail: String, listOfTreatment: List<OptionTreatment>, context: Context) {
         viewModelScope.launch {
-            when (saveCrisisUseCase(patientEmail, listOfTreatment)) {
+            when (saveCrisisUseCase(patientEmail, listOfTreatment, context)) {
                 is FirebaseResult.Error -> {
                     Log.d("saveCrisisTreatment", "Cannot save the CrisisTreatment")
                     _showError.value = true
