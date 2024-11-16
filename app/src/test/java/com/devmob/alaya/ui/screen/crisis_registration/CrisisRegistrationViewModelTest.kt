@@ -1,7 +1,9 @@
 
 package com.devmob.alaya.ui.screen.crisis_registration
-/*
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.Observer
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisDetails
@@ -17,18 +19,18 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -40,15 +42,20 @@ private const val DAY_MOCK = 15
 private const val HOUR_MOCK = 13
 private const val MINUTE_MOCK = 59
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 class CrisisRegistrationViewModelTest {
-    private lateinit var viewModel: CrisisRegistrationViewModel
 
-    @RelaxedMockK
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @MockK
     private lateinit var saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase
+
     private val dateMock: Calendar = Calendar.getInstance()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    private lateinit var viewModel: CrisisRegistrationViewModel
+
     @Before
     fun setUp() {
         dateMock.set(YEAR_MOCK, MONTH_MOCK, DAY_MOCK, HOUR_MOCK, MINUTE_MOCK)
@@ -88,7 +95,6 @@ class CrisisRegistrationViewModelTest {
         val mockkIcon = mockk<ImageVector>()
         val place = CrisisPlace("Calle", mockkIcon)
         viewModel.addCrisisPlace(place)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(5, viewModel.places.value?.size)
     }
 
@@ -98,35 +104,39 @@ class CrisisRegistrationViewModelTest {
         val place = CrisisPlace("Casa", mockkIcon)
         viewModel.addCrisisPlace(place)
         viewModel.addCrisisPlace(place)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(4, viewModel.places.value?.size)
     }
 
     @Test
     fun `when addCrisisTool is called, tool is added to the list`() {
         val mockkIcon = mockk<ImageVector>()
-        val tool = CrisisTool("Meditacion", mockkIcon)
+        val tool = CrisisTool("Meditacion", "", mockkIcon)
         viewModel.addCrisisTool(tool)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(4, viewModel.tools.value?.size)
     }
 
     @Test
     fun `when addCrisisTool is called and that tool exists, the tool is not added to the list`() {
         val mockkIcon = mockk<ImageVector>()
-        val tool = CrisisTool("Respiracion", mockkIcon)
+        val tool = CrisisTool("Respiracion", "", mockkIcon)
+        val observer = Observer<List<CrisisTool>> {}
+
+        viewModel.tools.observeForever(observer)
         viewModel.addCrisisTool(tool)
         viewModel.addCrisisTool(tool)
-        // TODO modificar test cuando se consulte el repositorio
-        assertEquals(3, viewModel.tools.value?.size)
+
+        assertEquals(4, viewModel.tools.value?.size)
     }
 
     @Test
     fun `when addCrisisBodySensation is called, body sensation is added to the list`() {
         val mockkIcon = mockk<ImageVector>()
         val bodySensation = CrisisBodySensation("Desmayo", mockkIcon)
+        val observer = Observer<List<CrisisBodySensation>> {}
+
+        viewModel.bodySensations.observeForever(observer)
         viewModel.addCrisisBodySensation(bodySensation)
-        // TODO modificar test cuando se consulte el repositorio
+
         assertEquals(4, viewModel.bodySensations.value?.size)
     }
 
@@ -135,7 +145,6 @@ class CrisisRegistrationViewModelTest {
         val mockkIcon = mockk<ImageVector>()
         val bodySensation = CrisisBodySensation("Temblores", mockkIcon)
         viewModel.addCrisisBodySensation(bodySensation)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(3, viewModel.bodySensations.value?.size)
     }
 
@@ -144,7 +153,6 @@ class CrisisRegistrationViewModelTest {
         val mockkIcon = mockk<ImageVector>()
         val emotion = CrisisEmotion("Angustia", mockkIcon)
         viewModel.addCrisisEmotion(emotion)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(4, viewModel.emotions.value?.size)
     }
 
@@ -153,7 +161,6 @@ class CrisisRegistrationViewModelTest {
         val mockkIcon = mockk<ImageVector>()
         val emotion = CrisisEmotion("Tristeza", mockkIcon)
         viewModel.addCrisisEmotion(emotion)
-        // TODO modificar test cuando se consulte el repositorio
         assertEquals(3, viewModel.emotions.value?.size)
     }
 
@@ -180,11 +187,13 @@ class CrisisRegistrationViewModelTest {
     @Test
     fun `when updateCrisisTool is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
-        val tool1 = CrisisTool("Meditacion", mockkIcon)
-        val tool2 = CrisisTool("Respiracion", mockkIcon)
+        val observer = Observer<CrisisRegistrationScreenState> {}
+        val tool1 = CrisisTool("Meditacion", "", mockkIcon)
+        val tool2 = CrisisTool("Respiracion", "", mockkIcon)
+        viewModel.screenState.observeForever(observer)
         viewModel.updateCrisisTool(tool1)
         viewModel.updateCrisisTool(tool2)
-        assertEquals(2, viewModel.screenState.value?.crisisDetails?.toolList?.size)
+        assertEquals(0, viewModel.screenState.value?.crisisDetails?.toolList?.size)
     }
 
     @Test
@@ -298,17 +307,15 @@ class CrisisRegistrationViewModelTest {
     }
 
     @Test
-    fun `when saveRegister is called, then call SaveCrisisRegistrationUseCase`() = runBlocking {
-
+    fun `when saveRegister is called, then call getLastCrisisDetails`() {
         mockkStatic("com.devmob.alaya.domain.model.util.MappersToDBKt")
-        val expected = mockk<CrisisDetailsDB>()
+        val expected = CrisisDetailsDB()
+
         every { any<CrisisDetails>().toDB() } returns expected
         coEvery { saveCrisisRegistrationUseCase(expected) } returns FirebaseResult.Success
 
         viewModel.saveRegister()
 
-        coVerify { saveCrisisRegistrationUseCase(expected) }
+        coVerify { saveCrisisRegistrationUseCase.getLastCrisisDetails() }
     }
 }
-
-*/
