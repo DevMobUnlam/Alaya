@@ -70,7 +70,7 @@ class SaveCrisisRegistrationUseCaseTest{
     }
 
     @Test
-    fun `getLastCrisisDetails calls repository method`() = runBlocking{
+    fun `when getLastCrisisDetails is called, last crisis is returned`() = runBlocking{
         val crisisDetails = CrisisDetailsDB().copy(place = "Universidad")
 
         coEvery { crisisRepository.getLastCrisisDetails() } returns crisisDetails
