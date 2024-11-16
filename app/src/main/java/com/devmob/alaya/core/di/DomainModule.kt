@@ -1,6 +1,5 @@
 package com.devmob.alaya.core.di
 
-import android.content.Context
 import com.devmob.alaya.domain.CrisisRepository
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.devmob.alaya.domain.GetUserRepository
@@ -9,7 +8,6 @@ import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 

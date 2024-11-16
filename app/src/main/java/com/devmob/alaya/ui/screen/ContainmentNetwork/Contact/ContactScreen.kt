@@ -45,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import coil.compose.rememberImagePainter
 import com.devmob.alaya.R
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
@@ -146,7 +145,7 @@ fun ContactScreen(
             secondaryButtonText = "No",
             onConfirm = {
                 if (email != null) {
-                    viewModel.deleteContact(email, currentContact)
+                    viewModel.deleteContact(currentContact)
                 }
                 showDeleteModal = false
                 navController.popBackStack()
@@ -161,9 +160,7 @@ fun ContactScreen(
                 contact = currentContact,
                 onDismiss = { showEditModal = false },
                 onSave = { updatedContact ->
-                    if (email != null) {
-                        viewModel.editContact(email, updatedContact)
-                    }
+                    viewModel.editContact(updatedContact)
                     showEditModal = false
                 }
             )
@@ -220,7 +217,6 @@ fun EditContactModal(
                     contentAlignment = Alignment.Center
                 ) {
                     if (photoUri == null) {
-                        val initials = initials
                         Text(
                             text = initials,
                             color = ColorWhite,

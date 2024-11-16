@@ -1,6 +1,7 @@
 package com.devmob.alaya.core.di
 
 import com.devmob.alaya.data.CrisisRepositoryImpl
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.CrisisRepository
 import com.devmob.alaya.domain.GetUserRepository
@@ -24,12 +25,19 @@ object DataModule {
     @Provides
     @Singleton
     fun provideCrisisRepository(): CrisisRepository {
-        return CrisisRepositoryImpl()
+        return CrisisRepositoryImpl(providesFirebaseClient())
     }
 
     @Provides
     @Singleton
     fun provideGetUserRepository(): GetUserRepository {
-        return GetUserRepositoryImpl()
+        return GetUserRepositoryImpl(providesFirebaseClient())
     }
+
+    @Provides
+    @Singleton
+    fun providesFirebaseClient(): FirebaseClient {
+        return FirebaseClient()
+    }
+
 }
