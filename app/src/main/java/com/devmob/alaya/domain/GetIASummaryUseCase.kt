@@ -45,7 +45,6 @@ class GetIASummaryUseCase @Inject constructor(
                     emit("")
                 }else{
                     val json = gson.toJson(IASummaryPrompt(patientName = patientName?:"", input = mappedList?: emptyList()))
-                    Log.v("getiasummary", json)
 
                     val prompt = "$instructions \n $json"
                     emit(generativeModel.generateContent(prompt).text?: "")

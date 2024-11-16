@@ -1,30 +1,34 @@
 package com.devmob.alaya.ui.screen.searchUser
 
-import com.devmob.alaya.data.FirebaseClient
-import com.devmob.alaya.data.GetUserRepositoryImpl
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.GetUserRepository
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.User
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
+import io.mockk.mockkStatic
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.mockito.BDDMockito.Then
 
 class SearchUserViewModelTest {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: SearchUserViewModel
 
@@ -34,8 +38,6 @@ class SearchUserViewModelTest {
     @MockK
     private lateinit var getUserRepository: GetUserRepository
 
-    @MockK
-    private lateinit var firebaseClient: FirebaseClient
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -45,9 +47,10 @@ class SearchUserViewModelTest {
     fun setUp() {
         MockKAnnotations.init(this,relaxed = true)
         Dispatchers.setMain(testDispatcher)
-        getUserRepository = GetUserRepositoryImpl(firebaseClient)
         getUserDataUseCase = GetUserDataUseCase(getUserRepository)
         viewModel = SearchUserViewModel(getUserDataUseCase)
+        mockkStatic("kotlinx.coroutines.tasks.TasksKt")
+
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,36 +62,33 @@ class SearchUserViewModelTest {
     }
 
     @Test
-    fun `given there are patients, when patients are loaded, patients is updated`(){
+    fun `given there are patients, when patients are loaded, patients is updated`() = runBlocking{
+
         //GIVEN
         val patient = Patient()
-        val professional = User(patients = listOf(patient))
-        coEvery { getUserRepository.getUser("") } returns professional
-        coEvery { getUserDataUseCase.getUser("")} returns professional
-//        coEvery { firebaseClient.db.collection("users").document(professional.email).get().await() } returns professional
+        val professional = User(email = "email@test.com",patients = listOf(patient))
+        coEvery { getUserDataUseCase.getUser(professional.email)} returns professional
 
         //WHEN
-
-        viewModel.loadPatients("")
+        viewModel.loadPatients(professional.email)
 
         //THEN
-        assertEquals(1,viewModel.patients.size)
+        Assert.assertEquals(1,viewModel.patients.size)
 
     }
 
-    // when there are no patients
 
     @Test
-    fun `given there are no patients, when patients are loaded, patients is empty`(){
+    fun `given there are no patients, when patients are loaded, patients is empty`() = runBlocking{
+
         //GIVEN
 
-        val professional = User(patients = emptyList())
-        coEvery { getUserRepository.getUser("") } returns professional
-        coEvery { getUserDataUseCase.getUser("")} returns professional
+        val professional = User(email = "email@test.com")
+        coEvery { getUserDataUseCase.getUser(professional.email)} returns professional
 
         //WHEN
 
-        viewModel.loadPatients("")
+        viewModel.loadPatients(professional.email)
 
         //THEN
         assertEquals(emptyList<Patient>(),viewModel.patients)

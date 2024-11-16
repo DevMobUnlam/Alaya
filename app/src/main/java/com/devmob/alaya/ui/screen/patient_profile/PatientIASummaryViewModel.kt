@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PatientIASummaryViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val getIASummaryUseCase: GetIASummaryUseCase
 ): ViewModel() {
 
@@ -24,7 +24,7 @@ class PatientIASummaryViewModel @Inject constructor(
     val uiState: StateFlow<IASummaryUIState> = _uiState.asStateFlow()
 
 
-    private val patientId: String = savedStateHandle["patientID"]?:""
+    private lateinit var patientId: String
 
 
     init {
@@ -32,6 +32,8 @@ class PatientIASummaryViewModel @Inject constructor(
     }
 
     private fun summarize(){
+
+        patientId = savedStateHandle["patientID"]?:""
 
         _uiState.value = IASummaryUIState.Loading
 
