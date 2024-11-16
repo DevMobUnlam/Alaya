@@ -24,8 +24,10 @@ class CrisisStepsManager(
 
     suspend fun updateCrisisSteps(patientEmail: String) {
         if (shouldUpdateCrisisStepsLocalDB(patientEmail)) {
-            crisisStepsDao.deleteAllCrisisSteps()
-            deleteImagesFromCache()
+            withContext(Dispatchers.IO) {
+                crisisStepsDao.deleteAllCrisisSteps()
+                deleteImagesFromCache()
+            }
             crisisStepsRemoteDB?.let { steps ->
                 steps.forEach { step ->
                     val localPath = downloadAndCacheImage(step.imageUri)
@@ -61,7 +63,10 @@ class CrisisStepsManager(
         crisisStepsRemoteDB = getCrisisTreatmentUseCase.getDataFromRemoteDatabase(patientEmail)
         crisisStepsLocalDB = crisisStepsDao.getCrisisSteps()
 
-        return (crisisStepsRemoteDB != crisisStepsLocalDB) || crisisStepsLocalDB.isNullOrEmpty()
+        val remoteData = crisisStepsRemoteDB?.map { Triple(it.title, it.description, it.imageUri) }
+        val localData = crisisStepsLocalDB?.map { Triple(it.title, it.description, it.imageUri) }
+
+        return (remoteData != localData) || localData.isNullOrEmpty()
     }
 
     private fun deleteImagesFromCache() {
