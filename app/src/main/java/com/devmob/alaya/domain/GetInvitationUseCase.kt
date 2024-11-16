@@ -15,10 +15,6 @@ class GetInvitationUseCase(
         return getUserRepository.getUser(email)?.invitation
     }
 
-    suspend fun getInvitations(email: String): List<Invitation>? {
-        return getUserRepository.getUser(email)?.invitations
-    }
-
     suspend fun updateInvitation(email: String, fieldName: String, status: InvitationStatus) {
         getUserRepository.updateUserField(email, fieldName, status.name)
     }
