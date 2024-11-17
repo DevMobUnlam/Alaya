@@ -24,7 +24,7 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
 
         treatment.forEach { optionTreatment ->
             optionTreatment?.imageUri?.let { imageUri ->
-                val image = uploadImage(imageUri, context)
+                val image = uploadImage(imageUri)
                 if (image != null) {
                     val updatedTreatment = optionTreatment.copy(imageUri = image.toString())
                     treatmentList.add(updatedTreatment)
