@@ -253,7 +253,8 @@ fun CrisisRegistrationScreen(
                                 )
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
-                        }
+                        },
+                        onCancel = {shouldShowAddNewCard = false}
                     )
                 }
             }
