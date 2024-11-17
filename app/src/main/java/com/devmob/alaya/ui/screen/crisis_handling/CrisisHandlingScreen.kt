@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -109,9 +110,7 @@ fun CrisisHandlingScreen(
 
 
 
-    BackHandler {
-        // Comportamiento del botón "Atrás"
-    }
+    BackHandler {}
     if (!viewModel.optionTreatmentsList.isNullOrEmpty()) {
         viewModel.loading.value = false
     }
@@ -231,41 +230,7 @@ fun CrisisHandlingScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                     })
             }
-            //TODO acá se reemplazó la animación de Lottie por la image de Firestore
-            /*
-                        val composition by rememberLottieComposition(
-                            spec = LottieCompositionSpec.RawRes(
-                                when (currentStep?.image) {
-                                    "image_step_1" -> R.raw.crisis_step1_animation
-                                    "image_step_2" -> R.raw.animation
-                                    "image_step_3" -> R.raw.crisis_step3_animation
-                                    else -> R.raw.feedback_congratulations_animation // Animación por defecto si no hay un paso válido
-                                }
-                            )
-                        )*/
-            /*
-                        val composition by rememberLottieComposition(
-                            spec = LottieCompositionSpec.Url(currentStep?.image)
-                        )
 
-                        val progress by animateLottieCompositionAsState(
-                            composition = composition,
-                            iterations = LottieConstants.IterateForever
-                        )
-
-                        LottieAnimation(
-                            composition = composition,
-                            progress = progress,
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                                .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
-                                .constrainAs(lottieAnimation) {
-                                    top.linkTo(title.bottom, margin = 24.dp)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(description.top, margin = 16.dp)
-                                }
-                        )*/
             SubcomposeAsyncImage(
                 model = currentStep?.image,
                 contentDescription = null,
@@ -289,6 +254,14 @@ fun CrisisHandlingScreen(
                         )
                     }
                 },
+                error = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Error al cargar imagen", color = Color.Red)
+                    }
+                }
             )
 
             if (currentStep != null) {
