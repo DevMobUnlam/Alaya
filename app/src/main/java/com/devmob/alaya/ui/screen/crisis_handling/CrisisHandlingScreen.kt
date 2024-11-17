@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.ui.components.Button
@@ -60,8 +59,6 @@ fun CrisisHandlingScreen(
     val currentStepIndex = viewModel.currentStepIndex
     val currentStep = viewModel.currentStep
     val totalSteps = viewModel.steps.size
-
-    var loadingScreen by rememberSaveable { mutableStateOf(true) }
 
     val context = LocalContext.current
     val isPlaying = viewModel.isPlaying
@@ -269,19 +266,29 @@ fun CrisisHandlingScreen(
                                     bottom.linkTo(description.top, margin = 16.dp)
                                 }
                         )*/
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = currentStep?.imageLocalPath ?: currentStep?.image,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                    .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+                    .fillMaxWidth(0.8f)
+                    .aspectRatio(1f)
                     .constrainAs(lottieAnimation) {
                         top.linkTo(title.bottom, margin = 24.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(description.top, margin = 16.dp)
                     },
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = ColorPrimary
+                        )
+                    }
+                },
             )
 
             if (currentStep != null) {
