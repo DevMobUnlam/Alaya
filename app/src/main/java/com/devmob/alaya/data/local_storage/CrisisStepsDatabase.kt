@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.devmob.alaya.domain.model.OptionTreatment
 
-@Database(entities = [OptionTreatment::class], version = 1)
+@Database(entities = [OptionTreatment::class], version = 2)
 abstract class CrisisStepsDatabase : RoomDatabase() {
     abstract fun crisisStepsDao(): CrisisStepsDao
 
@@ -18,10 +18,8 @@ abstract class CrisisStepsDatabase : RoomDatabase() {
         fun getDataBase(context: Context): CrisisStepsDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    CrisisStepsDatabase::class.java,
-                    DATABASE_NAME
-                ).build()
+                    context.applicationContext, CrisisStepsDatabase::class.java, DATABASE_NAME
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }
