@@ -1,7 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.speech.tts.TextToSpeech
 import ExpandableButton
+import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,20 +27,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import coil.compose.SubcomposeAsyncImage
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.model.StepCrisis
@@ -67,7 +65,6 @@ fun CrisisHandlingScreen(
     val currentStep = viewModel.currentStep
     val totalSteps = viewModel.steps.size
 
-    val context = LocalContext.current
     val isPlaying = viewModel.isPlaying
 
 
