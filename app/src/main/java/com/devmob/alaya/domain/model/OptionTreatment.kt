@@ -10,8 +10,7 @@ data class OptionTreatment(
     val title: String,
     val description: String,
     val imageUri: String,
-    val imageResId: Int = R.drawable.logounologin,
-    @ColumnInfo(name = "image_local_path") val imageLocalPath: String? = null
+    val imageResId: Int = R.drawable.logounologin
 ) {
     constructor() : this("","", "")
 }

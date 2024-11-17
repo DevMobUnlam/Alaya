@@ -267,7 +267,7 @@ fun CrisisHandlingScreen(
                                 }
                         )*/
             SubcomposeAsyncImage(
-                model = currentStep?.imageLocalPath ?: currentStep?.image,
+                model = currentStep?.image,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)

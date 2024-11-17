@@ -1,11 +1,12 @@
 package com.devmob.alaya.utils
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
-import coil.request.CachePolicy
+import coil.imageLoader
 import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.devmob.alaya.data.local_storage.CrisisStepsDao
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.OptionTreatment
@@ -30,33 +31,30 @@ class CrisisStepsManager(
             }
             crisisStepsRemoteDB?.let { steps ->
                 steps.forEach { step ->
-                    val localPath = downloadAndCacheImage(step.imageUri)
-                    val updatedStep = step.copy(imageLocalPath = localPath)
-                    crisisStepsDao.insertCrisisStep(updatedStep)
+                    preloading(Uri.parse(step.imageUri))
+                    crisisStepsDao.insertCrisisStep(step)
                 }
             }
         }
     }
 
-    private suspend fun downloadAndCacheImage(imageUrl: String): String? {
-        val imageLoader = ImageLoader.Builder(context).build()
-
+    private fun preloading(uri: Uri?) {
         val request = ImageRequest.Builder(context)
-            .data(imageUrl)
-            .diskCacheKey(imageUrl)
-            .diskCachePolicy(CachePolicy.ENABLED)
+            .data(uri)
+            .crossfade(true)
+            .listener(
+                onStart = { Log.d("Preloading", "Starting to preload $uri") },
+                onSuccess = { _, _ -> Log.d("Preloading", "Successfully preloaded $uri") },
+                onError = { _, throwable ->
+                    Log.e(
+                        "Preloading",
+                        "Error preloading $uri $throwable"
+                    )
+                }
+            )
             .build()
 
-        return withContext(Dispatchers.IO) {
-            val result = imageLoader.execute(request)
-            if (result is SuccessResult) {
-                val diskCache = imageLoader.diskCache
-                val cacheFile = diskCache?.get(imageUrl)?.data?.toFile()
-                cacheFile?.absolutePath
-            } else {
-                null
-            }
-        }
+        context.imageLoader.enqueue(request)
     }
 
     private suspend fun shouldUpdateCrisisStepsLocalDB(patientEmail: String): Boolean {
@@ -71,7 +69,7 @@ class CrisisStepsManager(
 
     private fun deleteImagesFromCache() {
         val imageLoader = ImageLoader.Builder(context).build()
-        val diskCache = imageLoader.diskCache
-        diskCache?.clear()
+        imageLoader.memoryCache?.clear()
+        imageLoader.diskCache?.clear()
     }
 }
