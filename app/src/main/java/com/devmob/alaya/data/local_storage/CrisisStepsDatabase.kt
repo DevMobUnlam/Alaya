@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.devmob.alaya.domain.model.OptionTreatment
 
-@Database(entities = [OptionTreatment::class], version = 2)
+@Database(entities = [OptionTreatment::class], version = 3)
 abstract class CrisisStepsDatabase : RoomDatabase() {
     abstract fun crisisStepsDao(): CrisisStepsDao
 

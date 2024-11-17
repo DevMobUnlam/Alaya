@@ -1,27 +1,28 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
 import com.devmob.alaya.data.local_storage.CrisisStepsDao
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.model.OptionTreatment
 
-class GetCrisisTreatmentUseCase(private val crisisStepsDao: CrisisStepsDao) {
+class GetCrisisTreatmentUseCase(
+    private val prefs: SharedPreferences,
+    private val userRepository: GetUserRepository,
+    private val crisisStepsDao: CrisisStepsDao
+) {
 
-    private val CustomTreatmentRepository = CrisisTreatmentRepositoryImpl()
-
-    suspend operator fun invoke(
-        patientEmail: String
-    ): List<OptionTreatment>? {
+    suspend operator fun invoke(): List<OptionTreatment>? {
         if (getDataFromLocalDatabase().isEmpty()) {
-            val crisisSteps = getDataFromRemoteDatabase(patientEmail)
-            crisisSteps?.let { updateLocalDatabase(it) }
-            return crisisSteps
+            val email = prefs.getEmail()
+            val stepsCrisis = email?.let { getDataFromRemoteDatabase(it) }
+            stepsCrisis?.let { updateLocalDatabase(it) }
+            return stepsCrisis
         } else {
             return getDataFromLocalDatabase()
         }
     }
 
     suspend fun getDataFromRemoteDatabase(patientEmail: String): List<OptionTreatment>? {
-        return CustomTreatmentRepository.getCustomTreatment(patientEmail)
+        return userRepository.getUser(patientEmail)?.stepCrisis
     }
 
     private suspend fun getDataFromLocalDatabase(): List<OptionTreatment> {

@@ -4,19 +4,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.GetUserRepositoryImpl
+import com.devmob.alaya.data.UploadImageToFirestoreRepositoryImpl
+import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
+import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
-import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
-import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
@@ -28,15 +33,20 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun ProfessionalNavigation(navController: NavHostController) {
     val currentRoute = NavUtilsProfessional.currentRoute(navController)
-
+    val context = LocalContext.current
+    val prefs = SharedPreferences(context)
+    val firebaseClient = FirebaseClient()
     val contactViewModel: ContactViewModel = hiltViewModel()
     val patientIASummaryViewModel: PatientIASummaryViewModel = hiltViewModel()
 
-    val getUserDataUseCase = GetUserDataUseCase();
+    val getUserDataUseCase = GetUserDataUseCase(GetUserRepositoryImpl(firebaseClient))
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
 
-    val saveCrisisUseCase = SaveCrisisTreatmentUseCase()
-    val configTreatmentViewModel = ConfigTreatmentViewModel(saveCrisisUseCase)
+    val saveCrisisTreatmentUseCase = SaveCrisisTreatmentUseCase(
+        CrisisTreatmentRepositoryImpl(firebaseClient),
+        UploadImageToFirestoreUseCase(UploadImageToFirestoreRepositoryImpl(firebaseClient), prefs)
+    )
+    val configTreatmentViewModel = ConfigTreatmentViewModel(saveCrisisTreatmentUseCase)
 
 
     Scaffold(
@@ -61,7 +71,7 @@ fun ProfessionalNavigation(navController: NavHostController) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.ProfessionalRoutes.Home.route) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase, firebaseClient), navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(searchUserViewModel, navController)

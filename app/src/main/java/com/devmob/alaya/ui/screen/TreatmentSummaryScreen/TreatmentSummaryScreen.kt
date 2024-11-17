@@ -128,7 +128,7 @@ fun TreatmentSummaryScreen(
             Button(
                 onClick = {
                     showModal = true
-                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions, context)
+                    viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"

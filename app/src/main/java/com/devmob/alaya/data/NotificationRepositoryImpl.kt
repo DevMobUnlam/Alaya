@@ -4,9 +4,10 @@ import com.devmob.alaya.ONESIGNAL_APP_ID
 import com.devmob.alaya.domain.NotificationRepository
 import retrofit2.Response
 
-class NotificationRepositoryImpl : NotificationRepository {
+class NotificationRepositoryImpl(
+    private val api: NotificationService
+) : NotificationRepository {
 
-    private val api = NotificationService()
     override suspend fun sendNotificationInvitation(
         patientEmail: String,
         professionalEmail: String

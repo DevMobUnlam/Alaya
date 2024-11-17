@@ -9,8 +9,9 @@ import com.devmob.alaya.R
 data class OptionTreatment(
     val title: String,
     val description: String,
-    val imageUri: String,
-    val imageResId: Int = R.drawable.logounologin
+    val imageUri: String = "",
+    val imageResId: Int = R.drawable.logounologin,
+    val animationRes: Int? = null
 ) {
     constructor() : this("","", "")
 }
