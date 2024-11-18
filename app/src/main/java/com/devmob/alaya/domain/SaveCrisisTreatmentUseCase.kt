@@ -24,6 +24,6 @@ class SaveCrisisTreatmentUseCase(
                 }
             }
         }
-        return customTreatmentRepository.saveCustomTreatment(patientEmail, treatment)
+        return customTreatmentRepository.saveCustomTreatment(patientEmail, treatmentList)
     }
 }
