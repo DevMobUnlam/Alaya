@@ -163,13 +163,13 @@ fun CrisisRegistrationScreen(
                             viewModel.updateStartDate(newDate)
                         },
                         onStartTimeChange = { newTime ->
-                            viewModel.updateStartTime(newTime)
+                            viewModel.updateStartDate(newTime)
                         },
                         onEndDateChange = { newDate ->
                             viewModel.updateEndDate(newDate)
                         },
                         onEndTimeChange = { newTime ->
-                            viewModel.updateEndTime(newTime)
+                            viewModel.updateEndDate(newTime)
                         },
                         crisisTimeDetails = crisisTimeDetails
                     )
@@ -647,7 +647,7 @@ object GridElementsRepository {
 
     fun returnAvailableTools(): List<CrisisTool> {
         return listOf(
-            CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview, id = "Imaginación guiada"), //Id temporal, para que coincida con el texto de la db
+            CrisisTool(name = "Imaginacion guiada", icon = Icons.Outlined.Preview, id = "Imaginación guiada"),
             CrisisTool(name = "Respiracion", icon = Icons.Outlined.Air, id = "Controlar la respiración"),
             CrisisTool(name = "Autoafirmaciones", icon = Icons.Outlined.Psychology, id = "Autoafirmaciones"),
         )

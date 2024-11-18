@@ -224,7 +224,7 @@ fun MainContent(
                     )
                 }
             ) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase, firebaseClient), navController)
             }
             composable(
                 route = "${ProfessionalRoutes.PatientProfile.route}/{email}",

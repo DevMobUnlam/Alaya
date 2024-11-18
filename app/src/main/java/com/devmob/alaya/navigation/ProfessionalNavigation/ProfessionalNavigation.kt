@@ -71,7 +71,7 @@ fun ProfessionalNavigation(navController: NavHostController) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(NavUtils.ProfessionalRoutes.Home.route) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase, firebaseClient), navController)
             }
             composable(NavUtils.ProfessionalRoutes.PatientProfile.route){
                 SearchUserScreen(searchUserViewModel, navController)
