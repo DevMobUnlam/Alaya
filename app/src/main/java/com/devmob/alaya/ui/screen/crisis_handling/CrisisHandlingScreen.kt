@@ -66,6 +66,7 @@ fun CrisisHandlingScreen(
     val totalSteps = viewModel.steps.size
 
     val isPlaying = viewModel.isPlaying
+    val isVoiceOn = viewModel.isVoiceOn
 
 
     DisposableEffect(isPlaying) {
@@ -75,40 +76,15 @@ fun CrisisHandlingScreen(
             viewModel.stopMusic()
         }
         onDispose {
+            viewModel.setShouldSpeakVoice(false)
             viewModel.stopMusic()
         }
     }
 
-    var shouldVoiceSpeak by remember{mutableStateOf(true)}
-    var isVoiceOn by remember{mutableStateOf(false)}
 
-    LaunchedEffect(currentStepIndex) {
 
-        if (textToSpeech.isSpeaking) {
-            textToSpeech.stop()
-        }
-
-        if (shouldVoiceSpeak && isVoiceOn) {
-            if (isTtsInitialized) {
-                if (currentStep != null) {
-                    textToSpeech.speak(
-                        currentStep.title,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-                if (currentStep != null) {
-                    textToSpeech.speak(
-                        currentStep.description,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-
-            }
-        }
+    LaunchedEffect(true) {
+        viewModel.setShouldSpeakVoice(true)
     }
 
 
@@ -161,10 +137,8 @@ fun CrisisHandlingScreen(
                 modifier = Modifier
                     .size(32.dp)
                     .clickable {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        shouldVoiceSpeak = false
+                        viewModel.stopTextToSpeech(textToSpeech)
+                        viewModel.setShouldSpeakVoice(false)
                         viewModel.showExitModal()
                     }
                     .constrainAs(closeIcon) {
@@ -186,42 +160,9 @@ fun CrisisHandlingScreen(
                         viewModel.playMusic()
                     }
                 },
-                onPauseMusic = { viewModel.pauseMusic() }, isVoiceOn = isVoiceOn,
-                onMuteVoice = {
-                    if (isVoiceOn) {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        isVoiceOn = false
-                    } else {
-                        isVoiceOn = true
-
-                        if (isTtsInitialized) {
-
-                            if (textToSpeech.isSpeaking) {
-                                textToSpeech.stop()
-                            }
-
-                            if (currentStep != null) {
-                                textToSpeech.speak(
-                                    currentStep.title,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    null
-                                )
-                            }
-                            if (currentStep != null) {
-                                textToSpeech.speak(
-                                    currentStep.description,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    null
-                                )
-                            }
-
-                        }
-                    }
-                }
+                onPauseMusic = { viewModel.pauseMusic() }, 
+                isVoiceOn = isVoiceOn,
+                onMuteVoice = { viewModel.onMuteVoice(textToSpeech,isTtsInitialized) },
             )
 
             if (currentStep != null) {
@@ -341,11 +282,8 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 {
                     viewModel.showModal()
                     viewModel.stopMusic()
-                    if (textToSpeech.isSpeaking) {
-                        textToSpeech.stop()
-                    }
-
-                    shouldVoiceSpeak = false
+                    viewModel.stopTextToSpeech(textToSpeech)
+                    viewModel.setShouldSpeakVoice(false)
                     viewModel.showModal()
                 })
 
@@ -359,16 +297,13 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 },
                 ButtonStyle.Filled,
                 onClick = {
-
-                    if (currentStepIndex == 2) {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        shouldVoiceSpeak = false
-                    }
-
                     viewModel.nextStep()
-
+                    if (currentStepIndex == 2) {
+                        viewModel.stopTextToSpeech(textToSpeech)
+                        viewModel.setShouldSpeakVoice(false)
+                    }else{
+                        viewModel.startTextToSpeech(textToSpeech,isTtsInitialized)
+                    }
                 }
             )
 
@@ -414,26 +349,9 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 },
                 onDismiss = {
                     viewModel.dismissExitModal()
-                    shouldVoiceSpeak = true
-                    if (isTtsInitialized && isVoiceOn) {
-                        if (currentStep != null) {
-                            textToSpeech.speak(
-                                currentStep.title,
-                                TextToSpeech.QUEUE_ADD,
-                                null,
-                                null
-                            )
-                        }
-                        if (currentStep != null) {
-                            textToSpeech.speak(
-                                currentStep.description,
-                                TextToSpeech.QUEUE_ADD,
-                                null,
-                                null
-                            )
-                        }
-
-                    }
+                    viewModel.setShouldSpeakVoice(true)
+                    viewModel.startTextToSpeech(textToSpeech,isTtsInitialized)
+                    
                 })
         }
     }
