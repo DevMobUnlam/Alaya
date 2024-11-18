@@ -62,4 +62,27 @@ class NotificationRepositoryImplTest {
         )
         Assert.assertEquals(expected, response)
     }
+
+
+    @Test
+    fun `When a new treatment notification is sent successfully then it returns a response`(): Unit = runBlocking {
+        every { responseSuccessMockk.isSuccessful } returns true
+        val expected = responseSuccessMockk
+        coEvery { apiClient.sendNotification(any()) } returns responseSuccessMockk
+        val response = repository.sendNotificationNewTreatment(
+            patientEmail = patientEmailMockk
+        )
+        Assert.assertEquals(expected, response)
+    }
+
+    @Test
+    fun `When a new treatment notification is sent and fails then it returns a response`(): Unit = runBlocking {
+        val expected = responseFailureMockk
+        every { responseFailureMockk.isSuccessful } returns false
+        coEvery { apiClient.sendNotification(any()) } returns responseFailureMockk
+        val response = repository.sendNotificationNewTreatment(
+            patientEmail = patientEmailMockk
+        )
+        Assert.assertEquals(expected, response)
+    }
 }

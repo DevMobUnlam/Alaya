@@ -26,10 +26,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.Response
+import kotlin.properties.Delegates
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ConfigTreatmentViewModelTest {
-
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -43,22 +44,27 @@ class ConfigTreatmentViewModelTest {
 
     @MockK
     private lateinit var listOfTreatment: List<OptionTreatment>
+
+    @MockK
     private lateinit var firebaseClient: FirebaseClient
 
     private val testDispatcher = UnconfinedTestDispatcher()
-
-    private lateinit var viewModel: ConfigTreatmentViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
         coEvery { saveCrisisUseCase("email", listOfTreatment) } returns FirebaseResult.Success
-
         mockkObject(OneSignal)
         justRun { OneSignal.login(any()) }
-        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","") } returns mockk()
+        every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID", "") } returns mockk()
         viewModel = ConfigTreatmentViewModel(saveCrisisUseCase)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        clearMocks(saveCrisisUseCase, firebaseClient)
     }
 
     @Test
@@ -73,11 +79,7 @@ class ConfigTreatmentViewModelTest {
         val newListSize = viewModel.treatmentOptions.size
 
         //THEN
-        assertEquals(expectedListSize,newListSize)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        clearMocks(saveCrisisUseCase, firebaseClient)
+        assertEquals(expectedListSize, newListSize)
     }
 
     @Test
