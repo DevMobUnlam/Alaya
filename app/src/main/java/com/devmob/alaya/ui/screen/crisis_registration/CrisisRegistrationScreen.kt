@@ -163,13 +163,13 @@ fun CrisisRegistrationScreen(
                             viewModel.updateStartDate(newDate)
                         },
                         onStartTimeChange = { newTime ->
-                            viewModel.updateStartTime(newTime)
+                            viewModel.updateStartDate(newTime)
                         },
                         onEndDateChange = { newDate ->
                             viewModel.updateEndDate(newDate)
                         },
                         onEndTimeChange = { newTime ->
-                            viewModel.updateEndTime(newTime)
+                            viewModel.updateEndDate(newTime)
                         },
                         crisisTimeDetails = crisisTimeDetails
                     )
