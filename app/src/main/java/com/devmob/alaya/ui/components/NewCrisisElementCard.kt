@@ -54,7 +54,7 @@ fun NewCrisisElementCard(
     placeholderText: String,
     icon: ImageVector,
     onSave: (String) -> Unit = {},
-    onCancel: () -> Unit = {}
+    onCancel: () -> Unit
 ) {
     var text by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -137,6 +137,7 @@ fun NewCrisisElementCard(
 fun NewCrisisElementCardPreview() {
     NewCrisisElementCard(
         placeholderText = "Lugar...",
-        icon = Icons.Filled.LocationOn
+        icon = Icons.Filled.LocationOn,
+        onCancel = {}
     )
 }

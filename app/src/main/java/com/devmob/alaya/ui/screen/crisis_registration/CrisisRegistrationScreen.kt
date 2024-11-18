@@ -254,7 +254,7 @@ fun CrisisRegistrationScreen(
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
                         },
-                        onCancel = {shouldShowAddNewCard = false}
+                        onCancel = { shouldShowAddNewCard = false}
                     )
                 }
             }
@@ -348,7 +348,8 @@ fun CrisisRegistrationScreen(
                                 )
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
-                        }
+                        },
+                        onCancel = { shouldShowAddNewCard = false}
                     )
                 }
             }
@@ -443,7 +444,8 @@ fun CrisisRegistrationScreen(
                                 )
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
-                        }
+                        },
+                        onCancel = { shouldShowAddNewCard = false }
                     )
                 }
             }
@@ -521,7 +523,8 @@ fun CrisisRegistrationScreen(
                                 )
                             )
                             shouldShowAddNewCard = !shouldShowAddNewCard
-                        }
+                        },
+                        onCancel = { shouldShowAddNewCard = false }
                     )
                 }
             }
