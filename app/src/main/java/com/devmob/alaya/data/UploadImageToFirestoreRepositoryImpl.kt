@@ -14,7 +14,6 @@ class UploadImageToFirestoreRepositoryImpl(
         return try {
             val imageRef = storageRef.child(storagePath)
             if (imageUri.startsWith("https://")) {
-                //Si es un paso predeterminado, la imagen ya está subida a firebase
                 Uri.parse(imageUri)
             } else {
                 imageRef.putFile(Uri.parse(imageUri)).await()
