@@ -1,9 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import ExpandableButton
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,27 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -51,7 +41,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
-import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.StepCrisis
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
@@ -70,60 +59,32 @@ fun CrisisHandlingScreen(
     isTtsInitialized: Boolean
 ) {
 
-
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val currentStepIndex = viewModel.currentStepIndex
     val currentStep = viewModel.currentStep
     val totalSteps = viewModel.steps.size
 
-    var loadingScreen by rememberSaveable { mutableStateOf(true) }
-
-    val context = LocalContext.current
     val isPlaying = viewModel.isPlaying
+    val isVoiceOn = viewModel.isVoiceOn
 
 
     DisposableEffect(isPlaying) {
         if (isPlaying) {
-            viewModel.playMusic(context)
+            viewModel.playMusic()
         } else {
             viewModel.stopMusic()
         }
         onDispose {
+            viewModel.setShouldSpeakVoice(false)
             viewModel.stopMusic()
         }
     }
 
-    var shouldVoiceSpeak by remember{mutableStateOf(true)}
-    var isVoiceOn by remember{mutableStateOf(false)}
 
-    LaunchedEffect(currentStepIndex) {
 
-        if (textToSpeech.isSpeaking) {
-            textToSpeech.stop()
-        }
-
-        if (shouldVoiceSpeak && isVoiceOn) {
-            if (isTtsInitialized) {
-                if (currentStep != null) {
-                    textToSpeech.speak(
-                        currentStep.title,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-                if (currentStep != null) {
-                    textToSpeech.speak(
-                        currentStep.description,
-                        TextToSpeech.QUEUE_ADD,
-                        null,
-                        null
-                    )
-                }
-
-            }
-        }
+    LaunchedEffect(true) {
+        viewModel.setShouldSpeakVoice(true)
     }
 
 
@@ -176,10 +137,8 @@ fun CrisisHandlingScreen(
                 modifier = Modifier
                     .size(32.dp)
                     .clickable {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        shouldVoiceSpeak = false
+                        viewModel.stopTextToSpeech(textToSpeech)
+                        viewModel.setShouldSpeakVoice(false)
                         viewModel.showExitModal()
                     }
                     .constrainAs(closeIcon) {
@@ -198,45 +157,12 @@ fun CrisisHandlingScreen(
                     if (isPlaying) {
                         viewModel.pauseMusic()
                     } else {
-                        viewModel.playMusic(context)
+                        viewModel.playMusic()
                     }
                 },
-                onPauseMusic = { viewModel.pauseMusic() }, isVoiceOn = isVoiceOn,
-                onMuteVoice = {
-                    if (isVoiceOn) {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        isVoiceOn = false
-                    } else {
-                        isVoiceOn = true
-
-                        if (isTtsInitialized) {
-
-                            if (textToSpeech.isSpeaking) {
-                                textToSpeech.stop()
-                            }
-
-                            if (currentStep != null) {
-                                textToSpeech.speak(
-                                    currentStep.title,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    null
-                                )
-                            }
-                            if (currentStep != null) {
-                                textToSpeech.speak(
-                                    currentStep.description,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    null
-                                )
-                            }
-
-                        }
-                    }
-                }
+                onPauseMusic = { viewModel.pauseMusic() }, 
+                isVoiceOn = isVoiceOn,
+                onMuteVoice = { viewModel.onMuteVoice(textToSpeech,isTtsInitialized) },
             )
 
             if (currentStep != null) {
@@ -356,11 +282,8 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 {
                     viewModel.showModal()
                     viewModel.stopMusic()
-                    if (textToSpeech.isSpeaking) {
-                        textToSpeech.stop()
-                    }
-
-                    shouldVoiceSpeak = false
+                    viewModel.stopTextToSpeech(textToSpeech)
+                    viewModel.setShouldSpeakVoice(false)
                     viewModel.showModal()
                 })
 
@@ -374,16 +297,13 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 },
                 ButtonStyle.Filled,
                 onClick = {
-
-                    if (currentStepIndex == 2) {
-                        if (textToSpeech.isSpeaking) {
-                            textToSpeech.stop()
-                        }
-                        shouldVoiceSpeak = false
-                    }
-
                     viewModel.nextStep()
-
+                    if (currentStepIndex == 2) {
+                        viewModel.stopTextToSpeech(textToSpeech)
+                        viewModel.setShouldSpeakVoice(false)
+                    }else{
+                        viewModel.startTextToSpeech(textToSpeech,isTtsInitialized)
+                    }
                 }
             )
 
@@ -429,26 +349,9 @@ if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
                 },
                 onDismiss = {
                     viewModel.dismissExitModal()
-                    shouldVoiceSpeak = true
-                    if (isTtsInitialized && isVoiceOn) {
-                        if (currentStep != null) {
-                            textToSpeech.speak(
-                                currentStep.title,
-                                TextToSpeech.QUEUE_ADD,
-                                null,
-                                null
-                            )
-                        }
-                        if (currentStep != null) {
-                            textToSpeech.speak(
-                                currentStep.description,
-                                TextToSpeech.QUEUE_ADD,
-                                null,
-                                null
-                            )
-                        }
-
-                    }
+                    viewModel.setShouldSpeakVoice(true)
+                    viewModel.startTextToSpeech(textToSpeech,isTtsInitialized)
+                    
                 })
         }
     }

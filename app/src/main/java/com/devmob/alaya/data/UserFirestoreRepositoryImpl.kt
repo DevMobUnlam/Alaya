@@ -6,11 +6,12 @@ import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.User
 import kotlinx.coroutines.tasks.await
 
-class UserFirestoreRepositoryImpl : UserFirestoreRepository{
+class UserFirestoreRepositoryImpl(
+    firebaseClient: FirebaseClient
+) : UserFirestoreRepository {
+    private val db = firebaseClient.db
 
-    private val db = FirebaseClient().db
-
-    override suspend fun addUser(user: User) : FirebaseResult = runCatching {
+    override suspend fun addUser(user: User): FirebaseResult = runCatching {
         db.collection("users").document(user.email).set(user).await()
     }.toResponseFirebase()
 }

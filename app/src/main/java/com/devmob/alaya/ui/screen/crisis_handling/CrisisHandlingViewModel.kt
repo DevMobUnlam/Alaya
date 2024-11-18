@@ -2,8 +2,8 @@ package com.devmob.alaya.ui.screen.crisis_handling
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import android.content.Context
 import android.media.MediaPlayer
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 
 class CrisisHandlingViewModel (
-    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(),
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase,
     private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
 ): ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
@@ -33,6 +33,8 @@ class CrisisHandlingViewModel (
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
     var isPlaying by mutableStateOf(false)
+    private var shouldVoiceSpeak = true
+    var isVoiceOn by mutableStateOf(false)
     private var player: MediaPlayer? = null
     val currentUser = FirebaseClient().auth.currentUser
 
@@ -69,7 +71,7 @@ class CrisisHandlingViewModel (
             _loading.value = true
             try {
                 // Obtén los tratamientos del terapeuta
-                optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+                optionTreatmentsList = getCrisisTreatmentUseCase()
 
                 // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
@@ -164,7 +166,7 @@ class CrisisHandlingViewModel (
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
-    fun playMusic(context: Context) {
+    fun playMusic() {
         viewModelScope.launch(Dispatchers.IO) {
             val storage = FirebaseStorage.getInstance()
             val audioRef = storage.reference.child("Songs/song.mp3")
@@ -174,17 +176,12 @@ class CrisisHandlingViewModel (
                 prepare()
                 setVolume(0.45f, 0.45f)
                 start()
-
                 setOnCompletionListener {
                     start()
-
                 }
             }
-
-
-            }
-
-                }
+        }
+    }
 
     fun pauseMusic() {
         player?.pause()
@@ -197,9 +194,61 @@ class CrisisHandlingViewModel (
         isPlaying = false
     }
 
+
+
+    fun startTextToSpeech(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+        stopTextToSpeech(textToSpeech)
+        if (shouldVoiceSpeak && isVoiceOn) {
+            if (isTtsInitialized) {
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.title,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.description,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+
+            }
+        }
+
+    }
+
+    fun stopTextToSpeech(textToSpeech: TextToSpeech){
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+    }
+
+    fun setShouldSpeakVoice(status: Boolean){
+        shouldVoiceSpeak = status
+    }
+
+    fun onMuteVoice(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+        if (isVoiceOn) {
+            stopTextToSpeech(textToSpeech)
+            isVoiceOn = false
+        } else {
+            isVoiceOn = true
+
+            if (isTtsInitialized) {
+                stopTextToSpeech(textToSpeech)
+                startTextToSpeech(textToSpeech,true)
+            }
+        }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         stopMusic()
     }
 }
-
