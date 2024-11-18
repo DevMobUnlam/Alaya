@@ -193,23 +193,20 @@ class GetInvitationUseCaseTest {
         runTest {
             // GIVEN
             val patientEmail = "patientEmail"
-            val professionalEmail = "professionalEmail"
             val responseSuccess = Response.success(Unit)
             coEvery {
                 notificationRepository.sendNotificationInvitation(
-                    patientEmail,
-                    professionalEmail
+                    patientEmail
                 )
             } returns responseSuccess
 
             // WHEN
-            val result = getInvitationUseCase.sendNotification(patientEmail, professionalEmail)
+            val result = getInvitationUseCase.sendNotification(patientEmail)
 
             // THEN
             coVerify {
                 notificationRepository.sendNotificationInvitation(
-                    patientEmail,
-                    professionalEmail
+                    patientEmail
                 )
             }
             assertEquals(responseSuccess, result)
@@ -220,24 +217,21 @@ class GetInvitationUseCaseTest {
         runTest {
             // GIVEN
             val patientEmail = "patientEmail"
-            val professionalEmail = "professionalEmail"
             val responseBody = ResponseBody.create(null, "")
             val responseFailure = Response.error<Unit>(400, responseBody)
             coEvery {
                 notificationRepository.sendNotificationInvitation(
-                    patientEmail,
-                    professionalEmail
+                    patientEmail
                 )
             } returns responseFailure
 
             // WHEN
-            val result = getInvitationUseCase.sendNotification(patientEmail, professionalEmail)
+            val result = getInvitationUseCase.sendNotification(patientEmail)
 
             // THEN
             coVerify {
                 notificationRepository.sendNotificationInvitation(
-                    patientEmail,
-                    professionalEmail
+                    patientEmail
                 )
             }
             assertEquals(responseFailure, result)

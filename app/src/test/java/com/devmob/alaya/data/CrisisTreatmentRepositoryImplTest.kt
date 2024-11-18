@@ -1,6 +1,7 @@
 package com.devmob.alaya.data
 
 import com.devmob.alaya.domain.CrisisTreatmentRepository
+import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.google.android.gms.tasks.Task
@@ -18,6 +19,9 @@ class CrisisTreatmentRepositoryImplTest {
 
     @MockK
     private lateinit var firebaseClient: FirebaseClient
+
+    @MockK
+    private lateinit var uploadImage: UploadImageToFirestoreUseCase
 
     @MockK
     private lateinit var treatmentMockk: List<OptionTreatment?>
@@ -49,7 +53,7 @@ class CrisisTreatmentRepositoryImplTest {
         every { failureMock.exception } returns exceptionMock
         every { firebaseClient.db } returns dbMockk
 
-        repository = CrisisTreatmentRepositoryImpl(firebaseClient)
+        repository = CrisisTreatmentRepositoryImpl(firebaseClient, uploadImage)
     }
 
     @Test

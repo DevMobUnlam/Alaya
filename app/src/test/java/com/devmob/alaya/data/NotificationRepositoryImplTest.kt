@@ -1,5 +1,6 @@
 package com.devmob.alaya.data
 
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.NotificationRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -26,12 +27,18 @@ class NotificationRepositoryImplTest {
     @MockK
     private lateinit var apiClient: NotificationService
 
+    @MockK
+    private lateinit var firebaseClient: FirebaseClient
+
+    @MockK
+    private lateinit var getUserData: GetUserDataUseCase
+
     private lateinit var repository: NotificationRepository
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
-        repository = NotificationRepositoryImpl(apiClient)
+        repository = NotificationRepositoryImpl(apiClient, firebaseClient, getUserData)
     }
 
     @Test
@@ -40,8 +47,7 @@ class NotificationRepositoryImplTest {
         val expected = responseSuccessMockk
         coEvery { apiClient.sendNotification(any()) } returns responseSuccessMockk
         val response = repository.sendNotificationInvitation(
-            patientEmail = patientEmailMockk,
-            professionalEmail = professionalEmailMockk
+            patientEmail = patientEmailMockk
         )
         Assert.assertEquals(expected, response)
     }
@@ -52,8 +58,7 @@ class NotificationRepositoryImplTest {
         every { responseFailureMockk.isSuccessful } returns false
         coEvery { apiClient.sendNotification(any()) } returns responseFailureMockk
         val response = repository.sendNotificationInvitation(
-            patientEmail = patientEmailMockk,
-            professionalEmail = professionalEmailMockk
+            patientEmail = patientEmailMockk
         )
         Assert.assertEquals(expected, response)
     }
