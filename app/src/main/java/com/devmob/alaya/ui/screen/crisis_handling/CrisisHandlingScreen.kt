@@ -1,9 +1,7 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import ExpandableButton
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,27 +20,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -51,7 +41,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.devmob.alaya.R
 import com.devmob.alaya.components.SegmentedProgressBar
-import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
+import com.devmob.alaya.domain.model.StepCrisis
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
@@ -69,22 +59,18 @@ fun CrisisHandlingScreen(
     isTtsInitialized: Boolean
 ) {
 
-
     val shouldShowModal = viewModel.shouldShowModal
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val currentStepIndex = viewModel.currentStepIndex
     val currentStep = viewModel.currentStep
     val totalSteps = viewModel.steps.size
 
-    var loadingScreen by rememberSaveable { mutableStateOf(true) }
-
-    val context = LocalContext.current
     val isPlaying = viewModel.isPlaying
 
 
     DisposableEffect(isPlaying) {
         if (isPlaying) {
-            viewModel.playMusic(context)
+            viewModel.playMusic()
         } else {
             viewModel.stopMusic()
         }
@@ -197,7 +183,7 @@ fun CrisisHandlingScreen(
                     if (isPlaying) {
                         viewModel.pauseMusic()
                     } else {
-                        viewModel.playMusic(context)
+                        viewModel.playMusic()
                     }
                 },
                 onPauseMusic = { viewModel.pauseMusic() }, isVoiceOn = isVoiceOn,
@@ -285,20 +271,53 @@ fun CrisisHandlingScreen(
                                     bottom.linkTo(description.top, margin = 16.dp)
                                 }
                         )*/
-            Image(
-                painter = rememberImagePainter(data = currentStep?.image),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                    .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
-                    .constrainAs(lottieAnimation) {
-                        top.linkTo(title.bottom, margin = 24.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(description.top, margin = 16.dp)
-                    },
-                contentScale = ContentScale.Crop
-            )
+if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
+    Image(
+        painter = rememberImagePainter(data = currentStep?.image),
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .aspectRatio(1f)
+            .constrainAs(lottieAnimation) {
+                top.linkTo(title.bottom, margin = 24.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(description.top, margin = 16.dp)
+            },
+        contentScale = ContentScale.Crop
+    )
+}  else {
+    val composition by rememberLottieComposition(
+        spec = LottieCompositionSpec.RawRes(
+            when (currentStep?.image) {
+                "image_step_1" -> R.raw.crisis_step1_animation
+                "image_step_2" -> R.raw.animation
+                "image_step_3" -> R.raw.crisis_step3_animation
+                else -> R.raw.feedback_congratulations_animation
+            }
+        )
+    )
+
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+    iterations = LottieConstants.IterateForever
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = progress,
+        modifier = Modifier
+            .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
+            .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
+            .constrainAs(lottieAnimation) {
+                top.linkTo(title.bottom, margin = 24.dp)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(description.top, margin = 16.dp)
+            }
+    )
+
+}
 
             if (currentStep != null) {
                 TextContainer(
@@ -417,5 +436,38 @@ fun CrisisHandlingScreen(
                     }
                 })
         }
+    }
+}
+
+@Composable
+fun CrisisStepAnimationView(steps: List<StepCrisis>) {
+    var currentStepIndex by remember { mutableStateOf(0) }
+    val currentStep = steps.getOrNull(currentStepIndex)
+
+    if (currentStep != null) {
+        val composition by rememberLottieComposition(
+            spec = LottieCompositionSpec.RawRes(
+                when (currentStep.image) {
+                    "image_step_1" -> R.raw.crisis_step1_animation
+                    "image_step_2" -> R.raw.crisis_step2_animation
+                    "image_step_3" -> R.raw.crisis_step3_animation
+                    else -> R.raw.feedback_congratulations_animation
+                }
+            )
+        )
+
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            iterations = LottieConstants.IterateForever
+        )
+
+        LottieAnimation(
+            composition = composition,
+            progress = progress,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .aspectRatio(1f)
+        )
+
     }
 }

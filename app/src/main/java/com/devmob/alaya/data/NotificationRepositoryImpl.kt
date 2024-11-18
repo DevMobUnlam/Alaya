@@ -5,11 +5,11 @@ import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.NotificationRepository
 import retrofit2.Response
 
-class NotificationRepositoryImpl (
+class NotificationRepositoryImpl(
     private val api: NotificationService,
     private val firebaseClient: FirebaseClient,
     private val getUserData: GetUserDataUseCase
-): NotificationRepository {
+) : NotificationRepository {
 
     override suspend fun sendNotificationInvitation(
         patientEmail: String

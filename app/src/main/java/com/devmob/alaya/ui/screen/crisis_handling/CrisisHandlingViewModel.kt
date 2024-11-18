@@ -2,7 +2,6 @@ package com.devmob.alaya.ui.screen.crisis_handling
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import android.content.Context
 import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -24,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 
 class CrisisHandlingViewModel (
-    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(),
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase,
     private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
 ): ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
@@ -68,7 +67,10 @@ class CrisisHandlingViewModel (
         viewModelScope.launch {
             _loading.value = true
             try {
-                optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+                // Obtén los tratamientos del terapeuta
+                optionTreatmentsList = getCrisisTreatmentUseCase()
+
+                // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
                     stepCrisisList = optionTreatmentsList!!.map { option ->
                         StepCrisis(
@@ -78,9 +80,27 @@ class CrisisHandlingViewModel (
                         )
                     }
                     steps = stepCrisisList
-                    _loading.value = false
+                } else {
+                    // Si no hay tratamiento por terapeuta, carga los pasos predeterminados
+                    steps = listOf(
+                        StepCrisis(
+                            "Controlar la respiración",
+                            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
+                            "image_step_1"
+                        ),
+                        StepCrisis(
+                            "Imaginación guiada",
+                            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
+                            "image_step_2"
+                        ),
+                        StepCrisis(
+                            "Autoafirmaciones",
+                            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
+                            "image_step_3"
+                        )
+                    )
                 }
-
+                _loading.value = false
             } catch (e: Exception) {
                 _loading.value = false
                 Log.d("CrisisHandlingViewModel", "Exception in fetchCrisisSteps $e")
@@ -143,7 +163,7 @@ class CrisisHandlingViewModel (
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
-    fun playMusic(context: Context) {
+    fun playMusic() {
         viewModelScope.launch(Dispatchers.IO) {
             val storage = FirebaseStorage.getInstance()
             val audioRef = storage.reference.child("Songs/song.mp3")
@@ -153,17 +173,12 @@ class CrisisHandlingViewModel (
                 prepare()
                 setVolume(0.45f, 0.45f)
                 start()
-
                 setOnCompletionListener {
                     start()
-
                 }
             }
-
-
-            }
-
-                }
+        }
+    }
 
     fun pauseMusic() {
         player?.pause()
@@ -181,3 +196,4 @@ class CrisisHandlingViewModel (
         stopMusic()
     }
 }
+

@@ -9,24 +9,15 @@ import com.devmob.alaya.domain.model.User
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
-class ContactRepositoryImpl() : ContactRepository {
-    private val db = FirebaseClient().db
+class ContactRepositoryImpl(
+    firebaseClient: FirebaseClient
+) : ContactRepository {
+    private val db = firebaseClient.db
 
-    override suspend fun addContact(email: String, contact: Contact): FirebaseResult {
+    override suspend fun updateContacts(email: String, contacts: List<Contact>): FirebaseResult {
         return try {
             val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-
-            if (!updatedContacts.any { it.contactId == contact.contactId }) {
-                updatedContacts.add(contact)
-            }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
+            userRef.update("containmentNetwork", contacts).await()
             FirebaseResult.Success
         } catch (e: Exception) {
             FirebaseResult.Error(e)
@@ -59,75 +50,6 @@ class ContactRepositoryImpl() : ContactRepository {
         }
     }
 
-
-    override suspend fun getContacts(email: String): List<Contact> {
-        return try {
-            val snapshot = db.collection("users").document(email).get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val contacts = user?.containmentNetwork ?: emptyList()
-            val defaultContact = getDefaultContact()
-
-            listOf(defaultContact) + contacts.filter { it.contactId != defaultContact.contactId }
-        } catch (e: Exception) {
-            Log.e("Firebase", "Error al obtener los contactos", e)
-            emptyList()
-        }
-    }
-
-    override suspend fun deleteContact(email: String, contact: Contact): FirebaseResult {
-        return try {
-            val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-            updatedContacts.removeIf { it.contactId == contact.contactId }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
-            FirebaseResult.Success
-        } catch (e: Exception) {
-            FirebaseResult.Error(e)
-        }
-    }
-
-    override suspend fun editContact(email: String, contact: Contact): FirebaseResult {
-        return try {
-            val userRef = db.collection("users").document(email)
-
-            val snapshot = userRef.get().await()
-            val user = snapshot.toObject(User::class.java)
-
-            val updatedContacts = user?.containmentNetwork?.toMutableList() ?: mutableListOf()
-            val index = updatedContacts.indexOfFirst { it.contactId == contact.contactId }
-
-            if (index != -1) {
-                val currentContact = updatedContacts[index]
-                var updatedContact = contact
-
-                if (contact.photo != null && contact.photo.isNotEmpty() && contact.photo != currentContact.photo) {
-                    val photoUri = Uri.parse(contact.photo)
-                    val photoUrl = uploadImageToStorage(photoUri, contact.contactId)
-                    if (photoUrl != null) {
-                        updatedContact = contact.copy(photo = photoUrl)
-                    } else {
-                        return FirebaseResult.Error(Exception("Error al subir la foto"))
-                    }
-                }
-
-                updatedContacts[index] = updatedContact
-            }
-
-            userRef.update("containmentNetwork", updatedContacts).await()
-
-            FirebaseResult.Success
-        } catch (e: Exception) {
-            FirebaseResult.Error(e)
-        }
-    }
-
     override suspend fun uploadImageToStorage(uri: Uri, contactId: String): String? {
         return try {
             val storageRef = FirebaseStorage.getInstance().reference
@@ -141,7 +63,7 @@ class ContactRepositoryImpl() : ContactRepository {
     }
 
 
-    private fun getDefaultContact(): Contact {
+    override fun getDefaultContact(): Contact {
         return Contact(
             contactId = "4",
             name = "Salud Mental Responde",

@@ -7,11 +7,13 @@ import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.domain.model.User
 import kotlinx.coroutines.tasks.await
 
-class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
-    private val db = FirebaseClient().db
-    private val uploadImage = UploadImageToFirestoreUseCase()
+class CrisisTreatmentRepositoryImpl(
+    firebaseClient: FirebaseClient,
+    private val uploadImage: UploadImageToFirestoreUseCase
+) : CrisisTreatmentRepository {
+    private val db = firebaseClient.db
 
-    override suspend fun addCustomTreatment(
+    override suspend fun saveCustomTreatment(
         patientEmail: String,
         treatment: List<OptionTreatment?>
     ) = runCatching {
@@ -30,7 +32,7 @@ class CrisisTreatmentRepositoryImpl : CrisisTreatmentRepository {
             }
         }
         db.collection("users").document(patientEmail)
-            .update("stepCrisis", treatmentList)
+            .update("stepCrisis", treatment)
     }.toResponseFirebase()
 
     override suspend fun getCustomTreatment(patientEmail: String): List<OptionTreatment>? {
