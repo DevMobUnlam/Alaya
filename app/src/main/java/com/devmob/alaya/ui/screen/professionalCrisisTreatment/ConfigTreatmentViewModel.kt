@@ -76,10 +76,10 @@ class ConfigTreatmentViewModel(
         }
     }
 
-    fun sendNotification(patientEmail: String, professionalEmail: String) {
+    fun sendNotification(patientEmail: String) {
         viewModelScope.launch {
             val notification =
-                saveCrisisUseCase.sendNotification(patientEmail, professionalEmail)
+                saveCrisisUseCase.sendNotification(patientEmail)
             if (notification.isSuccessful) {
                 Log.i(
                     "ConfigTreatmentViewModel",

@@ -1,20 +1,30 @@
 package com.devmob.alaya.data
 
 import com.devmob.alaya.ONESIGNAL_APP_ID
+import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.NotificationRepository
 import retrofit2.Response
 
-class NotificationRepositoryImpl : NotificationRepository {
+class NotificationRepositoryImpl (
+    private val api: NotificationService,
+    private val firebaseClient: FirebaseClient,
+    private val getUserData: GetUserDataUseCase
+): NotificationRepository {
 
-    private val api = NotificationService()
+
+
     override suspend fun sendNotificationInvitation(
-        patientEmail: String,
-        professionalEmail: String
+        patientEmail: String
     ): Response<Unit> {
+
+        val currentUser = firebaseClient.auth.currentUser?.email
+        val professional = currentUser?.let { getUserData.getUser(it) }
+        val completeName = professional?.name + " " + professional?.surname
+
         val body = NotificationInvitation(
             ONESIGNAL_APP_ID,
             "push",
-            contents = mapOf("en" to "$professionalEmail te invitó a que seas su paciente a traves de Alaya."),
+            contents = mapOf("en" to "$completeName te invitó a que seas su paciente a traves de Alaya."),
             include_aliases = IncludeAliases(
                 ALIAS_FIREBASE_ID = listOf(patientEmail)
             )
@@ -23,13 +33,15 @@ class NotificationRepositoryImpl : NotificationRepository {
     }
 
     override suspend fun sendNotificationNewTreatment(
-        patientEmail: String,
-        professionalEmail: String
+        patientEmail: String
     ): Response<Unit> {
+        val currentUser = firebaseClient.auth.currentUser?.email
+        val professional = currentUser?.let { getUserData.getUser(it) }
+
         val body = NotificationInvitation(
             ONESIGNAL_APP_ID,
             "push",
-            contents = mapOf("en" to "$professionalEmail te configuró un nuevo tratamiento."),
+            contents = mapOf("en" to "${professional?.name} te configuró un nuevo tratamiento."),
             include_aliases = IncludeAliases(
                 ALIAS_FIREBASE_ID = listOf(patientEmail)
             )

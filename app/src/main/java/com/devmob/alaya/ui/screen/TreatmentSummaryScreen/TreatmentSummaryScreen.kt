@@ -41,8 +41,6 @@ fun TreatmentSummaryScreen(
     navController: NavController,
     viewModel: ConfigTreatmentViewModel
 ) {
-    val currentEmail = FirebaseClient().auth.currentUser?.email
-
     val selectedOptions = listOfNotNull(
         getTreatmentOption(firstStep, viewModel.treatmentOptions),
         getTreatmentOption(secondStep, viewModel.treatmentOptions),
@@ -127,9 +125,8 @@ fun TreatmentSummaryScreen(
                 onClick = {
                     showModal = true
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
-                    if (currentEmail != null) {
-                        viewModel.sendNotification(patientEmail, currentEmail)
-                    }
+                    viewModel.sendNotification(patientEmail)
+
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"

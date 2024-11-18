@@ -1,7 +1,9 @@
 package com.devmob.alaya.domain
 
+import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.data.NotificationRepositoryImpl
+import com.devmob.alaya.data.NotificationService
 import com.devmob.alaya.domain.model.Invitation
 import com.devmob.alaya.domain.model.InvitationStatus
 import com.devmob.alaya.domain.model.Patient
@@ -10,7 +12,7 @@ import retrofit2.Response
 
 class GetInvitationUseCase {
     private val getUserUseCase = GetUserRepositoryImpl()
-    private val notificationRepository = NotificationRepositoryImpl()
+    private val notificationRepository = NotificationRepositoryImpl(NotificationService(), FirebaseClient(), GetUserDataUseCase())
 
     suspend fun getInvitationProfessional(email: String): Invitation? {
         return getUserUseCase.getUser(email)?.invitation
@@ -40,7 +42,7 @@ class GetInvitationUseCase {
         return getUserUseCase.updateProfessionalInvitationList(professionalEmail,patientEmail, status)
     }
 
-    suspend fun sendNotification(patientEmail: String, professionalEmail: String): Response<Unit> {
-        return notificationRepository.sendNotificationInvitation(patientEmail,professionalEmail)
+    suspend fun sendNotification(patientEmail: String): Response<Unit> {
+        return notificationRepository.sendNotificationInvitation(patientEmail)
     }
 }
