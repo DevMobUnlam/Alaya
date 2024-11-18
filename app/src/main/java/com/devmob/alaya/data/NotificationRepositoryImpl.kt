@@ -15,7 +15,7 @@ class NotificationRepositoryImpl(
         val body = NotificationInvitation(
             ONESIGNAL_APP_ID,
             "push",
-            contents = mapOf("en" to "$professionalEmail te invitó a que seas su paciente a traves de Alaya."),
+            contents = mapOf("en" to "$professionalEmail te invitó a que seas su paciente a través de Alaya."),
             include_aliases = IncludeAliases(
                 ALIAS_FIREBASE_ID = listOf(patientEmail)
             )
