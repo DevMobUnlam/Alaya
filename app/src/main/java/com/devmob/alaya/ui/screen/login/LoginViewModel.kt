@@ -55,9 +55,8 @@ class LoginViewModel(
                     val role = getRoleUseCase(email)
                     role?.let { prefs.setUserLoggedIn(email, it) }
                     when (role) {
-                        UserRole.PATIENT ->{
+                        UserRole.PATIENT ->
                             _navigateToPatientHome.value = true
-                        }
 
                         UserRole.PROFESSIONAL ->
                             _navigateToProfessionalHome.value = true
