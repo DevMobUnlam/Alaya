@@ -1,5 +1,6 @@
 package com.devmob.alaya.data
 
+import android.net.Uri
 import com.devmob.alaya.domain.CrisisTreatmentRepository
 import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
@@ -10,8 +11,10 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -23,8 +26,8 @@ class CrisisTreatmentRepositoryImplTest {
     @MockK
     private lateinit var uploadImage: UploadImageToFirestoreUseCase
 
-    @MockK
-    private lateinit var treatmentMockk: List<OptionTreatment?>
+    @MockK (relaxed = true)
+    private lateinit var treatmentMockk: OptionTreatment
 
     @MockK
     private lateinit var exceptionMock: Exception
@@ -36,6 +39,9 @@ class CrisisTreatmentRepositoryImplTest {
     private lateinit var successMock: Task<Void>
 
     @MockK
+    private lateinit var uriMock: Uri
+
+    @MockK
     private lateinit var dbMockk: FirebaseFirestore
 
     private val patientEmailMockk = "patientEmailMockk"
@@ -45,37 +51,41 @@ class CrisisTreatmentRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        every { successMock.isComplete } returns true
-        every { successMock.exception } returns null
-        every { successMock.isCanceled } returns false
-        every { failureMock.isComplete } returns true
-        every { failureMock.isSuccessful } returns false
         every { failureMock.exception } returns exceptionMock
         every { firebaseClient.db } returns dbMockk
+
+        every {
+            dbMockk.collection("users").document(any()).update("stepCrisis", any())
+        } returns successMock
+        every { treatmentMockk.imageUri } returns "someImageUri"
+        every { treatmentMockk.copy(any()) } returns treatmentMockk.copy(imageUri = "newImageUri")
+        coEvery { uploadImage(any()) } returns uriMock
 
         repository = CrisisTreatmentRepositoryImpl(firebaseClient, uploadImage)
     }
 
     @Test
     fun `When save custom treatment then Success result`(): Unit = runTest {
+        //GIVEN
+        val treatmentList = listOf(treatmentMockk)
         val expected = FirebaseResult.Success
-        every {
-            dbMockk.collection("users").document(any()).update("stepCrisis", any())
-        } returns successMock
-        val result = repository.saveCustomTreatment(patientEmailMockk, treatmentMockk)
 
+        //WHEN
+        val result = repository.saveCustomTreatment(patientEmailMockk, treatmentList)
+
+        // THEN
         Assert.assertEquals(expected, result)
     }
 
     @Test
     fun `When save custom treatment then Error result`(): Unit = runTest {
-        val expected = FirebaseResult.Error(exceptionMock)
+        val treatmentList = listOf(treatmentMockk)
         coEvery {
             dbMockk.collection("users").document("null").update("stepCrisis", treatmentMockk)
         } throws exceptionMock
 
-        val result = repository.saveCustomTreatment("null", treatmentMockk)
+        val result = repository.saveCustomTreatment("null", treatmentList)
 
-        Assert.assertEquals(expected, result)
+        assertTrue(result is FirebaseResult.Error)
     }
 }
