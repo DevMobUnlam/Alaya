@@ -169,4 +169,18 @@ class PatientHomeScreenViewmodelTest {
         coVerify (exactly = 0) { getInvitationUseCase.addPatient(any(), any()) }
         assertFalse(viewModel.shouldShowInvitation)
     }
+
+    @Test
+    fun `given emailPatient from auth, when updateCrisisSteps is called, then verify update on crisisStepsManager`(){
+        // GIVEN
+        val emailPatient = "emailPatient"
+        every { firebaseClient.auth.currentUser?.email } returns emailPatient
+        coEvery { crisisStepsManager.updateCrisisSteps(emailPatient) } returns Unit
+
+        // WHEN
+        viewModel.updateCrisisSteps()
+
+        // THEN
+        coVerify { crisisStepsManager.updateCrisisSteps(emailPatient) }
+    }
 }
