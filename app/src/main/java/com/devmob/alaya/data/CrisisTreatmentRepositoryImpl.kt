@@ -1,11 +1,8 @@
 package com.devmob.alaya.data
 
-import android.net.Uri
-import android.util.Log
 import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.CrisisTreatmentRepository
 import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
-import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.domain.model.User
 import kotlinx.coroutines.tasks.await

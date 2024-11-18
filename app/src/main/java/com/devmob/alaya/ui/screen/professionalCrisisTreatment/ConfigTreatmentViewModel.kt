@@ -18,7 +18,6 @@ class ConfigTreatmentViewModel(
 ) : ViewModel() {
 
     var patientEmail = mutableStateOf("")
-    val professionalEmail = FirebaseClient().auth.currentUser?.email
 
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>

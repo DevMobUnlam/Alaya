@@ -11,12 +11,9 @@ class NotificationRepositoryImpl (
     private val getUserData: GetUserDataUseCase
 ): NotificationRepository {
 
-
-
     override suspend fun sendNotificationInvitation(
         patientEmail: String
     ): Response<Unit> {
-
         val currentUser = firebaseClient.auth.currentUser?.email
         val professional = currentUser?.let { getUserData.getUser(it) }
         val completeName = professional?.name + " " + professional?.surname
