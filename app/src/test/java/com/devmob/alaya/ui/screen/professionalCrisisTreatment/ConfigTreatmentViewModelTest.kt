@@ -2,12 +2,9 @@ package com.devmob.alaya.ui.screen.professionalCrisisTreatment
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.compose.runtime.traceEventEnd
-import androidx.compose.ui.text.lerp
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.OptionTreatment
-import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.every
