@@ -3,6 +3,7 @@ package com.devmob.alaya.ui.screen.crisis_handling
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import android.media.MediaPlayer
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,8 @@ class CrisisHandlingViewModel (
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
     var isPlaying by mutableStateOf(false)
+    private var shouldVoiceSpeak = true
+    var isVoiceOn by mutableStateOf(false)
     private var player: MediaPlayer? = null
     val currentUser = FirebaseClient().auth.currentUser
 
@@ -191,9 +194,61 @@ class CrisisHandlingViewModel (
         isPlaying = false
     }
 
+
+
+    fun startTextToSpeech(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+        stopTextToSpeech(textToSpeech)
+        if (shouldVoiceSpeak && isVoiceOn) {
+            if (isTtsInitialized) {
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.title,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.description,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+
+            }
+        }
+
+    }
+
+    fun stopTextToSpeech(textToSpeech: TextToSpeech){
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+    }
+
+    fun setShouldSpeakVoice(status: Boolean){
+        shouldVoiceSpeak = status
+    }
+
+    fun onMuteVoice(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+        if (isVoiceOn) {
+            stopTextToSpeech(textToSpeech)
+            isVoiceOn = false
+        } else {
+            isVoiceOn = true
+
+            if (isTtsInitialized) {
+                stopTextToSpeech(textToSpeech)
+                startTextToSpeech(textToSpeech,true)
+            }
+        }
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         stopMusic()
     }
 }
-
