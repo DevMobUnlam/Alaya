@@ -30,7 +30,7 @@ class SaveCrisisTreatmentUseCase(
                 }
             }
         }
-        return customTreatmentRepository.saveCustomTreatment(patientEmail, treatment)
+        return customTreatmentRepository.saveCustomTreatment(patientEmail, treatmentList)
     }
 
     suspend fun sendNotification(patientEmail: String): Response<Unit> {

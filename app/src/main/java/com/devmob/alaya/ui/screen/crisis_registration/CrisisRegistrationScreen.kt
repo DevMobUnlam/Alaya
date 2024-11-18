@@ -140,16 +140,16 @@ fun CrisisRegistrationScreen(
         when (screenState.value?.currentStep) {
             1 -> {
                 Text(
-                    text = "¿En qué momento\ncomenzó?",
+                    text = "¿En qué momento comenzó?",
                     fontSize = messageTextSize,
                     color = ColorText,
                     textAlign = TextAlign.Center,
-                    lineHeight = 30.sp,
+                    lineHeight = 20.sp,
                     modifier = Modifier
                         .constrainAs(title) {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            top.linkTo(progressBar.bottom, margin = 20.dp)
+                            top.linkTo(closeIcon.bottom, margin = 1.dp)
                         }
                 )
                 viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
@@ -163,13 +163,13 @@ fun CrisisRegistrationScreen(
                             viewModel.updateStartDate(newDate)
                         },
                         onStartTimeChange = { newTime ->
-                            viewModel.updateStartTime(newTime)
+                            viewModel.updateStartDate(newTime)
                         },
                         onEndDateChange = { newDate ->
                             viewModel.updateEndDate(newDate)
                         },
                         onEndTimeChange = { newTime ->
-                            viewModel.updateEndTime(newTime)
+                            viewModel.updateEndDate(newTime)
                         },
                         crisisTimeDetails = crisisTimeDetails
                     )
@@ -530,7 +530,7 @@ fun CrisisRegistrationScreen(
                     title = "¿Querés agregar algo más?",
                     textActual = screenState.value?.crisisDetails?.notes!!,
                     modifier = Modifier.constrainAs(addMoreStep) {
-                        top.linkTo(title.bottom)
+                        top.linkTo(title.bottom, margin = 3.dp)
                         bottom.linkTo(parent.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
