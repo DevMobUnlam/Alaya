@@ -3,12 +3,10 @@ package com.devmob.alaya.ui.screen.login
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.devmob.alaya.data.preferences.SharedPreferences
-import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.model.AuthenticationResult
 import com.devmob.alaya.domain.model.UserRole
-import com.devmob.alaya.utils.CrisisStepsManager
 import com.onesignal.OneSignal
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
@@ -56,10 +54,7 @@ class LoginViewmodelTest {
         MockKAnnotations.init(this, relaxed = true)
         mockkObject(OneSignal)
         Dispatchers.setMain(testDispatcher)
-        viewModel = LoginViewModel(
-            loginUseCase, getRoleUseCase, prefs, CrisisStepsManager(crisisStepsDao,
-                GetCrisisTreatmentUseCase(crisisStepsDao), context)
-        )
+        viewModel = LoginViewModel(loginUseCase, getRoleUseCase, prefs)
         justRun { OneSignal.login(any()) }
         every { OneSignal.User.addAlias("ALIAS_FIREBASE_ID","") } returns mockk()
     }
