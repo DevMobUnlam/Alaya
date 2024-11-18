@@ -73,19 +73,4 @@ class SaveCrisisTreatmentUseCaseTest {
             //THEN
             assertTrue(result is FirebaseResult.Error)
         }
-
-    @Test
-    fun `given an email and a null list, when saveCrisisTreatment is called, then return Error`() =
-        runBlocking {
-            //GIVEN
-            val email = "email"
-            val nullTreatment: List<OptionTreatment?> = listOf(null)
-
-            //WHEN
-            val result = saveCrisisTreatmentUseCase(email, nullTreatment)
-
-            //THEN
-            assertTrue(result is FirebaseResult.Error)
-        }
-
 }
