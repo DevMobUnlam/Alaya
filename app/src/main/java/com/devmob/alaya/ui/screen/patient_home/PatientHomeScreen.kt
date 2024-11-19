@@ -46,6 +46,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         viewmodel.fetchPatient()
         viewmodel.updateGreetingMessage()
         viewmodel.checkProfessionalInvitation()
+        viewmodel.updateCrisisSteps()
     }
     
     InvitationModal(nameProfessional, shouldShowModal, viewmodel)
@@ -66,8 +67,8 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         ) {
             val (greetingText, cardColumn) = createRefs()
             Text(
-                text = "Hola ${namePatient}, ¡${greetingMessage}!",
-                fontSize = 32.sp,
+                text = "Hola ${namePatient}\n¡${greetingMessage}!",
+                fontSize = 31.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 32.sp,
                 color = ColorText,

@@ -163,7 +163,7 @@ fun CustomActivityScreen(
 
         Button(
             onClick = {
-                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri.toString()))
+                viewModel.addCustomActivity(OptionTreatment(title = title, description = description, imageUri = imageUri.toString()))
                 navController.navigate(
                     NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
                         "{patientEmail}",
