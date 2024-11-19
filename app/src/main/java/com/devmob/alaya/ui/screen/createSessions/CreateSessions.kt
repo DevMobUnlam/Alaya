@@ -133,7 +133,7 @@ fun ScheduleSessionScreen(
                                 colors = RadioButtonDefaults.colors(
                                 selectedColor = Color(0xFFF5A5DE) )
                     )
-                    Text(text = "Programar solo una sesión")
+                    Text(text = "Programar solo una sesión", color = ColorText)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
@@ -142,7 +142,7 @@ fun ScheduleSessionScreen(
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color(0xFFF5A5DE) )
                     )
-                    Text(text = "Programar sesiones del mes")
+                    Text(text = "Programar sesiones del mes", color = ColorText)
                 }
             }
 
