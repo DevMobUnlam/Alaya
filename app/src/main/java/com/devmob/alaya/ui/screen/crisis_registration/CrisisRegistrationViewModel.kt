@@ -20,11 +20,8 @@ import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
 import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository.returnAvailableTools
-import com.devmob.alaya.utils.toCalendar
-import com.devmob.alaya.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import java.util.Date
 
 class CrisisRegistrationViewModel(
@@ -146,12 +143,8 @@ class CrisisRegistrationViewModel(
         if (!currentPlaces.any { it.name == place.name }) {
             currentPlaces.add(place)
             _places.value = currentPlaces
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    placeList = currentPlaces
-                )
-            )
         }
+        updatePlace(place,0)
     }
 
     fun addCrisisBodySensation(bodySensation: CrisisBodySensation) {
@@ -159,12 +152,8 @@ class CrisisRegistrationViewModel(
         if (!currentSensations.any { it.name == bodySensation.name }) {
             currentSensations.add(bodySensation)
             _bodySensations.value = currentSensations
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    bodySensationList = currentSensations
-                )
-            )
         }
+        selectCrisisBodySensation(bodySensation)
     }
 
     fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
@@ -296,12 +285,8 @@ class CrisisRegistrationViewModel(
         if (!currentTools.any { it.name == crisisTool.name }) {
             currentTools.add(crisisTool)
             _tools.value = currentTools
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    toolList = currentTools
-                )
-            )
         }
+        updateCrisisTool(crisisTool)
     }
 
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
@@ -309,12 +294,8 @@ class CrisisRegistrationViewModel(
         if (!currentEmotions.any { it.name == crisisEmotion.name }) {
             currentEmotions.add(crisisEmotion)
             _emotions.value = currentEmotions
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    emotionList = currentEmotions
-                )
-            )
         }
+        selectCrisisEmotion(crisisEmotion)
     }
 
     fun updateNotes(text: String) {
@@ -361,72 +342,25 @@ class CrisisRegistrationViewModel(
     }
 
     fun updateStartDate(date: Date) {
-        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
-        val newDate = updateDate(date, oldDate)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startTime = newDate
+            startTime = date
         )
-        _screenState.value = _screenState.value?.copy(
-            crisisDetails = _screenState.value?.crisisDetails?.copy(
-                crisisTimeDetails = updatedCrisisTimeDetails!!
-            )!!
-        )
-    }
-
-    fun updateStartTime(hour: Date) {
-        val oldDate = _screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
-        val newDate = updateHour(hour, oldDate)
-        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            startTime = newDate
-        )
-        _screenState.value = _screenState.value?.copy(
-            crisisDetails = _screenState.value?.crisisDetails?.copy(
-                crisisTimeDetails = updatedCrisisTimeDetails!!
-            )!!
-        )
+        updateScreenStateCrisisDetails(updatedCrisisTimeDetails)
     }
 
     fun updateEndDate(date: Date) {
-        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
-        val newDate = updateDate(date, oldTime)
         val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endTime = newDate
+            endTime = date
         )
+        updateScreenStateCrisisDetails(updatedCrisisTimeDetails)
+    }
+
+    private fun updateScreenStateCrisisDetails(updatedCrisisTimeDetails: CrisisTimeDetails?) {
         _screenState.value = _screenState.value?.copy(
             crisisDetails = _screenState.value?.crisisDetails?.copy(
                 crisisTimeDetails = updatedCrisisTimeDetails!!
             )!!
         )
-    }
-
-    fun updateEndTime(hour: Date) {
-        val oldTime = _screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
-        val newDate = updateHour(hour, oldTime)
-        val updatedCrisisTimeDetails = _screenState.value?.crisisDetails?.crisisTimeDetails?.copy(
-            endTime = newDate
-        )
-        _screenState.value = _screenState.value?.copy(
-            crisisDetails = _screenState.value?.crisisDetails?.copy(
-                crisisTimeDetails = updatedCrisisTimeDetails!!
-            )!!
-        )
-    }
-
-    private fun updateDate(newDate: Date, oldTime: Date?): Date {
-        val newDateCalendar = newDate.toCalendar()
-        val oldTimeCalendar = oldTime.toCalendar()
-        oldTimeCalendar.set(Calendar.DAY_OF_MONTH, newDateCalendar.get(Calendar.DAY_OF_MONTH))
-        oldTimeCalendar.set(Calendar.MONTH, newDateCalendar.get(Calendar.MONTH))
-        oldTimeCalendar.set(Calendar.YEAR, newDateCalendar.get(Calendar.YEAR))
-        return oldTimeCalendar.toDate()
-    }
-
-    private fun updateHour(newDate: Date, oldTime: Date?): Date {
-        val newDateCalendar = newDate.toCalendar()
-        val oldTimeCalendar = oldTime.toCalendar()
-        oldTimeCalendar.set(Calendar.HOUR_OF_DAY, newDateCalendar.get(Calendar.HOUR_OF_DAY))
-        oldTimeCalendar.set(Calendar.MINUTE, newDateCalendar.get(Calendar.MINUTE))
-        return oldTimeCalendar.toDate()
     }
 
     fun hideBackButton() {

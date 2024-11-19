@@ -14,11 +14,12 @@ import java.util.Calendar
 import java.util.Locale
 
 class ProfessionalHomeViewModel(
-    private val getUserData: GetUserDataUseCase
+    private val getUserData: GetUserDataUseCase,
+    firebaseClient: FirebaseClient
 ) : ViewModel() {
     var patients by mutableStateOf<List<Patient>>(emptyList())
     var greetingMessage by mutableStateOf("")
-    var currentEmail = FirebaseClient().auth.currentUser?.email
+    var currentEmail = firebaseClient.auth.currentUser?.email
     var nameProfessional by mutableStateOf("")
     var isLoading by mutableStateOf(true)
 
@@ -65,5 +66,4 @@ class ProfessionalHomeViewModel(
             else -> "Buenas noches"
         }
     }
-
 }
