@@ -6,6 +6,7 @@ import com.devmob.alaya.domain.GetInvitationUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.Invitation
 import com.devmob.alaya.domain.model.InvitationStatus
+import com.devmob.alaya.utils.CrisisStepsManager
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.coEvery
@@ -40,13 +41,16 @@ class PatientHomeScreenViewmodelTest {
     @MockK
     private lateinit var firebaseClient: FirebaseClient
 
+    @MockK
+    private lateinit var crisisStepsManager: CrisisStepsManager
+
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
-        viewModel = PatientHomeScreenViewmodel(getUserData, getInvitationUseCase, firebaseClient)
+        viewModel = PatientHomeScreenViewmodel(getUserData, getInvitationUseCase, firebaseClient, crisisStepsManager)
     }
 
     @After
@@ -164,5 +168,19 @@ class PatientHomeScreenViewmodelTest {
         coVerify (exactly = 0) { getInvitationUseCase.addProfessional(any(), any()) }
         coVerify (exactly = 0) { getInvitationUseCase.addPatient(any(), any()) }
         assertFalse(viewModel.shouldShowInvitation)
+    }
+
+    @Test
+    fun `given emailPatient from auth, when updateCrisisSteps is called, then verify update on crisisStepsManager`(){
+        // GIVEN
+        val emailPatient = "emailPatient"
+        every { firebaseClient.auth.currentUser?.email } returns emailPatient
+        coEvery { crisisStepsManager.updateCrisisSteps(emailPatient) } returns Unit
+
+        // WHEN
+        viewModel.updateCrisisSteps()
+
+        // THEN
+        coVerify { crisisStepsManager.updateCrisisSteps(emailPatient) }
     }
 }

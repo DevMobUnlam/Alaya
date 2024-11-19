@@ -111,4 +111,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     implementation (libs.libCharts)
+    implementation (libs.androidx.room)
+    implementation (libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 }
