@@ -46,6 +46,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         viewmodel.fetchPatient()
         viewmodel.updateGreetingMessage()
         viewmodel.checkProfessionalInvitation()
+        viewmodel.updateCrisisSteps()
     }
     
     InvitationModal(nameProfessional, shouldShowModal, viewmodel)
