@@ -143,12 +143,8 @@ class CrisisRegistrationViewModel(
         if (!currentPlaces.any { it.name == place.name }) {
             currentPlaces.add(place)
             _places.value = currentPlaces
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    placeList = currentPlaces
-                )
-            )
         }
+        updatePlace(place,0)
     }
 
     fun addCrisisBodySensation(bodySensation: CrisisBodySensation) {
@@ -156,12 +152,8 @@ class CrisisRegistrationViewModel(
         if (!currentSensations.any { it.name == bodySensation.name }) {
             currentSensations.add(bodySensation)
             _bodySensations.value = currentSensations
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    bodySensationList = currentSensations
-                )
-            )
         }
+        selectCrisisBodySensation(bodySensation)
     }
 
     fun unselectCrisisBodySensation(bodySensation: CrisisBodySensation) {
@@ -293,12 +285,8 @@ class CrisisRegistrationViewModel(
         if (!currentTools.any { it.name == crisisTool.name }) {
             currentTools.add(crisisTool)
             _tools.value = currentTools
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    toolList = currentTools
-                )
-            )
         }
+        updateCrisisTool(crisisTool)
     }
 
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
@@ -306,12 +294,8 @@ class CrisisRegistrationViewModel(
         if (!currentEmotions.any { it.name == crisisEmotion.name }) {
             currentEmotions.add(crisisEmotion)
             _emotions.value = currentEmotions
-            _screenState.value = _screenState.value?.copy(
-                crisisDetails = _screenState.value!!.crisisDetails.copy(
-                    emotionList = currentEmotions
-                )
-            )
         }
+        selectCrisisEmotion(crisisEmotion)
     }
 
     fun updateNotes(text: String) {

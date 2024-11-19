@@ -1,6 +1,7 @@
 package com.devmob.alaya.domain
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.devmob.alaya.data.local_storage.CrisisStepsDao
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.domain.model.User
@@ -33,6 +34,9 @@ class GetCrisisTreatmentUseCaseTest {
     @MockK
     private lateinit var userRepository: GetUserRepository
 
+    @MockK
+    private lateinit var crisisStepsDao: CrisisStepsDao
+
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
@@ -42,7 +46,7 @@ class GetCrisisTreatmentUseCaseTest {
     fun setUp() {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
-        getCrisisTreatmentUseCase = GetCrisisTreatmentUseCase(prefs, userRepository)
+        getCrisisTreatmentUseCase = GetCrisisTreatmentUseCase(prefs, userRepository, crisisStepsDao)
     }
 
     @After
@@ -54,7 +58,7 @@ class GetCrisisTreatmentUseCaseTest {
     fun `given valid email, when user is found, then return treatment options`() = runTest {
         // GIVEN
         val email = "test@example.com"
-        val user = mockk<User>(relaxed = true)  // Mock user object
+        val user = mockk<User>(relaxed = true)
         val options = listOf(OptionTreatment(), OptionTreatment())
         coEvery { prefs.getEmail() } returns email
         coEvery { userRepository.getUser(email) } returns user
@@ -93,5 +97,40 @@ class GetCrisisTreatmentUseCaseTest {
         // THEN
         assertEquals(null, result)
         coVerify { userRepository.getUser(email) }
+    }
+
+    @Test
+    fun `given valid email, when local database is not empty, then return treatment options from local database`() = runTest{
+        // GIVEN
+        val email = "test@example.com"
+        val options = listOf(OptionTreatment(), OptionTreatment())
+        coEvery { prefs.getEmail() } returns email
+        coEvery { crisisStepsDao.getCrisisSteps() } returns options
+
+        // WHEN
+        val result = getCrisisTreatmentUseCase.invoke()
+
+        // THEN
+        assertEquals(options, result)
+        coVerify { crisisStepsDao.getCrisisSteps() }
+    }
+
+    @Test
+    fun `given valid email, when local database is empty, then return treatment options from remote database and update local database`() = runTest {
+        // GIVEN
+        val email = "test@example.com"
+        val user = mockk<User>(relaxed = true)
+        val options = listOf(OptionTreatment(), OptionTreatment())
+        coEvery { prefs.getEmail() } returns email
+        coEvery { userRepository.getUser(email) } returns user
+        coEvery { user.stepCrisis } returns options
+
+        // WHEN
+        val result = getCrisisTreatmentUseCase.invoke()
+
+        // THEN
+        assertEquals(options, result)
+        coVerify { userRepository.getUser(email) }
+        coVerify { crisisStepsDao.insertCrisisStep(any()) }
     }
 }

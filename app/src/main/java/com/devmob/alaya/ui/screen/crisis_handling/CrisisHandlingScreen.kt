@@ -1,9 +1,8 @@
 package com.devmob.alaya.ui.screen.crisis_handling
 
-import android.speech.tts.TextToSpeech
 import ExpandableButton
+import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.SubcomposeAsyncImage
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -89,13 +89,10 @@ fun CrisisHandlingScreen(
 
 
 
-    BackHandler {
-        // Comportamiento del botón "Atrás"
-    }
+    BackHandler {}
     if (!viewModel.optionTreatmentsList.isNullOrEmpty()) {
         viewModel.loading.value = false
     }
-    viewModel.fetchCrisisSteps()
 
     if (viewModel.currentStep == null) {
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -177,88 +174,69 @@ fun CrisisHandlingScreen(
                         end.linkTo(parent.end, margin = 16.dp)
                     })
             }
-            //TODO acá se reemplazó la animación de Lottie por la image de Firestore
-            /*
-                        val composition by rememberLottieComposition(
-                            spec = LottieCompositionSpec.RawRes(
-                                when (currentStep?.image) {
-                                    "image_step_1" -> R.raw.crisis_step1_animation
-                                    "image_step_2" -> R.raw.animation
-                                    "image_step_3" -> R.raw.crisis_step3_animation
-                                    else -> R.raw.feedback_congratulations_animation // Animación por defecto si no hay un paso válido
-                                }
-                            )
-                        )*/
-            /*
-                        val composition by rememberLottieComposition(
-                            spec = LottieCompositionSpec.Url(currentStep?.image)
+            if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
+            SubcomposeAsyncImage(
+                model = currentStep?.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .aspectRatio(1f)
+                    .constrainAs(lottieAnimation) {
+                        top.linkTo(title.bottom, margin = 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(description.top, margin = 16.dp)
+                    },
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = ColorPrimary
                         )
+                    }
+                },
+                error = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Error al cargar imagen", color = Color.Red)
+                    }
+                }
+            )} else{
+                val composition by rememberLottieComposition(
+                    spec = LottieCompositionSpec.RawRes(
+                        when (currentStep?.image) {
+                            "image_step_1" -> R.raw.crisis_step1_animation
+                            "image_step_2" -> R.raw.animation
+                            "image_step_3" -> R.raw.crisis_step3_animation
+                            else -> R.raw.feedback_congratulations_animation
+                        }
+                    )
+                )
 
-                        val progress by animateLottieCompositionAsState(
-                            composition = composition,
-                            iterations = LottieConstants.IterateForever
-                        )
+                val progress by animateLottieCompositionAsState(
+                    composition = composition,
+                    iterations = LottieConstants.IterateForever
+                )
 
-                        LottieAnimation(
-                            composition = composition,
-                            progress = progress,
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-                                .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
-                                .constrainAs(lottieAnimation) {
-                                    top.linkTo(title.bottom, margin = 24.dp)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(description.top, margin = 16.dp)
-                                }
-                        )*/
-if(!viewModel.optionTreatmentsList.isNullOrEmpty()) {
-    Image(
-        painter = rememberImagePainter(data = currentStep?.image),
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .aspectRatio(1f)
-            .constrainAs(lottieAnimation) {
-                top.linkTo(title.bottom, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(description.top, margin = 16.dp)
-            },
-        contentScale = ContentScale.Crop
-    )
-}  else {
-    val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(
-            when (currentStep?.image) {
-                "image_step_1" -> R.raw.crisis_step1_animation
-                "image_step_2" -> R.raw.animation
-                "image_step_3" -> R.raw.crisis_step3_animation
-                else -> R.raw.feedback_congratulations_animation
+                LottieAnimation(
+                    composition = composition,
+                    progress = progress,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .aspectRatio(1f)
+                        .constrainAs(lottieAnimation) {
+                            top.linkTo(title.bottom, margin = 24.dp)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(description.top, margin = 16.dp)
+                        }
+                )
             }
-        )
-    )
-
-        val progress by animateLottieCompositionAsState(
-            composition = composition,
-    iterations = LottieConstants.IterateForever
-    )
-
-    LottieAnimation(
-        composition = composition,
-        progress = progress,
-        modifier = Modifier
-            .fillMaxWidth(0.8f) // Ajusta el ancho al 80% del tamaño de la pantalla
-            .aspectRatio(1f) // Mantén una relación de aspecto de 1:1 (cuadrada)
-            .constrainAs(lottieAnimation) {
-                top.linkTo(title.bottom, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(description.top, margin = 16.dp)
-            }
-    )
-
-}
 
             if (currentStep != null) {
                 TextContainer(
