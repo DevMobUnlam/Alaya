@@ -13,5 +13,3 @@ class UploadImageToFirestoreUseCase(
         return repository.uploadImage(imageUri, path)
     }
 }
-
-
