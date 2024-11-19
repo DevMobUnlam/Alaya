@@ -17,29 +17,18 @@ import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.domain.model.OptionTreatment
-import com.devmob.alaya.ui.components.Button
-import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
-import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
