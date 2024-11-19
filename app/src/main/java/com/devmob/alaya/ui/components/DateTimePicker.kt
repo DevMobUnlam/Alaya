@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.CrisisTimeDetails
+import com.devmob.alaya.utils.updateDate
+import com.devmob.alaya.utils.updateHour
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,8 +53,8 @@ fun DateTimePicker(
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            selectedStartTime.value = calendar.time
-            onStartDateChange(calendar.time)
+            selectedStartTime.value = selectedStartTime.value.updateDate(calendar.time)
+            onStartDateChange(selectedStartTime.value)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
     ).apply {
@@ -63,8 +65,8 @@ fun DateTimePicker(
         ContextThemeWrapper(context, R.style.CustomPickerTheme),
         { _, year, month, dayOfMonth ->
             calendar.set(year, month, dayOfMonth)
-            selectedEndTime.value = calendar.time
-            onEndDateChange(calendar.time)
+            selectedEndTime.value = selectedEndTime.value.updateDate(calendar.time)
+            onEndDateChange(selectedEndTime.value)
         },
         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
     ).apply {
@@ -76,8 +78,8 @@ fun DateTimePicker(
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            selectedStartTime.value = calendar.time
-            onStartTimeChange(calendar.time)
+            selectedStartTime.value = selectedStartTime.value.updateHour(calendar.time)
+            onStartTimeChange(selectedStartTime.value)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )
@@ -87,8 +89,8 @@ fun DateTimePicker(
         { _, hourOfDay, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calendar.set(Calendar.MINUTE, minute)
-            selectedEndTime.value = calendar.time
-            onEndTimeChange(calendar.time)
+            selectedEndTime.value = selectedEndTime.value.updateHour(calendar.time)
+            onEndTimeChange(selectedEndTime.value)
         },
         calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
     )

@@ -2,19 +2,11 @@ package com.devmob.alaya.ui.screen.patient_profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +24,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.HorizontalCardCarousel
@@ -182,7 +176,7 @@ fun PatientProfileScreen(
 fun PatientProfileScreenPreview() {
     PatientProfileScreen(
         navController = NavController(LocalContext.current),
-        PatientProfileViewModel(GetUserDataUseCase()),
+        PatientProfileViewModel(GetUserDataUseCase(GetUserRepositoryImpl(FirebaseClient()))),
         ""
     )
 }

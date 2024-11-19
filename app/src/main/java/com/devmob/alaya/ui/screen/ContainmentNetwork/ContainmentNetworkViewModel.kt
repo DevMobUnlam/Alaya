@@ -4,7 +4,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
-import android.util.Log
 import androidx.lifecycle.*
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.ContactUseCase
@@ -32,17 +31,15 @@ class ContainmentNetworkViewModel(
         }
     }
 
-
     private val _operationStatus = MutableLiveData<String>()
-    val operationStatus: LiveData<String> get() = _operationStatus
 
-    fun addContactFromPhone(context: Context, email: String, contactUri: Uri) {
+    fun addContactFromPhone(context: Context, contactUri: Uri) {
         val contentResolver = context.contentResolver
         val contact = loadContactFromUri(contentResolver, contactUri)
 
         if (contact != null) {
             viewModelScope.launch {
-                val result = contactUseCase.addContact(email, contact)
+                val result = contactUseCase.addContact(contact)
                 handleFirebaseResult(result, "Contacto agregado con éxito", "Error al agregar contacto")
             }
         } else {
@@ -50,9 +47,9 @@ class ContainmentNetworkViewModel(
         }
     }
 
-    fun editContact(email: String, contact: Contact) {
+    fun editContact(contact: Contact) {
         viewModelScope.launch {
-            val result = contactUseCase.editContact(email, contact)
+            val result = contactUseCase.editContact(contact)
             handleFirebaseResult(result, "Contacto editado con éxito", "Error al editar contacto")
 
             if (result is FirebaseResult.Success) {
@@ -63,9 +60,9 @@ class ContainmentNetworkViewModel(
         }
     }
 
-    fun deleteContact(email: String, contact: Contact) {
+    fun deleteContact(contact: Contact) {
         viewModelScope.launch {
-            val result = contactUseCase.deleteContact(email, contact)
+            val result = contactUseCase.deleteContact(contact)
             handleFirebaseResult(result, "Contacto eliminado con éxito", "Error al eliminar contacto")
 
             if (result is FirebaseResult.Success) {
