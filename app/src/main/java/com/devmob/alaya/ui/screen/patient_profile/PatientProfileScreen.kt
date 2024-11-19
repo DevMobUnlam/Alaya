@@ -125,7 +125,14 @@ fun PatientProfileScreen(
                         end.linkTo(parent.end)
                     },
                 style = ButtonStyle.Outlined,
-                onClick = {},
+                onClick = {
+                    navController.navigate(
+                        NavUtils.ProfessionalRoutes.CreateSessions.route.replace(
+                            "{patientEmail}",
+                            email
+                        )
+                    )
+                          },
                 containerColor = ColorWhite
             )
 

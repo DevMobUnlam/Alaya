@@ -1,6 +1,7 @@
 package com.devmob.alaya
 
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
+import com.devmob.alaya.domain.SessionUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
@@ -46,6 +48,8 @@ import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
+import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
+import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
@@ -85,6 +89,11 @@ fun MainContent(
     val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
     val getUserDataUseCase = GetUserDataUseCase();
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val sessionViewModel: SessionViewModel = viewModel(
+        factory = ViewModelFactory {
+            SessionViewModel(SessionUseCase())
+        }
+    )
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -98,7 +107,8 @@ fun MainContent(
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
-        ProfessionalRoutes.SendInvitation.route
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.CreateSessions.route
     )
     val factoryCrisisRegistrationVM =
         ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
@@ -370,6 +380,7 @@ fun MainContent(
                 }
             ) { backStackEntry ->
                 val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+
                 ConfigTreatmentScreen(
                     patientEmail = patientEmail,
                     configTreatmentViewModel,
@@ -563,6 +574,32 @@ fun MainContent(
                 }
             ) {
                 SendInvitationScreen(sendInvitationViewModel)
+            }
+
+            composable(ProfessionalRoutes.CreateSessions.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                sessionViewModel.patientEmail.value = patientEmail
+                ScheduleSessionScreen(
+                    patientEmail = patientEmail,
+                    viewModel = sessionViewModel,
+                    navController = navController,
+                )
             }
 
         }

@@ -46,6 +46,7 @@ object NavUtils {
                 "add_custom_activity/$patientEmail"
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
+        data object CreateSessions : ProfessionalRoutes("create_sessions/{patientEmail}")
     }
 
     val routeTitleAppBar = mapOf(
@@ -58,7 +59,8 @@ object NavUtils {
         ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
-        ProfessionalRoutes.SendInvitation.route to "Enviar invitación"
+        ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones"
     )
 
     val routesWithBottomBar = listOf(

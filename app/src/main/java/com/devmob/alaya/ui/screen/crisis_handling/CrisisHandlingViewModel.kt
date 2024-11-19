@@ -68,10 +68,8 @@ class CrisisHandlingViewModel (
         viewModelScope.launch {
             _loading.value = true
             try {
-                // Obtén los tratamientos del terapeuta
                 optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
 
-                // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
                     stepCrisisList = optionTreatmentsList!!.map { option ->
                         StepCrisis(
@@ -82,7 +80,6 @@ class CrisisHandlingViewModel (
                     }
                     steps = stepCrisisList
                 } else {
-                    // Si no hay tratamiento por terapeuta, carga los pasos predeterminados
                     steps = listOf(
                         StepCrisis(
                             "Controlar la respiración",
