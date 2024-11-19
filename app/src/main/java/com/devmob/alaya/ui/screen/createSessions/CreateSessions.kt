@@ -1,26 +1,22 @@
 package com.devmob.alaya.ui.screen.createSessions
 
 import android.app.TimePickerDialog
-import android.util.Log
 import android.view.ContextThemeWrapper
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,16 +24,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.RadioButton
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.DayOfWeek
-import com.devmob.alaya.domain.model.Recurrence
 import com.devmob.alaya.ui.components.Button
-import com.devmob.alaya.ui.components.DateTimePickerSession
-import com.devmob.alaya.ui.theme.ColorPrimary
+import com.devmob.alaya.ui.components.Modal
+import com.devmob.alaya.ui.theme.ColorText
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -47,130 +46,124 @@ import java.util.Locale
 fun ScheduleSessionScreen(
     viewModel: SessionViewModel,
     navController: NavController,
-    patientEmail: String
 ) {
-    val session = viewModel.session.value
-    val selectedDays = viewModel.selectedDays.value
-    val selectedDate = viewModel.selectedDate.value
-    val selectedTime = viewModel.selectedTime.value
-    val sessionDuration = viewModel.sessionDuration.value
+    val selectedDayOfWeek = viewModel.selectedDayOfWeek.value
+    val showModal = remember { mutableStateOf(false) }
+    val nextSessionDate = viewModel.nextSessionDate.value
+    val isMultipleSessions = viewModel.isMultipleSessions.value
+
+    fun onConfirmButtonClick() {
+        viewModel.calculateNextSessionDate()
+        if (viewModel.nextSessionDate.value != null) {
+            showModal.value = true
+        }
+    }
+
+    fun onConfirmSession() {
+        if (isMultipleSessions) {
+            viewModel.scheduleMonthlySessions()
+        } else {
+            viewModel.scheduleSession()
+        }
+        showModal.value = false
+    }
+
+    fun onCancelSession() {
+        showModal.value = false
+    }
+
+    if (showModal.value) {
+        Modal(
+            show = showModal.value,
+            title = "Próxima sesión",
+            description = nextSessionDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+            primaryButtonText = "Confirmar",
+            secondaryButtonText = "Cancelar",
+            onDismiss = { showModal.value = false },
+            onConfirm = { onConfirmSession() },
+            onDismissRequest = { onCancelSession() }
+        )
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo_home),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            alpha = 0.8f
         )
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-            DropdownMenu(
-                selectedOption = session.recurrence ?: Recurrence.NONE,
-                onOptionSelected = { recurrence ->
-                    viewModel.updateRecurrence(recurrence)
-                }
-            )
-            when (session.recurrence) {
-                Recurrence.WEEKLY, Recurrence.DAILY -> {
-                    WeekdaySelector(selectedDays = selectedDays) { days ->
-                        viewModel.selectedDays.value = days
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Seleccione un día y horario para programar sesiones semanales",
+                    color = ColorText,
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold,
+                )
+
+                WeekdaySelector(
+                    selectedDay = selectedDayOfWeek ?: DayOfWeek.MONDAY,
+                    onDaySelected = { day -> viewModel.selectedDayOfWeek.value = day }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TimePickers(
+                    onStartTimeChange = { date ->
+                        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                        viewModel.selectedTime.value = timeFormat.format(date)
                     }
-                    TimePickers(
-                        onStartTimeChange = { time ->
-                            viewModel.selectedTime.value = time.toString()
-                        }
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = !isMultipleSessions,
+                        onClick = { viewModel.isMultipleSessions.value = false },
+                                colors = RadioButtonDefaults.colors(
+                                selectedColor = Color(0xFFF5A5DE) )
                     )
+                    Text(text = "Programar solo una sesión")
                 }
-
-                Recurrence.FORTNIGHTLY, Recurrence.MONTHLY, Recurrence.ONCE -> {
-                    DateTimePickerSession(
-                        onStartDateChange = { date ->
-                            viewModel.selectedDate.value = date
-                        },
-
-                        )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = isMultipleSessions,
+                        onClick = { viewModel.isMultipleSessions.value = true },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = Color(0xFFF5A5DE) )
+                    )
+                    Text(text = "Programar sesiones del mes")
                 }
-
-                Recurrence.NONE -> Log.d("a", "nada")
-                null -> Log.d("a", "null")
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            DurationInput(
-                durationInMinutes = sessionDuration,
-                onDurationChange = { duration ->
-                    viewModel.updateSessionDuration(duration)
-                }
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { viewModel.scheduleSession() },
-                text = "Confirmar sesión",
-                modifier = Modifier.fillMaxWidth()
+                onClick = { onConfirmButtonClick() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                text = "Confirmar sesión"
             )
         }
     }
 }
 
-@Composable
-fun DropdownMenu(
-    selectedOption: Recurrence,
-    onOptionSelected: (Recurrence) -> Unit
-) {
-    val options = Recurrence.values()
-    val optionLabels = mapOf(
-        Recurrence.ONCE to "Única vez",
-        Recurrence.WEEKLY to "Semanal",
-        Recurrence.MONTHLY to "Mensual",
-        Recurrence.FORTNIGHTLY to "Quincenal",
-        Recurrence.DAILY to "Más de una vez por semana",
-        Recurrence.NONE to "Seleccione recurrencia"
-    )
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .border(1.dp,
-                if (expanded) ColorPrimary else Color.Gray,
-                shape = RoundedCornerShape(8.dp))
-            .padding(8.dp)
-            .clickable { expanded = !expanded }
-            .fillMaxWidth()
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween, ) {
-            Text(
-                text = optionLabels[selectedOption] ?: selectedOption.name,
-                color = if (selectedOption == Recurrence.NONE) Color.Gray else Color.Black
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Icono desplegable"
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            options.forEach { option ->
-                DropdownMenuItem(onClick = {
-                    onOptionSelected(option)
-                    expanded = false
-                }, text = { Text(optionLabels[option] ?: option.name)})
-            }
-        }
-    }
-}
 
 @Composable
 fun WeekdaySelector(
-    selectedDays: List<DayOfWeek>,
-    onDaySelected: (List<DayOfWeek>) -> Unit
+    selectedDay: DayOfWeek,
+    onDaySelected: (DayOfWeek?) -> Unit
 ) {
     val daysOfWeek = listOf(
         DayOfWeek.MONDAY to "Lunes",
@@ -186,18 +179,17 @@ fun WeekdaySelector(
         daysOfWeek.forEach { (day, dayName) ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
-                    checked = selectedDays.contains(day),
+                    checked = selectedDay == day,
                     onCheckedChange = { isChecked ->
-                        val updatedDays = if (isChecked) {
-                            selectedDays + day
+                        if (isChecked) {
+                            onDaySelected(day)
                         } else {
-                            selectedDays - day
+                            onDaySelected(null)
                         }
-                        onDaySelected(updatedDays)
                     },
-                    colors = CheckboxDefaults.colors(checkedColor =Color(0xFFF5A5DE))
+                    colors = CheckboxDefaults.colors(checkedColor =Color(0xFFF5A5DE), uncheckedColor = ColorText)
                 )
-                Text(dayName)
+                Text(text = dayName, color = ColorText)
             }
         }
     }

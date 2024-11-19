@@ -7,18 +7,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.yml.charts.common.model.Point
 import com.devmob.alaya.domain.GetUserDataUseCase
+import com.devmob.alaya.domain.SessionUseCase
+import com.devmob.alaya.domain.model.Session
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.LightBlueColor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PatientProfileViewModel(private val getEmailUseCase: GetUserDataUseCase) :
+class PatientProfileViewModel(
+    private val getEmailUseCase: GetUserDataUseCase,
+    private val getSessionUseCase : SessionUseCase
+) :
     ViewModel() {
 
     var patientData by mutableStateOf<User?>(null)
     var isLoading by mutableStateOf(false)
+
+    private val _nextSession = MutableStateFlow<Session?>(null)
+    val nextSession: StateFlow<Session?> get() = _nextSession
+
+    fun getNextSession(patientEmail: String) {
+        viewModelScope.launch {
+            val session = getSessionUseCase.getNextSession(patientEmail)
+            _nextSession.value = session
+        }
+    }
 
     fun getPatientData(email: String) {
         viewModelScope.launch {

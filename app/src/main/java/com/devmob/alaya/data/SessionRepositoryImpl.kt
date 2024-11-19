@@ -4,7 +4,9 @@ import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.SessionRepository
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Session
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import java.util.UUID
 
 class SessionRepositoryImpl : SessionRepository {
@@ -33,4 +35,17 @@ class SessionRepositoryImpl : SessionRepository {
             doc.toObject(Session::class.java) ?: Session()
         }
     }.getOrElse { emptyList() }
+
+    override suspend fun getNextSession(patientEmail: String): Session? = runCatching {
+        val querySnapshot = db.collection("users")
+            .document(patientEmail)
+            .collection("sessions")
+            .whereGreaterThan("date", Date())
+            .orderBy("date", Query.Direction.ASCENDING)
+            .limit(1)
+            .get()
+            .await()
+
+        querySnapshot.documents.firstOrNull()?.toObject(Session::class.java)
+    }.getOrElse { null }
 }

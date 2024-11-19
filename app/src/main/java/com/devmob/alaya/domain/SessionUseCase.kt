@@ -14,5 +14,9 @@ class SessionUseCase {
     suspend fun getSessions(patientEmail: String): List<Session> {
         return sessionRepository.getSessions(patientEmail)
     }
+
+    suspend fun getNextSession(patientEmail: String): Session? {
+        return sessionRepository.getNextSession(patientEmail)
+    }
 }
 

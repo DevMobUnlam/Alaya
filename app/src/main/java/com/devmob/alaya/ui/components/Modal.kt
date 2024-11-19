@@ -21,7 +21,8 @@ fun Modal(
     secondaryButtonText: String? = null,
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
-    onDismissRequest: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
+    content: @Composable (() -> Unit)? = null
 ) {
     if (!show) return
     AlertDialog(
@@ -55,7 +56,9 @@ fun Modal(
             )
         },
         text = {
-            description?.let {
+            if (content != null) {
+                content() // Renderizar contenido personalizado si está disponible
+            } else if (description != null) {
                 Text(
                     text = description,
                     color = ColorText,

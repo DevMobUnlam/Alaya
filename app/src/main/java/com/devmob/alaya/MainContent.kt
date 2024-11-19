@@ -107,10 +107,11 @@ fun MainContent(
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
     val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
+    val getSessionUseCase = SessionUseCase()
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
     val sessionViewModel: SessionViewModel = viewModel(
         factory = ViewModelFactory {
-            SessionViewModel(SessionUseCase())
+            SessionViewModel(getSessionUseCase)
         }
     )
     val crisisRepository = CrisisRepositoryImpl(firebaseClient)
@@ -174,7 +175,7 @@ fun MainContent(
     )
 
     val patientProfileViewModel: PatientProfileViewModel =
-        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase) })
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase, getSessionUseCase) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -642,7 +643,6 @@ fun MainContent(
                 val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
                 sessionViewModel.patientEmail.value = patientEmail
                 ScheduleSessionScreen(
-                    patientEmail = patientEmail,
                     viewModel = sessionViewModel,
                     navController = navController,
                 )
