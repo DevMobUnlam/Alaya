@@ -1,22 +1,28 @@
 package com.devmob.alaya.ui.screen.createSessions
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.domain.NotificationRepository
 import com.devmob.alaya.domain.SessionUseCase
 import com.devmob.alaya.domain.model.DayOfWeek
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Session
 import com.devmob.alaya.domain.model.SessionStatus
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class SessionViewModel(private val sessionUseCase: SessionUseCase) : ViewModel() {
+class SessionViewModel(
+    private val sessionUseCase: SessionUseCase,
+    //private val notificationRepository : NotificationRepository
+    ) : ViewModel() {
     val selectedDayOfWeek = mutableStateOf<DayOfWeek?>(null)
     val selectedTime = mutableStateOf<String?>("")
     val sessionDuration = mutableStateOf(0)
@@ -122,4 +128,24 @@ class SessionViewModel(private val sessionUseCase: SessionUseCase) : ViewModel()
             }
         }
     }
+
+    fun sendNotification(patientEmail: String) {
+        viewModelScope.launch {
+            val notification =
+                sessionUseCase.sendNotificationSession(patientEmail)
+            if (notification.isSuccessful) {
+                Log.i(
+                    "SessionViewModel",
+                    "Notificacion enviada satisfactoriamente a: $patientEmail"
+                )
+            } else {
+                Log.w(
+                    "SessionViewModel",
+                    "No se pudo enviar la notificación  a: $patientEmail"
+                )
+            }
+        }
+    }
+
+
 }

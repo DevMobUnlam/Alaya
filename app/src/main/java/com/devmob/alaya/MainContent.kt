@@ -111,7 +111,7 @@ fun MainContent(
     )
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
-    val getSessionUseCase = SessionUseCase()
+    val getSessionUseCase = SessionUseCase(notificationRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
     val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
     val sessionViewModel: SessionViewModel = viewModel(

@@ -3,8 +3,11 @@ package com.devmob.alaya.domain
 import com.devmob.alaya.data.SessionRepositoryImpl
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Session
+import retrofit2.Response
 
-class SessionUseCase {
+class SessionUseCase(
+    private val notificationRepository : NotificationRepository
+) {
     private val sessionRepository = SessionRepositoryImpl()
 
     suspend operator fun invoke(session: Session, patientEmail: String): FirebaseResult {
@@ -17,6 +20,10 @@ class SessionUseCase {
 
     suspend fun getNextSession(patientEmail: String): Session? {
         return sessionRepository.getNextSession(patientEmail)
+    }
+
+    suspend fun sendNotificationSession(patientEmail: String): Response<Unit> {
+        return notificationRepository.sendNotificationSessions(patientEmail)
     }
 }
 

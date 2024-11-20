@@ -51,6 +51,7 @@ fun ScheduleSessionScreen(
     val showModal = remember { mutableStateOf(false) }
     val nextSessionDate = viewModel.nextSessionDate.value
     val isMultipleSessions = viewModel.isMultipleSessions.value
+    val patientEmail = navController.currentBackStackEntry?.arguments?.getString("patientEmail")
 
     fun onConfirmButtonClick() {
         viewModel.calculateNextSessionDate()
@@ -62,8 +63,14 @@ fun ScheduleSessionScreen(
     fun onConfirmSession() {
         if (isMultipleSessions) {
             viewModel.scheduleMonthlySessions()
+            if (patientEmail != null) {
+                viewModel.sendNotification(patientEmail)
+            }
         } else {
             viewModel.scheduleSession()
+            if (patientEmail != null) {
+                viewModel.sendNotification(patientEmail)
+            }
         }
         showModal.value = false
     }
