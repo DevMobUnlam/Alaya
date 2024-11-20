@@ -94,7 +94,8 @@ fun MainContent(
 
     val firebaseClient = FirebaseClient()
     val getUserRepository = GetUserRepositoryImpl(firebaseClient)
-    val notificationRepository = NotificationRepositoryImpl(NotificationService())
+    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
+    val notificationRepository = NotificationRepositoryImpl(NotificationService(), firebaseClient, getUserDataUseCase)
     val contactUseCase = ContactUseCase(
         prefs,
         ContactRepositoryImpl(firebaseClient),
@@ -106,20 +107,20 @@ fun MainContent(
     )
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
-    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
     val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
     val crisisRepository = CrisisRepositoryImpl(firebaseClient)
     val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(crisisRepository)
-    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient)
     val uploadImageToFirestoreRepository = UploadImageToFirestoreRepositoryImpl(firebaseClient)
     val uploadImageToFirestoreUseCase = UploadImageToFirestoreUseCase(
         uploadImageToFirestoreRepository,
         prefs
     )
+    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient, uploadImageToFirestoreUseCase)
     val saveCrisisTreatmentUseCase = SaveCrisisTreatmentUseCase(
         crisisTreatmentRepository,
-        uploadImageToFirestoreUseCase
+        uploadImageToFirestoreUseCase,
+        notificationRepository
     )
     val userRepository = GetUserRepositoryImpl(firebaseClient)
     val loginRepository = LoginRepositoryImpl(firebaseClient)
