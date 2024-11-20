@@ -65,7 +65,7 @@ class CrisisRegistrationViewModel(
             _crisisDetails.value = result
 
             if (result != null) {
-                if (result.completed == false) {
+                if (!result.completed) {
                     val startTime = result.start
                     val endTime = result.end
                     if (startTime != null && endTime != null) {
@@ -223,6 +223,17 @@ class CrisisRegistrationViewModel(
         updateStateEmotionList(currentState, updatedEmotionList)
     }
 
+    fun selectCrisisTool(tool: CrisisTool) {
+        val currentState = _screenState.value ?: return
+        val updatedToolList =
+            currentState.crisisDetails.toolList.toMutableList().apply {
+                if (!any { it.name == tool.name }) {
+                    add(tool)
+                }
+            }
+        updateStateToolList(currentState, updatedToolList)
+    }
+
     fun updateIntensityEmotion(crisisEmotion: CrisisEmotion, intensity: Intensity) {
         val currentState = _screenState.value ?: return
         val updatedEmotionList =
@@ -245,6 +256,18 @@ class CrisisRegistrationViewModel(
             )
         )
     }
+
+    private fun updateStateToolList(
+        currentState: CrisisRegistrationScreenState,
+        updatedToolList: MutableList<CrisisTool>
+    ) {
+        _screenState.value = currentState.copy(
+            crisisDetails = currentState.crisisDetails.copy(
+                toolList = updatedToolList
+            )
+        )
+    }
+
 
     fun updateCrisisEmotion(emotion: CrisisEmotion) {
         val currentState = _screenState.value ?: return
