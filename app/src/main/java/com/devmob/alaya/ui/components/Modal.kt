@@ -22,7 +22,6 @@ fun Modal(
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
     onDismissRequest: () -> Unit = {},
-    content: @Composable (() -> Unit)? = null
 ) {
     if (!show) return
     AlertDialog(
@@ -56,9 +55,7 @@ fun Modal(
             )
         },
         text = {
-            if (content != null) {
-                content() // Renderizar contenido personalizado si está disponible
-            } else if (description != null) {
+            if (description != null) {
                 Text(
                     text = description,
                     color = ColorText,
@@ -67,7 +64,7 @@ fun Modal(
                     textAlign = TextAlign.Center
                 )
             }
-        }
+            }
     )
 }
 
