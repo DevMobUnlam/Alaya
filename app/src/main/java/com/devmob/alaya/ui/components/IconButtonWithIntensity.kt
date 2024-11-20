@@ -27,15 +27,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.domain.model.Intensity
+import com.devmob.alaya.ui.theme.ColorDarkOrange
+import com.devmob.alaya.ui.theme.ColorEnfado
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorMiedo
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.ColorTristeza
 import com.devmob.alaya.ui.theme.ColorWhite
 
 /**
@@ -106,7 +111,7 @@ fun IconButtonWithIntensity(
             },
             shape = CircleShape,
             colors = IconButtonColors(
-                containerColor = if (isActive) ColorText else ColorPrimary,
+                containerColor = if (isActive) ColorText else getColorByText(text),
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite
@@ -129,6 +134,18 @@ fun IconButtonWithIntensity(
     }
 }
 
+fun getColorByText(text: String): Color {
+    var color = ColorPrimary
+    when (text) {
+        "Miedo" -> color = ColorMiedo
+        "Tristeza" -> color = ColorTristeza
+        "Enfado" -> color = ColorEnfado
+        else -> color = ColorPrimary
+    }
+    return color
+}
+
+
 @Preview
 @Composable
 fun EmotionIconButtonPreview() {
@@ -136,7 +153,7 @@ fun EmotionIconButtonPreview() {
         Icons.Outlined.Refresh,
         "Mareos",
         size = 70.dp,
-        isActive = true,
+        isActive = false,
         onChangedIntensity = {},
         intensity = Intensity.MEDIUM,
         onClick = {})

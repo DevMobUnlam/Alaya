@@ -15,6 +15,11 @@ val ColorDarkOrange = Color(0xFFFE7A5A)
 val ColorOrange = Color(0xFFEC9E8B)
 val ColorGreen = Color(0xFF9BDC9D)
 
+//Emociones
+val ColorMiedo = Color(0xFF636363)
+val ColorTristeza = Color(0xFFA0A3FC)
+val ColorEnfado = Color(0xFFF46565)
+
 // Colores básicos
 val ColorWhite = Color(0xFFFFFFFF)
 val ColorBlack = Color(0xFF000000)
