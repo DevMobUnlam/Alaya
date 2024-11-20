@@ -32,6 +32,9 @@ class SaveCrisisTreatmentUseCaseTest {
     private lateinit var uploadImage: UploadImageToFirestoreUseCase
 
     @MockK
+    private lateinit var notificationRepository: NotificationRepository
+
+    @MockK
     private lateinit var treatment: List<OptionTreatment>
 
     private lateinit var saveCrisisTreatmentUseCase: SaveCrisisTreatmentUseCase
@@ -44,7 +47,7 @@ class SaveCrisisTreatmentUseCaseTest {
         Dispatchers.setMain(testDispatcher)
         coEvery {  customTreatmentRepository.saveCustomTreatment("email", treatment) } returns FirebaseResult.Success
         saveCrisisTreatmentUseCase =
-            SaveCrisisTreatmentUseCase(customTreatmentRepository, uploadImage)
+            SaveCrisisTreatmentUseCase(customTreatmentRepository, uploadImage, notificationRepository)
     }
 
 
