@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -37,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
+import com.devmob.alaya.ui.theme.ColorDarkOrange
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
@@ -94,18 +96,18 @@ fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
             modifier = Modifier.size(48.dp)
         )
 
-        IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController)
-        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController)
+        IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPrimary)
+        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorDarkOrange)
     }
 }
 
 @Composable
-fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHostController) {
+fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHostController, animationColor: Color) {
     val scale = remember { Animatable(1f) }
 
     LaunchedEffect(Unit) {
         scale.animateTo(
-            targetValue = 1.1f,
+            targetValue = 1.15f,
             animationSpec = infiniteRepeatable(
                 animation = tween(durationMillis = 1000, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
@@ -121,7 +123,7 @@ fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHost
                     scaleX = scale.value
                     scaleY = scale.value
                 }
-                .background(ColorPrimary, shape = CircleShape)
+                .background(animationColor, shape = CircleShape)
         )
         FloatingMiddleButton(item, navHostController)
     }
@@ -132,7 +134,7 @@ fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
     FloatingActionButton(
         containerColor = ColorTertiary,
         modifier = Modifier
-            .size(60.dp),
+            .size(65.dp),
         onClick = { navHostController.navigate(item.route) },
         shape = CircleShape
     ) {

@@ -9,6 +9,12 @@ val ColorQuaternary = Color(0xFFD7F4F4)
 val LightBlueColor = Color(0xFFEFF3FF)
 val ColorText =Color(0xFF2E4D83)
 
+//Colores extra
+val ColorRed = Color(0xFFF46565)
+val ColorDarkOrange = Color(0xFFFE7A5A)
+val ColorOrange = Color(0xFFEC9E8B)
+val ColorGreen = Color(0xFF9BDC9D)
+
 // Colores básicos
 val ColorWhite = Color(0xFFFFFFFF)
 val ColorBlack = Color(0xFF000000)
