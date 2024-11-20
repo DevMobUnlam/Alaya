@@ -11,7 +11,7 @@ data class User (
     val email: String = "",
     val image: Int = R.drawable.logounologin,
     val hour: String = "No tiene sesiones",
-    val role: UserRole = UserRole.PATIENT,
+    val role: UserRole = UserRole.NONE,
     val invitation: Invitation? = null,
     val invitations: List<Invitation> = emptyList(),
     val professional: Professional? = null,
@@ -20,7 +20,7 @@ data class User (
     val stepCrisis: List<OptionTreatment>? = null
 ) : Serializable {
     // Constructor vacío requerido para Firestore
-    constructor() : this("", "", "", "", R.drawable.logounologin, "No tiene sesiones", UserRole.PATIENT)
+    constructor() : this("", "", "", "", R.drawable.logounologin, "No tiene sesiones", UserRole.NONE)
     constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
 }
 
