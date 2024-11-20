@@ -37,20 +37,25 @@ class SessionViewModel(private val sessionUseCase: SessionUseCase) : ViewModel()
         val selectedMinute = selectedTime.value?.substringAfter(":")?.toIntOrNull()
 
         if (selectedDay != null && selectedHour != null && selectedMinute != null) {
-            val argentinaZoneId = ZoneId.of("America/Argentina/Buenos_Aires")
-            val today = ZonedDateTime.now(argentinaZoneId)
-            val todayDayOfWeek = today.dayOfWeek
+            val today = Calendar.getInstance()
+            val todayDayOfWeek = today.get(Calendar.DAY_OF_WEEK)
 
-            val daysUntilNextDay = (selectedDay.ordinal - todayDayOfWeek.ordinal + 7) % 7
-            var nextDate = today.plusDays(daysUntilNextDay.toLong())
+            val adjustedTodayDayOfWeek = if (todayDayOfWeek == Calendar.SUNDAY) 7 else todayDayOfWeek - 1
+            val daysUntilNextDay = (selectedDay.ordinal - adjustedTodayDayOfWeek + 7) % 7
 
-            nextDate = nextDate.withHour(selectedHour).withMinute(selectedMinute).withSecond(0).withNano(0)
+            today.add(Calendar.DAY_OF_YEAR, daysUntilNextDay)
+            today.set(Calendar.HOUR_OF_DAY, selectedHour)
+            today.set(Calendar.MINUTE, selectedMinute)
+            today.set(Calendar.SECOND, 0)
+            today.set(Calendar.MILLISECOND, 0)
 
-            if (daysUntilNextDay == 0 && nextDate.isBefore(today)) {
-                nextDate = nextDate.plusWeeks(1)
+            if (today.time.before(Date())) {
+                today.add(Calendar.WEEK_OF_YEAR, 1)
             }
 
-            nextSessionDate.value = nextDate
+            val zoneId = ZoneId.systemDefault()
+            val nextSessionDateTime = today.time.toInstant().atZone(zoneId)
+            nextSessionDate.value = nextSessionDateTime
         } else {
             nextSessionDate.value = null
         }
