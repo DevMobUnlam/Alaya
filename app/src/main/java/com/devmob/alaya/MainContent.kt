@@ -51,6 +51,7 @@ import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
+import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
@@ -143,6 +144,7 @@ fun MainContent(
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         "patient_profile/{email}",
+        NavUtils.PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
@@ -380,6 +382,10 @@ fun MainContent(
                         navController = navController
                     )
                 }
+            }
+            //Pantalla actividades diarias
+            composable(NavUtils.PatientRoutes.ActivityDay.route) {
+                ActivityDayScreen()
             }
 
             composable("feedback_screen/{feedbackType}",
