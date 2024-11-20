@@ -112,7 +112,7 @@ class CrisisHandlingViewModel (
     }
 
     fun nextStep() {
-        currentStep?.let { addTool(it.title) } // si voy al siguiente paso doy por hecho que se utilizo la herramienta
+        currentStep?.let { addTool(it.title) }
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
         } else {
@@ -152,7 +152,7 @@ class CrisisHandlingViewModel (
 
     fun showModal() {
         shouldShowModal = true
-        currentStep?.let { addTool(it.title) } //cuando se muestra el modal puede tomar 2 caminos, ahi tambien doy por hecho que realizo la herramienta del paso actual
+        currentStep?.let { addTool(it.title) }
     }
 
     fun dismissModal() {

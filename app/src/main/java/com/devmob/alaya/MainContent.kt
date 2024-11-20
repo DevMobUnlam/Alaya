@@ -26,6 +26,7 @@ import com.devmob.alaya.data.NotificationService
 import com.devmob.alaya.data.RegisterNewUserRepositoryImpl
 import com.devmob.alaya.data.UploadImageToFirestoreRepositoryImpl
 import com.devmob.alaya.data.UserFirestoreRepositoryImpl
+import com.devmob.alaya.data.local_storage.CrisisStepsDatabase
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
@@ -45,18 +46,14 @@ import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
+import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
 import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
@@ -64,10 +61,16 @@ import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
+import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
@@ -77,6 +80,7 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
+import com.devmob.alaya.utils.CrisisStepsManager
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -94,7 +98,8 @@ fun MainContent(
 
     val firebaseClient = FirebaseClient()
     val getUserRepository = GetUserRepositoryImpl(firebaseClient)
-    val notificationRepository = NotificationRepositoryImpl(NotificationService())
+    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
+    val notificationRepository = NotificationRepositoryImpl(NotificationService(), firebaseClient, getUserDataUseCase)
     val contactUseCase = ContactUseCase(
         prefs,
         ContactRepositoryImpl(firebaseClient),
@@ -106,9 +111,9 @@ fun MainContent(
     )
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
-    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
     val getSessionUseCase = SessionUseCase()
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
     val sessionViewModel: SessionViewModel = viewModel(
         factory = ViewModelFactory {
             SessionViewModel(getSessionUseCase)
@@ -116,15 +121,16 @@ fun MainContent(
     )
     val crisisRepository = CrisisRepositoryImpl(firebaseClient)
     val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(crisisRepository)
-    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient)
     val uploadImageToFirestoreRepository = UploadImageToFirestoreRepositoryImpl(firebaseClient)
     val uploadImageToFirestoreUseCase = UploadImageToFirestoreUseCase(
         uploadImageToFirestoreRepository,
         prefs
     )
+    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient, uploadImageToFirestoreUseCase)
     val saveCrisisTreatmentUseCase = SaveCrisisTreatmentUseCase(
         crisisTreatmentRepository,
-        uploadImageToFirestoreUseCase
+        uploadImageToFirestoreUseCase,
+        notificationRepository
     )
     val userRepository = GetUserRepositoryImpl(firebaseClient)
     val loginRepository = LoginRepositoryImpl(firebaseClient)
@@ -132,12 +138,14 @@ fun MainContent(
     val getRoleUseCase = GetRoleUseCase(getUserRepository)
     val getCrisisTreatmentUseCase = GetCrisisTreatmentUseCase(
         prefs,
-        userRepository
+        userRepository,
+        crisisStepsDao
     )
     val registerNewUserRepository = RegisterNewUserRepositoryImpl(firebaseClient)
     val registerNewUserUseCase = RegisterNewUserUseCase(registerNewUserRepository)
     val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
     val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
+    val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -146,6 +154,7 @@ fun MainContent(
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         "patient_profile/{email}",
+        NavUtils.PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
@@ -164,7 +173,8 @@ fun MainContent(
             PatientHomeScreenViewmodel(
                 getUserDataUseCase,
                 getInvitationUseCase,
-                firebaseClient
+                firebaseClient,
+                crisisStepsManager
             )
         }
     )
@@ -383,6 +393,10 @@ fun MainContent(
                         navController = navController
                     )
                 }
+            }
+            //Pantalla actividades diarias
+            composable(NavUtils.PatientRoutes.ActivityDay.route) {
+                ActivityDayScreen()
             }
 
             composable("feedback_screen/{feedbackType}",
