@@ -9,9 +9,11 @@ import androidx.compose.foundation.content.contentReceiver
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -123,38 +125,110 @@ fun PatientIASummaryScreen(
             }
             is IASummaryUIState.Success -> {
 
-                Column(modifier = Modifier.constrainAs(summaryCard) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start, margin = 10.dp)
-                    end.linkTo(parent.end, margin = 10.dp)
-                    bottom.linkTo(parent.bottom)
-                }, verticalArrangement = Arrangement.spacedBy(15.dp)){
+                CardContainer(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .constrainAs(summaryCard) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start, margin = 15.dp)
+                            end.linkTo(parent.end, margin = 15.dp)
+                            bottom.linkTo(parent.bottom)
+                        }
+                        .verticalScroll(rememberScrollState()),
+                    enabled = false,
+                    content = {
+                        Text(modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
+                            text = "Detalles",
+                            fontSize = 27.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            color = ColorText
 
-                    ExpandableCard(header = "Detalles", modifier = Modifier.fillMaxWidth()){
-                            Text(modifier = Modifier
-                                .padding(horizontal = 5.dp, vertical = 8.dp),
-                                text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
-                                textAlign = TextAlign.Start,
-                                color = ColorText
-                            )
-                    }
-                    ExpandableCard(header = "¿Qué sucedio?",  modifier = Modifier.fillMaxWidth()){
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
                         Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 8.dp),
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
+                            text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
+                            fontSize = 24.sp,
+                            textAlign = TextAlign.Start,
+                            color = ColorText
+
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
+                            text = "¿Cómo sucedió?",
+                            fontSize = 27.sp,
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            color = ColorText
+                        )
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Text(modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
                             text = (uiState.value as IASummaryUIState.Success).outputText.details,
+                            fontSize = 24.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
+
                         )
-                    }
-                    ExpandableCard(header = "Comentarios", modifier = Modifier.fillMaxWidth()){
+                        Spacer(modifier = Modifier.height(3.dp))
                         Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 8.dp),
-                            text = (uiState.value as IASummaryUIState.Success).outputText.extra,
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
+                            text = "Comentarios",
+                            fontSize = 27.sp,
                             textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
                             color = ColorText
                         )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Text(modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 5.dp),
+                            text = (uiState.value as IASummaryUIState.Success).outputText.details,
+                            fontSize = 24.sp,
+                            textAlign = TextAlign.Start,
+                            color = ColorText
+
+                        )
                     }
-                }
+                )
+
+//                Column(modifier = Modifier.constrainAs(summaryCard) {
+//                    top.linkTo(parent.top)
+//                    start.linkTo(parent.start, margin = 10.dp)
+//                    end.linkTo(parent.end, margin = 10.dp)
+//                    bottom.linkTo(parent.bottom)
+//                }, verticalArrangement = Arrangement.spacedBy(15.dp)){
+//
+//                    ExpandableCard(header = "Detalles", modifier = Modifier.fillMaxWidth()){
+//                            Text(modifier = Modifier
+//                                .padding(horizontal = 5.dp, vertical = 8.dp),
+//                                text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
+//                                textAlign = TextAlign.Start,
+//                                color = ColorText
+//                            )
+//                    }
+//                    ExpandableCard(header = "¿Qué sucedio?",  modifier = Modifier.fillMaxWidth()){
+//                        Text(modifier = Modifier
+//                            .padding(horizontal = 5.dp, vertical = 8.dp),
+//                            text = (uiState.value as IASummaryUIState.Success).outputText.details,
+//                            textAlign = TextAlign.Start,
+//                            color = ColorText
+//                        )
+//                    }
+//                    ExpandableCard(header = "Comentarios", modifier = Modifier.fillMaxWidth()){
+//                        Text(modifier = Modifier
+//                            .padding(horizontal = 5.dp, vertical = 8.dp),
+//                            text = (uiState.value as IASummaryUIState.Success).outputText.extra,
+//                            textAlign = TextAlign.Start,
+//                            color = ColorText
+//                        )
+//                    }
+  //              }
 
 
 
