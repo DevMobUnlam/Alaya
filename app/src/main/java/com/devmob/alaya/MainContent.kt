@@ -3,6 +3,7 @@ package com.devmob.alaya
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -75,7 +76,6 @@ import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.utils.CrisisStepsManager
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
@@ -383,7 +383,6 @@ fun MainContent(
                     )
                 }
             }
-            //Pantalla actividades diarias
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
             }
