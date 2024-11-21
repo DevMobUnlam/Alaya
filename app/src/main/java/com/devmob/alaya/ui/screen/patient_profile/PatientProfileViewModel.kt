@@ -18,6 +18,7 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class PatientProfileViewModel(
@@ -29,14 +30,30 @@ class PatientProfileViewModel(
     var patientData by mutableStateOf<User?>(null)
     var isLoading by mutableStateOf(false)
     private var listRegisters by mutableStateOf<List<CrisisDetailsDB>?>(null)
+    private var listRegistersBetweenDates by mutableStateOf<List<CrisisDetailsDB>?>(null)
 
     fun getPatientData(email: String) {
         viewModelScope.launch {
             isLoading = true
             patientData = getEmailUseCase.getUser(email)
             listRegisters = getRegistersUseCase.getListOfRegisters(email)
+            listRegistersBetweenDates = getRegistersUseCase.getRegistersBetweenDates(
+                email,
+                getLastSessionDate(),
+                getNextSessionDate()
+            )
             isLoading = false
         }
+    }
+
+    private fun getLastSessionDate(): Date {
+        // consultar session repository
+        return Date()
+    }
+
+    private fun getNextSessionDate(): Date {
+        // consultar session repository
+        return Date()
     }
 
     fun getPointsData(): List<Point> {
@@ -63,18 +80,7 @@ class PatientProfileViewModel(
     }
 
     private fun getRegistersBetweenSessions(): Int {
-        // obtener la ultima sesion y la proxima sesion del repository
-        val lastSession = SimpleDateFormat("dd/MM/yyyy").parse("01/11/2024")
-        val nextSession = SimpleDateFormat("dd/MM/yyyy").parse("10/11/2024")
-
-        if (lastSession?.date == null || nextSession?.date == null) {
-            return 0
-        }
-
-        return listRegisters?.let { register ->
-            register.filter { it.start != null }
-                .count { it.start!! > lastSession && it.start < nextSession }
-        } ?: 0
+        return listRegistersBetweenDates?.size ?: 0
     }
 
     private fun getCountCrisisByMonth(): Map<String, Int> {
@@ -107,7 +113,7 @@ class PatientProfileViewModel(
     }
 
     private fun getTopTools(): List<String> {
-        return listRegisters
+        return listRegistersBetweenDates
             ?.flatMap { it.tools }
             ?.groupingBy { it }
             ?.eachCount()
