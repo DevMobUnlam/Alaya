@@ -3,9 +3,7 @@ package com.devmob.alaya
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -54,7 +52,9 @@ import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
-import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
@@ -155,7 +155,10 @@ fun MainContent(
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ActivityDayProfessional.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
         ProfessionalRoutes.ProfileUser.route
+
     )
     val factoryCrisisRegistrationVM = ViewModelFactory {
         CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
@@ -390,6 +393,16 @@ fun MainContent(
             }
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
+            }
+
+            //Pantalla actividades diarias Profesional
+            composable(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route) {
+                ActivityDayProfessionalScreen(navController)
+            }
+
+            //Pantalla modal profesional
+            composable(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) {
+                ModalActivityDayProfessional()
             }
 
             composable("feedback_screen/{feedbackType}",

@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayPatient
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
