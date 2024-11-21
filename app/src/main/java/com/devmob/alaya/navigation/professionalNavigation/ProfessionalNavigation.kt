@@ -1,4 +1,4 @@
-package com.devmob.alaya.navigation.ProfessionalNavigation
+package com.devmob.alaya.navigation.professionalNavigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold

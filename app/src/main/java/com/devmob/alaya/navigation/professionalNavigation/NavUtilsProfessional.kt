@@ -1,4 +1,4 @@
-package com.devmob.alaya.navigation.ProfessionalNavigation
+package com.devmob.alaya.navigation.professionalNavigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
