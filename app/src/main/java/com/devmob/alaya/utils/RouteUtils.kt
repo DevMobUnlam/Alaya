@@ -49,6 +49,7 @@ object NavUtils {
         data object SendInvitation : ProfessionalRoutes("send_invitation")
         data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional")
         data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional")
+        data object ProfileUser : ProfessionalRoutes("profile_user")
     }
 
     val routeTitleAppBar = mapOf(
@@ -67,6 +68,9 @@ object NavUtils {
         ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias"
 
         )
+        ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil"
+    )
 
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
@@ -79,7 +83,10 @@ object NavUtils {
         ProfessionalRoutes.SendInvitation.route,
         PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ActivityDayProfessional.route,
-        ProfessionalRoutes.ModalActivityDayProfessional.route
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        PatientRoutes.ActivityDay.route,
+        ProfessionalRoutes.ProfileUser.route
+
     )
 
     fun isProfessionalRoute(route: String?): Boolean {
