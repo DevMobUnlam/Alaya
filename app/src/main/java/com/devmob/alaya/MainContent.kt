@@ -3,7 +3,9 @@ package com.devmob.alaya
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -386,7 +388,6 @@ fun MainContent(
                     )
                 }
             }
-            //Pantalla actividades diarias
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
             }
