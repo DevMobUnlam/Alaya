@@ -21,4 +21,10 @@ class GetUserDataUseCase(
     suspend fun getPhone(email: String): String? {
         return getUserRepository.getUser(email)?.phone
     }
+    suspend fun updateProfileImage(userId: String, imageUrl: String): Boolean {
+        return getUserRepository.updateProfileImage(userId,imageUrl)
+    }
+    suspend fun updatePhoneNumber(userId: String, phoneNumber: String): Boolean{
+        return getUserRepository.updatePhoneNumber(userId, phoneNumber)
+    }
 }

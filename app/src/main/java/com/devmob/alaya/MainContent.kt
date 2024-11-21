@@ -50,6 +50,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
 import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
@@ -71,6 +72,7 @@ import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScr
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
@@ -137,6 +139,7 @@ fun MainContent(
     val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
     val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
     val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
+    val profileUserViewModel = ProfileUserViewModel(getUserDataUseCase)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -154,6 +157,9 @@ fun MainContent(
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.ActivityDayProfessional.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route
+
+        ProfessionalRoutes.ProfileUser.route
+
     )
     val factoryCrisisRegistrationVM = ViewModelFactory {
         CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
@@ -637,6 +643,26 @@ fun MainContent(
                 }
             ) {
                 SendInvitationScreen(sendInvitationViewModel)
+            }
+
+            composable(ProfessionalRoutes.ProfileUser.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                ProfileUserScreen(profileUserViewModel, navController)
             }
 
         }
