@@ -110,7 +110,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
                 Card(
                     title = "Actividades diarias",
                     subtitle = "Prácticas diarias para mejorar el control emocional",
-                    onClick = { },
+                    onClick = {navController.navigate(NavUtils.PatientRoutes.ActivityDay.route) },
                     leftIcon = Icons.Outlined.Checklist,
                     rightIcon = Icons.Filled.ArrowForwardIos
                 )

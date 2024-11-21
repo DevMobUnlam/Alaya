@@ -9,26 +9,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devmob.alaya.domain.model.OptionTreatment
+import com.devmob.alaya.ui.components.Button
+import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.ui.theme.LightBlueColor
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.domain.model.OptionTreatment
-import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Card
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
-import com.devmob.alaya.ui.theme.ColorText
-import com.devmob.alaya.ui.theme.LightBlueColor
 import com.devmob.alaya.utils.NavUtils
 
 @Composable
@@ -40,7 +40,6 @@ fun TreatmentSummaryScreen(
     navController: NavController,
     viewModel: ConfigTreatmentViewModel
 ) {
-
     val selectedOptions = listOfNotNull(
         getTreatmentOption(firstStep, viewModel.treatmentOptions),
         getTreatmentOption(secondStep, viewModel.treatmentOptions),
@@ -125,6 +124,8 @@ fun TreatmentSummaryScreen(
                 onClick = {
                     showModal = true
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
+                    viewModel.sendNotification(patientEmail)
+
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"

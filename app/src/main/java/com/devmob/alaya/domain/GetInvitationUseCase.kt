@@ -50,7 +50,7 @@ class GetInvitationUseCase(
         return getUserRepository.updateUserField(professionalEmail, "invitations", updatedInvitations)
     }
 
-    suspend fun sendNotification(patientEmail: String, professionalEmail: String): Response<Unit> {
-        return notificationRepository.sendNotificationInvitation(patientEmail, professionalEmail)
+    suspend fun sendNotification(patientEmail: String): Response<Unit> {
+        return notificationRepository.sendNotificationInvitation(patientEmail)
     }
 }

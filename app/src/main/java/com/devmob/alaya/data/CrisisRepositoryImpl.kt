@@ -89,7 +89,7 @@ class CrisisRepositoryImpl @Inject constructor(
             val querySnapshot = db.collection("users")
                 .document(userEmail)
                 .collection("crisis_registers")
-                .whereEqualTo("completed", false)
+                //.whereEqualTo("completed", false)
                 .orderBy("start", Query.Direction.DESCENDING)
                 .limit(1)
                 .get()

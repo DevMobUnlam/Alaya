@@ -476,8 +476,13 @@ fun CrisisRegistrationScreen(
                     }
                 ) {
                     items(tools) { tool ->
-                        val isSelected = viewModel.selectedTools.contains(tool.id)
-
+                        val isSelected =
+                            if (viewModel.screenState.value?.crisisDetails?.toolList?.isEmpty() == true) {
+                                selectedTools.contains(tool.name)
+                            } else {
+                                viewModel.screenState.value?.crisisDetails?.toolList?.any { it.name == tool.name }
+                                    ?: false
+                            }
                         CrisisRegisterIconButton(
                             imageVector = tool.icon,
                             size = 70.dp,
@@ -485,9 +490,11 @@ fun CrisisRegistrationScreen(
                             isSelected = isSelected,
                             onClick = {
                                 if (isSelected) {
+                                    selectedTools = selectedTools - tool.name
                                     viewModel.selectedTools.remove(tool.id)
                                 } else {
-                                    viewModel.selectedTools.add(tool.id)
+                                    selectedTools.plus(tool.name)
+                                    viewModel.selectCrisisTool(tool)
                                 }
                                 viewModel.updateCrisisTool(tool)
                             }
