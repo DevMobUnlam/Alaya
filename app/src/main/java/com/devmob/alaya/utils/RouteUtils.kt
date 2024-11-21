@@ -47,9 +47,13 @@ object NavUtils {
                 "add_custom_activity/$patientEmail"
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
+
         data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional")
         data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional")
         data object ProfileUser : ProfessionalRoutes("profile_user")
+
+        data object ProfileUser : ProfessionalRoutes("profile_user")
+
     }
 
     val routeTitleAppBar = mapOf(
@@ -73,6 +77,10 @@ object NavUtils {
 
 
 
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil"
+    )
+
+
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
         PatientRoutes.ContainmentNetwork.route,
@@ -86,6 +94,9 @@ object NavUtils {
         ProfessionalRoutes.ActivityDayProfessional.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route,
         PatientRoutes.ActivityDay.route,
+        ProfessionalRoutes.ProfileUser.route
+
+        ProfessionalRoutes.ModalActivityDayProfessional.route
         ProfessionalRoutes.ProfileUser.route
 
     )

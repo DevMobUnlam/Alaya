@@ -158,7 +158,11 @@ fun MainContent(
         ProfessionalRoutes.ActivityDayProfessional.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route,
         ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+
         ProfessionalRoutes.ProfileUser.route
+
     )
     val factoryCrisisRegistrationVM = ViewModelFactory {
         CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
@@ -391,7 +395,7 @@ fun MainContent(
                     )
                 }
             }
-            //Pantalla actividades diarias
+            //Pantalla actividades diarias Paciente
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
             }
