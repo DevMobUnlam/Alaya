@@ -2,6 +2,7 @@ package com.devmob.alaya.ui.screen.createSessions
 
 import android.app.TimePickerDialog
 import android.view.ContextThemeWrapper
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -47,6 +48,7 @@ fun ScheduleSessionScreen(
     viewModel: SessionViewModel,
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val selectedDayOfWeek = viewModel.selectedDayOfWeek.value
     val showModal = remember { mutableStateOf(false) }
     val nextSessionDate = viewModel.nextSessionDate.value
@@ -54,24 +56,31 @@ fun ScheduleSessionScreen(
     val patientEmail = navController.currentBackStackEntry?.arguments?.getString("patientEmail")
 
     fun onConfirmButtonClick() {
-        viewModel.calculateNextSessionDate()
-        if (viewModel.nextSessionDate.value != null) {
-            showModal.value = true
+        if (isMultipleSessions) {
+            viewModel.upcomingSessions.value = viewModel.calculateNextSessionsDates() ?: emptyList()
+        } else {
+            viewModel.calculateNextSessionDate()
         }
+        showModal.value = true
     }
 
     fun onConfirmSession() {
         if (isMultipleSessions) {
             viewModel.scheduleMonthlySessions()
+            Toast.makeText(context, "Sesiones programadas exitosamente", Toast.LENGTH_LONG).show()
+            navController.popBackStack()
             if (patientEmail != null) {
                 viewModel.sendNotification(patientEmail)
             }
         } else {
             viewModel.scheduleSession()
+            Toast.makeText(context, "Sesion programada exitosamente", Toast.LENGTH_LONG).show()
+            navController.popBackStack()
             if (patientEmail != null) {
                 viewModel.sendNotification(patientEmail)
             }
         }
+
         showModal.value = false
     }
 
@@ -82,15 +91,23 @@ fun ScheduleSessionScreen(
     if (showModal.value) {
         Modal(
             show = showModal.value,
-            title = "Próxima sesión",
-            description = nextSessionDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
+            title = if (isMultipleSessions) "Próximas sesiones" else "Próxima sesión",
+            description = if (!isMultipleSessions) {
+                nextSessionDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+            } else {
+                viewModel.upcomingSessions.value.joinToString("\n") { sessionDate ->
+                    sessionDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                }
+            },
             primaryButtonText = "Confirmar",
             secondaryButtonText = "Cancelar",
             onDismiss = { showModal.value = false },
             onConfirm = { onConfirmSession() },
             onDismissRequest = { onCancelSession() }
         )
-    }
+
+        }
+
 
     Box(
         modifier = Modifier.fillMaxSize()

@@ -67,10 +67,37 @@ class SessionViewModel(
         }
     }
 
+    fun calculateNextSessionsDates(): List<ZonedDateTime>? {
+        val selectedDay = selectedDayOfWeek.value
+        val selectedHour = selectedTime.value?.substringBefore(":")?.toIntOrNull()
+        val selectedMinute = selectedTime.value?.substringAfter(":")?.toIntOrNull()
+
+        if (selectedDay != null && selectedHour != null && selectedMinute != null) {
+            val today = Calendar.getInstance()
+            val todayDayOfWeek = today.get(Calendar.DAY_OF_WEEK)
+            val adjustedTodayDayOfWeek = if (todayDayOfWeek == Calendar.SUNDAY) 7 else todayDayOfWeek - 1
+            val daysUntilNextDay = (selectedDay.ordinal - adjustedTodayDayOfWeek + 7) % 7
+
+            today.add(Calendar.DAY_OF_YEAR, daysUntilNextDay)
+            today.set(Calendar.HOUR_OF_DAY, selectedHour)
+            today.set(Calendar.MINUTE, selectedMinute)
+            today.set(Calendar.SECOND, 0)
+            today.set(Calendar.MILLISECOND, 0)
+
+            val zoneId = ZoneId.systemDefault()
+            val firstSessionDate = today.time.toInstant().atZone(zoneId)
+
+            return (0 until 4).map { weekOffset ->
+                firstSessionDate.plusWeeks(weekOffset.toLong())
+            }
+        }
+        return null
+    }
+
     fun scheduleMonthlySessions() {
         viewModelScope.launch {
             val email = patientEmail.value
-            calculateNextSessionDate()
+            calculateNextSessionsDates()
 
             val nextSessionDateValue = nextSessionDate.value
             if (!email.isNullOrEmpty() && nextSessionDateValue != null) {
