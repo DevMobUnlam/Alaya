@@ -77,7 +77,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 }
             }
         )
-        
+
         CardContainer(
             modifier = Modifier
                 .wrapContentHeight()
@@ -89,8 +89,8 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 ) {
                     items(viewModel.patients.filter { it.name.contains(searchText.text, ignoreCase = true) }) { user ->
                         UserItem(
-                            user,
-                            false
+                            patient = user,
+                            withSubtitle = false
                         ) {
                             navController.navigate("${NavUtils.ProfessionalRoutes.PatientProfile.route}/${user.email}")
                         }
