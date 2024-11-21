@@ -87,7 +87,8 @@ fun ActivityDayProfessionalScreen(navController: NavController){
                         title = "Meditacion guiada",
                         descripcion = "Hola como te sentis hoy",
                         progress = 3,
-                        maxProgress = 7
+                        maxProgress = 7,
+                        navController = navController
                     )
                 }
             }

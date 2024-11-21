@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.activityDayProfessional
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,12 +27,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun CardPersonalizedProfessional(
+    navController: NavController,
     title: String,
     descripcion: String,
     progress: Int,
@@ -96,15 +100,9 @@ fun CardPersonalizedProfessional(
             contentDescription = "Info icon",
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable { navController.navigate(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) },
             tint = ColorText,
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewActivityDay(){
-    CardPersonalizedProfessional(title = "Meditacion guiada", descripcion = "Hola como te sentis hoy", progress = 3, maxProgress =7 )
-
 }
