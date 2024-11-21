@@ -52,6 +52,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
@@ -73,13 +74,13 @@ import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScr
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.utils.CrisisStepsManager
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
@@ -146,6 +147,7 @@ fun MainContent(
     val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
     val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
     val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
+    val profileUserViewModel = ProfileUserViewModel(getUserDataUseCase)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -160,6 +162,8 @@ fun MainContent(
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.CreateSessions.route
     )
@@ -660,6 +664,26 @@ fun MainContent(
                     viewModel = sessionViewModel,
                     navController = navController,
                 )
+            }
+
+            composable(ProfessionalRoutes.ProfileUser.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                ProfileUserScreen(profileUserViewModel, navController)
             }
 
         }

@@ -47,6 +47,7 @@ object NavUtils {
                 "add_custom_activity/$patientEmail"
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
+        data object ProfileUser : ProfessionalRoutes("profile_user")
         data object CreateSessions : ProfessionalRoutes("create_sessions/{patientEmail}")
     }
 
@@ -62,6 +63,7 @@ object NavUtils {
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil",
         ProfessionalRoutes.CreateSessions.route to "Programar sesiones"
     )
 
@@ -74,7 +76,8 @@ object NavUtils {
         ProfessionalRoutes.MenuProfessional.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.SendInvitation.route,
-        PatientRoutes.ActivityDay.route
+        PatientRoutes.ActivityDay.route,
+        ProfessionalRoutes.ProfileUser.route
 
     )
 
