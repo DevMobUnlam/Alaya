@@ -5,6 +5,8 @@ import com.devmob.alaya.domain.CrisisRepository
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.devmob.alaya.domain.GetUserRepository
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.GenerationConfig
+import com.google.ai.client.generativeai.type.generationConfig
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -20,9 +22,14 @@ object DomainModule {
     @Provides
     @Singleton
     fun providesGenerativeModel(): GenerativeModel{
+        val config = generationConfig{
+            responseMimeType = "application/json"
+        }
+
         return GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs")
+            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs",
+            generationConfig = config)
     }
 
     @Provides

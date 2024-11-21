@@ -66,7 +66,7 @@ class GetIASummaryUseCase @Inject constructor(
                                     "'details': (en este campo iria un resumen con emociones y sensaciones corporales sentidas, con su respectiva intensidad. Tambien, las herramientas que uso para sentirse mejor" +
                                     "\n" +
                                     "'extra': (en este campo va un resumen con comentarios adicionales)" + "\n" +
-                                    "}" + "La respuesta generada debe comenzar con { y terminar con }"+ "El tipo de intensidad debe ser traducido"
+                                    "}" + "Texto generado debe comenzar solo con { y terminar solo con }"+ "El tipo de intensidad debe ser traducido"
 
                             val prompt = "$instructions \n $json"
                             val generatedResponse = generativeModel.generateContent(prompt).text

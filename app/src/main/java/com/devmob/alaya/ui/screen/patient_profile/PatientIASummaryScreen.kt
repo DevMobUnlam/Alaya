@@ -151,7 +151,7 @@ fun PatientIASummaryScreen(
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
                             text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
-                            fontSize = 24.sp,
+                            fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
 
@@ -170,7 +170,7 @@ fun PatientIASummaryScreen(
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
                             text = (uiState.value as IASummaryUIState.Success).outputText.details,
-                            fontSize = 24.sp,
+                            fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
 
@@ -188,48 +188,14 @@ fun PatientIASummaryScreen(
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = (uiState.value as IASummaryUIState.Success).outputText.details,
-                            fontSize = 24.sp,
+                            text = (uiState.value as IASummaryUIState.Success).outputText.extra,
+                            fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
 
                         )
                     }
                 )
-
-//                Column(modifier = Modifier.constrainAs(summaryCard) {
-//                    top.linkTo(parent.top)
-//                    start.linkTo(parent.start, margin = 10.dp)
-//                    end.linkTo(parent.end, margin = 10.dp)
-//                    bottom.linkTo(parent.bottom)
-//                }, verticalArrangement = Arrangement.spacedBy(15.dp)){
-//
-//                    ExpandableCard(header = "Detalles", modifier = Modifier.fillMaxWidth()){
-//                            Text(modifier = Modifier
-//                                .padding(horizontal = 5.dp, vertical = 8.dp),
-//                                text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
-//                                textAlign = TextAlign.Start,
-//                                color = ColorText
-//                            )
-//                    }
-//                    ExpandableCard(header = "¿Qué sucedio?",  modifier = Modifier.fillMaxWidth()){
-//                        Text(modifier = Modifier
-//                            .padding(horizontal = 5.dp, vertical = 8.dp),
-//                            text = (uiState.value as IASummaryUIState.Success).outputText.details,
-//                            textAlign = TextAlign.Start,
-//                            color = ColorText
-//                        )
-//                    }
-//                    ExpandableCard(header = "Comentarios", modifier = Modifier.fillMaxWidth()){
-//                        Text(modifier = Modifier
-//                            .padding(horizontal = 5.dp, vertical = 8.dp),
-//                            text = (uiState.value as IASummaryUIState.Success).outputText.extra,
-//                            textAlign = TextAlign.Start,
-//                            color = ColorText
-//                        )
-//                    }
-  //              }
-
 
 
             }

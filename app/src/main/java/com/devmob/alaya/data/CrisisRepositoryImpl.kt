@@ -40,19 +40,16 @@ class CrisisRepositoryImpl @Inject constructor(
                     .collection("crisis_registers")
 
                 registersCollection.orderBy("start", Query.Direction.DESCENDING)
-                    .whereEqualTo("completed", true)
                     .limit(1)
                     .get()
                     .addOnSuccessListener { documents ->
                         if (!documents.isEmpty) {
-                            val latestDate = documents.documents[0].getDate("start")
                             val calendar = Calendar.getInstance()
-                            calendar.time = latestDate ?: Date()
-                            calendar.add(Calendar.DAY_OF_YEAR, -7)
+                            calendar.time = Date()
+                            calendar.add(Calendar.DAY_OF_YEAR, -8)
                             val startDate = calendar.time
 
                             registersCollection
-                                .whereEqualTo("completed", true)
                                 .whereGreaterThanOrEqualTo("start", startDate)
                                 .orderBy("start", Query.Direction.ASCENDING)
                                 .addSnapshotListener { snapshot, e ->
