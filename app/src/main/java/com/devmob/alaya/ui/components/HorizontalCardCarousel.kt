@@ -33,7 +33,7 @@ import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 
 @Composable
-fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>, onGenerateIASummary: () -> Unit) {
+fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>, onGenerateIASummary: () -> Unit,activityDayProfessional: () -> Unit) {
 
     LazyRow(
         modifier = modifier
@@ -41,13 +41,13 @@ fun HorizontalCardCarousel(modifier: Modifier, items: List<CarouselItem>, onGene
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items) { item ->
-            CarouselCard(item, onGenerateIASummary)
+            CarouselCard(item, onGenerateIASummary,activityDayProfessional)
         }
     }
 }
 
 @Composable
-fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit) {
+fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit,activityDayProfessionalPressed: () -> Unit) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 9.dp),
@@ -57,6 +57,8 @@ fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit) {
             .clickable{if(item is CarouselItem.GenerateSummary){
                 onGenerateIASummary()
             }
+                if(item is CarouselItem.Activities){
+                    activityDayProfessionalPressed()                }
             }
     ) {
         Box(
@@ -137,5 +139,5 @@ fun TitleText(title: String) {
 @Preview(showBackground = true)
 @Composable
 fun HorizontalCardCarouselPreview() {
-    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth(), items = listOf(), onGenerateIASummary = {})
+    HorizontalCardCarousel(modifier = Modifier.fillMaxWidth(), items = listOf(), onGenerateIASummary = {},activityDayProfessional = {})
 }

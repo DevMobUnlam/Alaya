@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
 fun ActivityDayProfessionalScreen(navController: NavController){
@@ -92,7 +93,7 @@ fun ActivityDayProfessionalScreen(navController: NavController){
             }
         }
         FloatingActionButton(
-            onClick = {},
+            onClick = {navController.navigate(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route)},
             containerColor = ColorPrimary,
             contentColor = Color.White,
             shape = RoundedCornerShape(50.dp),
