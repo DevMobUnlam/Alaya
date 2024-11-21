@@ -34,6 +34,29 @@ fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+            ,
+            enabled = true,
+            content = {
+                Text(
+                    text = "Mi perfil",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = ColorText,
+                    modifier = Modifier
+                        .padding(18.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                NavUtils.ProfessionalRoutes.ProfileUser.route
+                            )
+                        }
+                )
+            }
+        )
+        CardContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
                 ,
             enabled = true,
             content = {
@@ -61,5 +84,6 @@ fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
                 )
             }
         )
+
     }
 }

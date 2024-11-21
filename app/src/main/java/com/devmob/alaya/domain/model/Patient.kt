@@ -13,8 +13,8 @@ data  class Patient (
     val nextSession: String? = null,
     val nextSessionDate: String? = "",
     val nextSessionTime: String? = "",
-    val image: Int = R.drawable.logounologin,
+    val profileImage: String? = null,
     val hour: String = "No tiene sesiones"
 ) : Serializable {
-    constructor() : this("", "", "", "", "","", "")
+    constructor() : this("", "", "", "", "","", "", null)
 }
