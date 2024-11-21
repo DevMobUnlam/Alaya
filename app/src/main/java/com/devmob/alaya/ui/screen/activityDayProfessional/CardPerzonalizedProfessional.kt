@@ -33,6 +33,7 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 @Composable
 fun CardPersonalizedProfessional(
     title: String,
+    descripcion: String,
     progress: Int,
     maxProgress: Int,
     modifier: Modifier = Modifier
@@ -66,6 +67,13 @@ fun CardPersonalizedProfessional(
                         color = ColorText
                     )
                     Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = descripcion,
+                        fontSize = 14.sp,
+                        color = ColorText
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Progreso semanal: $progress de $maxProgress",
                         fontSize = 14.sp,
@@ -97,6 +105,6 @@ fun CardPersonalizedProfessional(
 @Preview(showBackground = true)
 @Composable
 fun PreviewActivityDay(){
-    CardPersonalizedProfessional(title = "Meditacion guiada", progress = 3, maxProgress =7 )
+    CardPersonalizedProfessional(title = "Meditacion guiada", descripcion = "Hola como te sentis hoy", progress = 3, maxProgress =7 )
 
 }

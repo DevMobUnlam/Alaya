@@ -52,6 +52,8 @@ import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
@@ -381,9 +383,19 @@ fun MainContent(
                     )
                 }
             }
-            //Pantalla actividades diarias
+            //Pantalla actividades diarias Paciente
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
+            }
+
+            //Pantalla actividades diarias Profesional
+            composable(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route) {
+                ActivityDayProfessionalScreen(navController)
+            }
+
+            //Pantalla modal profesional
+            composable(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) {
+                ModalActivityDayProfessional()
             }
 
             composable("feedback_screen/{feedbackType}",

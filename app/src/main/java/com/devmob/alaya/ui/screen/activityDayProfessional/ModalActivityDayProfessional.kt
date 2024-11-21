@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,9 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.theme.ColorPrimary
@@ -36,9 +39,11 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 @Composable
 fun ModalActivityDayProfessional(){
 
-        val textState = remember { mutableStateOf(TextFieldValue()) }
+    val titleState = remember { mutableStateOf(TextFieldValue()) }
+    val descrioptionState = remember { mutableStateOf(TextFieldValue()) }
+    val countState = remember { mutableStateOf(TextFieldValue()) }
 
-        Box(
+    Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(LightBlueColor),
@@ -59,8 +64,8 @@ fun ModalActivityDayProfessional(){
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = textState.value,
-                        onValueChange = { textState.value = it },
+                        value = titleState.value,
+                        onValueChange = { titleState.value = it },
                         label = { Text("Titulo") },
                         isError = false,
                         singleLine = false,
@@ -77,8 +82,8 @@ fun ModalActivityDayProfessional(){
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
-                        value = textState.value,
-                        onValueChange = { textState.value = it },
+                        value = descrioptionState.value,
+                        onValueChange = { descrioptionState.value = it },
                         label = { Text("Descripción") },
                         isError = false,
                         singleLine = false,
@@ -94,11 +99,12 @@ fun ModalActivityDayProfessional(){
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
-                        value = textState.value,
-                        onValueChange = { textState.value = it },
-                        label = { Text("Cantidad de veces por semnana*") },
+                        value = countState.value, // Obtenemos el valor del estado
+                        onValueChange = {countState.value = it},
+                        label = { Text("Cantidad de veces por semana*") },
                         isError = false,
-                        singleLine = false,
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -132,12 +138,5 @@ fun ModalActivityDayProfessional(){
 
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewModalAactivityModal(){
-
-    ModalActivityDayProfessional()
-}
 
 

@@ -23,16 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
 
 @Composable
-fun ActivityDayProfessionalScreen(){
+fun ActivityDayProfessionalScreen(navController: NavController){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +84,7 @@ fun ActivityDayProfessionalScreen(){
                 ) {
                     CardPersonalizedProfessional(
                         title = "Meditacion guiada",
+                        descripcion = "Hola como te sentis hoy",
                         progress = 3,
                         maxProgress = 7
                     )
@@ -111,8 +112,3 @@ fun ActivityDayProfessionalScreen(){
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewActivityDayScreen(){
-    ActivityDayProfessionalScreen()
-}

@@ -56,7 +56,8 @@ fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit) {
             .height(150.dp)
             .clickable{if(item is CarouselItem.GenerateSummary){
                 onGenerateIASummary()
-            } }
+            }
+            }
     ) {
         Box(
             modifier = Modifier

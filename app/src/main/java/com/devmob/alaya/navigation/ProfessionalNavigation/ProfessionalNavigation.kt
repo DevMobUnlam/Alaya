@@ -21,6 +21,8 @@ import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.components.BottomBarNavigation
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
@@ -85,6 +87,14 @@ fun ProfessionalNavigation(navController: NavHostController) {
                 )
 
             }
+
+            composable(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route){
+                ActivityDayProfessionalScreen(navController)
+            }
+
+            composable(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route){
+                ModalActivityDayProfessional()            }
+
          /*   composable(NavUtils.ProfessionalRoutes.TreatmentSummary.route) { backStackEntry ->
                 val firstStep = backStackEntry.arguments?.getString("firstStep") ?: ""
                 val secondStep = backStackEntry.arguments?.getString("secondStep") ?: ""
