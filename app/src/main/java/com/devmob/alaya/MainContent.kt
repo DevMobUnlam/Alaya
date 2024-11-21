@@ -31,6 +31,7 @@ import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
+import com.devmob.alaya.domain.GetRegistersUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -136,6 +137,7 @@ fun MainContent(
     val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
     val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
     val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
+    val getRegistersUseCase = GetRegistersUseCase(crisisRepository)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -174,7 +176,7 @@ fun MainContent(
     )
 
     val patientProfileViewModel: PatientProfileViewModel =
-        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase) })
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase, getRegistersUseCase) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
