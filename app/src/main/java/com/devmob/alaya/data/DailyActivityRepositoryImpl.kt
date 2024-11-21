@@ -1,6 +1,7 @@
 package com.devmob.alaya.data
 
 import android.util.Log
+import com.devmob.alaya.data.mapper.toData
 import com.devmob.alaya.data.mapper.toDomain
 import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.DailyActivityRepository
@@ -12,6 +13,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import javax.inject.Inject
 
 class DailyActivityRepositoryImpl @Inject constructor(
@@ -21,7 +23,7 @@ class DailyActivityRepositoryImpl @Inject constructor(
     private val auth = firebaseClient.auth
     private val db = firebaseClient.db
 
-    override suspend fun getDailyActivities(): Flow<List<DailyActivity>?> {
+    override suspend fun getDailyActivities(): Flow<List<DailyActivityNetwork>?> {
         return callbackFlow {
             try{
                 val currentUserEmail = auth.currentUser?.email
@@ -37,7 +39,7 @@ class DailyActivityRepositoryImpl @Inject constructor(
                                 trySend(null)
                             }
                             if(snapshot != null && !snapshot.isEmpty){
-                                val list = snapshot.map { it.toDomain() }
+                                val list = snapshot.map { it.toData()}
                                 trySend(list)
                             } else {
                                 Log.w("Firebase", "Data not found")
@@ -60,9 +62,9 @@ class DailyActivityRepositoryImpl @Inject constructor(
                 .document(it)
                 .collection("daily_activities")
                 .document(dailyActivity.id)
-            collection.update("isDone", newStatus)
-            collection.update("currentProgress", updatedProgress)
-            .await()
+                collection.update("currentProgress", updatedProgress)
+                collection.update("lastCompleted", Date())
+                .await()
         }
     }.toResponseFirebase()
 

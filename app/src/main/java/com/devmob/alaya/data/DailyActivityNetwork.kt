@@ -1,11 +1,14 @@
-package com.devmob.alaya.domain.model
+package com.devmob.alaya.data
 
 
-data class DailyActivity(
+import java.util.Date
+
+data class DailyActivityNetwork(
     val id: String = "",
     val title: String = "",
     val description: String = "",
     val currentProgress: Int = 0,
     val maxProgress: Int = 0,
-    val isDone: Boolean = false
-)
+    val lastCompleted: Date? = Date(),
+) {
+}
