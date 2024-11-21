@@ -21,7 +21,7 @@ class ConfigTreatmentViewModel(
 
     private val _showError = mutableStateOf(false)
     val showError: MutableState<Boolean>
-        get() = _showError
+        get() = _showError //TODO Manejar error desde la screen
 
     private val _navigate = mutableStateOf(false)
     val navigate: MutableState<Boolean>
@@ -74,6 +74,24 @@ class ConfigTreatmentViewModel(
                 FirebaseResult.Success -> {
                     _navigate.value = true
                 }
+            }
+        }
+    }
+
+    fun sendNotification(patientEmail: String) {
+        viewModelScope.launch {
+            val notification =
+                saveCrisisUseCase.sendNotification(patientEmail)
+            if (notification.isSuccessful) {
+                Log.i(
+                    "ConfigTreatmentViewModel",
+                    "Notificacion enviada satisfactoriamente a: $patientEmail"
+                )
+            } else {
+                Log.w(
+                    "ConfigTreatmentViewModel",
+                    "No se pudo enviar la notificación  a: $patientEmail"
+                )
             }
         }
     }
