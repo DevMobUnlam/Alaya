@@ -65,12 +65,13 @@ object NavUtils {
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ActivityDayProfessional.route to "Actividades diarias",
-        ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias"
-
-        )
+        ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias" ,
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil"
-    )
+
+        )
+
+
 
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
