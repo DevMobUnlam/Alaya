@@ -72,7 +72,6 @@ class PatientProfileViewModel(
                 val monthString =
                     String.format("%02d-%d", month, Calendar.getInstance().get(Calendar.YEAR))
                 val value = it[monthString] ?: 0
-                Log.i("mes", month.toFloat().toString() + " " + value.toFloat().toString())
                 allMonths.add(Point(month.toFloat(), value.toFloat(), getMonthName(month)))
             }
             return allMonths
