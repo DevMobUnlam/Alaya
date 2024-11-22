@@ -1,6 +1,5 @@
 package com.devmob.alaya.domain.model
 
-import com.devmob.alaya.R
 import java.io.Serializable
 
 
@@ -20,7 +19,6 @@ data class User (
     val stepCrisis: List<OptionTreatment>? = null,
     val sessions: List<Session>? = emptyList()
 ) : Serializable {
-    // Constructor vacío requerido para Firestore
     constructor() : this("", "", "", "", "","No tiene sesiones", UserRole.NONE)
     constructor(name: String, surname: String, email: String, role: UserRole) : this(name, surname, "", email, role = role)
 }

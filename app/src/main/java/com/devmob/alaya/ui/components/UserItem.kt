@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
@@ -58,8 +57,8 @@ fun UserItem(patient: Patient, withSubtitle: Boolean, onClick: () -> Unit) {
                 )
             }
         } else {
-            Image(
-                painter = rememberAsyncImagePainter(model = imageUrl),
+            SubcomposeAsyncImage(
+                model = imageUrl,
                 contentDescription = "Foto de ${patient.name}",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

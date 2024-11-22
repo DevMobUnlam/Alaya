@@ -56,6 +56,7 @@ fun PatientProfileScreen(
     val phoneNumber = viewModel.patientData?.phone
     val namePatient = viewModel.patientData?.name
     val surnamePatient = viewModel.patientData?.surname
+    val image = viewModel.patientData?.profileImage
 
     LaunchedEffect(Unit) {
         viewModel.cleanViewModel()
@@ -91,7 +92,7 @@ fun PatientProfileScreen(
                         top.linkTo(parent.top, margin = 16.dp)
                         end.linkTo(parent.end, margin = 16.dp)
                     },
-                contactViewModel, phoneNumber, context
+                contactViewModel, phoneNumber, context, image ?: ""
             )
 
             ButtonAlaya(

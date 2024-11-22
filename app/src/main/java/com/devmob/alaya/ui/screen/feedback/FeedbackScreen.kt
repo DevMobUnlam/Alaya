@@ -64,10 +64,9 @@ fun FeedbackScreen(
                         style = MaterialTheme.typography.titleLarge.copy(fontSize = 30.sp),
                         modifier = Modifier.padding(bottom = 10.dp)
                     )
-
                     val composition by rememberLottieComposition(
                         spec = LottieCompositionSpec.RawRes(
-                            R.raw.feedback_congratulations_animation
+                            R.raw.clap
                         )
                     )
                     var isPlaying by remember {
