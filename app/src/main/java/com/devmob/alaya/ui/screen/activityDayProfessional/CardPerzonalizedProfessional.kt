@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayProfessional
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -8,19 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,35 +24,36 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
+import com.devmob.alaya.utils.NavUtils
 
 @Composable
-fun ProgressCard(
-    modifier: Modifier = Modifier,
+fun CardPersonalizedProfessional(
+    navController: NavController,
     title: String,
+    descripcion: String,
     progress: Int,
     maxProgress: Int,
-    isChecked: Boolean,
-    onCheckClick: () -> Unit = {},
-    onHelpIconClick: () -> Unit = {},
-) {
-
+    modifier: Modifier = Modifier
+){
     Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        ElevatedCard(
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(25.dp)),
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFFF0FBFB)
-            ),
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -66,17 +61,6 @@ fun ProgressCard(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onCheckClick,
-                    modifier = Modifier.size(48.dp)                ) {
-                    Icon(
-                        imageVector = if (isChecked) Icons.Filled.CheckCircle else Icons.Outlined.Circle,
-                        contentDescription = "Check icon",
-                        modifier = Modifier.size(50.dp),
-                        tint = if (isChecked) Color(0xFF4CAF50) else Color.Gray
-                    )
-                }
-
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
@@ -87,6 +71,13 @@ fun ProgressCard(
                         color = ColorText
                     )
                     Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = descripcion,
+                        fontSize = 14.sp,
+                        color = ColorText
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Progreso semanal: $progress de $maxProgress",
                         fontSize = 14.sp,
@@ -105,12 +96,12 @@ fun ProgressCard(
             }
         }
         Icon(
-            imageVector = Icons.AutoMirrored.Outlined.HelpOutline,
+            imageVector = Icons.Outlined.Edit,
             contentDescription = "Info icon",
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .clickable(onClick = onHelpIconClick)
-                .padding(8.dp),
+                .padding(8.dp)
+                .clickable { navController.navigate(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) },
             tint = ColorText,
         )
     }

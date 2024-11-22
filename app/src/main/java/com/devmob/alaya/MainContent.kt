@@ -1,12 +1,9 @@
 package com.devmob.alaya
 
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,6 +31,7 @@ import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
+import com.devmob.alaya.domain.GetRegistersUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
@@ -54,9 +52,10 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
-import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
 import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
@@ -76,6 +75,7 @@ import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScr
 import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.profile_user.ProfileUserViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
@@ -112,7 +112,7 @@ fun MainContent(
         getUserRepository,
         notificationRepository
     )
-    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
+    val containmentViewModel = ContainmentNetworkViewModel(firebaseClient, contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
     val getSessionUseCase = SessionUseCase(notificationRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
@@ -150,6 +150,7 @@ fun MainContent(
     val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
     val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
     val profileUserViewModel = ProfileUserViewModel(getUserDataUseCase)
+    val getRegistersUseCase = GetRegistersUseCase(crisisRepository)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -165,6 +166,14 @@ fun MainContent(
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ActivityDayProfessional.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+
+        ProfessionalRoutes.ProfileUser.route,
+
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.CreateSessions.route,
@@ -192,7 +201,7 @@ fun MainContent(
     )
 
     val patientProfileViewModel: PatientProfileViewModel =
-        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase, getSessionUseCase) })
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase, getSessionUseCase, getRegistersUseCase) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -401,8 +410,19 @@ fun MainContent(
                     )
                 }
             }
+            //Pantalla actividades diarias Paciente
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
+            }
+
+            //Pantalla actividades diarias Profesional
+            composable(ProfessionalRoutes.ActivityDayProfessional.route) {
+                ActivityDayProfessionalScreen(navController)
+            }
+
+            //Pantalla modal profesional
+            composable(ProfessionalRoutes.ModalActivityDayProfessional.route) {
+                ModalActivityDayProfessional()
             }
 
             composable("feedback_screen/{feedbackType}",

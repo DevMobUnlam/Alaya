@@ -12,6 +12,7 @@ import com.devmob.alaya.domain.model.FirebaseResult
 import kotlinx.coroutines.launch
 
 class ContainmentNetworkViewModel(
+    private val firebase: FirebaseClient,
      val contactUseCase: ContactUseCase
 ) : ViewModel() {
 
@@ -23,7 +24,7 @@ class ContainmentNetworkViewModel(
     }
 
     fun listenToContacts() {
-        val email = FirebaseClient().auth.currentUser?.email
+        val email = firebase.auth.currentUser?.email
         if (email != null) {
             contactUseCase.listenToContacts(email) { updatedContacts ->
                 _contacts.postValue(updatedContacts)

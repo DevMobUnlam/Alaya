@@ -15,8 +15,6 @@ sealed class CarouselItem(val title: String, val colorBackground: Color) {
     class Tools(
         title: String,
         colorBackground: Color,
-        val tools: List<ToolProgress>
+        val tools: List<String>
     ) : CarouselItem(title, colorBackground)
 }
-
-data class ToolProgress(val name: String, val progress: Float)

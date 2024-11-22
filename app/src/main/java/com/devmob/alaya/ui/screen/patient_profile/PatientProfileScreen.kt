@@ -26,8 +26,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devmob.alaya.R
+import com.devmob.alaya.data.CrisisRepositoryImpl
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.data.GetUserRepositoryImpl
+import com.devmob.alaya.domain.CrisisRepository
+import com.devmob.alaya.domain.GetRegistersUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.HorizontalCardCarousel
@@ -56,8 +59,9 @@ fun PatientProfileScreen(
     val image = viewModel.patientData?.profileImage
 
     LaunchedEffect(Unit) {
-        viewModel.getPatientData(email)
+        viewModel.cleanViewModel()
         viewModel.getNextSession(email)
+        viewModel.getPatientData(email)
     }
     val nextSession by viewModel.nextSession.collectAsState()
 
@@ -151,7 +155,8 @@ fun PatientProfileScreen(
                     top.linkTo(titleCarousel.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }, viewModel.getCarouselItems(), onGenerateIASummary = {navController.navigate("patient_ia_summary/$email")}
+                }, viewModel.getCarouselItems(), onGenerateIASummary = {navController.navigate("patient_ia_summary/$email")},
+                activityDayProfessional = {navController.navigate(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route)}
             )
 
             Text(
@@ -165,13 +170,26 @@ fun PatientProfileScreen(
                 }
             )
 
-            SingleLineChartWithGridLines(
-                viewModel.getPointsData(),
-                modifier = Modifier.constrainAs(lineCharts) {
-                    top.linkTo(titleLineCharts.bottom, margin = 4.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                })
+            if(viewModel.getPointsData().isEmpty()) {
+                Text(
+                    text = "No hay eventos de crisis",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    color = ColorText,
+                    modifier = Modifier.constrainAs(lineCharts) {
+                        top.linkTo(titleLineCharts.bottom, margin = 4.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                    }
+                )
+            } else{
+                SingleLineChartWithGridLines(
+                    viewModel.getPointsData(),
+                    modifier = Modifier.constrainAs(lineCharts) {
+                        top.linkTo(titleLineCharts.bottom, margin = 4.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    })
+            }
         }
     }
 }
