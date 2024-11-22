@@ -95,13 +95,13 @@ fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
             modifier = Modifier.size(48.dp)
         )
 
-        IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPrimary)
-        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPrimary)
+        IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorTertiary)
+        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPink)
     }
 }
 
 @Composable
-fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHostController, animationColor: Color) {
+fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHostController, containerColor: Color) {
     val scale = remember { Animatable(1f) }
 
     LaunchedEffect(Unit) {
@@ -122,16 +122,16 @@ fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHost
                     scaleX = scale.value
                     scaleY = scale.value
                 }
-                .background(animationColor, shape = CircleShape)
+                .background(ColorPrimary, shape = CircleShape)
         )
-        FloatingMiddleButton(item, navHostController)
+        FloatingMiddleButton(item, navHostController, containerColor)
     }
 }
 
 @Composable
-fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
+fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController, containerColor: Color) {
     FloatingActionButton(
-        containerColor = ColorPink,
+        containerColor = containerColor,
         modifier = Modifier
             .size(65.dp),
         onClick = { navHostController.navigate(item.route) },
