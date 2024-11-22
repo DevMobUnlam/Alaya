@@ -164,7 +164,7 @@ class CrisisRegistrationViewModelTest {
     }
 
     @Test
-    fun `when updateCrisisBodySensation is called, then update list`() {
+    fun `when selectCrisisBodySensation is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
         val bodySensation1 = CrisisBodySensation("Desmayo", mockkIcon)
         val bodySensation2 = CrisisBodySensation("Calor", mockkIcon)
@@ -174,25 +174,23 @@ class CrisisRegistrationViewModelTest {
     }
 
     @Test
-    fun `when updateCrisisEmotion is called, then update list`() {
+    fun `when selectCrisisEmotion is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
         val emotion1 = CrisisEmotion("Angustia", mockkIcon)
         val emotion2 = CrisisEmotion("Tristeza", mockkIcon)
-        viewModel.updateCrisisEmotion(emotion1)
-        viewModel.updateCrisisEmotion(emotion2)
+        viewModel.selectCrisisEmotion(emotion1)
+        viewModel.selectCrisisEmotion(emotion2)
         assertEquals(2, viewModel.screenState.value?.crisisDetails?.emotionList?.size)
     }
 
     @Test
-    fun `when updateCrisisTool is called, then update list`() {
+    fun `when selectCrisisTool is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
-        val observer = Observer<CrisisRegistrationScreenState> {}
-        val tool1 = CrisisTool("Meditacion", "", mockkIcon)
-        val tool2 = CrisisTool("Respiracion", "", mockkIcon)
-        viewModel.screenState.observeForever(observer)
-        viewModel.updateCrisisTool(tool1)
-        viewModel.updateCrisisTool(tool2)
-        assertEquals(0, viewModel.screenState.value?.crisisDetails?.toolList?.size)
+        val tool1 = CrisisTool("Autoafirmaciones", "Autoafirmaciones", mockkIcon)
+        val tool2 = CrisisTool("Controlar la respiración", "Respiracion", mockkIcon)
+        viewModel.selectCrisisTool(tool1)
+        viewModel.selectCrisisTool(tool2)
+        assertEquals(2, viewModel.screenState.value?.crisisDetails?.toolList?.size)
     }
 
     @Test
