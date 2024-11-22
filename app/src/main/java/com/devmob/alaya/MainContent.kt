@@ -56,7 +56,6 @@ import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
 import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
 import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
-import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
 import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
@@ -172,7 +171,7 @@ fun MainContent(
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route,
 
-        ProfessionalRoutes.ProfileUser.route
+        ProfessionalRoutes.ProfileUser.route,
 
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
