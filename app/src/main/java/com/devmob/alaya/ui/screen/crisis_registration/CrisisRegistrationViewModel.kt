@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.model.CrisisBodySensation
-import com.devmob.alaya.domain.model.CrisisDetailsDB
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTimeDetails
@@ -18,7 +17,6 @@ import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
-import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -39,9 +37,6 @@ class CrisisRegistrationViewModel(
     val emotions: LiveData<List<CrisisEmotion>> get() = _emotions
     var shouldGoToBack by mutableStateOf(true)
     var shouldGoToSummary by mutableStateOf(false)
-    private val _crisisTimeDetails = MutableLiveData(CrisisTimeDetails())
-    val crisisTimeDetails: LiveData<CrisisTimeDetails> get() = _crisisTimeDetails
-
 
     init {
         loadPlaces()
@@ -54,13 +49,9 @@ class CrisisRegistrationViewModel(
 
     var shouldShowExitModal by mutableStateOf(false)
 
-    private val _crisisDetails = MutableLiveData<CrisisDetailsDB?>()
-    val crisisDetails: LiveData<CrisisDetailsDB?> get() = _crisisDetails
-
-    fun loadLastCrisisDetails() {
+    private fun loadLastCrisisDetails() {
         viewModelScope.launch(Dispatchers.Main) {
             val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
-            _crisisDetails.value = result
 
             if (result != null) {
                 if (!result.completed) {
@@ -71,7 +62,6 @@ class CrisisRegistrationViewModel(
                             startTime = startTime,
                             endTime = endTime
                         )
-                        _crisisTimeDetails.value = crisisTimeDetails
                         _screenState.value = _screenState.value?.copy(
                             crisisDetails = _screenState.value!!.crisisDetails.copy(
                                 crisisTimeDetails = crisisTimeDetails
@@ -90,7 +80,6 @@ class CrisisRegistrationViewModel(
                         )
                     )
                 } else {
-                    _crisisTimeDetails.value = CrisisTimeDetails() // Limpiamos las fechas cuando la crisis está completa
                     _screenState.value = _screenState.value?.copy(
                         crisisDetails = _screenState.value!!.crisisDetails.copy(
                             crisisTimeDetails = CrisisTimeDetails() // Aquí también reseteamos las fechas en el estado
@@ -108,8 +97,6 @@ class CrisisRegistrationViewModel(
 
     fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()
-        _crisisTimeDetails.value = CrisisTimeDetails()
-        _crisisDetails.value = null
         shouldGoToBack = true
         shouldGoToSummary = false
         shouldShowExitModal = false
@@ -268,23 +255,6 @@ class CrisisRegistrationViewModel(
                 }
             }
         updateStateToolList(currentState, updatedToolList)
-    }
-
-    fun updateCrisisEmotion(emotion: CrisisEmotion) {
-        val currentState = _screenState.value ?: return
-        val updatedEmotionList = currentState.crisisDetails.emotionList.toMutableList().apply {
-            if (any { it.name == emotion.name }) {
-                removeIf { it.name == emotion.name }
-            } else {
-                add(emotion)
-            }
-        }
-
-        _screenState.value = currentState.copy(
-            crisisDetails = currentState.crisisDetails.copy(
-                emotionList = updatedEmotionList
-            )
-        )
     }
 
     fun addCrisisTool(crisisTool: CrisisTool) {
