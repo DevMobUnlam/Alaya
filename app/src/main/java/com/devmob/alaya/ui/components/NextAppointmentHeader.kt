@@ -1,11 +1,12 @@
 package com.devmob.alaya.ui.components
 
 import android.content.Context
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,22 +14,27 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devmob.alaya.R
+import coil.compose.SubcomposeAsyncImage
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
+import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -47,6 +53,7 @@ fun NextAppointmentHeader(
     contactViewModel: ContactViewModel,
     phoneNumber: String?,
     context: Context,
+    image: String
 ) {
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -61,21 +68,41 @@ fun NextAppointmentHeader(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 9.dp
         ),
-        modifier = modifier.height(IntrinsicSize.Min).padding(16.dp),
+        modifier = modifier
+            .height(IntrinsicSize.Min)
+            .padding(16.dp),
     ) {
         Row(
             modifier = Modifier
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.brenda_rodriguez),
+            SubcomposeAsyncImage(
+                model = image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(100.dp)
-                    .clip(CircleShape)
-            )
+                    .clip(CircleShape),
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = ColorPrimary
+                        )
+                    }
+                },
+                error = {
+                    Icon(
+                        imageVector = Icons.Rounded.AccountCircle,
+                        tint = Color.Gray,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                })
+
             Spacer(modifier = Modifier.width(8.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
