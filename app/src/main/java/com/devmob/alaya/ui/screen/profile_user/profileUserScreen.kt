@@ -45,7 +45,7 @@ import com.devmob.alaya.utils.NavUtils
 @Composable
 fun ProfileUserScreen(
     viewModel: ProfileUserViewModel,
-    navController: NavController
+    navController: NavController,
 ) {
     val userState by viewModel.userState.collectAsState()
     val profileImage by viewModel.profileImage.collectAsState()
