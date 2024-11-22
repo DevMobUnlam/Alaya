@@ -8,4 +8,6 @@ interface GetUserRepository {
     suspend fun updateUserField(userId: String, fieldName: String, fieldValue: Any)
     suspend fun addNewField (userId: String, fieldName: String, newField: Any)
     suspend fun sendInvitation(invitationForPatient: Invitation, invitationForProfessional: Invitation): Result<Unit>
+    suspend fun updateProfileImage(userId: String, imageUrl: String) : Boolean
+    suspend fun updatePhoneNumber(userId: String, phoneNumber: String): Boolean
 }
