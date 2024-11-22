@@ -72,15 +72,16 @@ object NavUtils {
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil",
-        ProfessionalRoutes.CreateSessions.route to "Programar sesiones"
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
+        PatientRoutes.ProfileUser.route to "Mi perfil"
         )
 
 
 
 
-        ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
-        PatientRoutes.ProfileUser.route to "Mi perfil"
-    )
+
+
 
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
@@ -97,9 +98,7 @@ object NavUtils {
         PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route,
-        ProfessionalRoutes.ProfileUser.route
-
-
+        ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.ProfileUser.route,
         PatientRoutes.ProfileUser.route
     )
