@@ -79,7 +79,7 @@ fun PatientProfileScreen(
             NextAppointmentHeader(
                 namePatient ?: "",
                 surnamePatient ?: "",
-                date = nextSession?.date ?: Date(),
+                date = nextSession?.date,
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(header) {
