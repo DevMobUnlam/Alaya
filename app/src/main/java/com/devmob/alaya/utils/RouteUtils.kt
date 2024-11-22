@@ -28,6 +28,7 @@ object NavUtils {
         data object CrisisRegistration : PatientRoutes ("crisis_registration")
         data object CrisisRegistrationSummary: PatientRoutes("crisis_registration_summary")
         data object ActivityDay : PatientRoutes("activity_day")
+        data object ProfileUser : PatientRoutes("profile_user_patient")
     }
 
     sealed class ProfessionalRoutes(val route: String) {
@@ -64,7 +65,8 @@ object NavUtils {
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil",
-        ProfessionalRoutes.CreateSessions.route to "Programar sesiones"
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
+        PatientRoutes.ProfileUser.route to "Mi perfil"
     )
 
     val routesWithBottomBar = listOf(
@@ -77,8 +79,8 @@ object NavUtils {
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.SendInvitation.route,
         PatientRoutes.ActivityDay.route,
-        ProfessionalRoutes.ProfileUser.route
-
+        ProfessionalRoutes.ProfileUser.route,
+        PatientRoutes.ProfileUser.route
     )
 
     fun isProfessionalRoute(route: String?): Boolean {
