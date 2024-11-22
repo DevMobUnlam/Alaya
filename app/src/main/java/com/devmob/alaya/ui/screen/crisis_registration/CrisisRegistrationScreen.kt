@@ -97,18 +97,6 @@ fun CrisisRegistrationScreen(
     LaunchedEffect(Unit) {
         viewModel.loadLastCrisisDetails()
     }
-    LaunchedEffect(screenState.value?.crisisDetails) {
-        val isCompleted = screenState.value?.crisisDetails?.completed == true
-        if (isCompleted) {
-            viewModel.cleanState()
-        }
-    }
-
-    GridElementsRepository.returnAvailableTools().let { list ->
-        for (tool in list) {
-            viewModel.addCrisisTool(tool)
-        }
-    }
 
     BackHandler {
         when(screenState.value?.currentStep){
@@ -152,7 +140,7 @@ fun CrisisRegistrationScreen(
                             top.linkTo(closeIcon.bottom, margin = 1.dp)
                         }
                 )
-                viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
+                viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let { time ->
                     DateTimePicker(
                         modifier = Modifier.constrainAs(datePickerComponent) {
                             start.linkTo(parent.start)
@@ -171,7 +159,7 @@ fun CrisisRegistrationScreen(
                         onEndTimeChange = { newTime ->
                             viewModel.updateEndDate(newTime)
                         },
-                        crisisTimeDetails = crisisTimeDetails
+                        crisisTimeDetails = time
                     )
                 }
             }
@@ -491,12 +479,11 @@ fun CrisisRegistrationScreen(
                             onClick = {
                                 if (isSelected) {
                                     selectedTools = selectedTools - tool.name
-                                    viewModel.selectedTools.remove(tool.id)
+                                    viewModel.unselectCrisisTool(tool)
                                 } else {
                                     selectedTools.plus(tool.name)
                                     viewModel.selectCrisisTool(tool)
                                 }
-                                viewModel.updateCrisisTool(tool)
                             }
                         )
                     }

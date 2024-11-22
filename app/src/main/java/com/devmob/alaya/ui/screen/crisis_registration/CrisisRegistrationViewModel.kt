@@ -43,7 +43,6 @@ class CrisisRegistrationViewModel(
     private val _crisisTimeDetails = MutableLiveData(CrisisTimeDetails())
     val crisisTimeDetails: LiveData<CrisisTimeDetails> get() = _crisisTimeDetails
 
-    var selectedTools = mutableStateListOf<String>()
 
     init {
         loadPlaces()
@@ -80,14 +79,12 @@ class CrisisRegistrationViewModel(
                             )
                         )
                     }
-                    selectedTools.clear()
                     val availableTools = returnAvailableTools()
 
                     val selectedCrisisTools = result.tools.mapNotNull { toolId ->
                         availableTools.find { it.id == toolId }
                     }
-                    selectedTools.addAll(selectedCrisisTools.map { it.id })
-
+                    _tools.value = availableTools
                     _screenState.value = _screenState.value?.copy(
                         crisisDetails = _screenState.value!!.crisisDetails.copy(
                             toolList = selectedCrisisTools
@@ -100,7 +97,6 @@ class CrisisRegistrationViewModel(
                             crisisTimeDetails = CrisisTimeDetails() // Aquí también reseteamos las fechas en el estado
                         )
                     )
-                    selectedTools.clear()
                     _screenState.value = _screenState.value?.copy(
                         crisisDetails = _screenState.value!!.crisisDetails.copy(
                             toolList = emptyList()
@@ -113,8 +109,6 @@ class CrisisRegistrationViewModel(
 
     fun cleanState() {
         _screenState.value = CrisisRegistrationScreenState()
-        selectedTools.clear()
-        _tools.value = emptyList()
         _crisisTimeDetails.value = CrisisTimeDetails()
         _crisisDetails.value = null
         shouldGoToBack = true
@@ -134,7 +128,6 @@ class CrisisRegistrationViewModel(
 
     fun updateStep(step: Int) {
         _screenState.value = _screenState.value?.copy(currentStep = step)
-//        shouldGoToSummary = true
         hideBackButton()
     }
 
@@ -267,7 +260,16 @@ class CrisisRegistrationViewModel(
             )
         )
     }
-
+    fun unselectCrisisTool(tool: CrisisTool) {
+        val currentState = _screenState.value ?: return
+        val updatedToolList =
+            currentState.crisisDetails.toolList.toMutableList().apply {
+                if (any { it.name == tool.name }) {
+                    removeIf { it.name == tool.name }
+                }
+            }
+        updateStateToolList(currentState, updatedToolList)
+    }
 
     fun updateCrisisEmotion(emotion: CrisisEmotion) {
         val currentState = _screenState.value ?: return
@@ -286,30 +288,13 @@ class CrisisRegistrationViewModel(
         )
     }
 
-    fun updateCrisisTool(tool: CrisisTool) {
-        val currentState = _screenState.value ?: return
-        val updatedToolList = currentState.crisisDetails.toolList.toMutableList().apply {
-            if (any { it.name == tool.name }) {
-                removeIf { it.name == tool.name }
-            } else {
-                add(tool)
-            }
-        }
-
-        _screenState.value = currentState.copy(
-            crisisDetails = currentState.crisisDetails.copy(
-                toolList = updatedToolList
-            )
-        )
-    }
-
     fun addCrisisTool(crisisTool: CrisisTool) {
         val currentTools = _tools.value?.toMutableList() ?: mutableListOf()
         if (!currentTools.any { it.name == crisisTool.name }) {
             currentTools.add(crisisTool)
             _tools.value = currentTools
         }
-        updateCrisisTool(crisisTool)
+        selectCrisisTool(crisisTool)
     }
 
     fun addCrisisEmotion(crisisEmotion: CrisisEmotion) {
@@ -411,36 +396,32 @@ class CrisisRegistrationViewModel(
         val crisis = _screenState.value?.crisisDetails?.toDB()
         viewModelScope.launch {
             val lastCrisis = saveCrisisRegistrationUseCase.getLastCrisisDetails()
-            if (lastCrisis != null) {
-                if (lastCrisis.completed == false) {
-                    val updatedCrisis = crisis?.copy(completed = true)
+            if (lastCrisis != null && !lastCrisis.completed) {
+                val updatedCrisis = crisis?.copy(completed = true)
+                val response = updatedCrisis?.let {
+                    saveCrisisRegistrationUseCase.updateCrisisDetails(
+                        it
+                    )
+                }
 
-                    // Llamamos al useCase para actualizar el registro
-                    val response = updatedCrisis?.let {
-                        saveCrisisRegistrationUseCase.updateCrisisDetails(
-                            it
+                when (response) {
+                    is FirebaseResult.Success -> {
+                        Log.d(
+                            "CrisisRegistrationViewModel",
+                            "Registro actualizado exitosamente"
                         )
                     }
 
-                    when (response) {
-                        is FirebaseResult.Success -> {
-                            Log.d(
-                                "CrisisRegistrationViewModel",
-                                "Registro actualizado exitosamente"
-                            )
-                        }
+                    is FirebaseResult.Error -> {
+                        Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
+                    }
 
-                        is FirebaseResult.Error -> {
-                            Log.d("CrisisRegistrationViewModel", "Error al actualizar el registro")
-                        }
-
-                        null -> {
-                            Log.d("CrisisRegistrationViewModel", "Respuesta null al actualizar")
-                        }
+                    null -> {
+                        Log.d("CrisisRegistrationViewModel", "Respuesta null al actualizar")
                     }
                 }
             } else {
-                // Si no se encontró crisis incompleta, creo nuevo registro
+                // Si no se encontró crisis o la última está completa, creo nuevo registro
                 val crisisToSave = crisis?.copy(completed = true)
                 val response = crisisToSave?.let { saveCrisisRegistrationUseCase.invoke(it) }
 
