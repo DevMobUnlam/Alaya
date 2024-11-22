@@ -37,7 +37,7 @@ fun DateTimePicker(
     onEndDateChange: (Date) -> Unit = {},
     onStartTimeChange: (Date) -> Unit = {},
     onEndTimeChange: (Date) -> Unit = {},
-    crisisTimeDetails: CrisisTimeDetails,
+    crisisTimeDetails: CrisisTimeDetails = CrisisTimeDetails(),
 ) {
     val calendar = Calendar.getInstance()
 

@@ -28,6 +28,7 @@ object NavUtils {
         data object CrisisRegistration : PatientRoutes ("crisis_registration")
         data object CrisisRegistrationSummary: PatientRoutes("crisis_registration_summary")
         data object ActivityDay : PatientRoutes("activity_day")
+        data object ProfileUser : PatientRoutes("profile_user_patient")
     }
 
     sealed class ProfessionalRoutes(val route: String) {
@@ -47,6 +48,8 @@ object NavUtils {
                 "add_custom_activity/$patientEmail"
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
+        data object ProfileUser : ProfessionalRoutes("profile_user")
+        data object CreateSessions : ProfessionalRoutes("create_sessions/{patientEmail}")
     }
 
     val routeTitleAppBar = mapOf(
@@ -57,10 +60,13 @@ object NavUtils {
         PatientRoutes.ActivityDay.route to "Actividades diarias",
         ProfessionalRoutes.PatientProfile.route to "Perfil del paciente",
         "patient_profile/{email}" to "Perfil del paciente",
-        ProfessionalRoutes.ConfigTreatment.route to "Configurar tratamiento",
+        ProfessionalRoutes.ConfigTreatment.route to "Configurar manejo de crisis",
         ProfessionalRoutes.TreatmentSummary.route to "Resumen",
-        ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
-        ProfessionalRoutes.SendInvitation.route to "Enviar invitación"
+        ProfessionalRoutes.AddCustomActivity.route to "Herramienta personalizada",
+        ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil",
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
+        PatientRoutes.ProfileUser.route to "Mi perfil"
     )
 
     val routesWithBottomBar = listOf(
@@ -72,8 +78,9 @@ object NavUtils {
         ProfessionalRoutes.MenuProfessional.route,
         ProfessionalRoutes.PatientProfile.route,
         ProfessionalRoutes.SendInvitation.route,
-        PatientRoutes.ActivityDay.route
-
+        PatientRoutes.ActivityDay.route,
+        ProfessionalRoutes.ProfileUser.route,
+        PatientRoutes.ProfileUser.route
     )
 
     fun isProfessionalRoute(route: String?): Boolean {

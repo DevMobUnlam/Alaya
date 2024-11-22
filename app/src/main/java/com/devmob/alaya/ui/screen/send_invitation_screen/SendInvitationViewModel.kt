@@ -25,7 +25,7 @@ class SendInvitationViewModel(
             val result = invitationUseCase.sendInvitation(patientEmail, professionalEmail)
             _sendInvitationStatus.value = result
             if (result.isSuccess) {
-                val r = invitationUseCase.sendNotification(patientEmail, professionalEmail)
+                val r = invitationUseCase.sendNotification(patientEmail)
                 if (r.isSuccessful) {
                     Log.i("SendInvitationViewModel", "Invitación enviada satisfactoriamente a: $patientEmail")
                 }else{
