@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
-
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -34,7 +33,6 @@ import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -87,11 +85,6 @@ fun CrisisRegistrationScreen(
     var selectedBodySensations by remember { mutableStateOf<Map<String, Intensity>>(emptyMap()) }
     val emotions by viewModel.emotions.observeAsState(emptyList())
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
-
-    // Carga el último registro cuando se inicializa la pantalla
-    LaunchedEffect(Unit) {
-        viewModel.loadLastCrisisDetails()
-    }
 
     BackHandler {
         when(screenState.value?.currentStep){
