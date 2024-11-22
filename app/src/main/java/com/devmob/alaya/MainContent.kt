@@ -112,7 +112,7 @@ fun MainContent(
         getUserRepository,
         notificationRepository
     )
-    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
+    val containmentViewModel = ContainmentNetworkViewModel(firebaseClient, contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
     val getSessionUseCase = SessionUseCase(notificationRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
