@@ -11,6 +11,7 @@ val ColorText =Color(0xFF2E4D83)
 val ColorIntensityHigh = Color(0x80FF6E6E)
 val ColorIntensityMedium = Color(0x81FFE048)
 val ColorIntensityLow = Color(0x8386D0FD)
+val ColorPink = Color(0xFFF5A5DE)
 
 // Colores básicos
 val ColorWhite = Color(0xFFFFFFFF)

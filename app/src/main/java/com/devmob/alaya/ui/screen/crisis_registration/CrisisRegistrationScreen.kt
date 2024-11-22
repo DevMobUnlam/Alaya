@@ -627,7 +627,7 @@ object GridElementsRepository {
                 name = "Enfado",
                 icon = Icons.Outlined.SentimentVeryDissatisfied,
                 intensity = Intensity.LOW
-            ),
+            )
         )
     }
 
