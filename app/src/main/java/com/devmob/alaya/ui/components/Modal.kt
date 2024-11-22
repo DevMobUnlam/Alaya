@@ -21,7 +21,7 @@ fun Modal(
     secondaryButtonText: String? = null,
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
-    onDismissRequest: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
 ) {
     if (!show) return
     AlertDialog(
@@ -55,7 +55,7 @@ fun Modal(
             )
         },
         text = {
-            description?.let {
+            if (description != null) {
                 Text(
                     text = description,
                     color = ColorText,
@@ -64,7 +64,7 @@ fun Modal(
                     textAlign = TextAlign.Center
                 )
             }
-        }
+            }
     )
 }
 
