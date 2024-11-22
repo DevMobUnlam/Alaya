@@ -11,6 +11,29 @@ fun Date?.toCalendar(): Calendar {
     return result
 }
 
+fun Date?.toCalendarOrNull(): Calendar? {
+    this?.let {
+        val result = Calendar.getInstance()
+        result.time = this
+        return result
+    }
+    return null
+}
+
+fun Date?.toHourString(): String {
+    this?.let {
+        val hour = this.toCalendar().get(Calendar.HOUR_OF_DAY)
+        var minutes = this.toCalendar().get(Calendar.MINUTE).toString()
+        if(minutes.length == 1){
+            minutes = "0$minutes"
+        }
+        val hourString = "$hour:$minutes"
+        return hourString
+    }
+    return ""
+}
+
+
 fun Calendar?.toDate(): Date {
     return this?.time ?: Date()
 }
