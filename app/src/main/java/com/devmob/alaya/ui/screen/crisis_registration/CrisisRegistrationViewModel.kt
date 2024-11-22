@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +18,7 @@ import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.domain.model.util.toDB
-import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository.returnAvailableTools
+import com.devmob.alaya.ui.screen.crisis_registration.GridElementsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -79,7 +78,7 @@ class CrisisRegistrationViewModel(
                             )
                         )
                     }
-                    val availableTools = returnAvailableTools()
+                    val availableTools = GridElementsRepository.returnAvailableTools()
 
                     val selectedCrisisTools = result.tools.mapNotNull { toolId ->
                         availableTools.find { it.id == toolId }

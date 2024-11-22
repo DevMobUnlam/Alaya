@@ -52,7 +52,6 @@ import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
-import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.components.CrisisRegisterIconButton
@@ -68,7 +67,6 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
-
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel,
@@ -76,7 +74,6 @@ fun CrisisRegistrationScreen(
     onFinishedRegistration: () -> Unit,
     navController: NavHostController,
 ) {
-
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val messageTextSize = 30.sp
@@ -90,8 +87,6 @@ fun CrisisRegistrationScreen(
     var selectedBodySensations by remember { mutableStateOf<Map<String, Intensity>>(emptyMap()) }
     val emotions by viewModel.emotions.observeAsState(emptyList())
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
-
-    val crisisTimeDetails by viewModel.crisisTimeDetails.observeAsState(CrisisTimeDetails())
 
     // Carga el último registro cuando se inicializa la pantalla
     LaunchedEffect(Unit) {
