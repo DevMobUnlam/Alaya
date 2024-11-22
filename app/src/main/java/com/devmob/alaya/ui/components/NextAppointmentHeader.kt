@@ -42,18 +42,19 @@ import java.util.Locale
 fun NextAppointmentHeader(
     name: String,
     lastName: String,
-    date: Serializable,
+    date: Serializable?,
     modifier: Modifier,
     contactViewModel: ContactViewModel,
     phoneNumber: String?,
-    context: Context
+    context: Context,
 ) {
 
     val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-    val formattedDate = dateFormatter.format(date)
-    val formattedTime = timeFormatter.format(date)
+    val formattedDate = if (date != null) dateFormatter.format(date) else null
+    val formattedTime = if (date != null) timeFormatter.format(date) else null
+
     Card(
         colors = CardDefaults.cardColors(containerColor = ColorWhite),
         shape = RoundedCornerShape(20.dp),
@@ -90,20 +91,31 @@ fun NextAppointmentHeader(
                     thickness = 3.dp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Próxima Sesión:",
-                    fontSize = 21.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    color = ColorText,
-                )
-                Text(
-                    text = "${formattedDate} - \n ${formattedTime}hs",
-                    fontSize = 21.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    color = ColorText,
-                )
+                if (formattedDate != null && formattedTime != null) {
+                    Text(
+                        text = "Próxima Sesión:",
+                        fontSize = 21.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        color = ColorText,
+                    )
+                    Text(
+                        text = "$formattedDate - \n $formattedTime hs",
+                        fontSize = 21.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        color = ColorText,
+                    )
+                } else {
+
+                    Text(
+                        text = "No tienes una próxima sesión programada",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        color = ColorText,
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 WhatsAppButton(contactViewModel, phoneNumber ?: "", context)
             }

@@ -174,7 +174,8 @@ fun MainContent(
 
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
-        ProfessionalRoutes.CreateSessions.route
+        ProfessionalRoutes.CreateSessions.route,
+        NavUtils.PatientRoutes.ProfileUser.route
     )
     val factoryCrisisRegistrationVM = ViewModelFactory {
         CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
@@ -686,6 +687,26 @@ fun MainContent(
             }
 
             composable(ProfessionalRoutes.ProfileUser.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                ProfileUserScreen(profileUserViewModel, navController)
+            }
+            composable(
+                NavUtils.PatientRoutes.ProfileUser.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
