@@ -1,7 +1,6 @@
 package com.devmob.alaya
 
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
@@ -414,12 +413,12 @@ fun MainContent(
             }
 
             //Pantalla actividades diarias Profesional
-            composable(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route) {
+            composable(ProfessionalRoutes.ActivityDayProfessional.route) {
                 ActivityDayProfessionalScreen(navController)
             }
 
             //Pantalla modal profesional
-            composable(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) {
+            composable(ProfessionalRoutes.ModalActivityDayProfessional.route) {
                 ModalActivityDayProfessional()
             }
 
