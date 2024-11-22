@@ -25,14 +25,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devmob.alaya.R
-import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.IconButton
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactCard
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
-import com.devmob.alaya.ui.theme.ColorDarkOrange
-import com.devmob.alaya.ui.theme.ColorOrange
 import com.devmob.alaya.ui.theme.ColorPink
-import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 
