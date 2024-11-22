@@ -69,7 +69,6 @@ object NavUtils {
         ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias" ,
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil"
-
         )
 
 
