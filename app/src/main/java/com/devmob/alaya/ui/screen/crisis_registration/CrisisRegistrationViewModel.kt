@@ -53,44 +53,42 @@ class CrisisRegistrationViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             val result = saveCrisisRegistrationUseCase.getLastCrisisDetails()
 
-            if (result != null) {
-                if (!result.completed) {
-                    val startTime = result.start
-                    val endTime = result.end
-                    if (startTime != null && endTime != null) {
-                        val crisisTimeDetails = CrisisTimeDetails(
-                            startTime = startTime,
-                            endTime = endTime
-                        )
-                        _screenState.value = _screenState.value?.copy(
-                            crisisDetails = _screenState.value!!.crisisDetails.copy(
-                                crisisTimeDetails = crisisTimeDetails
-                            )
-                        )
-                    }
-                    val availableTools = GridElementsRepository.returnAvailableTools()
-
-                    val selectedCrisisTools = result.tools.mapNotNull { toolId ->
-                        availableTools.find { it.id == toolId }
-                    }
-                    _tools.value = availableTools
-                    _screenState.value = _screenState.value?.copy(
-                        crisisDetails = _screenState.value!!.crisisDetails.copy(
-                            toolList = selectedCrisisTools
-                        )
-                    )
-                } else {
-                    _screenState.value = _screenState.value?.copy(
-                        crisisDetails = _screenState.value!!.crisisDetails.copy(
-                            crisisTimeDetails = CrisisTimeDetails() // Aquí también reseteamos las fechas en el estado
-                        )
+            if (result?.completed == false) {
+                val startTime = result.start
+                val endTime = result.end
+                if (startTime != null && endTime != null) {
+                    val crisisTimeDetails = CrisisTimeDetails(
+                        startTime = startTime,
+                        endTime = endTime
                     )
                     _screenState.value = _screenState.value?.copy(
                         crisisDetails = _screenState.value!!.crisisDetails.copy(
-                            toolList = emptyList()
+                            crisisTimeDetails = crisisTimeDetails
                         )
                     )
                 }
+                val availableTools = GridElementsRepository.returnAvailableTools()
+
+                val selectedCrisisTools = result.tools.mapNotNull { toolId ->
+                    availableTools.find { it.id == toolId }
+                }
+                _tools.value = availableTools
+                _screenState.value = _screenState.value?.copy(
+                    crisisDetails = _screenState.value!!.crisisDetails.copy(
+                        toolList = selectedCrisisTools
+                    )
+                )
+            } else {
+                _screenState.value = _screenState.value?.copy(
+                    crisisDetails = _screenState.value!!.crisisDetails.copy(
+                        crisisTimeDetails = CrisisTimeDetails()
+                    )
+                )
+                _screenState.value = _screenState.value?.copy(
+                    crisisDetails = _screenState.value!!.crisisDetails.copy(
+                        toolList = emptyList()
+                    )
+                )
             }
         }
     }
@@ -333,11 +331,15 @@ class CrisisRegistrationViewModel(
     }
 
     private fun updateScreenStateCrisisDetails(updatedCrisisTimeDetails: CrisisTimeDetails?) {
-        _screenState.value = _screenState.value?.copy(
-            crisisDetails = _screenState.value?.crisisDetails?.copy(
-                crisisTimeDetails = updatedCrisisTimeDetails!!
-            )!!
-        )
+        _screenState.value = updatedCrisisTimeDetails?.let { crisisTimeDetails ->
+            _screenState.value?.crisisDetails?.copy(
+                crisisTimeDetails = crisisTimeDetails
+            )?.let { crisisDetails ->
+                _screenState.value?.copy(
+                    crisisDetails = crisisDetails
+                )
+            }
+        }
     }
 
     fun hideBackButton() {
