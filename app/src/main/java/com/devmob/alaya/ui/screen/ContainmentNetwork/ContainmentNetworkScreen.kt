@@ -31,6 +31,7 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactCard
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.theme.ColorDarkOrange
 import com.devmob.alaya.ui.theme.ColorOrange
+import com.devmob.alaya.ui.theme.ColorPink
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
@@ -94,8 +95,8 @@ fun ContainmentNetworkScreen(
             items(contacts) { contact ->
                 ContactCard(
                     contact = contact,
-                    textColor = if (contact.contactId == "4") ColorWhite else ColorText,
-                    backgroundColor = if (contact.contactId == "4") ColorOrange else ColorWhite,
+                    textColor = if (contact.contactId == "4") ColorText else ColorText,
+                    backgroundColor = if (contact.contactId == "4") ColorPink else ColorWhite,
                     showWhatsappButton = contact.contactId != "4",
                     viewModel = ContactViewModel(),
                     onClick = {

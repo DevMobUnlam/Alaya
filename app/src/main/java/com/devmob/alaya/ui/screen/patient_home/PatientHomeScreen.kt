@@ -115,16 +115,6 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
                     rightIcon = Icons.Filled.ArrowForwardIos
                 )
                 Card(
-                    title = "Herramientas de bienestar",
-                    subtitle = "Encuentra recursos para cuidar tu mente y mejorar tu bienestar diario",
-                    onClick = { },
-                    rightIcon = Icons.Filled.ArrowForwardIos,
-                    leftIconBitmap = BitmapFactory.decodeResource(
-                        LocalContext.current.resources,
-                        R.drawable.hand_heart
-                    )
-                )
-                Card(
                     title = "Registro de crisis",
                     subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
                     onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route) },

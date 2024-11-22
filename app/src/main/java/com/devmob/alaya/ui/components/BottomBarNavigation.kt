@@ -39,6 +39,8 @@ import com.devmob.alaya.R
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.theme.ColorDarkOrange
+import com.devmob.alaya.ui.theme.ColorOrange
+import com.devmob.alaya.ui.theme.ColorPink
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.ColorText
@@ -97,7 +99,7 @@ fun IconMenu(item: ItemMenu, navHostController: NavHostController) {
         )
 
         IconType.PROFESSIONAL -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPrimary)
-        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorDarkOrange)
+        IconType.PATIENT -> FloatingMiddleButtonWithAnimation(item, navHostController, ColorPrimary)
     }
 }
 
@@ -132,7 +134,7 @@ fun FloatingMiddleButtonWithAnimation(item: ItemMenu, navHostController: NavHost
 @Composable
 fun FloatingMiddleButton(item: ItemMenu, navHostController: NavHostController) {
     FloatingActionButton(
-        containerColor = ColorTertiary,
+        containerColor = ColorPink,
         modifier = Modifier
             .size(65.dp),
         onClick = { navHostController.navigate(item.route) },

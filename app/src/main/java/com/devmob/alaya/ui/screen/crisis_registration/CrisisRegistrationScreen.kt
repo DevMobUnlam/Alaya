@@ -653,6 +653,31 @@ object GridElementsRepository {
                 icon = Icons.Outlined.SentimentVeryDissatisfied,
                 intensity = Intensity.LOW
             ),
+            CrisisEmotion(
+                name = "Euforia",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Culpa",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Asco",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Vergüenza",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
+            CrisisEmotion(
+                name = "Rechazo",
+                icon = Icons.Outlined.SentimentDissatisfied,
+                intensity = Intensity.LOW
+            ),
         )
     }
 
@@ -678,6 +703,21 @@ object GridElementsRepository {
             ),
             CrisisBodySensation(
                 name = "Palpitaciones",
+                icon = Icons.Filled.MonitorHeart,
+                intensity = Intensity.LOW
+            ),
+            CrisisBodySensation(
+                name = "Calor",
+                icon = Icons.Filled.MonitorHeart,
+                intensity = Intensity.LOW
+            ),
+            CrisisBodySensation(
+                name = "Falta de aire",
+                icon = Icons.Filled.MonitorHeart,
+                intensity = Intensity.LOW
+            ),
+            CrisisBodySensation(
+                name = "Sudor",
                 icon = Icons.Filled.MonitorHeart,
                 intensity = Intensity.LOW
             )

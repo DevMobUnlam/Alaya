@@ -111,7 +111,7 @@ fun IconButtonWithIntensity(
             },
             shape = CircleShape,
             colors = IconButtonColors(
-                containerColor = if (isActive) ColorText else getColorByText(text),
+                containerColor = if (isActive) ColorText else ColorPrimary,
                 contentColor = ColorWhite,
                 disabledContentColor = ColorGray,
                 disabledContainerColor = ColorWhite
@@ -133,18 +133,6 @@ fun IconButtonWithIntensity(
         )
     }
 }
-
-fun getColorByText(text: String): Color {
-    var color = ColorPrimary
-    when (text) {
-        "Miedo" -> color = ColorMiedo
-        "Tristeza" -> color = ColorTristeza
-        "Enfado" -> color = ColorEnfado
-        else -> color = ColorPrimary
-    }
-    return color
-}
-
 
 @Preview
 @Composable
