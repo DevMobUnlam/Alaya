@@ -48,8 +48,8 @@ object NavUtils {
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
 
-        data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional")
-        data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional")
+        data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional/{patientEmail}")
+        data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional/{patientEmail}")
 
         data object ProfileUser : ProfessionalRoutes("profile_user")
 
@@ -68,12 +68,10 @@ object NavUtils {
         ProfessionalRoutes.AddCustomActivity.route to "Actividad personalizada",
         ProfessionalRoutes.SendInvitation.route to "Enviar invitación",
         ProfessionalRoutes.ActivityDayProfessional.route to "Actividades diarias",
-        ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias"
-
+        ProfessionalRoutes.ModalActivityDayProfessional.route to "Actividades diarias",
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil"
         )
 
-        ProfessionalRoutes.ProfileUser.route to "Mi perfil"
-    )
 
 
     val routesWithBottomBar = listOf(
@@ -87,7 +85,7 @@ object NavUtils {
         ProfessionalRoutes.SendInvitation.route,
         PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ActivityDayProfessional.route,
-        ProfessionalRoutes.ModalActivityDayProfessional.route
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
         ProfessionalRoutes.ProfileUser.route
 
     )

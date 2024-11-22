@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -54,6 +55,7 @@ import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
 import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalViewModel
 import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
@@ -111,6 +113,7 @@ fun MainContent(
     val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val activityDayProfessionalViewModel: ActivityDayProfessionalViewModel = hiltViewModel()
     val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
     val crisisRepository = CrisisRepositoryImpl(firebaseClient)
     val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(crisisRepository)
@@ -395,14 +398,20 @@ fun MainContent(
                 ActivityDayScreen()
             }
 
-            //Pantalla actividades diarias Profesional
-            composable(NavUtils.ProfessionalRoutes.ActivityDayProfessional.route) {
-                ActivityDayProfessionalScreen(navController)
+            composable(
+                route = "${ProfessionalRoutes.ActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ActivityDayProfessionalScreen(activityDayProfessionalViewModel,navController, email?:"")
             }
 
-            //Pantalla modal profesional
-            composable(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) {
-                ModalActivityDayProfessional()
+            composable(
+                route = "${ProfessionalRoutes.ModalActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ModalActivityDayProfessional(activityDayProfessionalViewModel, navController,email?:"")
             }
 
             composable("feedback_screen/{feedbackType}",

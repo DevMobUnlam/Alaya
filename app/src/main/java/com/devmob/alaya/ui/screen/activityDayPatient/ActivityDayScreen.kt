@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.activityDayPatient
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +42,7 @@ fun ActivityDayScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -98,9 +98,7 @@ fun ActivityDayScreen(
                                     top.linkTo(text.bottom)
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                }
-                                .verticalScroll(rememberScrollState())
-                                .padding(bottom = 120.dp),
+                                },
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ){
                             uiState.value.activityList.forEach{ activity ->

@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayPatient
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -6,11 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
 import com.devmob.alaya.domain.model.DailyActivity
 import com.devmob.alaya.domain.model.FirebaseResult
-import com.google.firebase.FirebaseError
+import com.devmob.alaya.ui.screen.activityDay.ActivityDayUIState
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -34,7 +34,7 @@ class ActivityDayViewModel @Inject constructor(
 
     fun loadDailyActivities(){
           viewModelScope.launch(Dispatchers.IO){
-              Log.d("ActivityDayViewModel", "scope launched called")
+              _uiState.update { it.copy(isLoading = true) }
               try {
                 patientDailyActivitiesUseCases.getPatientDailyActivitiesUseCase.invoke().collect{ list ->
                     if(!list.isNullOrEmpty()){
@@ -71,11 +71,6 @@ class ActivityDayViewModel @Inject constructor(
                 }
             }
 
-//            _uiState.update {
-//                    val updatedList = it.activityList.toMutableList()
-//                    updatedList[index] = dailyActivity.copy(isDone = true)
-//                ActivityDayUIState(activityList = updatedList.toList(), isLoading = false)
-//            }
         }
 
     }
@@ -113,9 +108,6 @@ class ActivityDayViewModel @Inject constructor(
         shouldShowPostActivityModal = false
     }
 
-    fun onMicrophoneClick(){
-        TODO()
-    }
 
     override fun onCleared() {
         viewModelScope.cancel()
