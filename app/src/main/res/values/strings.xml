@@ -25,7 +25,7 @@
     <string name="confirm">Sí</string>
     <string name="dismiss">No</string>
     <string name="send_message">Enviar mensaje</string>
-    <string name="treatment_text_button_professional">Configurar tratamientos</string>
+    <string name="treatment_text_button_professional">Configurar manejo de crisis</string>
     <string name="summary_text_button_professional">Resumen semanal</string>
     <string name="session_text_button_professional">Programar próxima sesión</string>
     <string name="Registrar_episodio">Registrar el episodio</string>
@@ -72,8 +72,8 @@
     <string name="registrar_el_episodio">Registrar el episodio</string>
     <string name="lograste_superar_este_momento_segu_as">Lograste superar este momento. ¡Seguí así!</string>
     <string name="felicidades">¡Felicidades!</string>
-    <string name="actividad_personalizada">Actividad personalizada</string>
-    <string name="confirmar_tratamiento">Confirmar tratamiento</string>
+    <string name="actividad_personalizada">Herramienta personalizada</string>
+    <string name="confirmar_tratamiento">Confirmar</string>
     <string name="paso_3">Paso 3</string>
     <string name="paso_2">Paso 2</string>
     <string name="paso_1">Paso 1</string>
