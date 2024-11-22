@@ -8,6 +8,7 @@ val ColorTertiary = Color(0xFFA0A3FC)
 val ColorQuaternary = Color(0xFFD7F4F4)
 val LightBlueColor = Color(0xFFEFF3FF)
 val ColorText =Color(0xFF2E4D83)
+val ColorPink = Color(0xFFF5A5DE)
 
 // Colores básicos
 val ColorWhite = Color(0xFFFFFFFF)
