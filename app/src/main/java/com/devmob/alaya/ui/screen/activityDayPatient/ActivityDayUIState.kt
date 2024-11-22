@@ -1,3 +1,5 @@
+package com.devmob.alaya.ui.screen.activityDayPatient
+
 import com.devmob.alaya.domain.model.DailyActivity
 
 data class ActivityDayUIState(

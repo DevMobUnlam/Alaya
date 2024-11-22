@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.activityDayPatient
 
-import ActivityDayUIState
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
 import com.devmob.alaya.domain.model.DailyActivity
 import com.devmob.alaya.domain.model.FirebaseResult
-import com.devmob.alaya.ui.screen.activityDay.ActivityDayUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel

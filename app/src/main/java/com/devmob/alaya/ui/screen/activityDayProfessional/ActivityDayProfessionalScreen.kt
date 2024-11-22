@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.activityDayProfessional
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,15 +48,12 @@ fun ActivityDayProfessionalScreen(
     email: String
 ){
 
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit){
         viewModel.getDailyActivities(email)
     }
 
-    DisposableEffect(Unit){
-        onDispose { viewModel.cancelJob() }
-    }
 
     Box(
         modifier = Modifier
@@ -64,7 +63,7 @@ fun ActivityDayProfessionalScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-               .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState())
                 .padding(top = 32.dp)
         ) {
 

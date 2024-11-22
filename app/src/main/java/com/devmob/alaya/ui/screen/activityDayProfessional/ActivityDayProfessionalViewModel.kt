@@ -9,7 +9,6 @@ import com.devmob.alaya.domain.ProfessionalDailyActivitiesUseCases
 import com.devmob.alaya.domain.model.DailyActivity
 import com.devmob.alaya.domain.model.FirebaseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,18 +30,16 @@ class ActivityDayProfessionalViewModel @Inject constructor(
     var focusedActivity by mutableStateOf(DailyActivity())
         private set
 
-    private var job: Job? = null
-
 
     fun getDailyActivities(patientID: String){
-        job = viewModelScope.launch {
+        viewModelScope.launch {
             try {
                 useCases.getDailyActivitiesUseCase(patientID).collect{ list ->
                     if (list != null) {
                         if(list.isNotEmpty()){
                             _uiState.update { it.copy(activityList = list, isLoading = false, isError = false) }
                         }else{
-                            _uiState.update { it.copy(isLoading = false, isError = false) }
+                            _uiState.update { it.copy(activityList = emptyList(), isLoading = false, isError = false) }
                         }
                     }else{
                         _uiState.update { it.copy(isLoading = false, isError = true) }
@@ -110,9 +107,6 @@ class ActivityDayProfessionalViewModel @Inject constructor(
         _uiState.update {it.copy(isCreating = false) }
     }
 
-    fun cancelJob(){
-        job?.cancel()
-    }
 
 }
 
