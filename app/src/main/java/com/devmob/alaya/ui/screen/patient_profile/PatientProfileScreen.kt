@@ -11,6 +11,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,11 +37,12 @@ import com.devmob.alaya.ui.components.HorizontalCardCarousel
 import com.devmob.alaya.ui.components.NextAppointmentHeader
 import com.devmob.alaya.ui.components.SingleLineChartWithGridLines
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
+import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
-import java.time.LocalDateTime
+import java.util.Date
 import com.devmob.alaya.ui.components.Button as ButtonAlaya
 
 @Composable
@@ -56,7 +59,9 @@ fun PatientProfileScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getPatientData(email)
+        viewModel.getNextSession(email)
     }
+    val nextSession by viewModel.nextSession.collectAsState()
 
     if (viewModel.isLoading) {
         CircularProgressIndicator(
@@ -77,8 +82,7 @@ fun PatientProfileScreen(
             NextAppointmentHeader(
                 namePatient ?: "",
                 surnamePatient ?: "",
-                date = LocalDateTime.now(),
-
+                date = nextSession?.date ?: Date(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .constrainAs(header) {
@@ -122,7 +126,14 @@ fun PatientProfileScreen(
                         end.linkTo(parent.end)
                     },
                 style = ButtonStyle.Outlined,
-                onClick = {},
+                onClick = {
+                    navController.navigate(
+                        NavUtils.ProfessionalRoutes.CreateSessions.route.replace(
+                            "{patientEmail}",
+                            email
+                        )
+                    )
+                          },
                 containerColor = ColorWhite
             )
 
@@ -180,12 +191,3 @@ fun PatientProfileScreen(
     }
 }
 
-@Preview
-@Composable
-fun PatientProfileScreenPreview() {
-    PatientProfileScreen(
-        navController = NavController(LocalContext.current),
-        PatientProfileViewModel(GetUserDataUseCase(GetUserRepositoryImpl(FirebaseClient())), GetRegistersUseCase(CrisisRepositoryImpl(FirebaseClient()))),
-        ""
-    )
-}

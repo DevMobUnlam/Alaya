@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,12 +8,16 @@ import androidx.lifecycle.viewModelScope
 import co.yml.charts.common.model.Point
 import com.devmob.alaya.domain.GetRegistersUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
+import com.devmob.alaya.domain.SessionUseCase
 import com.devmob.alaya.domain.model.CrisisDetailsDB
+import com.devmob.alaya.domain.model.Session
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorSecondary
 import com.devmob.alaya.ui.theme.ColorTertiary
 import com.devmob.alaya.ui.theme.LightBlueColor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -23,6 +26,7 @@ import java.util.Locale
 
 class PatientProfileViewModel(
     private val getEmailUseCase: GetUserDataUseCase,
+    private val getSessionUseCase : SessionUseCase,
     private val getRegistersUseCase: GetRegistersUseCase
 ) :
     ViewModel() {
@@ -31,6 +35,16 @@ class PatientProfileViewModel(
     var isLoading by mutableStateOf(false)
     private var listRegisters by mutableStateOf<List<CrisisDetailsDB>?>(null)
     private var listRegistersBetweenDates by mutableStateOf<List<CrisisDetailsDB>?>(null)
+
+    private val _nextSession = MutableStateFlow<Session?>(null)
+    val nextSession: StateFlow<Session?> get() = _nextSession
+
+    fun getNextSession(patientEmail: String) {
+        viewModelScope.launch {
+            val session = getSessionUseCase.getNextSession(patientEmail)
+            _nextSession.value = session
+        }
+    }
 
     fun getPatientData(email: String) {
         viewModelScope.launch {
