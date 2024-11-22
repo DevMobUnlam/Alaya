@@ -55,7 +55,7 @@ fun TreatmentSummaryScreen(
         val (title, content, buttonColumn) = createRefs()
 
         Text(
-            text = "Resumen del Tratamiento",
+            text = "Resumen de las herramientas",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
