@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.activityDayPatient
 
+import ActivityDayUIState
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +11,6 @@ import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
 import com.devmob.alaya.domain.model.DailyActivity
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.ui.screen.activityDay.ActivityDayUIState
-import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -51,7 +51,7 @@ class ActivityDayViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("ActivityDayViewModel", e.message?:"")
             }
-          }
+        }
 
     }
 
@@ -94,7 +94,7 @@ class ActivityDayViewModel @Inject constructor(
                 }
                 else -> {Log.e("PostActivityModal",
                     (result as FirebaseResult.Error).t?.message ?:"")
-                hidePostActivityModal()
+                    hidePostActivityModal()
                 }
             }
         }

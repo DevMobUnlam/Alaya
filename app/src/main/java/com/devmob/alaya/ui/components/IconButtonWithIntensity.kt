@@ -136,7 +136,7 @@ fun EmotionIconButtonPreview() {
         Icons.Outlined.Refresh,
         "Mareos",
         size = 70.dp,
-        isActive = true,
+        isActive = false,
         onChangedIntensity = {},
         intensity = Intensity.MEDIUM,
         onClick = {})

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -102,21 +104,20 @@ fun CarouselCard(item: CarouselItem, onGenerateIASummary :() -> Unit,activityDay
                         TitleText(item.title)
                         Spacer(modifier = Modifier.height(4.dp))
                         item.tools.forEach { tool ->
-                            Text(
-                                text = tool.name,
-                                fontWeight = FontWeight.Normal,
-                                color = ColorText
-                            )
-                            LinearProgressIndicator(
-                                progress = tool.progress,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(10.dp)
-                                    .padding(vertical = 2.dp),
-                                color = ColorTertiary,
-                                trackColor = ColorQuaternary,
-                                strokeCap = StrokeCap.Round
-                            )
+                            Row {
+                                Text(
+                                    text = "•",
+                                    fontWeight = FontWeight.Normal,
+                                    color = ColorText
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = tool,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontWeight = FontWeight.Normal,
+                                    color = ColorText)
+                            }
                         }
                     }
                 }

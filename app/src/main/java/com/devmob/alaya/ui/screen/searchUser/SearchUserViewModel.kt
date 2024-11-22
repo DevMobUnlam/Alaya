@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.Patient
 import kotlinx.coroutines.launch
