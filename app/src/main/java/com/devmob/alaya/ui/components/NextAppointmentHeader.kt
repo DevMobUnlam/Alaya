@@ -22,11 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devmob.alaya.R
@@ -34,19 +32,28 @@ import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
+import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun NextAppointmentHeader(
     name: String,
     lastName: String,
-    date: LocalDateTime,
+    date: Serializable,
     modifier: Modifier,
     contactViewModel: ContactViewModel,
     phoneNumber: String?,
     context: Context
 ) {
+
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    val formattedDate = dateFormatter.format(date)
+    val formattedTime = timeFormatter.format(date)
     Card(
         colors = CardDefaults.cardColors(containerColor = ColorWhite),
         shape = RoundedCornerShape(20.dp),
@@ -91,7 +98,7 @@ fun NextAppointmentHeader(
                     color = ColorText,
                 )
                 Text(
-                    text = "${formatDate(date)} - \n ${formatTime(date)}hs",
+                    text = "${formattedDate} - \n ${formattedTime}hs",
                     fontSize = 21.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center,
@@ -103,24 +110,6 @@ fun NextAppointmentHeader(
 
         }
     }
-}
-
-@Preview()
-@Composable
-fun NextAppointmentHeaderPreview(
-    name: String = "Mauro",
-    lastName: String = "Catrambone",
-    date: LocalDateTime = LocalDateTime.now()
-) {
-    NextAppointmentHeader(
-        name = name,
-        lastName = lastName,
-        date,
-        Modifier,
-        ContactViewModel(),
-        "1166011371",
-        LocalContext.current
-    )
 }
 
 fun formatDate(date: LocalDateTime, pattern: String = "dd/MM/yyyy"): String {

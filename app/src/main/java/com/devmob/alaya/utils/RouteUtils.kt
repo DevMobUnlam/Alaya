@@ -51,6 +51,7 @@ object NavUtils {
         data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional")
         data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional")
         data object ProfileUser : ProfessionalRoutes("profile_user")
+        data object CreateSessions : ProfessionalRoutes("create_sessions/{patientEmail}")
     }
 
     val routeTitleAppBar = mapOf(
@@ -71,6 +72,9 @@ object NavUtils {
         ProfessionalRoutes.ProfileUser.route to "Mi perfil"
         )
 
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil",
+        ProfessionalRoutes.CreateSessions.route to "Programar sesiones"
+    )
 
     val routesWithBottomBar = listOf(
         PatientRoutes.Home.route,
