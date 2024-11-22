@@ -53,21 +53,10 @@ class PatientProfileViewModel(
             listRegisters = getRegistersUseCase.getListOfRegisters(email)
             listRegistersBetweenDates = getRegistersUseCase.getRegistersBetweenDates(
                 email,
-                getLastSessionDate(),
-                getNextSessionDate()
+                getSessionUseCase.getNextSession(email)?.date ?: Date()
             )
             isLoading = false
         }
-    }
-
-    private fun getLastSessionDate(): Date {
-        // consultar session repository
-        return Date()
-    }
-
-    private fun getNextSessionDate(): Date {
-        // consultar session repository
-        return Date()
     }
 
     fun getPointsData(): List<Point> {
@@ -168,5 +157,13 @@ class PatientProfileViewModel(
             12 to "Dic"
         )
         return monthNames[monthNumber] ?: ""
+    }
+
+    fun cleanViewModel() {
+        patientData = null
+        isLoading = false
+        listRegisters = null
+        listRegistersBetweenDates = null
+        _nextSession.value = null
     }
 }

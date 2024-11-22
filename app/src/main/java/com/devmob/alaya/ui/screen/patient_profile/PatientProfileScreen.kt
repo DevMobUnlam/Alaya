@@ -58,8 +58,9 @@ fun PatientProfileScreen(
     val surnamePatient = viewModel.patientData?.surname
 
     LaunchedEffect(Unit) {
-        viewModel.getPatientData(email)
+        viewModel.cleanViewModel()
         viewModel.getNextSession(email)
+        viewModel.getPatientData(email)
     }
     val nextSession by viewModel.nextSession.collectAsState()
 
