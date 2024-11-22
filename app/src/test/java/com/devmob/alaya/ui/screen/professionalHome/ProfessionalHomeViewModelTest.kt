@@ -23,6 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -74,7 +75,7 @@ class ProfessionalHomeViewModelTest {
         val todaySession =
             SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
         val mockkPatient =
-            Patient("id", "name", "surname", "email", "phone", todaySession, "nextSessionTime")
+            Patient("email", "name", "surname", "phone", Date(), "nextSessionTime")
         coEvery { getUserData.getUser("test@gmail.com")!!.patients } returns List(2) { mockkPatient }
 
         // WHEN
@@ -90,7 +91,7 @@ class ProfessionalHomeViewModelTest {
         // GIVEN
         val anyDate = "01/01/2024"
         val mockkPatient =
-            Patient("id", "name", "surname", "email", "phone", anyDate, "nextSessionTime")
+            Patient("email", "name", "surname", "phone", Date(), "nextSessionTime")
         coEvery { getUserData.getUser("test@gmail.com")!!.patients } returns List(2) { mockkPatient }
 
         // WHEN
