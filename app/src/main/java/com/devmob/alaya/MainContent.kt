@@ -53,7 +53,9 @@ import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
-import com.devmob.alaya.ui.screen.activityDay.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
 import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
@@ -164,6 +166,14 @@ fun MainContent(
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ActivityDayProfessional.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+
+        ProfessionalRoutes.ProfileUser.route,
+
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.CreateSessions.route,
@@ -400,8 +410,19 @@ fun MainContent(
                     )
                 }
             }
+            //Pantalla actividades diarias Paciente
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
+            }
+
+            //Pantalla actividades diarias Profesional
+            composable(ProfessionalRoutes.ActivityDayProfessional.route) {
+                ActivityDayProfessionalScreen(navController)
+            }
+
+            //Pantalla modal profesional
+            composable(ProfessionalRoutes.ModalActivityDayProfessional.route) {
+                ModalActivityDayProfessional()
             }
 
             composable("feedback_screen/{feedbackType}",

@@ -1,4 +1,4 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayPatient
 
 import android.Manifest.permission.RECORD_AUDIO
 import android.view.MotionEvent.ACTION_DOWN
