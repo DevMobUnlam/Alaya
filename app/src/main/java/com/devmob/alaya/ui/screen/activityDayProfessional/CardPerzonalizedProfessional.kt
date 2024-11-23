@@ -40,7 +40,9 @@ fun CardPersonalizedProfessional(
     descripcion: String,
     progress: Int,
     maxProgress: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    email: String,
+    onEditClick: () -> Unit = {},
 ){
     Box(
         modifier = modifier
@@ -101,7 +103,10 @@ fun CardPersonalizedProfessional(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(8.dp)
-                .clickable { navController.navigate(NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route) },
+                .clickable {
+                    navController.navigate("${NavUtils.ProfessionalRoutes.ModalActivityDayProfessional.route}/$email")
+                    onEditClick()
+                },
             tint = ColorText,
         )
     }

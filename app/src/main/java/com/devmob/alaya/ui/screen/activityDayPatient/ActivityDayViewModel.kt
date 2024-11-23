@@ -1,6 +1,5 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayPatient
 
-import ActivityDayUIState
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +31,9 @@ class ActivityDayViewModel @Inject constructor(
     var shouldShowPostActivityModal by mutableStateOf(false)
 
     fun loadDailyActivities(){
-        viewModelScope.launch(Dispatchers.IO){
-            Log.d("ActivityDayViewModel", "scope launched called")
-            try {
+          viewModelScope.launch(Dispatchers.IO){
+              _uiState.update { it.copy(isLoading = true) }
+              try {
                 patientDailyActivitiesUseCases.getPatientDailyActivitiesUseCase.invoke().collect{ list ->
                     if(!list.isNullOrEmpty()){
                         _uiState.update {
@@ -70,11 +69,6 @@ class ActivityDayViewModel @Inject constructor(
                 }
             }
 
-//            _uiState.update {
-//                    val updatedList = it.activityList.toMutableList()
-//                    updatedList[index] = dailyActivity.copy(isDone = true)
-//                ActivityDayUIState(activityList = updatedList.toList(), isLoading = false)
-//            }
         }
 
     }
@@ -112,9 +106,6 @@ class ActivityDayViewModel @Inject constructor(
         shouldShowPostActivityModal = false
     }
 
-    fun onMicrophoneClick(){
-        TODO()
-    }
 
     override fun onCleared() {
         viewModelScope.cancel()

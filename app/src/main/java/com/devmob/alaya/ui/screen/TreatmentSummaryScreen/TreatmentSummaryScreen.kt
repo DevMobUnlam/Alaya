@@ -141,7 +141,7 @@ fun TreatmentSummaryScreen(
 
         Modal(
             show = showModal,
-            title = "Tratamiento Confirmado",
+            title = "Manejo de crisis confirmado",
             primaryButtonText = "Aceptar",
             onDismiss = { showModal = false },
             onConfirm = {

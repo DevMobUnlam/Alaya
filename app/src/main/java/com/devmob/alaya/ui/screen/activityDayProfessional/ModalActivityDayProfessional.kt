@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.activityDayProfessional
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,14 +20,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devmob.alaya.ui.components.Button
@@ -37,11 +39,47 @@ import com.devmob.alaya.ui.theme.LightBlueColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModalActivityDayProfessional(){
+fun ModalActivityDayProfessional(
+    viewModel: ActivityDayProfessionalViewModel,
+    navController: NavController,
+    email: String = "",
+){
+
+    val context = LocalContext.current
 
     val titleState = remember { mutableStateOf(TextFieldValue()) }
-    val descrioptionState = remember { mutableStateOf(TextFieldValue()) }
-    val countState = remember { mutableStateOf(TextFieldValue()) }
+    val descriptionState = remember { mutableStateOf(TextFieldValue()) }
+    val countState = remember { mutableStateOf(TextFieldValue())}
+
+    LaunchedEffect(Unit) {
+        titleState.value = TextFieldValue(viewModel.focusedActivity.title)
+        descriptionState.value = TextFieldValue(viewModel.focusedActivity.description)
+        countState.value = TextFieldValue((viewModel.focusedActivity.maxProgress.toString()))
+    }
+
+            LaunchedEffect(viewModel.saveActivityResult.value){
+                when(viewModel.saveActivityResult.value){
+                null -> {}
+                true -> {
+                    navController.popBackStack()
+                    Toast.makeText(
+                        context,
+                        "¡La actividad se ha guardado con exito!",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+                false -> {
+                    Toast.makeText(
+                        context,
+                        "Error al guardar la actividad",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+        }
+
+
+
 
     Box(
             modifier = Modifier
@@ -66,7 +104,7 @@ fun ModalActivityDayProfessional(){
                     OutlinedTextField(
                         value = titleState.value,
                         onValueChange = { titleState.value = it },
-                        label = { Text("Titulo") },
+                        label = { Text("Título") },
                         isError = false,
                         singleLine = false,
                         modifier = Modifier.fillMaxWidth(),
@@ -82,8 +120,8 @@ fun ModalActivityDayProfessional(){
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
-                        value = descrioptionState.value,
-                        onValueChange = { descrioptionState.value = it },
+                        value = descriptionState.value,
+                        onValueChange = {descriptionState.value = it},
                         label = { Text("Descripción") },
                         isError = false,
                         singleLine = false,
@@ -99,9 +137,9 @@ fun ModalActivityDayProfessional(){
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
-                        value = countState.value, // Obtenemos el valor del estado
+                        value = countState.value,
                         onValueChange = {countState.value = it},
-                        label = { Text("Cantidad de veces por semana*") },
+                        label = { Text("Cantidad de veces por semana") },
                         isError = false,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -118,7 +156,12 @@ fun ModalActivityDayProfessional(){
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         text = "Guardar",
-                        onClick = {},
+                        onClick = {
+                            if(titleState.value.text.isNotEmpty() && countState.value.text.isNotEmpty() && countState.value.text.toInt() !=0){
+                                viewModel.onSaveActivity(email,titleState.value.text, descriptionState.value.text,countState.value.text.toInt()
+                                )
+                            }
+                            },
                         style = ButtonStyle.Filled,
                         modifier = Modifier.width(300.dp).height(50.dp),
                     )
@@ -126,7 +169,10 @@ fun ModalActivityDayProfessional(){
 
                     Button(
                         text = "Descartar",
-                        onClick = {},
+                        onClick = {
+                        viewModel.onDismiss()
+                        navController.popBackStack()
+                        },
                         style = ButtonStyle.Outlined,
                         modifier = Modifier.width(300.dp).height(50.dp),
                     )
