@@ -129,7 +129,7 @@ fun ActivityDayScreen(
                         PostActivityModal(
                             show = viewModel.shouldShowPostActivityModal,
                             onSave = { viewModel.onSavePostActivityComment(it) },
-                            onSkip = { viewModel.hideActivityDescriptionModal() },
+                            onSkip = { viewModel.hidePostActivityModal() },
                         )
 
                     }
