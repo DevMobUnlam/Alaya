@@ -120,7 +120,7 @@ fun NextAppointmentHeader(
                 Spacer(modifier = Modifier.height(8.dp))
                 if (formattedDate != null && formattedTime != null) {
                     Text(
-                        text = "Próxima Sesión:",
+                        text = "Próxima sesión:",
                         fontSize = 21.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center,
