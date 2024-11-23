@@ -104,7 +104,7 @@ fun ModalActivityDayProfessional(
                     OutlinedTextField(
                         value = titleState.value,
                         onValueChange = { titleState.value = it },
-                        label = { Text("Titulo") },
+                        label = { Text("Título") },
                         isError = false,
                         singleLine = false,
                         modifier = Modifier.fillMaxWidth(),
@@ -137,9 +137,9 @@ fun ModalActivityDayProfessional(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
-                        value = countState.value, // Obtenemos el valor del estado
+                        value = countState.value,
                         onValueChange = {countState.value = it},
-                        label = { Text("Cantidad de veces por semana*") },
+                        label = { Text("Cantidad de veces por semana") },
                         isError = false,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

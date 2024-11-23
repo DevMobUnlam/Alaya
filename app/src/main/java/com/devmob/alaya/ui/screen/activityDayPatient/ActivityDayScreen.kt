@@ -15,9 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
-import com.devmob.alaya.ui.components.DailyActivityDescriptionModal
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
@@ -64,7 +61,7 @@ fun ActivityDayScreen(
                 false -> {
                     if(uiState.value.activityList.isEmpty()){
                         Text(
-                            text = "Todavia no tenes ninguna actividad cargada para hacer",
+                            text = "Todavía no tenés ninguna actividad cargada para hacer",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold,
                             lineHeight = 32.sp,
