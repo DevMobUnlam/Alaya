@@ -1,5 +1,6 @@
 package com.devmob.alaya.data
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.devmob.alaya.data.mapper.toData
 import com.devmob.alaya.data.mapper.toDomain
@@ -56,6 +57,7 @@ class DailyActivityRepositoryImpl @Inject constructor(
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override suspend fun changeDailyActivityStatus(dailyActivity: DailyActivity, newStatus: Boolean, updatedProgress: Int): FirebaseResult = runCatching {
         auth.currentUser?.email?.let {
             val collection = db.collection("users")

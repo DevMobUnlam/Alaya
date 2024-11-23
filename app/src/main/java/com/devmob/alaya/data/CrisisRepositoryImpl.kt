@@ -139,5 +139,25 @@ class CrisisRepositoryImpl @Inject constructor(
             FirebaseResult.Error(e)
         }
     }
-}
 
+    override suspend fun getListRegisters(patientId: String): List<CrisisDetailsDB>? {
+        return try {
+            val registersCollection = db.collection("users")
+                .document(patientId)
+                .collection("crisis_registers")
+
+            val documents = registersCollection.orderBy("start", Query.Direction.DESCENDING)
+                .get()
+                .await()
+
+            if (!documents.isEmpty) {
+                documents.map { it.toObject(CrisisDetailsDB::class.java) }
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("Firebase", e.localizedMessage ?: "")
+            null
+        }
+    }
+}

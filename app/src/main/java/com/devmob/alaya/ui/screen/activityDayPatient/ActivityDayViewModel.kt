@@ -1,16 +1,15 @@
 package com.devmob.alaya.ui.screen.activityDay
 
+import ActivityDayUIState
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
 import com.devmob.alaya.domain.model.DailyActivity
 import com.devmob.alaya.domain.model.FirebaseResult
-import com.google.firebase.FirebaseError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -33,9 +32,9 @@ class ActivityDayViewModel @Inject constructor(
     var shouldShowPostActivityModal by mutableStateOf(false)
 
     fun loadDailyActivities(){
-          viewModelScope.launch(Dispatchers.IO){
-              Log.d("ActivityDayViewModel", "scope launched called")
-              try {
+        viewModelScope.launch(Dispatchers.IO){
+            Log.d("ActivityDayViewModel", "scope launched called")
+            try {
                 patientDailyActivitiesUseCases.getPatientDailyActivitiesUseCase.invoke().collect{ list ->
                     if(!list.isNullOrEmpty()){
                         _uiState.update {
@@ -51,7 +50,7 @@ class ActivityDayViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("ActivityDayViewModel", e.message?:"")
             }
-          }
+        }
 
     }
 
@@ -99,7 +98,7 @@ class ActivityDayViewModel @Inject constructor(
                 }
                 else -> {Log.e("PostActivityModal",
                     (result as FirebaseResult.Error).t?.message ?:"")
-                hidePostActivityModal()
+                    hidePostActivityModal()
                 }
             }
         }

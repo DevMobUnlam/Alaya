@@ -1,20 +1,18 @@
 package com.devmob.alaya.domain.model
 
-import com.devmob.alaya.R
 import java.io.Serializable
-import java.time.LocalDate
-import java.time.LocalTime
+import java.util.Date
 
 data  class Patient (
     val email: String,
     val name: String,
     val surname: String,
     val phone: String,
-    val nextSession: String? = null,
+    val nextSession: Date? = null,
     val nextSessionDate: String? = "",
     val nextSessionTime: String? = "",
     val profileImage: String? = null,
-    val hour: String = "No tiene sesiones"
+    val hour: String = "No tiene sesiones",
 ) : Serializable {
-    constructor() : this("", "", "", "", "","", "", null)
+    constructor() : this("", "", "", "", Date(),"", "", null)
 }

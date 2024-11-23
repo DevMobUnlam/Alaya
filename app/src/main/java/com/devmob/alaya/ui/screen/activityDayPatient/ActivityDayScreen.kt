@@ -1,6 +1,6 @@
-package com.devmob.alaya.ui.screen.activityDay
+package com.devmob.alaya.ui.screen.activityDayPatient
 
-import android.util.Log
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.devmob.alaya.ui.components.DailyActivityDescriptionModal
+import com.devmob.alaya.ui.screen.activityDay.ActivityDayViewModel
 import com.devmob.alaya.ui.theme.ColorGray
 import com.devmob.alaya.ui.theme.ColorText
 
