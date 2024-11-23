@@ -49,8 +49,9 @@ object NavUtils {
         }
         data object SendInvitation : ProfessionalRoutes("send_invitation")
 
-        data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional")
-        data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional")
+        data object ActivityDayProfessional : ProfessionalRoutes("activity_day_professional/{patientEmail}")
+        data object ModalActivityDayProfessional : ProfessionalRoutes("modal_activity_day_professional/{patientEmail}")
+
         data object ProfileUser : ProfessionalRoutes("profile_user")
         data object CreateSessions : ProfessionalRoutes("create_sessions/{patientEmail}")
     }

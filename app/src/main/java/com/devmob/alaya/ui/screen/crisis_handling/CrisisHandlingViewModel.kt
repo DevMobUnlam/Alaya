@@ -23,10 +23,10 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 
-class CrisisHandlingViewModel (
+class CrisisHandlingViewModel(
     private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase,
     private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
-): ViewModel() {
+) : ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
     var optionTreatmentsList by mutableStateOf<List<OptionTreatment>?>(null)
     var currentStepIndex by mutableIntStateOf(0)
@@ -51,6 +51,7 @@ class CrisisHandlingViewModel (
         get() = if (steps.isNotEmpty()) {
             steps[currentStepIndex]
         } else null
+
     init {
         fetchCrisisSteps()
         startCrisisHandling()
@@ -65,7 +66,7 @@ class CrisisHandlingViewModel (
         saveCrisisData()
     }
 
-    fun fetchCrisisSteps() {
+    private fun fetchCrisisSteps() {
         var stepCrisisList: List<StepCrisis>
         viewModelScope.launch {
             _loading.value = true
@@ -75,41 +76,44 @@ class CrisisHandlingViewModel (
 
                 // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
-                    stepCrisisList = optionTreatmentsList!!.map { option ->
+                    stepCrisisList = optionTreatmentsList?.map { option ->
                         StepCrisis(
                             title = option.title,
                             description = option.description,
                             image = option.imageUri
                         )
-                    }
+                    } ?: getDefaultStepCrises()
                     steps = stepCrisisList
                 } else {
                     // Si no hay tratamiento por terapeuta, carga los pasos predeterminados
-                    steps = listOf(
-                        StepCrisis(
-                            "Controlar la respiración",
-                            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
-                            "image_step_1"
-                        ),
-                        StepCrisis(
-                            "Imaginación guiada",
-                            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
-                            "image_step_2"
-                        ),
-                        StepCrisis(
-                            "Autoafirmaciones",
-                            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
-                            "image_step_3"
-                        )
-                    )
+                    steps = getDefaultStepCrises()
                 }
                 _loading.value = false
             } catch (e: Exception) {
+                steps = getDefaultStepCrises()
                 _loading.value = false
                 Log.d("CrisisHandlingViewModel", "Exception in fetchCrisisSteps $e")
             }
         }
     }
+
+    private fun getDefaultStepCrises() = listOf(
+        StepCrisis(
+            "Controlar la respiración",
+            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
+            "image_step_1"
+        ),
+        StepCrisis(
+            "Imaginación guiada",
+            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
+            "image_step_2"
+        ),
+        StepCrisis(
+            "Autoafirmaciones",
+            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
+            "image_step_3"
+        )
+    )
 
     fun nextStep() {
         currentStep?.let { addTool(it.title) }
@@ -122,7 +126,7 @@ class CrisisHandlingViewModel (
         }
     }
 
-    fun saveCrisisData() {
+    private fun saveCrisisData() {
         viewModelScope.launch {
             val crisisDetails = CrisisDetailsDB(
                 start = startTime,
@@ -144,7 +148,7 @@ class CrisisHandlingViewModel (
         }
     }
 
-    fun addTool(tool: String) {
+    private fun addTool(tool: String) {
         if (!toolsUsed.contains(tool)) {
             toolsUsed.add(tool)
         }
@@ -166,6 +170,7 @@ class CrisisHandlingViewModel (
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
+
     fun playMusic() {
         viewModelScope.launch(Dispatchers.IO) {
             val storage = FirebaseStorage.getInstance()
@@ -194,9 +199,7 @@ class CrisisHandlingViewModel (
         isPlaying = false
     }
 
-
-
-    fun startTextToSpeech(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+    fun startTextToSpeech(textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
         stopTextToSpeech(textToSpeech)
         if (shouldVoiceSpeak && isVoiceOn) {
             if (isTtsInitialized) {
@@ -222,17 +225,17 @@ class CrisisHandlingViewModel (
 
     }
 
-    fun stopTextToSpeech(textToSpeech: TextToSpeech){
+    fun stopTextToSpeech(textToSpeech: TextToSpeech) {
         if (textToSpeech.isSpeaking) {
             textToSpeech.stop()
         }
     }
 
-    fun setShouldSpeakVoice(status: Boolean){
+    fun setShouldSpeakVoice(status: Boolean) {
         shouldVoiceSpeak = status
     }
 
-    fun onMuteVoice(textToSpeech: TextToSpeech, isTtsInitialized: Boolean){
+    fun onMuteVoice(textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
         if (isVoiceOn) {
             stopTextToSpeech(textToSpeech)
             isVoiceOn = false
@@ -241,11 +244,10 @@ class CrisisHandlingViewModel (
 
             if (isTtsInitialized) {
                 stopTextToSpeech(textToSpeech)
-                startTextToSpeech(textToSpeech,true)
+                startTextToSpeech(textToSpeech, true)
             }
         }
     }
-
 
     override fun onCleared() {
         super.onCleared()

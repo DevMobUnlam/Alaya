@@ -2,12 +2,16 @@ package com.devmob.alaya.core.di
 
 import android.content.Context
 import com.devmob.alaya.domain.ChangeDailyActivityStatusUseCase
+import com.devmob.alaya.domain.CreateDailyActivityUseCase
 import com.devmob.alaya.domain.CrisisRepository
 import com.devmob.alaya.domain.DailyActivityRepository
+import com.devmob.alaya.domain.EditDailyActivityUseCase
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.devmob.alaya.domain.GetPatientDailyActivitiesUseCase
+import com.devmob.alaya.domain.GetProfessionalDailyActivitiesUseCase
 import com.devmob.alaya.domain.GetUserRepository
 import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
+import com.devmob.alaya.domain.ProfessionalDailyActivitiesUseCases
 import com.devmob.alaya.domain.SavePostActivityCommentUseCase
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.GenerationConfig
@@ -50,6 +54,17 @@ object DomainModule {
             changeDailyActivityStatusUseCase = ChangeDailyActivityStatusUseCase(dailyActivityRepository),
             getPatientDailyActivitiesUseCase = GetPatientDailyActivitiesUseCase(dailyActivityRepository),
             savePostActivityCommentUseCase = SavePostActivityCommentUseCase((dailyActivityRepository))
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfessionalDailyActivitiesUseCases(dailyActivityRepository: DailyActivityRepository): ProfessionalDailyActivitiesUseCases{
+        return ProfessionalDailyActivitiesUseCases(
+            getDailyActivitiesUseCase = GetProfessionalDailyActivitiesUseCase(dailyActivityRepository),
+            createDailyActivityUseCase = CreateDailyActivityUseCase(dailyActivityRepository),
+            editDailyActivityUseCase = EditDailyActivityUseCase(dailyActivityRepository)
+
         )
     }
 }

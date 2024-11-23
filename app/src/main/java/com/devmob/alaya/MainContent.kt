@@ -3,11 +3,14 @@ package com.devmob.alaya
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -55,6 +58,7 @@ import com.devmob.alaya.ui.screen.MenuProfessionalScreen
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
 import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
 import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalViewModel
 import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
 import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
 import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
@@ -116,6 +120,7 @@ fun MainContent(
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
     val getSessionUseCase = SessionUseCase(notificationRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val activityDayProfessionalViewModel: ActivityDayProfessionalViewModel = hiltViewModel()
     val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
     val sessionViewModel: SessionViewModel = viewModel(
         factory = ViewModelFactory {
@@ -168,6 +173,8 @@ fun MainContent(
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.PatientIASummary.route,
         ProfessionalRoutes.ActivityDayProfessional.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.ModalActivityDayProfessional.route,
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.ProfileUser.route,
@@ -414,19 +421,24 @@ fun MainContent(
                     )
                 }
             }
-            //Pantalla actividades diarias Paciente
             composable(NavUtils.PatientRoutes.ActivityDay.route) {
                 ActivityDayScreen()
             }
 
-            //Pantalla actividades diarias Profesional
-            composable(ProfessionalRoutes.ActivityDayProfessional.route) {
-                ActivityDayProfessionalScreen(navController)
+            composable(
+                route = "${ProfessionalRoutes.ActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ActivityDayProfessionalScreen(activityDayProfessionalViewModel,navController, email?:"")
             }
 
-            //Pantalla modal profesional
-            composable(ProfessionalRoutes.ModalActivityDayProfessional.route) {
-                ModalActivityDayProfessional()
+            composable(
+                route = "${ProfessionalRoutes.ModalActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ModalActivityDayProfessional(activityDayProfessionalViewModel, navController,email?:"")
             }
 
             composable("feedback_screen/{feedbackType}",
