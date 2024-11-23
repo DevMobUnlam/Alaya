@@ -25,6 +25,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorText
+import com.devmob.alaya.utils.toHourString
 
 @Composable
 fun UserItem(patient: Patient, withSubtitle: Boolean, onClick: () -> Unit) {
@@ -75,9 +76,9 @@ fun UserItem(patient: Patient, withSubtitle: Boolean, onClick: () -> Unit) {
                 color = ColorText
             )
             if (withSubtitle) {
-                patient.nextSessionTime?.let {
+                patient.nextSession?.let {
                     Text(
-                        text = it,
+                        text = it.toHourString(),
                         fontSize = 18.sp,
                         color = ColorPrimary
                     )
