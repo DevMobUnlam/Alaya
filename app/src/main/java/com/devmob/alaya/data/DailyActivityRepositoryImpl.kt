@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.devmob.alaya.data.mapper.toData
 import com.devmob.alaya.data.mapper.toDomain
+import com.devmob.alaya.data.mapper.toNetwork
+import com.devmob.alaya.data.mapper.toNetworkPost
 import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.DailyActivityRepository
 import com.devmob.alaya.domain.model.DailyActivity
@@ -60,7 +62,7 @@ class DailyActivityRepositoryImpl @Inject constructor(
     @SuppressLint("SuspiciousIndentation")
     override suspend fun changeDailyActivityStatus(dailyActivity: DailyActivity, newStatus: Boolean, updatedProgress: Int): FirebaseResult = runCatching {
         auth.currentUser?.email?.let {
-            val collection = db.collection("users")
+                val collection = db.collection("users")
                 .document(it)
                 .collection("daily_activities")
                 .document(dailyActivity.id)
@@ -83,4 +85,63 @@ class DailyActivityRepositoryImpl @Inject constructor(
                 .await()
         }
     }.toResponseFirebase()
+
+    override suspend fun editDailyActivity(
+        patientID: String,
+        dailyActivity: DailyActivityBody
+    ): FirebaseResult = runCatching{
+            val document = db.collection("users")
+            .document(patientID)
+            .collection("daily_activities")
+            .document(dailyActivity.id)
+            document.update("title", dailyActivity.title)
+            document.update("description", dailyActivity.description)
+            document.update("maxProgress", dailyActivity.maxProgress)
+            .await()
+    }.toResponseFirebase()
+
+    override suspend fun createDailyActivity(
+        patientID: String,
+        dailyActivity: DailyActivityBody
+    ): FirebaseResult = runCatching{
+        db.collection("users")
+            .document(patientID)
+            .collection("daily_activities")
+            .add(dailyActivity.toNetworkPost())
+            .await()
+    }.toResponseFirebase()
+
+    override suspend fun getAssignedDailyActivities(patientID: String): Flow<List<DailyActivityNetwork>?> {
+        return callbackFlow {
+
+        try{
+            val currentUserEmail = auth.currentUser?.email
+            if(currentUserEmail == null){
+                trySend(null)
+            }else{
+                db.collection("users")
+                    .document(patientID)
+                    .collection("daily_activities")
+                    .addSnapshotListener{ snapshot, e ->
+                        if(e != null){
+                            Log.w("Firebase","DailyActivitiesListenFailed")
+                            trySend(null)
+                        }
+                        if(snapshot != null && !snapshot.isEmpty){
+                            val list = snapshot.map { it.toData()}
+                            trySend(list)
+                        } else {
+                            Log.w("Firebase", "Data not found")
+                            this.trySend(emptyList())
+                        }
+                    }
+
+            }
+        }catch(e:Exception){
+            Log.e("DailyActivityRepository", e.message?:"")
+            trySend(null)
+        }
+        awaitClose{cancel()}
+    }
+    }
 }
