@@ -93,10 +93,10 @@ fun ScheduleSessionScreen(
             show = showModal.value,
             title = if (isMultipleSessions) "Próximas sesiones" else "Próxima sesión",
             description = if (!isMultipleSessions) {
-                nextSessionDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                nextSessionDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))+ " hs"
             } else {
-                viewModel.upcomingSessions.value.joinToString("\n") { sessionDate ->
-                    sessionDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                viewModel.upcomingSessions.value.joinToString("\n\n") { sessionDate ->
+                    sessionDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + " hs"
                 }
             },
             primaryButtonText = "Confirmar",
@@ -157,7 +157,7 @@ fun ScheduleSessionScreen(
                                 colors = RadioButtonDefaults.colors(
                                 selectedColor = Color(0xFFF5A5DE) )
                     )
-                    Text(text = "Programar solo una sesión", color = ColorText)
+                    Text(text = "Programar una sola sesión", color = ColorText)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
