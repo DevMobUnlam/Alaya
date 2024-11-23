@@ -61,7 +61,7 @@ fun ActivityDayScreen(
                 false -> {
                     if(uiState.value.activityList.isEmpty()){
                         Text(
-                            text = "Todavía no tenés ninguna actividad cargada para hacer",
+                            text = "No tienes actividades pendientes por realizar",
                             fontSize = 25.sp,
                             fontWeight = FontWeight.Bold,
                             lineHeight = 32.sp,
