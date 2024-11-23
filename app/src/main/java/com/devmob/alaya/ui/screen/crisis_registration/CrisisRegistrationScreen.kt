@@ -1,6 +1,5 @@
 package com.devmob.alaya.ui.screen.crisis_registration
 
-
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -34,7 +33,6 @@ import androidx.compose.material.icons.outlined.SentimentVeryDissatisfied
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +50,6 @@ import com.devmob.alaya.components.SegmentedProgressBar
 import com.devmob.alaya.domain.model.CrisisBodySensation
 import com.devmob.alaya.domain.model.CrisisEmotion
 import com.devmob.alaya.domain.model.CrisisPlace
-import com.devmob.alaya.domain.model.CrisisTimeDetails
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.Intensity
 import com.devmob.alaya.ui.components.CrisisRegisterIconButton
@@ -68,7 +65,6 @@ import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
 
-
 @Composable
 fun CrisisRegistrationScreen(
     viewModel: CrisisRegistrationViewModel,
@@ -76,7 +72,6 @@ fun CrisisRegistrationScreen(
     onFinishedRegistration: () -> Unit,
     navController: NavHostController,
 ) {
-
     val screenState = viewModel.screenState.observeAsState()
     val shouldShowExitModal = viewModel.shouldShowExitModal
     val messageTextSize = 30.sp
@@ -90,25 +85,6 @@ fun CrisisRegistrationScreen(
     var selectedBodySensations by remember { mutableStateOf<Map<String, Intensity>>(emptyMap()) }
     val emotions by viewModel.emotions.observeAsState(emptyList())
     var selectedEmotions by remember { mutableStateOf<Set<String>>(emptySet()) }
-
-    val crisisTimeDetails by viewModel.crisisTimeDetails.observeAsState(CrisisTimeDetails())
-
-    // Carga el último registro cuando se inicializa la pantalla
-    LaunchedEffect(Unit) {
-        viewModel.loadLastCrisisDetails()
-    }
-    LaunchedEffect(screenState.value?.crisisDetails) {
-        val isCompleted = screenState.value?.crisisDetails?.completed == true
-        if (isCompleted) {
-            viewModel.cleanState()
-        }
-    }
-
-    GridElementsRepository.returnAvailableTools().let { list ->
-        for (tool in list) {
-            viewModel.addCrisisTool(tool)
-        }
-    }
 
     BackHandler {
         when(screenState.value?.currentStep){
@@ -152,7 +128,7 @@ fun CrisisRegistrationScreen(
                             top.linkTo(closeIcon.bottom, margin = 1.dp)
                         }
                 )
-                viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let {
+                viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.let { time ->
                     DateTimePicker(
                         modifier = Modifier.constrainAs(datePickerComponent) {
                             start.linkTo(parent.start)
@@ -171,7 +147,7 @@ fun CrisisRegistrationScreen(
                         onEndTimeChange = { newTime ->
                             viewModel.updateEndDate(newTime)
                         },
-                        crisisTimeDetails = crisisTimeDetails
+                        crisisTimeDetails = time
                     )
                 }
             }
@@ -491,12 +467,11 @@ fun CrisisRegistrationScreen(
                             onClick = {
                                 if (isSelected) {
                                     selectedTools = selectedTools - tool.name
-                                    viewModel.selectedTools.remove(tool.id)
+                                    viewModel.unselectCrisisTool(tool)
                                 } else {
                                     selectedTools.plus(tool.name)
                                     viewModel.selectCrisisTool(tool)
                                 }
-                                viewModel.updateCrisisTool(tool)
                             }
                         )
                     }
@@ -652,7 +627,7 @@ object GridElementsRepository {
                 name = "Enfado",
                 icon = Icons.Outlined.SentimentVeryDissatisfied,
                 intensity = Intensity.LOW
-            ),
+            )
         )
     }
 

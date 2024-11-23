@@ -9,4 +9,5 @@ interface CrisisRepository {
     suspend fun getRegisters(patientId: String): Flow<List<CrisisDetailsDB>?>
     suspend fun getLastCrisisDetails(): CrisisDetailsDB?
     suspend fun updateCrisisDetails(register: CrisisDetailsDB): FirebaseResult
+    suspend fun getListRegisters(patientId: String): List<CrisisDetailsDB>?
 }

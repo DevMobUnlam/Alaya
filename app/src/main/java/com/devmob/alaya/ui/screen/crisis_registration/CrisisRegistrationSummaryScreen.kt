@@ -27,6 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,6 +42,9 @@ import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.ButtonStyle
 import com.devmob.alaya.ui.components.Modal
 import com.devmob.alaya.ui.theme.ColorGray
+import com.devmob.alaya.ui.theme.ColorIntensityHigh
+import com.devmob.alaya.ui.theme.ColorIntensityLow
+import com.devmob.alaya.ui.theme.ColorIntensityMedium
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.ColorWhite
 import com.devmob.alaya.utils.NavUtils
@@ -173,7 +179,7 @@ fun CrisisRegistrationSummaryScreen(
                     SummaryItemCard(
                         title = stringResource(R.string.body_sensations),
                         startContent = {
-                            Column {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 screenState.value?.crisisDetails?.bodySensationList?.let { sensationsList ->
                                     if (sensationsList.isNotEmpty()) {
                                         sensationsList.forEach { sensation ->
@@ -198,6 +204,7 @@ fun CrisisRegistrationSummaryScreen(
                                                         text = intensityFormatter(sensation.intensity),
                                                         fontSize = 19.sp,
                                                         color = ColorText,
+                                                        modifier = getIntensityModifier(sensation.intensity)
                                                     )
                                                 }
                                             }
@@ -218,7 +225,7 @@ fun CrisisRegistrationSummaryScreen(
                     SummaryItemCard(
                         title = stringResource(R.string.emotions),
                         startContent = {
-                            Column {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 screenState.value?.crisisDetails?.emotionList?.let { emotionList ->
                                     if (emotionList.isNotEmpty()) {
                                         emotionList.forEach { emotion ->
@@ -242,7 +249,8 @@ fun CrisisRegistrationSummaryScreen(
                                                     Text(
                                                         text = intensityFormatter(emotion.intensity),
                                                         fontSize = 19.sp,
-                                                        color = ColorText
+                                                        color = ColorText,
+                                                        modifier = getIntensityModifier(emotion.intensity)
                                                     )
                                                 }
                                             }
@@ -370,6 +378,16 @@ fun CrisisRegistrationSummaryScreen(
     }
 }
 
+@Composable
+private fun getIntensityModifier(intensity: Intensity) = Modifier
+    .drawBehind {
+        drawRoundRect(
+            solveColorIntensity(intensity),
+            cornerRadius = CornerRadius(20.dp.toPx())
+        )
+    }
+    .padding(4.dp)
+
 
 @Composable
 fun SummaryItemCard(
@@ -438,6 +456,14 @@ fun intensityFormatter(intensity: Intensity): String {
         Intensity.LOW -> "Intensidad: " + stringResource(R.string.intensity_low)
         Intensity.MEDIUM -> "Intensidad: " + stringResource(R.string.intensity_medium)
         Intensity.HIGH -> "Intensidad: " + stringResource(R.string.intensity_high)
+    }
+}
+
+fun solveColorIntensity(intensity: Intensity): Color {
+    return when (intensity) {
+        Intensity.LOW -> ColorIntensityLow
+        Intensity.MEDIUM -> ColorIntensityMedium
+        Intensity.HIGH -> ColorIntensityHigh
     }
 }
 

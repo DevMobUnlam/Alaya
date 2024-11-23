@@ -45,4 +45,21 @@ class NotificationRepositoryImpl(
         )
         return api.sendNotification(body)
     }
+
+    override suspend fun sendNotificationSessions(
+        patientEmail: String
+    ): Response<Unit> {
+        val currentUser = firebaseClient.auth.currentUser?.email
+        val professional = currentUser?.let { getUserData.getUser(it) }
+
+        val body = NotificationInvitation(
+            ONESIGNAL_APP_ID,
+            "push",
+            contents = mapOf("en" to "${professional?.name} te programó nuevas sesiones"),
+            include_aliases = IncludeAliases(
+                ALIAS_FIREBASE_ID = listOf(patientEmail)
+            )
+        )
+        return api.sendNotification(body)
+    }
 }

@@ -47,7 +47,7 @@ fun MenuPatientScreen(navController: NavController, prefs: SharedPreferences){
                         .fillMaxWidth()
                         .clickable {
                             navController.navigate(
-                                NavUtils.ProfessionalRoutes.ProfileUser.route
+                                NavUtils.PatientRoutes.ProfileUser.route
                             )
                         }
                 )
