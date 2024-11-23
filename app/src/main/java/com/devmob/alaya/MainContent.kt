@@ -178,7 +178,10 @@ fun MainContent(
         ProfessionalRoutes.ProfileUser.route,
         ProfessionalRoutes.SendInvitation.route,
         ProfessionalRoutes.CreateSessions.route,
-        NavUtils.PatientRoutes.ProfileUser.route
+        NavUtils.PatientRoutes.ProfileUser.route,
+        ProfessionalRoutes.PatientIASummary.route,
+        ProfessionalRoutes.ProfileUser.route
+
     )
     val factoryCrisisRegistrationVM = ViewModelFactory {
         CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)

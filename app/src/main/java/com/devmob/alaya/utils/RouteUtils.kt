@@ -73,6 +73,7 @@ object NavUtils {
         ProfessionalRoutes.PatientIASummary.route to "Resumen",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil",
         ProfessionalRoutes.ProfileUser.route to "Mi perfil",
+        ProfessionalRoutes.ProfileUser.route to "Mi perfil",
         ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
         ProfessionalRoutes.CreateSessions.route to "Programar sesiones",
         PatientRoutes.ProfileUser.route to "Mi perfil"
