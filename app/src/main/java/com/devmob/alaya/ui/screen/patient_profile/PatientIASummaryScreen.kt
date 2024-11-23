@@ -150,7 +150,7 @@ fun PatientIASummaryScreen(
                         Spacer(modifier = Modifier.height(3.dp))
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = (uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
+                            text = "Se registraron 3 eventos. Dos ocurrieron en la universidad, uno por la tarde y otro por la noche. El otro evento ocurrió en transporte público al mediodía.",//(uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
                             fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
@@ -169,7 +169,7 @@ fun PatientIASummaryScreen(
                         Spacer(modifier = Modifier.height(3.dp))
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = (uiState.value as IASummaryUIState.Success).outputText.details,
+                            text = "Brenda experimentado vergüenza (media), angustia (baja), miedo (alto y medio), mareos (medios y altos) y sudoración (media y alta). Para sobrellevar estas emociones y sensaciones, utilizó la imaginación guiada afirmaciones positivas y ejercicios de respiración.",//(uiState.value as IASummaryUIState.Success).outputText.details,
                             fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
@@ -188,7 +188,7 @@ fun PatientIASummaryScreen(
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(modifier = Modifier
                             .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = (uiState.value as IASummaryUIState.Success).outputText.extra,
+                            text = "Los eventos están relacionados con situaciones académicas y de transporte. La imaginación guiada y la respiración fueron las herramientas más utilizadas para la regulación emocional.", //(uiState.value as IASummaryUIState.Success).outputText.extra,
                             fontSize = 23.sp,
                             textAlign = TextAlign.Start,
                             color = ColorText
@@ -196,8 +196,6 @@ fun PatientIASummaryScreen(
                         )
                     }
                 )
-
-
             }
             is IASummaryUIState.EmptyContent -> {
                 CardContainer(
