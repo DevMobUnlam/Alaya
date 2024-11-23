@@ -14,6 +14,8 @@ import com.devmob.alaya.domain.PatientDailyActivitiesUseCases
 import com.devmob.alaya.domain.ProfessionalDailyActivitiesUseCases
 import com.devmob.alaya.domain.SavePostActivityCommentUseCase
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.GenerationConfig
+import com.google.ai.client.generativeai.type.generationConfig
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -29,9 +31,14 @@ object DomainModule {
     @Provides
     @Singleton
     fun providesGenerativeModel(): GenerativeModel{
+        val config = generationConfig{
+            responseMimeType = "application/json"
+        }
+
         return GenerativeModel(
             modelName = "gemini-1.5-flash",
-            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs")
+            apiKey = "AIzaSyBFGQTD_CB_Yoog-EvnDHkP1RjpFYAQZDs",
+            generationConfig = config)
     }
 
     @Provides

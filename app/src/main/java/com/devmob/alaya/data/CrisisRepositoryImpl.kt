@@ -31,11 +31,9 @@ class CrisisRepositoryImpl @Inject constructor(
         }
     }.toResponseFirebase()
 
-    override suspend fun getRegisters(
-        patientId: String,
-        onRegisterUpdate: () -> Unit
-    ): Flow<List<CrisisDetailsDB>?> {
-        return callbackFlow {
+
+    override suspend fun getRegisters(patientId: String): Flow<List<CrisisDetailsDB>?> {
+        return callbackFlow{
             try {
                 val registersCollection = db.collection("users")
                     .document(patientId)
@@ -46,10 +44,9 @@ class CrisisRepositoryImpl @Inject constructor(
                     .get()
                     .addOnSuccessListener { documents ->
                         if (!documents.isEmpty) {
-                            val latestDate = documents.documents[0].getDate("start")
                             val calendar = Calendar.getInstance()
-                            calendar.time = latestDate ?: Date()
-                            calendar.add(Calendar.DAY_OF_YEAR, -7)
+                            calendar.time = Date()
+                            calendar.add(Calendar.DAY_OF_YEAR, -8)
                             val startDate = calendar.time
 
                             registersCollection
@@ -61,11 +58,7 @@ class CrisisRepositoryImpl @Inject constructor(
                                         this.close()
                                     }
                                     if (snapshot != null && !snapshot.isEmpty) {
-
-
-                                        val register =
-                                            snapshot.map { it.toObject(CrisisDetailsDB::class.java) }
-                                        onRegisterUpdate()
+                                        val register = snapshot.map { it.toObject(CrisisDetailsDB::class.java) }
                                         this.trySend(register)
                                     } else {
                                         Log.w("Firebase", "Data not found")
