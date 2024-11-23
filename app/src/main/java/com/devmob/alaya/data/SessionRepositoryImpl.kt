@@ -1,5 +1,6 @@
 package com.devmob.alaya.data
 
+import android.util.Log
 import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.SessionRepository
@@ -18,28 +19,35 @@ class SessionRepositoryImpl : SessionRepository {
 
     override suspend fun addSession(session: Session, patientEmail: String): FirebaseResult = runCatching {
         firebase.auth.currentUser?.email?.let {
-            val professional = getUserDataUseCase.getUser(it)
-            val patients = professional?.patients?.toMutableList()
-            val patient = patients?.filter() {
-                it.email == patientEmail
+            try {
+                val professional = getUserDataUseCase.getUser(it)
+                val patients = professional?.patients?.toMutableList()
+                    ?: throw IllegalArgumentException("Lista de pacientes no encontrada.")
+
+                val patient = patients.firstOrNull { p -> p.email == patientEmail }
+                    ?: throw IllegalArgumentException("Paciente no encontrado con el email: $patientEmail.")
+
+                val newPatient = patient.copy(nextSession = session.date)
+                val index = patients.indexOf(patient)
+                patients[index] = newPatient
+
+                val sessionId = UUID.randomUUID().toString()
+                val sessionRef = db.collection("users")
+                    .document(patientEmail)
+                    .collection("sessions")
+                    .document(sessionId)
+                val sessionProfessionalRef = db.collection("users")
+                    .document(it)
+
+                db.runBatch { batch ->
+                    batch.set(sessionRef, session)
+                    batch.update(sessionProfessionalRef, "patients", patients)
+                }
+            } catch (e: Exception) {
+                Log.e("addSession", "Error al agregar sesión: ${e.message}", e)
+                throw e
             }
-            val newPatient = patient?.first()?.copy(nextSession = session.date)
-            val index = patients?.indexOf(patient?.first())
-            if (newPatient != null) {
-                patients[index!!] = newPatient
-            }
-            val sessionId = UUID.randomUUID().toString()
-            val sessionRef = db.collection("users")
-                .document(patientEmail)
-                .collection("sessions")
-                .document(sessionId)
-            val sessionProfesionalRef = db.collection("users")
-                .document(it)
-            db.runBatch { batch ->
-                batch.set(sessionRef,session)
-                batch.update(sessionProfesionalRef,"patients", patients)
-            }
-        }
+        } ?: throw IllegalStateException("Usuario no autenticado.")
     }.toResponseFirebase()
 
     override suspend fun getSessions(patientEmail: String): List<Session> = runCatching {

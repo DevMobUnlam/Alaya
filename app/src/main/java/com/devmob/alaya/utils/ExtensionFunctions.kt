@@ -22,12 +22,15 @@ fun Date?.toCalendarOrNull(): Calendar? {
 
 fun Date?.toHourString(): String {
     this?.let {
-        val hour = this.toCalendar().get(Calendar.HOUR_OF_DAY)
+        var hour = this.toCalendar().get(Calendar.HOUR_OF_DAY).toString()
         var minutes = this.toCalendar().get(Calendar.MINUTE).toString()
         if(minutes.length == 1){
             minutes = "0$minutes"
         }
-        val hourString = "$hour:$minutes"
+        if(hour.length == 1){
+            hour = "0$hour"
+        }
+        val hourString = "$hour:$minutes hs"
         return hourString
     }
     return ""
