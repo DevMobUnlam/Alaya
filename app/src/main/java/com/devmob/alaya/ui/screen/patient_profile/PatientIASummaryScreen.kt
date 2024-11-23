@@ -33,16 +33,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.R
+import com.devmob.alaya.domain.model.IASummaryText
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.ExpandableCard
@@ -51,14 +49,21 @@ import com.devmob.alaya.ui.theme.ColorPrimary
 import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 
 @Composable
 fun PatientIASummaryScreen(
     modifier: Modifier = Modifier,
     viewModel: PatientIASummaryViewModel = hiltViewModel(),
-){
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+) {
+
+    val texto = IASummaryText(
+        "Se registraron 3 eventos. Dos ocurrieron en la universidad, uno por la tarde y otro por la noche. El otro evento ocurrió en transporte público al mediodía.",
+        "Brenda experimentado vergüenza (media), angustia (baja), miedo (alto y medio), mareos (medios y altos) y sudoración (media y alta). Para sobrellevar estas emociones y sensaciones, utilizó la imaginación guiada afirmaciones positivas y ejercicios de respiración.",
+        "Los eventos están relacionados con situaciones académicas y de transporte. La imaginación guiada y la respiración fueron las herramientas más utilizadas para la regulación emocional."
+    )
+    val uiState = IASummaryUIState.Success(texto)//viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
 
@@ -75,154 +80,86 @@ fun PatientIASummaryScreen(
 
     ConstraintLayout(
         modifier = modifier.fillMaxSize()
-    ){
+    ) {
         val (progressIndicator, headerText, summaryCard, retryButton) = createRefs()
-
-        when(uiState.value){
-            is IASummaryUIState.Loading -> {
-
-                CircularProgressIndicator(
-                    modifier = Modifier.constrainAs(progressIndicator){
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                    color = ColorPrimary
-                )
-
-            }
-            is IASummaryUIState.Initial -> {}
-            is IASummaryUIState.Error -> {
-
+        CardContainer(
+            modifier = Modifier
+                .padding(5.dp)
+                .constrainAs(summaryCard) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start, margin = 15.dp)
+                    end.linkTo(parent.end, margin = 15.dp)
+                    bottom.linkTo(parent.bottom)
+                }
+                .verticalScroll(rememberScrollState()),
+            enabled = false,
+            content = {
                 Text(
-                    modifier = Modifier.constrainAs(headerText){
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start, margin = 14.dp)
-                        end.linkTo(parent.end, margin = 14.dp)
-                    },
-                    text = "No es posible ver el resumen en este momento",
-                    textAlign = TextAlign.Center,
-                    fontSize = 25.sp,
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "Detalles",
+                    fontSize = 27.sp,
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    color = ColorText
+
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "Se registraron 3 eventos. Dos ocurrieron en la universidad, uno por la tarde y otro por la noche. El otro evento ocurrió en transporte público al mediodía.",//(uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
+                    fontSize = 23.sp,
+                    textAlign = TextAlign.Start,
+                    color = ColorText
+
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "¿Cómo sucedió?",
+                    fontSize = 27.sp,
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
                     color = ColorText
                 )
-
-                Button(
-                    modifier = Modifier.constrainAs(retryButton){
-                      top.linkTo(headerText.bottom, margin = 10.dp)
-                      start.linkTo(parent.start)
-                      end.linkTo(parent.end)
-                    },
-                    text = "Reintentar",
-                    onClick = {viewModel.onRetryClick()}
-                )
-
-                Toast.makeText(
-                    context,
-                    stringResource(R.string.patient_summary_error),
-                    Toast.LENGTH_SHORT).show()
-            }
-            is IASummaryUIState.Success -> {
-
-                CardContainer(
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
                     modifier = Modifier
-                        .padding(5.dp)
-                        .constrainAs(summaryCard) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start, margin = 15.dp)
-                            end.linkTo(parent.end, margin = 15.dp)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .verticalScroll(rememberScrollState()),
-                    enabled = false,
-                    content = {
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "Detalles",
-                            fontSize = 27.sp,
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            color = ColorText
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "Brenda experimentado vergüenza (media), angustia (baja), miedo (alto y medio), mareos (medios y altos) y sudoración (media y alta). Para sobrellevar estas emociones y sensaciones, utilizó la imaginación guiada afirmaciones positivas y ejercicios de respiración.",//(uiState.value as IASummaryUIState.Success).outputText.details,
+                    fontSize = 23.sp,
+                    textAlign = TextAlign.Start,
+                    color = ColorText
 
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "Se registraron 3 eventos. Dos ocurrieron en la universidad, uno por la tarde y otro por la noche. El otro evento ocurrió en transporte público al mediodía.",//(uiState.value as IASummaryUIState.Success).outputText.timeAndPlace,
-                            fontSize = 23.sp,
-                            textAlign = TextAlign.Start,
-                            color = ColorText
-
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "¿Cómo sucedió?",
-                            fontSize = 27.sp,
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            color = ColorText
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "Brenda experimentado vergüenza (media), angustia (baja), miedo (alto y medio), mareos (medios y altos) y sudoración (media y alta). Para sobrellevar estas emociones y sensaciones, utilizó la imaginación guiada afirmaciones positivas y ejercicios de respiración.",//(uiState.value as IASummaryUIState.Success).outputText.details,
-                            fontSize = 23.sp,
-                            textAlign = TextAlign.Start,
-                            color = ColorText
-
-                        )
-                        Spacer(modifier = Modifier.height(3.dp))
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "Comentarios",
-                            fontSize = 27.sp,
-                            textAlign = TextAlign.Start,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            color = ColorText
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 5.dp),
-                            text = "Los eventos están relacionados con situaciones académicas y de transporte. La imaginación guiada y la respiración fueron las herramientas más utilizadas para la regulación emocional.", //(uiState.value as IASummaryUIState.Success).outputText.extra,
-                            fontSize = 23.sp,
-                            textAlign = TextAlign.Start,
-                            color = ColorText
-
-                        )
-                    }
                 )
-            }
-            is IASummaryUIState.EmptyContent -> {
-                CardContainer(
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
                     modifier = Modifier
-                        .padding(5.dp)
-                        .constrainAs(summaryCard) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start, margin = 15.dp)
-                            end.linkTo(parent.end, margin = 15.dp)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .verticalScroll(rememberScrollState()),
-                    enabled = false,
-                    content = {
-                        Text(modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 8.dp),
-                            text = stringResource(R.string.empty_generated_summary),
-                            fontSize = 24.sp,
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            color = ColorText
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "Comentarios",
+                    fontSize = 27.sp,
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    color = ColorText
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    text = "Los eventos están relacionados con situaciones académicas y de transporte. La imaginación guiada y la respiración fueron las herramientas más utilizadas para la regulación emocional.", //(uiState.value as IASummaryUIState.Success).outputText.extra,
+                    fontSize = 23.sp,
+                    textAlign = TextAlign.Start,
+                    color = ColorText
 
-                        )}
                 )
             }
-        }
+        )
     }
-
-
 }
+
+
