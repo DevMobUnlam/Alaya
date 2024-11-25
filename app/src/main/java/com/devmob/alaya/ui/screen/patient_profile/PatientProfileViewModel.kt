@@ -70,7 +70,7 @@ class PatientProfileViewModel(
             val maxMonth = it.keys.maxOf { key -> key.split("-")[0].toInt() }
 
             val allMonths = mutableListOf<Point>()
-            for (month in minMonth - 6 until minMonth) {
+            for (month in minMonth - 5 until minMonth) {
                 allMonths.add(Point(month.toFloat(), 0f, getMonthName(month)))
             }
             for (month in minMonth..maxMonth) {
