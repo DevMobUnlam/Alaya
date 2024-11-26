@@ -11,21 +11,31 @@ import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.InvitationStatus
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.Professional
+import com.devmob.alaya.utils.CrisisStepsManager
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class PatientHomeScreenViewmodel(
     private val getUserData: GetUserDataUseCase,
     private val getInvitationUseCase: GetInvitationUseCase,
-    private val firebaseClient: FirebaseClient = FirebaseClient()
+    private val firebaseClient: FirebaseClient = FirebaseClient(),
+    private val crisisStepsManager: CrisisStepsManager
 ) : ViewModel() {
 
     var nameProfessional by mutableStateOf("")
     var namePatient by mutableStateOf("")
     var greetingMessage by mutableStateOf("")
     var shouldShowInvitation by mutableStateOf(false)
-    private var emailPatient by mutableStateOf("")
-    private var emailProfessional by mutableStateOf("")
+
+    private var emailPatient = ""
+    private var emailProfessional = ""
+
+    fun updateCrisisSteps() {
+        getEmailPatient()
+        viewModelScope.launch {
+            crisisStepsManager.updateCrisisSteps(emailPatient)
+        }
+    }
 
     fun fetchPatient() {
         getEmailPatient()

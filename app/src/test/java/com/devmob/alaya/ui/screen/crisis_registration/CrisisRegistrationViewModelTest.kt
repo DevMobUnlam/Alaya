@@ -13,7 +13,6 @@ import com.devmob.alaya.domain.model.CrisisPlace
 import com.devmob.alaya.domain.model.CrisisTool
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.util.toDB
-import com.devmob.alaya.utils.toCalendar
 import com.devmob.alaya.utils.toDate
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -165,7 +164,7 @@ class CrisisRegistrationViewModelTest {
     }
 
     @Test
-    fun `when updateCrisisBodySensation is called, then update list`() {
+    fun `when selectCrisisBodySensation is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
         val bodySensation1 = CrisisBodySensation("Desmayo", mockkIcon)
         val bodySensation2 = CrisisBodySensation("Calor", mockkIcon)
@@ -175,25 +174,23 @@ class CrisisRegistrationViewModelTest {
     }
 
     @Test
-    fun `when updateCrisisEmotion is called, then update list`() {
+    fun `when selectCrisisEmotion is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
         val emotion1 = CrisisEmotion("Angustia", mockkIcon)
         val emotion2 = CrisisEmotion("Tristeza", mockkIcon)
-        viewModel.updateCrisisEmotion(emotion1)
-        viewModel.updateCrisisEmotion(emotion2)
+        viewModel.selectCrisisEmotion(emotion1)
+        viewModel.selectCrisisEmotion(emotion2)
         assertEquals(2, viewModel.screenState.value?.crisisDetails?.emotionList?.size)
     }
 
     @Test
-    fun `when updateCrisisTool is called, then update list`() {
+    fun `when selectCrisisTool is called, then update list`() {
         val mockkIcon = mockk<ImageVector>()
-        val observer = Observer<CrisisRegistrationScreenState> {}
-        val tool1 = CrisisTool("Meditacion", "", mockkIcon)
-        val tool2 = CrisisTool("Respiracion", "", mockkIcon)
-        viewModel.screenState.observeForever(observer)
-        viewModel.updateCrisisTool(tool1)
-        viewModel.updateCrisisTool(tool2)
-        assertEquals(0, viewModel.screenState.value?.crisisDetails?.toolList?.size)
+        val tool1 = CrisisTool("Autoafirmaciones", "Autoafirmaciones", mockkIcon)
+        val tool2 = CrisisTool("Controlar la respiración", "Respiracion", mockkIcon)
+        viewModel.selectCrisisTool(tool1)
+        viewModel.selectCrisisTool(tool2)
+        assertEquals(2, viewModel.screenState.value?.crisisDetails?.toolList?.size)
     }
 
     @Test
@@ -234,69 +231,22 @@ class CrisisRegistrationViewModelTest {
 
     @Test
     fun `when updateStartDate is called, then update starting date`() {
-        viewModel.updateStartDate(dateMock.toDate())
+        val expect = dateMock.toDate()
+        viewModel.updateStartDate(expect)
 
         val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
-        assertEquals(
-            dateMock.get(Calendar.YEAR),
-            actual?.toCalendar()?.get(Calendar.YEAR)
-        )
-        assertEquals(
-            dateMock.get(Calendar.MONTH),
-            actual?.toCalendar()?.get(Calendar.MONTH)
-        )
-        assertEquals(
-            dateMock.get(Calendar.DAY_OF_MONTH),
-            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
-        )
-    }
 
-    @Test
-    fun `when updateStartTime is called, then update start time`() {
-
-        viewModel.updateStartTime(dateMock.toDate())
-        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.startTime
-        assertEquals(
-            dateMock.get(Calendar.HOUR_OF_DAY),
-            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
-        )
-        assertEquals(
-            dateMock.get(Calendar.MINUTE),
-            actual?.toCalendar()?.get(Calendar.MINUTE)
-        )
+        assertEquals(expect,actual)
     }
 
     @Test
     fun `when updateEndDate is called, then update end date`() {
-        viewModel.updateEndDate(dateMock.toDate())
+        val expect = dateMock.toDate()
+        viewModel.updateEndDate(expect)
 
         val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
-        assertEquals(
-            dateMock.get(Calendar.YEAR),
-            actual?.toCalendar()?.get(Calendar.YEAR)
-        )
-        assertEquals(
-            dateMock.get(Calendar.MONTH),
-            actual?.toCalendar()?.get(Calendar.MONTH)
-        )
-        assertEquals(
-            dateMock.get(Calendar.DAY_OF_MONTH),
-            actual?.toCalendar()?.get(Calendar.DAY_OF_MONTH)
-        )
-    }
 
-    @Test
-    fun `when updateEndTime is called, then update end time`() {
-        viewModel.updateEndTime(dateMock.toDate())
-        val actual = viewModel.screenState.value?.crisisDetails?.crisisTimeDetails?.endTime
-        assertEquals(
-            dateMock.get(Calendar.HOUR_OF_DAY),
-            actual?.toCalendar()?.get(Calendar.HOUR_OF_DAY)
-        )
-        assertEquals(
-            dateMock.get(Calendar.MINUTE),
-            actual?.toCalendar()?.get(Calendar.MINUTE)
-        )
+        assertEquals(expect,actual)
     }
 
     @Test

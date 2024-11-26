@@ -1,11 +1,11 @@
 package com.devmob.alaya.ui.screen.TreatmentSummaryScreen
 
-import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +17,6 @@ import com.devmob.alaya.domain.model.OptionTreatment
 import com.devmob.alaya.ui.components.Button
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.ui.theme.LightBlueColor
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +40,6 @@ fun TreatmentSummaryScreen(
     navController: NavController,
     viewModel: ConfigTreatmentViewModel
 ) {
-
     val selectedOptions = listOfNotNull(
         getTreatmentOption(firstStep, viewModel.treatmentOptions),
         getTreatmentOption(secondStep, viewModel.treatmentOptions),
@@ -58,7 +55,7 @@ fun TreatmentSummaryScreen(
         val (title, content, buttonColumn) = createRefs()
 
         Text(
-            text = "Resumen del Tratamiento",
+            text = "Resumen de las herramientas",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -127,6 +124,8 @@ fun TreatmentSummaryScreen(
                 onClick = {
                     showModal = true
                     viewModel.saveCrisisTreatment(patientEmail, selectedOptions)
+                    viewModel.sendNotification(patientEmail)
+
                 },
                 modifier = Modifier.fillMaxWidth(),
                 text = "Confirmar"
@@ -142,7 +141,7 @@ fun TreatmentSummaryScreen(
 
         Modal(
             show = showModal,
-            title = "Tratamiento Confirmado",
+            title = "Manejo de crisis confirmado",
             primaryButtonText = "Aceptar",
             onDismiss = { showModal = false },
             onConfirm = {

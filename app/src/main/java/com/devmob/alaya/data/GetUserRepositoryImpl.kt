@@ -47,4 +47,27 @@ class GetUserRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun updateProfileImage(userId: String, imageUrl: String): Boolean {
+        return try {
+            db.collection("users").document(userId)
+                .update("profileImage", imageUrl).await()
+            true
+        } catch (e: Exception) {
+            Log.e("Firestore", "Error actualizando imagen de perfil", e)
+            false
+        }
+    }
+
+    override suspend fun updatePhoneNumber(userId: String, phoneNumber: String): Boolean {
+        return try {
+            db.collection("users").document(userId)
+                .update("phone", phoneNumber).await()
+            true
+        } catch (e: Exception) {
+            Log.e("Firestore", "Error actualizando número de teléfono", e)
+            false
+        }
+    }
 }
+

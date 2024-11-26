@@ -1,21 +1,29 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.google.ai.client.generativeai.GenerativeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 @HiltViewModel
 class PatientIASummaryViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val getIASummaryUseCase: GetIASummaryUseCase
 ): ViewModel() {
 
@@ -23,8 +31,8 @@ class PatientIASummaryViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<IASummaryUIState> = MutableStateFlow(IASummaryUIState.Initial)
     val uiState: StateFlow<IASummaryUIState> = _uiState.asStateFlow()
 
-
-    private lateinit var patientId: String
+    private val patientId: String = savedStateHandle["patientID"]?:""
+    private lateinit var job: Job
 
 
     init {
@@ -33,18 +41,9 @@ class PatientIASummaryViewModel @Inject constructor(
 
     private fun summarize(){
 
-        patientId = savedStateHandle["patientID"]?:""
-
         _uiState.value = IASummaryUIState.Loading
 
-
-        val instructions = "-Generar un resumen a partir del siguiente JSON,emociones sentidas,comentarios adicionales, para poder realizar una lectura posterior\n" +
-                "- El resumen deberia tener 2 parrafos como maximo, con informacion comprimida\n" +
-                "- El resumen debe abarcar la semana entera, no es necesario resumir cada dia individualmente\n" +
-                "- Usar el nombre de la persona de la cual se esta resumiendo su semana."
-
-
-        viewModelScope.launch {
+        job = viewModelScope.launch {
 
 
             try{
@@ -52,24 +51,15 @@ class PatientIASummaryViewModel @Inject constructor(
                 if(patientId == ""){
                     _uiState.update { IASummaryUIState.Error("El paciente no existe") }
                 }else{
-                    val response = getIASummaryUseCase(instructions = instructions, patientId = patientId, onRegisterUpdate = {
-                        _uiState.value = IASummaryUIState.Loading
+                    val response = getIASummaryUseCase(patientId = patientId)
+
+                    response.collect { outputContent ->
+                       _uiState.update { outputContent }
                     }
-                    )
 
-                    response.collect{ outputContent ->
 
-                        if(outputContent.isNotEmpty()){
-                            _uiState.update { IASummaryUIState.Success(outputContent) }
-
-                        }else{
-                            _uiState.update{ IASummaryUIState.Success("No hay contenido para resumir") }
-                        }
-                    }
                 }
-
-
-            }catch(e:Exception){
+            } catch (e:Exception){
                 _uiState.update{ IASummaryUIState.Error(e.message ?: "") }
             }
         }
@@ -78,8 +68,10 @@ class PatientIASummaryViewModel @Inject constructor(
     }
 
     fun onRetryClick(){
+        job.cancel()
         summarize()
     }
+
 
 
 }

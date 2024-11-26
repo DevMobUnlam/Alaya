@@ -86,8 +86,8 @@ fun CustomActivityScreen(
         Input(
             value = title,
             onValueChange = { title = it },
-            label = "Actividad",
-            placeholder = "Título de la actividad",
+            label = "Herramienta",
+            placeholder = "Título de la herramienta",
             modifier = Modifier.constrainAs(inputTitle) {
                 top.linkTo(parent.top, margin = 16.dp)
                 start.linkTo(parent.start, margin = 16.dp)
@@ -99,7 +99,7 @@ fun CustomActivityScreen(
             value = description,
             onValueChange = { description = it },
             label = { Text("Descripción", color = Color.Gray) },
-            placeholder = { Text("Descripción de la Actividad", color = Color.LightGray) },
+            placeholder = { Text("Descripción de la herramienta", color = Color.LightGray) },
             modifier = Modifier
                 .constrainAs(inputDescription) {
                     top.linkTo(inputTitle.bottom, margin = 16.dp)
@@ -163,7 +163,7 @@ fun CustomActivityScreen(
 
         Button(
             onClick = {
-                viewModel.addCustomActivity(OptionTreatment(title, description, imageUri.toString()))
+                viewModel.addCustomActivity(OptionTreatment(title = title, description = description, imageUri = imageUri.toString()))
                 navController.navigate(
                     NavUtils.ProfessionalRoutes.ConfigTreatment.route.replace(
                         "{patientEmail}",
@@ -181,7 +181,7 @@ fun CustomActivityScreen(
                 .fillMaxWidth(),
             enabled = title.isNotEmpty() && description.isNotEmpty()
         ) {
-            Text("Guardar Actividad")
+            Text("Guardar herramienta")
         }
     }
 }
