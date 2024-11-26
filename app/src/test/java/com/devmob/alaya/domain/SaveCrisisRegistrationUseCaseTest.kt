@@ -33,8 +33,6 @@ class SaveCrisisRegistrationUseCaseTest{
     private lateinit var crisisRepository: CrisisRepository
 
 
-
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -97,22 +95,5 @@ class SaveCrisisRegistrationUseCaseTest{
 
     }
 
-//    @Test
-//    fun `given register is updated, when repository throws exception, then response is failure`() = runBlocking{
-//
-//        //GIVEN
-//        val crisisDetails = CrisisDetailsDB().copy(place = "Universidad")
-//        val customThrowable = Throwable(message = "This is a throwable")
-//
-//        coEvery { crisisRepository.updateCrisisDetails(crisisDetails) } throws customThrowable
-//        //WHEN
-//        val result = saveCrisisRegistrationUseCase.updateCrisisDetails(crisisDetails)
-//
-//
-//        //THEN
-//
-//        assertEquals(FirebaseResult.Error(customThrowable),result)
-//        // CODIGO QUE CRASHEA EL TEST
-//    }
 
 }

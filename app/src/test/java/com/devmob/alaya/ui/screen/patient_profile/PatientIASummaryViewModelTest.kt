@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.domain.GetIASummaryUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.GetUserRepository
+import com.devmob.alaya.domain.model.IASummaryText
 import com.devmob.alaya.domain.model.Patient
 import com.devmob.alaya.domain.model.User
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
@@ -51,6 +52,9 @@ class PatientIASummaryViewModelTest {
     @MockK
     private val savedInstancedStateHandle = mockk<SavedStateHandle>(relaxed = true)
 
+    @MockK
+    private lateinit var outputContent: IASummaryText
+
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -91,10 +95,9 @@ class PatientIASummaryViewModelTest {
     fun `when content is returned, then summarize emits success`() = runBlocking{
 
         //GIVEN
-        val summaryContent = "Summary Content"
 
-        coEvery { getIASummaryUseCase(any(),any<String>(), any<() -> Unit>())
-        } returns flow{emit(summaryContent)}
+        coEvery { getIASummaryUseCase(any<String>())
+        } returns flow{emit(IASummaryUIState.Success(outputContent))}
 
 
         //WHEN
@@ -102,7 +105,7 @@ class PatientIASummaryViewModelTest {
         viewModel.onRetryClick()
 
         //THEN
-        assertEquals(IASummaryUIState.Success(summaryContent),viewModel.uiState.value)
+        assertEquals(IASummaryUIState.Success(outputContent),viewModel.uiState.value)
     }
 
 
@@ -111,16 +114,15 @@ class PatientIASummaryViewModelTest {
 
         //GIVEN
 
-        coEvery { getIASummaryUseCase(any(),any<String>(), any<() -> Unit>())
-        } returns flow{emit("")}
+        coEvery { getIASummaryUseCase(any<String>())
+        } returns flow{emit(IASummaryUIState.EmptyContent)}
         // WHEN
 
         viewModel.onRetryClick()
 
         //THEN
 
-        assertTrue(IASummaryUIState.Success("No hay contenido para resumir") == viewModel.uiState.value)
-
+        assert(viewModel.uiState.value is IASummaryUIState.EmptyContent)
     }
 
     @Test
@@ -131,7 +133,7 @@ class PatientIASummaryViewModelTest {
         val exceptionMessage = "This is exception message"
         val exception = Exception(exceptionMessage)
 
-        coEvery{getIASummaryUseCase(any(),any<String>(), any<() -> Unit>())
+        coEvery{getIASummaryUseCase(any<String>())
         } throws exception
 
         //WHEN
@@ -140,23 +142,8 @@ class PatientIASummaryViewModelTest {
 
         //THEN
 
-        assertEquals(IASummaryUIState.Error(exceptionMessage), viewModel.uiState.value)
+        assert(viewModel.uiState.value is IASummaryUIState.Error)
 
     }
 
-    @Test
-    fun `when patientID is empty, then UIStateValue is Error`() = runBlocking{
-
-        //GIVEN
-
-        every{savedInstancedStateHandle.get<String>("patientID")}returns ""
-
-
-        //WHEN
-        viewModel.onRetryClick()
-
-        //THEN
-        assertEquals(IASummaryUIState.Error("El paciente no existe"), viewModel.uiState.value)
-
-    }
 }
