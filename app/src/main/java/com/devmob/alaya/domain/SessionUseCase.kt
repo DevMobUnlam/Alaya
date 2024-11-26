@@ -1,15 +1,13 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.SessionRepositoryImpl
 import com.devmob.alaya.domain.model.FirebaseResult
 import com.devmob.alaya.domain.model.Session
 import retrofit2.Response
 
 class SessionUseCase(
-    private val notificationRepository : NotificationRepository
+    private val notificationRepository : NotificationRepository,
+    private val sessionRepository : SessionRepository
 ) {
-    private val sessionRepository = SessionRepositoryImpl()
-
     suspend operator fun invoke(session: Session, patientEmail: String): FirebaseResult {
         return sessionRepository.addSession(session, patientEmail)
     }
