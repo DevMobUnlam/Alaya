@@ -19,9 +19,9 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CreateDailyActivityUseCaseTest {
+class EditDailyActivityUseCaseTest {
 
-    private lateinit var createDailyActivityUseCase: CreateDailyActivityUseCase
+    private lateinit var editDailyActivityUseCase: EditDailyActivityUseCase
 
     @MockK
     private lateinit var repository: DailyActivityRepository
@@ -39,13 +39,13 @@ class CreateDailyActivityUseCaseTest {
         MockKAnnotations.init(this, relaxed = true)
         Dispatchers.setMain(testDispatcher)
         coEvery {
-            repository.createDailyActivity(
+            repository.editDailyActivity(
                 "id",
                 dailyActivity.toNetwork()
             )
         } returns FirebaseResult.Success
 
-        createDailyActivityUseCase = CreateDailyActivityUseCase(repository)
+        editDailyActivityUseCase = EditDailyActivityUseCase(repository)
     }
 
     @Test
@@ -55,11 +55,11 @@ class CreateDailyActivityUseCaseTest {
             val id = "id"
             val expected = FirebaseResult.Success
             //WHEN
-            val result = createDailyActivityUseCase(id, dailyActivity)
+            val result = editDailyActivityUseCase(id, dailyActivity)
 
             //THEN
             assertEquals(expected, result)
-            coVerify { repository.createDailyActivity(id, dailyActivity.toNetwork()) }
+            coVerify { repository.editDailyActivity(id, dailyActivity.toNetwork()) }
         }
 
     @Test
@@ -69,9 +69,10 @@ class CreateDailyActivityUseCaseTest {
             val invalidID = "invalid id"
 
             //WHEN
-            val result = createDailyActivityUseCase(invalidID, dailyActivity)
+            val result = editDailyActivityUseCase(invalidID, dailyActivity)
 
             //THEN
             assert(result is FirebaseResult.Error)
         }
+
 }
