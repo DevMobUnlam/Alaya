@@ -73,8 +73,6 @@ class ContactUseCaseTest {
         coEvery { userRepository.getUser("email") } returns userMock
         coEvery { contactRepository.updateContacts("email", any()) } returns FirebaseResult.Success
 
-
-
         contactUseCase = ContactUseCase(prefs, contactRepository, userRepository)
     }
 
