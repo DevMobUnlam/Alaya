@@ -26,6 +26,7 @@ import com.devmob.alaya.data.LoginRepositoryImpl
 import com.devmob.alaya.data.NotificationRepositoryImpl
 import com.devmob.alaya.data.NotificationService
 import com.devmob.alaya.data.RegisterNewUserRepositoryImpl
+import com.devmob.alaya.data.SessionRepositoryImpl
 import com.devmob.alaya.data.UploadImageToFirestoreRepositoryImpl
 import com.devmob.alaya.data.UserFirestoreRepositoryImpl
 import com.devmob.alaya.data.local_storage.CrisisStepsDatabase
@@ -118,7 +119,8 @@ fun MainContent(
     )
     val containmentViewModel = ContainmentNetworkViewModel(firebaseClient, contactUseCase)
     val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
-    val getSessionUseCase = SessionUseCase(notificationRepository)
+    val sessionRepository = SessionRepositoryImpl()
+    val getSessionUseCase = SessionUseCase(notificationRepository, sessionRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
     val activityDayProfessionalViewModel: ActivityDayProfessionalViewModel = hiltViewModel()
     val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
