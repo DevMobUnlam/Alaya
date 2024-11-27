@@ -1,10 +1,5 @@
 package com.devmob.alaya.ui.screen.patient_profile
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,6 +37,7 @@ class PatientIASummaryViewModel @Inject constructor(
     private fun summarize(){
 
         _uiState.value = IASummaryUIState.Loading
+
 
         job = viewModelScope.launch {
 

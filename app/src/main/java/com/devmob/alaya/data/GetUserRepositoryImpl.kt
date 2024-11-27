@@ -10,6 +10,7 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+
 class GetUserRepositoryImpl @Inject constructor(
     firebaseClient: FirebaseClient
 ) : GetUserRepository {

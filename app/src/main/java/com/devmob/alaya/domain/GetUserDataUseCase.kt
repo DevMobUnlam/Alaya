@@ -1,8 +1,9 @@
 package com.devmob.alaya.domain
 
 import com.devmob.alaya.domain.model.User
+import javax.inject.Inject
 
-class GetUserDataUseCase(
+class GetUserDataUseCase @Inject constructor(
     private val getUserRepository: GetUserRepository
 ) {
 
