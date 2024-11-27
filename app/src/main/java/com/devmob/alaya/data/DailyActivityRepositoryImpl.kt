@@ -3,8 +3,6 @@ package com.devmob.alaya.data
 import android.annotation.SuppressLint
 import android.util.Log
 import com.devmob.alaya.data.mapper.toData
-import com.devmob.alaya.data.mapper.toDomain
-import com.devmob.alaya.data.mapper.toNetwork
 import com.devmob.alaya.data.mapper.toNetworkPost
 import com.devmob.alaya.data.mapper.toResponseFirebase
 import com.devmob.alaya.domain.DailyActivityRepository
