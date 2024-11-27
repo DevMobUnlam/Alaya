@@ -1,10 +1,11 @@
 package com.devmob.alaya.domain
 
-import com.devmob.alaya.data.GetUserRepositoryImpl
 import com.devmob.alaya.domain.model.User
+import javax.inject.Inject
 
-class GetUserDataUseCase {
-    private val getUserRepository = GetUserRepositoryImpl()
+class GetUserDataUseCase @Inject constructor(
+    private val getUserRepository: GetUserRepository
+) {
 
     suspend fun getUser(email: String): User? {
         return getUserRepository.getUser(email)
@@ -20,5 +21,11 @@ class GetUserDataUseCase {
 
     suspend fun getPhone(email: String): String? {
         return getUserRepository.getUser(email)?.phone
+    }
+    suspend fun updateProfileImage(userId: String, imageUrl: String): Boolean {
+        return getUserRepository.updateProfileImage(userId,imageUrl)
+    }
+    suspend fun updatePhoneNumber(userId: String, phoneNumber: String): Boolean{
+        return getUserRepository.updatePhoneNumber(userId, phoneNumber)
     }
 }

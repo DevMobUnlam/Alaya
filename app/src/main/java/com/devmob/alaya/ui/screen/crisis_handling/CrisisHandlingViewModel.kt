@@ -2,8 +2,8 @@ package com.devmob.alaya.ui.screen.crisis_handling
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import android.content.Context
 import android.media.MediaPlayer
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,16 +23,18 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 
-class CrisisHandlingViewModel (
-    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(),
+class CrisisHandlingViewModel(
+    private val saveCrisisRegistrationUseCase: SaveCrisisRegistrationUseCase,
     private val getCrisisTreatmentUseCase: GetCrisisTreatmentUseCase
-): ViewModel() {
+) : ViewModel() {
     var steps by mutableStateOf<List<StepCrisis>>(emptyList())
     var optionTreatmentsList by mutableStateOf<List<OptionTreatment>?>(null)
     var currentStepIndex by mutableIntStateOf(0)
     var shouldShowModal by mutableStateOf(false)
     var shouldShowExitModal by mutableStateOf(false)
     var isPlaying by mutableStateOf(false)
+    private var shouldVoiceSpeak = true
+    var isVoiceOn by mutableStateOf(false)
     private var player: MediaPlayer? = null
     val currentUser = FirebaseClient().auth.currentUser
 
@@ -49,6 +51,7 @@ class CrisisHandlingViewModel (
         get() = if (steps.isNotEmpty()) {
             steps[currentStepIndex]
         } else null
+
     init {
         fetchCrisisSteps()
         startCrisisHandling()
@@ -63,54 +66,57 @@ class CrisisHandlingViewModel (
         saveCrisisData()
     }
 
-    fun fetchCrisisSteps() {
+    private fun fetchCrisisSteps() {
         var stepCrisisList: List<StepCrisis>
         viewModelScope.launch {
             _loading.value = true
             try {
                 // Obtén los tratamientos del terapeuta
-                optionTreatmentsList = currentUser?.email?.let { getCrisisTreatmentUseCase(it) }
+                optionTreatmentsList = getCrisisTreatmentUseCase()
 
                 // Si hay tratamientos por terapeuta
                 if (!optionTreatmentsList.isNullOrEmpty()) {
-                    stepCrisisList = optionTreatmentsList!!.map { option ->
+                    stepCrisisList = optionTreatmentsList?.map { option ->
                         StepCrisis(
                             title = option.title,
                             description = option.description,
                             image = option.imageUri
                         )
-                    }
+                    } ?: getDefaultStepCrises()
                     steps = stepCrisisList
                 } else {
                     // Si no hay tratamiento por terapeuta, carga los pasos predeterminados
-                    steps = listOf(
-                        StepCrisis(
-                            "Controlar la respiración",
-                            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
-                            "image_step_1"
-                        ),
-                        StepCrisis(
-                            "Imaginación guiada",
-                            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
-                            "image_step_2"
-                        ),
-                        StepCrisis(
-                            "Autoafirmaciones",
-                            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
-                            "image_step_3"
-                        )
-                    )
+                    steps = getDefaultStepCrises()
                 }
                 _loading.value = false
             } catch (e: Exception) {
+                steps = getDefaultStepCrises()
                 _loading.value = false
                 Log.d("CrisisHandlingViewModel", "Exception in fetchCrisisSteps $e")
             }
         }
     }
 
+    private fun getDefaultStepCrises() = listOf(
+        StepCrisis(
+            "Controlar la respiración",
+            "Poner una mano en el pecho y la otra en el estómago para tomar aire y soltarlo lentamente",
+            "image_step_1"
+        ),
+        StepCrisis(
+            "Imaginación guiada",
+            "Cerrar los ojos y pensar en un lugar tranquilo, prestando atención a todos los sentidos del ambiente que te rodea",
+            "image_step_2"
+        ),
+        StepCrisis(
+            "Autoafirmaciones",
+            "Repetir frases:\n“Soy fuerte y esto pasará”\n“Tengo el control de mi mente y mi cuerpo”\n“Me merezco tener alegría y plenitud”",
+            "image_step_3"
+        )
+    )
+
     fun nextStep() {
-        currentStep?.let { addTool(it.title) } // si voy al siguiente paso doy por hecho que se utilizo la herramienta
+        currentStep?.let { addTool(it.title) }
         if (currentStepIndex < steps.size - 1) {
             currentStepIndex++
         } else {
@@ -120,7 +126,7 @@ class CrisisHandlingViewModel (
         }
     }
 
-    fun saveCrisisData() {
+    private fun saveCrisisData() {
         viewModelScope.launch {
             val crisisDetails = CrisisDetailsDB(
                 start = startTime,
@@ -142,7 +148,7 @@ class CrisisHandlingViewModel (
         }
     }
 
-    fun addTool(tool: String) {
+    private fun addTool(tool: String) {
         if (!toolsUsed.contains(tool)) {
             toolsUsed.add(tool)
         }
@@ -150,7 +156,7 @@ class CrisisHandlingViewModel (
 
     fun showModal() {
         shouldShowModal = true
-        currentStep?.let { addTool(it.title) } //cuando se muestra el modal puede tomar 2 caminos, ahi tambien doy por hecho que realizo la herramienta del paso actual
+        currentStep?.let { addTool(it.title) }
     }
 
     fun dismissModal() {
@@ -164,7 +170,8 @@ class CrisisHandlingViewModel (
     fun dismissExitModal() {
         shouldShowExitModal = false
     }
-    fun playMusic(context: Context) {
+
+    fun playMusic() {
         viewModelScope.launch(Dispatchers.IO) {
             val storage = FirebaseStorage.getInstance()
             val audioRef = storage.reference.child("Songs/song.mp3")
@@ -174,17 +181,12 @@ class CrisisHandlingViewModel (
                 prepare()
                 setVolume(0.45f, 0.45f)
                 start()
-
                 setOnCompletionListener {
                     start()
-
                 }
             }
-
-
-            }
-
-                }
+        }
+    }
 
     fun pauseMusic() {
         player?.pause()
@@ -197,9 +199,58 @@ class CrisisHandlingViewModel (
         isPlaying = false
     }
 
+    fun startTextToSpeech(textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
+        stopTextToSpeech(textToSpeech)
+        if (shouldVoiceSpeak && isVoiceOn) {
+            if (isTtsInitialized) {
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.title,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+                if (currentStep != null) {
+                    textToSpeech.speak(
+                        currentStep?.description,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+
+            }
+        }
+
+    }
+
+    fun stopTextToSpeech(textToSpeech: TextToSpeech) {
+        if (textToSpeech.isSpeaking) {
+            textToSpeech.stop()
+        }
+    }
+
+    fun setShouldSpeakVoice(status: Boolean) {
+        shouldVoiceSpeak = status
+    }
+
+    fun onMuteVoice(textToSpeech: TextToSpeech, isTtsInitialized: Boolean) {
+        if (isVoiceOn) {
+            stopTextToSpeech(textToSpeech)
+            isVoiceOn = false
+        } else {
+            isVoiceOn = true
+
+            if (isTtsInitialized) {
+                stopTextToSpeech(textToSpeech)
+                startTextToSpeech(textToSpeech, true)
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         stopMusic()
     }
 }
-

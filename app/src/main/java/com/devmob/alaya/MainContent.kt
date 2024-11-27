@@ -3,68 +3,92 @@ package com.devmob.alaya
 import android.speech.tts.TextToSpeech
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.devmob.alaya.data.ContactRepositoryImpl
+import com.devmob.alaya.data.CrisisRepositoryImpl
+import com.devmob.alaya.data.CrisisTreatmentRepositoryImpl
 import com.devmob.alaya.data.FirebaseClient
+import com.devmob.alaya.data.GetUserRepositoryImpl
+import com.devmob.alaya.data.LoginRepositoryImpl
+import com.devmob.alaya.data.NotificationRepositoryImpl
+import com.devmob.alaya.data.NotificationService
+import com.devmob.alaya.data.RegisterNewUserRepositoryImpl
+import com.devmob.alaya.data.SessionRepositoryImpl
+import com.devmob.alaya.data.UploadImageToFirestoreRepositoryImpl
+import com.devmob.alaya.data.UserFirestoreRepositoryImpl
+import com.devmob.alaya.data.local_storage.CrisisStepsDatabase
 import com.devmob.alaya.data.preferences.SharedPreferences
 import com.devmob.alaya.domain.AddUserToFirestoreUseCase
 import com.devmob.alaya.domain.ContactUseCase
 import com.devmob.alaya.domain.GetCrisisTreatmentUseCase
 import com.devmob.alaya.domain.GetInvitationUseCase
+import com.devmob.alaya.domain.GetRegistersUseCase
 import com.devmob.alaya.domain.GetRoleUseCase
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.LoginUseCase
 import com.devmob.alaya.domain.RegisterNewUserUseCase
 import com.devmob.alaya.domain.SaveCrisisRegistrationUseCase
 import com.devmob.alaya.domain.SaveCrisisTreatmentUseCase
+import com.devmob.alaya.domain.SessionUseCase
+import com.devmob.alaya.domain.UploadImageToFirestoreUseCase
 import com.devmob.alaya.domain.model.FeedbackType
 import com.devmob.alaya.domain.model.IconType
 import com.devmob.alaya.domain.model.ItemMenu
 import com.devmob.alaya.ui.ViewModelFactory
 import com.devmob.alaya.ui.components.AppBar
 import com.devmob.alaya.ui.components.BottomBarNavigation
-import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
-import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactScreen
-import com.devmob.alaya.ui.screen.ContainmentNetwork.Contact.ContactViewModel
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkScreen
 import com.devmob.alaya.ui.screen.ContainmentNetwork.ContainmentNetworkViewModel
 import com.devmob.alaya.ui.screen.CustomActivity.CustomActivityScreen
 import com.devmob.alaya.ui.screen.MenuPatientScreen
 import com.devmob.alaya.ui.screen.MenuProfessionalScreen
-import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
-import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.TreatmentSummaryScreen.TreatmentSummaryScreen
+import com.devmob.alaya.ui.screen.activityDayPatient.ActivityDayScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalScreen
+import com.devmob.alaya.ui.screen.activityDayProfessional.ActivityDayProfessionalViewModel
+import com.devmob.alaya.ui.screen.activityDayProfessional.ModalActivityDayProfessional
+import com.devmob.alaya.ui.screen.createSessions.ScheduleSessionScreen
+import com.devmob.alaya.ui.screen.createSessions.SessionViewModel
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingScreen
 import com.devmob.alaya.ui.screen.crisis_handling.CrisisHandlingViewModel
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationSummaryScreen
 import com.devmob.alaya.ui.screen.crisis_registration.CrisisRegistrationViewModel
+import com.devmob.alaya.ui.screen.feedback.FeedbackScreen
+import com.devmob.alaya.ui.screen.login.LoginScreen
 import com.devmob.alaya.ui.screen.login.LoginViewModel
 import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreen
+import com.devmob.alaya.ui.screen.patient_home.PatientHomeScreenViewmodel
+import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileScreen
 import com.devmob.alaya.ui.screen.patient_profile.PatientProfileViewModel
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentScreen
+import com.devmob.alaya.ui.screen.professionalCrisisTreatment.ConfigTreatmentViewModel
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeScreen
 import com.devmob.alaya.ui.screen.professionalHome.ProfessionalHomeViewModel
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserScreen
+import com.devmob.alaya.ui.screen.profile_user.ProfileUserViewModel
 import com.devmob.alaya.ui.screen.register.RegisterScreen
 import com.devmob.alaya.ui.screen.register.RegisterViewmodel
 import com.devmob.alaya.ui.screen.searchUser.SearchUserScreen
 import com.devmob.alaya.ui.screen.searchUser.SearchUserViewModel
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationScreen
 import com.devmob.alaya.ui.screen.send_invitation_screen.SendInvitationViewModel
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryScreen
-import com.devmob.alaya.ui.screen.patient_profile.PatientIASummaryViewModel
+import com.devmob.alaya.utils.CrisisStepsManager
 import com.devmob.alaya.utils.NavUtils
 import com.devmob.alaya.utils.NavUtils.ProfessionalRoutes
 import com.devmob.alaya.utils.NavUtils.currentRoute
@@ -77,14 +101,63 @@ fun MainContent(
     isTtsInitialized: Boolean
 ) {
     val context = LocalContext.current
-    val currentRoute = currentRoute(navController)
-    val contactUseCase = ContactUseCase()
-    val containmentViewModel = ContainmentNetworkViewModel(contactUseCase)
     val prefs = SharedPreferences(context)
-    val SendInvitationUseCase = GetInvitationUseCase()
-    val sendInvitationViewModel = SendInvitationViewModel(SendInvitationUseCase)
-    val getUserDataUseCase = GetUserDataUseCase();
+    val currentRoute = currentRoute(navController)
+
+    val firebaseClient = FirebaseClient()
+    val getUserRepository = GetUserRepositoryImpl(firebaseClient)
+    val getUserDataUseCase = GetUserDataUseCase(getUserRepository)
+    val notificationRepository = NotificationRepositoryImpl(NotificationService(), firebaseClient, getUserDataUseCase)
+    val contactUseCase = ContactUseCase(
+        prefs,
+        ContactRepositoryImpl(firebaseClient),
+        getUserRepository
+    )
+    val getInvitationUseCase = GetInvitationUseCase(
+        getUserRepository,
+        notificationRepository
+    )
+    val containmentViewModel = ContainmentNetworkViewModel(firebaseClient, contactUseCase)
+    val sendInvitationViewModel = SendInvitationViewModel(getInvitationUseCase)
+    val sessionRepository = SessionRepositoryImpl()
+    val getSessionUseCase = SessionUseCase(notificationRepository, sessionRepository)
     val searchUserViewModel = SearchUserViewModel(getUserDataUseCase)
+    val activityDayProfessionalViewModel: ActivityDayProfessionalViewModel = hiltViewModel()
+    val crisisStepsDao = CrisisStepsDatabase.getDataBase(context).crisisStepsDao()
+    val sessionViewModel: SessionViewModel = viewModel(
+        factory = ViewModelFactory {
+            SessionViewModel(getSessionUseCase)
+        }
+    )
+    val crisisRepository = CrisisRepositoryImpl(firebaseClient)
+    val saveCrisisRegistrationUseCase = SaveCrisisRegistrationUseCase(crisisRepository)
+    val uploadImageToFirestoreRepository = UploadImageToFirestoreRepositoryImpl(firebaseClient)
+    val uploadImageToFirestoreUseCase = UploadImageToFirestoreUseCase(
+        uploadImageToFirestoreRepository,
+        prefs
+    )
+    val crisisTreatmentRepository = CrisisTreatmentRepositoryImpl(firebaseClient, uploadImageToFirestoreUseCase)
+    val saveCrisisTreatmentUseCase = SaveCrisisTreatmentUseCase(
+        crisisTreatmentRepository,
+        uploadImageToFirestoreUseCase,
+        notificationRepository
+    )
+    val userRepository = GetUserRepositoryImpl(firebaseClient)
+    val loginRepository = LoginRepositoryImpl(firebaseClient)
+    val loginUseCase = LoginUseCase(loginRepository)
+    val getRoleUseCase = GetRoleUseCase(getUserRepository)
+    val getCrisisTreatmentUseCase = GetCrisisTreatmentUseCase(
+        prefs,
+        userRepository,
+        crisisStepsDao
+    )
+    val registerNewUserRepository = RegisterNewUserRepositoryImpl(firebaseClient)
+    val registerNewUserUseCase = RegisterNewUserUseCase(registerNewUserRepository)
+    val userFirestoreRepository = UserFirestoreRepositoryImpl(firebaseClient)
+    val addUserToFirestoreUseCase = AddUserToFirestoreUseCase(userFirestoreRepository)
+    val crisisStepsManager = CrisisStepsManager(crisisStepsDao, getCrisisTreatmentUseCase, context)
+    val profileUserViewModel = ProfileUserViewModel(getUserDataUseCase)
+    val getRegistersUseCase = GetRegistersUseCase(crisisRepository)
 
     val routesWithAppBar = listOf(
         NavUtils.PatientRoutes.ContainmentNetwork.route,
@@ -93,34 +166,55 @@ fun MainContent(
         NavUtils.PatientRoutes.CrisisRegistrationSummary.route,
         ProfessionalRoutes.PatientProfile.route,
         "patient_profile/{email}",
+        NavUtils.PatientRoutes.ActivityDay.route,
         ProfessionalRoutes.ConfigTreatment.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
         ProfessionalRoutes.TreatmentSummary.route,
         ProfessionalRoutes.AddCustomActivity.route,
-        ProfessionalRoutes.SendInvitation.route
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.PatientIASummary.route,
+        ProfessionalRoutes.ActivityDayProfessional.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.ModalActivityDayProfessional.route,
+
+        ProfessionalRoutes.ProfileUser.route,
+
+        ProfessionalRoutes.ProfileUser.route,
+        ProfessionalRoutes.SendInvitation.route,
+        ProfessionalRoutes.CreateSessions.route,
+        NavUtils.PatientRoutes.ProfileUser.route,
+        ProfessionalRoutes.PatientIASummary.route,
+        ProfessionalRoutes.ProfileUser.route
+
     )
-    val factoryCrisisRegistrationVM =
-        ViewModelFactory { CrisisRegistrationViewModel(SaveCrisisRegistrationUseCase()) }
+    val factoryCrisisRegistrationVM = ViewModelFactory {
+        CrisisRegistrationViewModel(saveCrisisRegistrationUseCase)
+    }
     val crisisRegistrationViewModel: CrisisRegistrationViewModel =
         viewModel(factory = factoryCrisisRegistrationVM)
     val patientHomeScreenViewmodel: PatientHomeScreenViewmodel = viewModel(
         factory = ViewModelFactory {
             PatientHomeScreenViewmodel(
-                GetUserDataUseCase(),
-                GetInvitationUseCase(),
-                FirebaseClient()
+                getUserDataUseCase,
+                getInvitationUseCase,
+                firebaseClient,
+                crisisStepsManager
             )
         }
     )
     val configTreatmentViewModel: ConfigTreatmentViewModel = viewModel(
         factory = ViewModelFactory {
-            ConfigTreatmentViewModel(SaveCrisisTreatmentUseCase())
+            ConfigTreatmentViewModel(saveCrisisTreatmentUseCase)
         }
     )
 
     val patientProfileViewModel: PatientProfileViewModel =
-        viewModel(factory = ViewModelFactory { PatientProfileViewModel(GetUserDataUseCase()) })
+        viewModel(factory = ViewModelFactory { PatientProfileViewModel(getUserDataUseCase, getSessionUseCase, getRegistersUseCase) })
     Scaffold(
         topBar = {
             if (currentRoute in routesWithAppBar) {
@@ -180,7 +274,7 @@ fun MainContent(
                     )
                 }
             ) {
-                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase), navController)
+                ProfessionalHomeScreen(ProfessionalHomeViewModel(getUserDataUseCase, firebaseClient), navController)
             }
             composable(
                 route = "${ProfessionalRoutes.PatientProfile.route}/{email}",
@@ -251,7 +345,7 @@ fun MainContent(
                     )
                 }
             ) {
-                LoginScreen(navController, LoginViewModel(LoginUseCase(), GetRoleUseCase(), prefs))
+                LoginScreen(navController, LoginViewModel(loginUseCase, getRoleUseCase, prefs))
             }
             composable(NavUtils.PatientRoutes.Crisis.route,
                 enterTransition = {
@@ -271,7 +365,10 @@ fun MainContent(
                 }
             ) {
                 CrisisHandlingScreen(
-                    CrisisHandlingViewModel(SaveCrisisRegistrationUseCase(), GetCrisisTreatmentUseCase()),
+                    CrisisHandlingViewModel(
+                        saveCrisisRegistrationUseCase,
+                        getCrisisTreatmentUseCase
+                    ),
                     navController,
                     textToSpeech,
                     isTtsInitialized
@@ -325,6 +422,25 @@ fun MainContent(
                         navController = navController
                     )
                 }
+            }
+            composable(NavUtils.PatientRoutes.ActivityDay.route) {
+                ActivityDayScreen()
+            }
+
+            composable(
+                route = "${ProfessionalRoutes.ActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ActivityDayProfessionalScreen(activityDayProfessionalViewModel,navController, email?:"")
+            }
+
+            composable(
+                route = "${ProfessionalRoutes.ModalActivityDayProfessional.route}/{patientEmail}",
+                arguments = listOf(navArgument("patientEmail") { type = NavType.StringType }),
+                ) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("patientEmail")
+                ModalActivityDayProfessional(activityDayProfessionalViewModel, navController,email?:"")
             }
 
             composable("feedback_screen/{feedbackType}",
@@ -464,8 +580,8 @@ fun MainContent(
                 RegisterScreen(
                     navController,
                     RegisterViewmodel(
-                        RegisterNewUserUseCase(),
-                        AddUserToFirestoreUseCase()
+                        registerNewUserUseCase,
+                        addUserToFirestoreUseCase
                     )
                 )
             }
@@ -520,7 +636,7 @@ fun MainContent(
                     viewModel = crisisRegistrationViewModel
                 )
             }
-            composable(NavUtils.ProfessionalRoutes.AddCustomActivity.route,
+            composable(ProfessionalRoutes.AddCustomActivity.route,
                 enterTransition = {
                     return@composable slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
@@ -563,6 +679,71 @@ fun MainContent(
                 }
             ) {
                 SendInvitationScreen(sendInvitationViewModel)
+            }
+
+            composable(ProfessionalRoutes.CreateSessions.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) { backStackEntry ->
+                val patientEmail = backStackEntry.arguments?.getString("patientEmail") ?: ""
+                sessionViewModel.patientEmail.value = patientEmail
+                ScheduleSessionScreen(
+                    viewModel = sessionViewModel,
+                    navController = navController,
+                )
+            }
+
+            composable(ProfessionalRoutes.ProfileUser.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                ProfileUserScreen(profileUserViewModel, navController)
+            }
+            composable(
+                NavUtils.PatientRoutes.ProfileUser.route,
+                enterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                },
+                exitTransition = {
+                    return@composable slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End, tween(500)
+                    )
+                },
+                popEnterTransition = {
+                    return@composable slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start, tween(500)
+                    )
+                }
+            ) {
+                ProfileUserScreen(profileUserViewModel, navController)
             }
 
         }

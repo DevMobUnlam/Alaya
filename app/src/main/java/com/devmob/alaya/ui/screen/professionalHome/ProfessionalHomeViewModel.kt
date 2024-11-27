@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.professionalHome
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,17 +9,20 @@ import androidx.lifecycle.viewModelScope
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.domain.GetUserDataUseCase
 import com.devmob.alaya.domain.model.Patient
+import com.devmob.alaya.utils.toCalendarOrNull
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class ProfessionalHomeViewModel(
-    private val getUserData: GetUserDataUseCase
+    private val getUserData: GetUserDataUseCase,
+    firebaseClient: FirebaseClient
 ) : ViewModel() {
     var patients by mutableStateOf<List<Patient>>(emptyList())
     var greetingMessage by mutableStateOf("")
-    var currentEmail = FirebaseClient().auth.currentUser?.email
+    var currentEmail = firebaseClient.auth.currentUser?.email
     var nameProfessional by mutableStateOf("")
     var isLoading by mutableStateOf(true)
 
@@ -45,12 +49,15 @@ class ProfessionalHomeViewModel(
         viewModelScope.launch {
             val professional = getUserData.getUser(professionalEmail)
             professional?.let {
-                val today = Calendar.getInstance()
-                val todayString = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today.time)
-
+                val today = Date()
+                Log.d("hoy", today.toString())
                 patients = (it.patients ?: emptyList()).filter { patient ->
-                    patient.nextSessionDate == todayString
+                    Log.d ("nextSession", patient.nextSession.toString())
+                    patient.nextSession.toCalendarOrNull()?.get(Calendar.DAY_OF_MONTH) == today.toCalendarOrNull()?.get(Calendar.DAY_OF_MONTH)
+                            && patient.nextSession.toCalendarOrNull()?.get(Calendar.MONTH) == today.toCalendarOrNull()?.get(Calendar.MONTH)
+                            && patient.nextSession.toCalendarOrNull()?.get(Calendar.YEAR) == today.toCalendarOrNull()?.get(Calendar.YEAR)
                 }
+                Log.d ("patients", patients.toString())
             }
             checkIfLoadingCompleted()
         }
@@ -65,5 +72,4 @@ class ProfessionalHomeViewModel(
             else -> "Buenas noches"
         }
     }
-
 }

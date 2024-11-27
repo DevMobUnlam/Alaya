@@ -106,13 +106,13 @@ fun TextArea(
 
         Text(
             text = title,
-            fontSize = 30.sp,
+            fontSize = 27.sp,
             color = ColorText,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(8.dp),
             textAlign = TextAlign.Center,
-            lineHeight = 30.sp
+            maxLines = 1
         )
 
         Spacer(modifier = Modifier.height(16.dp))

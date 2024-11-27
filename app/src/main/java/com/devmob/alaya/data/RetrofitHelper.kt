@@ -18,7 +18,6 @@ object RetrofitHelper {
 
     private fun okhttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            //.addInterceptor(AuthInterceptor(context)) //TODO: Agregar interceptor para la autenticación
             .addNetworkInterceptor(logging)
             .build()
     }

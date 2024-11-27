@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Mood
 import androidx.compose.material3.Text
@@ -46,6 +47,7 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         viewmodel.fetchPatient()
         viewmodel.updateGreetingMessage()
         viewmodel.checkProfessionalInvitation()
+        viewmodel.updateCrisisSteps()
     }
     
     InvitationModal(nameProfessional, shouldShowModal, viewmodel)
@@ -66,8 +68,8 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
         ) {
             val (greetingText, cardColumn) = createRefs()
             Text(
-                text = "Hola ${namePatient}, ¡${greetingMessage}!",
-                fontSize = 32.sp,
+                text = "Hola ${namePatient}\n¡${greetingMessage}!",
+                fontSize = 31.sp,
                 fontWeight = FontWeight.Bold,
                 lineHeight = 32.sp,
                 color = ColorText,
@@ -109,30 +111,16 @@ fun PatientHomeScreen(viewmodel: PatientHomeScreenViewmodel, navController: NavC
                 Card(
                     title = "Actividades diarias",
                     subtitle = "Prácticas diarias para mejorar el control emocional",
-                    onClick = { },
+                    onClick = {navController.navigate(NavUtils.PatientRoutes.ActivityDay.route) },
                     leftIcon = Icons.Outlined.Checklist,
                     rightIcon = Icons.Filled.ArrowForwardIos
-                )
-                Card(
-                    title = "Herramientas de bienestar",
-                    subtitle = "Encuentra recursos para cuidar tu mente y mejorar tu bienestar diario",
-                    onClick = { },
-                    rightIcon = Icons.Filled.ArrowForwardIos,
-                    leftIconBitmap = BitmapFactory.decodeResource(
-                        LocalContext.current.resources,
-                        R.drawable.hand_heart
-                    )
                 )
                 Card(
                     title = "Registro de crisis",
                     subtitle = "Registra detalles del episodio para entender y mejorar tu manejo en estos momentos",
                     onClick = { navController.navigate(NavUtils.PatientRoutes.CrisisRegistration.route) },
-                    leftIcon = Icons.Outlined.Mood,
+                    leftIcon = Icons.Outlined.Description,
                     rightIcon = Icons.Filled.ArrowForwardIos,
-                    leftIconBitmap = BitmapFactory.decodeResource(
-                        LocalContext.current.resources,
-                        R.drawable.head_side_heart
-                    )
                 )
             }
         }

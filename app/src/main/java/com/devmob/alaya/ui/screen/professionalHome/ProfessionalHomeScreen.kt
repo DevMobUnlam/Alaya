@@ -1,5 +1,6 @@
 package com.devmob.alaya.ui.screen.professionalHome
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import com.devmob.alaya.ui.theme.ColorQuaternary
 import com.devmob.alaya.ui.theme.ColorText
 import com.devmob.alaya.utils.NavUtils
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ProfessionalHomeScreen(viewModel: ProfessionalHomeViewModel, navController: NavController) {
     val isLoading = viewModel.isLoading

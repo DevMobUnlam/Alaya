@@ -17,11 +17,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.devmob.alaya.data.FirebaseClient
 import com.devmob.alaya.ui.components.CardContainer
 import com.devmob.alaya.ui.components.UserItem
@@ -77,7 +75,7 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 }
             }
         )
-        
+
         CardContainer(
             modifier = Modifier
                 .wrapContentHeight()
@@ -89,8 +87,8 @@ fun SearchUserScreen(viewModel: SearchUserViewModel, navController: NavControlle
                 ) {
                     items(viewModel.patients.filter { it.name.contains(searchText.text, ignoreCase = true) }) { user ->
                         UserItem(
-                            user,
-                            false
+                            patient = user,
+                            withSubtitle = false
                         ) {
                             navController.navigate("${NavUtils.ProfessionalRoutes.PatientProfile.route}/${user.email}")
                         }
